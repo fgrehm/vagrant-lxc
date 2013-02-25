@@ -32,6 +32,10 @@ def restore_snapshot!
   exit 0
 end
 
+def vagrant_ssh(cmd)
+  sh "vagrant ssh -c \"#{cmd}\""
+end
+
 # Initialize git submodules
 sh 'git submodule update --init'
 
@@ -64,34 +68,34 @@ download "#{IMAGE_ROOT}/#{IMAGE_NAME}", IMAGE_NAME
 sh 'vagrant up'
 
 # Because I'm lazy ;)
-sh 'vagrant ssh -c "echo \'cd /vagrant\' >> ~/.bashrc"'
+vagrant_ssh "echo 'cd /vagrant' >> ~/.bashrc"
 
 # "be" archive is too slow for me
-sh 'vagrant ssh -c "sudo sed -i -e \'s/be.archive/br.archive/g\' /etc/apt/sources.list"'
+vagrant_ssh "sudo sed -i -e 's/be.archive/br.archive/g' /etc/apt/sources.list"
 
 # Ensure we have the latest packages around
-sh 'vagrant ssh -c "sudo apt-get update && sudo apt-get upgrade -y"'
+vagrant_ssh "sudo apt-get update && sudo apt-get upgrade -y"
 
 # Ensure the machine can boot properly after upgrades
 sh 'vagrant reload'
 
 # Install lxc, libffi, rinetd and bundler
-sh 'vagrant ssh -c "sudo apt-get install lxc rinetd libffi-dev libffi-ruby ruby1.9.1-dev htop -y && sudo gem install bundler --no-ri --no-rdoc"'
+vagrant_ssh "sudo apt-get install lxc rinetd libffi-dev libffi-ruby ruby1.9.1-dev htop -y && sudo gem install bundler --no-ri --no-rdoc"
 
 # Backup rinetd config
-sh "vagrant ssh -c 'cp /etc/rinetd.conf /vagrant/cache/rinetd.conf'"
+vagrant_ssh "cp /etc/rinetd.conf /vagrant/cache/rinetd.conf"
 
 # Make rinetd writable by vagrant user
-sh "vagrant ssh -c 'sudo chown vagrant:vagrant /etc/rinetd.conf'"
+vagrant_ssh 'sudo chown vagrant:vagrant /etc/rinetd.conf'
 
 # Bundle!
-sh "vagrant ssh -c 'cd /vagrant && bundle'"
+vagrant_ssh 'cd /vagrant && bundle'
 
 # Setup vagrant default ssh key
-sh 'vagrant ssh -c "cp /vagrant/vagrant-1.1/keys/vagrant ~/.ssh/id_rsa && cp /vagrant/vagrant-1.1/keys/vagrant.pub ~/.ssh/id_rsa.pub && chmod 600 ~/.ssh/id_rsa"'
+vagrant_ssh "cp /vagrant/vagrant-1.1/keys/vagrant ~/.ssh/id_rsa && cp /vagrant/vagrant-1.1/keys/vagrant.pub ~/.ssh/id_rsa.pub && chmod 600 ~/.ssh/id_rsa"
 
 # Setup lxc cache
-sh "vagrant ssh -c 'sudo mkdir -p /var/cache/lxc/cloud-quantal && sudo cp /vagrant/cache/#{IMAGE_NAME} /var/cache/lxc/cloud-quantal/#{IMAGE_NAME}'"
+vagrant_ssh "sudo mkdir -p /var/cache/lxc/cloud-quantal && sudo cp /vagrant/cache/#{IMAGE_NAME} /var/cache/lxc/cloud-quantal/#{IMAGE_NAME}"
 
 # Click
 sh 'vagrant halt'
