@@ -81,7 +81,7 @@ vagrant_ssh "sudo apt-get update && sudo apt-get upgrade -y"
 sh 'vagrant reload'
 
 # Install dependencies
-vagrant_ssh "sudo apt-get install lxc rinetd libffi-dev libffi-ruby ruby1.9.1-dev htop git -y && sudo gem install bundler --no-ri --no-rdoc"
+vagrant_ssh "sudo apt-get install lxc rinetd libffi-dev libffi-ruby ruby1.9.1-dev htop git virtualbox -y && sudo gem install bundler --no-ri --no-rdoc"
 
 # Backup rinetd config
 vagrant_ssh "cp /etc/rinetd.conf /vagrant/cache/rinetd.conf"
@@ -90,7 +90,7 @@ vagrant_ssh "cp /etc/rinetd.conf /vagrant/cache/rinetd.conf"
 vagrant_ssh 'sudo chown vagrant:vagrant /etc/rinetd.conf'
 
 # Bundle!
-vagrant_ssh 'cd /vagrant && bundle'
+vagrant_ssh 'cd /vagrant && bundle && cd /vagrant/dev && bundle'
 
 # Setup vagrant default ssh key
 vagrant_keys_path = '$(cd /vagrant && bundle show vagrant)/keys'
