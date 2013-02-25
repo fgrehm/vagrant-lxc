@@ -79,8 +79,8 @@ vagrant_ssh "sudo apt-get update && sudo apt-get upgrade -y"
 # Ensure the machine can boot properly after upgrades
 sh 'vagrant reload'
 
-# Install lxc, libffi, rinetd and bundler
-vagrant_ssh "sudo apt-get install lxc rinetd libffi-dev libffi-ruby ruby1.9.1-dev htop -y && sudo gem install bundler --no-ri --no-rdoc"
+# Install dependencies
+vagrant_ssh "sudo apt-get install lxc rinetd libffi-dev libffi-ruby ruby1.9.1-dev htop git -y && sudo gem install bundler --no-ri --no-rdoc"
 
 # Backup rinetd config
 vagrant_ssh "cp /etc/rinetd.conf /vagrant/cache/rinetd.conf"
