@@ -1,6 +1,6 @@
 # vagrant-lxc
 
-Highly experimental, soon to come, Linux Containers support for Vagrant 1.1
+Highly experimental, soon to come, Linux Containers support for the unreleased Vagrant 1.1
 
 ## WARNING
 
