@@ -69,6 +69,7 @@ sh 'vagrant up'
 
 # Because I'm lazy ;)
 vagrant_ssh "echo 'cd /vagrant' >> ~/.bashrc"
+vagrant_ssh "alias be='bundle exec' >> ~/.bashrc"
 
 # "be" archive is too slow for me
 vagrant_ssh "sudo sed -i -e 's/be.archive/br.archive/g' /etc/apt/sources.list"
