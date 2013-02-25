@@ -1,0 +1,3 @@
+[submodule "vagrant-1.1"]
+	path = vagrant-1.1
+	url = git://github.com/mitchellh/vagrant.git

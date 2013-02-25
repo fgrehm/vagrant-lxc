@@ -1,0 +1,101 @@
+#!/usr/bin/env ruby
+
+raise 'You should not run this script from the dev box' if ENV['USER'] == 'vagrant'
+
+require 'bundler'
+require 'json'
+
+IMAGE_ROOT   = 'https://cloud-images.ubuntu.com/releases/quantal/release-20130206'
+IMAGE_NAME   = 'ubuntu-12.10-server-cloudimg-amd64-root.tar.gz'
+VAGRANT_REPO = 'https://raw.github.com/mitchellh/vagrant/master'
+
+def download(source, destination)
+  destination = "#{File.dirname __FILE__}/cache/#{destination}"
+  return if File.exists?(destination)
+
+  sh "wget #{source} -O #{destination}"
+end
+
+def sh(cmd)
+  Bundler.with_clean_env do
+    puts cmd
+    raise 'Errored!' unless system cmd
+  end
+end
+
+def restore_snapshot!
+  sh 'vagrant halt -f'
+  conf = JSON.parse File.read('.vagrant')
+  id   = conf['active']['default']
+  sh "VBoxManage snapshot '#{id}' restore ready-to-rock"
+  sh 'vagrant up'
+  exit 0
+end
+
+# Initialize git submodules
+sh 'git submodule update --init'
+
+Bundler.with_clean_env do
+  # Ensure box has not been created yet
+  unless `vagrant status` =~ /not created/
+    print 'Vagrant box already created, do you want to [r]ecreate it, restore [s]napshot or [A]bort? '
+    answer = gets.chomp
+    exit 0 if answer.empty? || answer =~ /^a/i
+
+    case
+      when answer =~ /^s/i
+        restore_snapshot!
+      when answer =~ /^r/i
+        sh 'vagrant destroy -f'
+      else
+        puts 'Invalid option!'
+        exit 1
+    end
+  end
+end
+
+# Cache development dependencies
+`mkdir -p cache`
+
+# Cache container image between vagrant box destructions
+download "#{IMAGE_ROOT}/#{IMAGE_NAME}", IMAGE_NAME
+
+# Start vagrant
+sh 'vagrant up'
+
+# Because I'm lazy ;)
+sh 'vagrant ssh -c "echo \'cd /vagrant\' >> ~/.bashrc"'
+
+# "be" archive is too slow for me
+sh 'vagrant ssh -c "sudo sed -i -e \'s/be.archive/br.archive/g\' /etc/apt/sources.list"'
+
+# Ensure we have the latest packages around
+sh 'vagrant ssh -c "sudo apt-get update && sudo apt-get upgrade -y"'
+
+# Ensure the machine can boot properly after upgrades
+sh 'vagrant reload'
+
+# Install lxc, libffi, rinetd and bundler
+sh 'vagrant ssh -c "sudo apt-get install lxc rinetd libffi-dev libffi-ruby ruby1.9.1-dev htop -y && sudo gem install bundler --no-ri --no-rdoc"'
+
+# Backup rinetd config
+sh "vagrant ssh -c 'cp /etc/rinetd.conf /vagrant/cache/rinetd.conf'"
+
+# Make rinetd writable by vagrant user
+sh "vagrant ssh -c 'sudo chown vagrant:vagrant /etc/rinetd.conf'"
+
+# Bundle!
+sh "vagrant ssh -c 'cd /vagrant && bundle'"
+
+# Setup vagrant default ssh key
+sh 'vagrant ssh -c "cp /vagrant/vagrant-1.1/keys/vagrant ~/.ssh/id_rsa && cp /vagrant/vagrant-1.1/keys/vagrant.pub ~/.ssh/id_rsa.pub && chmod 600 ~/.ssh/id_rsa"'
+
+# Setup lxc cache
+sh "vagrant ssh -c 'sudo mkdir -p /var/cache/lxc/cloud-quantal && sudo cp /vagrant/cache/#{IMAGE_NAME} /var/cache/lxc/cloud-quantal/#{IMAGE_NAME}'"
+
+# Click
+sh 'vagrant halt'
+conf = JSON.parse File.read('.vagrant')
+id   = conf['active']['default']
+sh "VBoxManage snapshot '#{id}' take ready-to-rock"
+sh 'vagrant up'
