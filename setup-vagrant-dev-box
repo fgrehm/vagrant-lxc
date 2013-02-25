@@ -81,7 +81,9 @@ vagrant_ssh "sudo apt-get update && sudo apt-get upgrade -y"
 sh 'vagrant reload'
 
 # Install dependencies
-vagrant_ssh "sudo apt-get install lxc rinetd libffi-dev libffi-ruby ruby1.9.1-dev htop git virtualbox -y && sudo gem install bundler --no-ri --no-rdoc"
+vagrant_ssh "sudo apt-get install lxc rinetd libffi-dev libffi-ruby ruby1.9.1-dev htop git virtualbox virtualbox-ose-dkms linux-headers-generic linux-headers-3.5.0-17-generic -y && sudo gem install bundler --no-ri --no-rdoc"
+vagrant_ssh "sudo dkms install virtualbox/4.1.18"
+vagrant_ssh "sudo service virtualbox start"
 
 # Backup rinetd config
 vagrant_ssh "cp /etc/rinetd.conf /vagrant/cache/rinetd.conf"
