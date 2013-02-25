@@ -5,6 +5,7 @@ unless ENV['USER'] == 'vagrant'
   exit 1
 end
 
+gem 'vagrant', github: 'mitchellh/vagrant'
 gem 'rake'
 gem 'net-ssh'
 gem 'rspec'

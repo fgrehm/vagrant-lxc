@@ -93,7 +93,8 @@ vagrant_ssh 'sudo chown vagrant:vagrant /etc/rinetd.conf'
 vagrant_ssh 'cd /vagrant && bundle'
 
 # Setup vagrant default ssh key
-vagrant_ssh "cp /vagrant/vagrant-1.1/keys/vagrant ~/.ssh/id_rsa && cp /vagrant/vagrant-1.1/keys/vagrant.pub ~/.ssh/id_rsa.pub && chmod 600 ~/.ssh/id_rsa"
+vagrant_keys_path = '$(cd /vagrant && bundle show vagrant)/keys'
+vagrant_ssh "cp #{vagrant_keys_path}/vagrant ~/.ssh/id_rsa && cp #{vagrant_keys_path}/vagrant.pub ~/.ssh/id_rsa.pub && chmod 600 ~/.ssh/id_rsa"
 
 # Setup lxc cache
 vagrant_ssh "sudo mkdir -p /var/cache/lxc/cloud-quantal && sudo cp /vagrant/cache/#{IMAGE_NAME} /var/cache/lxc/cloud-quantal/#{IMAGE_NAME}"
