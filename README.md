@@ -19,6 +19,10 @@ On your host:
 vagrant ssh
 ```
 
+*NOTE: This takes around 12 minutes on a 15mb connection after the [base vagrant box](https://github.com/fgrehm/vagrant-lxc/blob/master/Vagrantfile#L5-L6)
+and ubuntu [lxc cloud img](https://github.com/fgrehm/vagrant-lxc/blob/master/setup-vagrant-dev-box#L8-L9)
+have been downloaded*
+
 On the guest machine:
 
 ```terminal
