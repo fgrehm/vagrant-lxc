@@ -33,11 +33,8 @@ def restore_snapshot!
 end
 
 def vagrant_ssh(cmd)
-  sh "vagrant ssh -c \"#{cmd}\""
+  sh "vagrant ssh -c '#{cmd}'"
 end
-
-# Initialize git submodules
-sh 'git submodule update --init'
 
 Bundler.with_clean_env do
   # Ensure box has not been created yet
@@ -68,22 +65,47 @@ download "#{IMAGE_ROOT}/#{IMAGE_NAME}", IMAGE_NAME
 sh 'vagrant up'
 
 # Because I'm lazy ;)
-vagrant_ssh "echo 'cd /vagrant' >> ~/.bashrc"
-vagrant_ssh "alias be='bundle exec' >> ~/.bashrc"
+vagrant_ssh 'echo "cd /vagrant" >> ~/.bashrc'
+vagrant_ssh 'echo "alias be=\"bundle exec\"" >> ~/.bashrc'
 
 # "be" archive is too slow for me
-vagrant_ssh "sudo sed -i -e 's/be.archive/br.archive/g' /etc/apt/sources.list"
+vagrant_ssh 'sudo sed -i -e "s/be.archive/br.archive/g" /etc/apt/sources.list'
 
 # Ensure we have the latest packages around
 vagrant_ssh "sudo apt-get update && sudo apt-get upgrade -y"
-
-# Ensure the machine can boot properly after upgrades
-sh 'vagrant reload'
 
 # Install dependencies
 vagrant_ssh "sudo apt-get install lxc rinetd libffi-dev libffi-ruby ruby1.9.1-dev htop git virtualbox virtualbox-ose-dkms linux-headers-generic linux-headers-3.5.0-17-generic -y && sudo gem install bundler --no-ri --no-rdoc -v 1.2.5"
 vagrant_ssh "sudo dkms install virtualbox/4.1.18"
 vagrant_ssh "sudo service virtualbox start"
+
+# Ensure the machine can boot properly after upgrades and dependencies have been installed
+sh 'vagrant reload'
+
+# Allow gems to be installed on vagrant user home avoiding "sudo"s
+# Tks to http://wiki.railsplayground.com/railsplayground/show/How+to+install+gems+and+non+root+user
+vagrant_ssh 'mkdir -p ~/gems'
+vagrant_ssh "cat << EOF >> ~/.profile
+export GEM_HOME=$HOME/gems
+export GEM_PATH=$HOME/gems:/var/lib/gems/1.9.1
+export PATH=$PATH:$HOME/gems/bin
+EOF"
+vagrant_ssh "cat << EOF > .gemrc
+---
+:verbose: true
+gem: --no-ri --no-rdoc
+:update_sources: true
+:sources:
+- http://gems.rubyforge.org
+- http://gems.github.com
+:backtrace: false
+:bulk_threshold: 1000
+:benchmark: false
+gemhome: $HOME/gems
+gempath:
+- $HOME/gems
+- /usr/local/lib/ruby/gems/1.8
+EOF"
 
 # Backup rinetd config
 vagrant_ssh "cp /etc/rinetd.conf /vagrant/cache/rinetd.conf"
@@ -95,8 +117,9 @@ vagrant_ssh 'sudo chown vagrant:vagrant /etc/rinetd.conf'
 vagrant_ssh 'cd /vagrant && bundle && cd /vagrant/dev && bundle'
 
 # Setup vagrant default ssh key
-vagrant_keys_path = '$(cd /vagrant && bundle show vagrant)/keys'
-vagrant_ssh "cp #{vagrant_keys_path}/vagrant ~/.ssh/id_rsa && cp #{vagrant_keys_path}/vagrant.pub ~/.ssh/id_rsa.pub && chmod 600 ~/.ssh/id_rsa"
+# FIXME: This is wrong
+vagrant_keys_path = '~/gems/bundler/gems/vagrant-803269f72917/keys'
+vagrant_ssh "cd /vagrant && mkdir -p ~/.ssh && cp #{vagrant_keys_path}/vagrant ~/.ssh/id_rsa && cp #{vagrant_keys_path}/vagrant.pub ~/.ssh/id_rsa.pub && chmod 600 ~/.ssh/id_rsa"
 
 # Setup lxc cache
 vagrant_ssh "sudo mkdir -p /var/cache/lxc/cloud-quantal && sudo cp /vagrant/cache/#{IMAGE_NAME} /var/cache/lxc/cloud-quantal/#{IMAGE_NAME}"
