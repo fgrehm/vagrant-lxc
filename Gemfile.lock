@@ -11,6 +11,11 @@ GIT
       net-scp (~> 1.0.4)
       net-ssh (~> 2.2.2)
 
+PATH
+  remote: .
+  specs:
+    vagrant-lxc (0.0.1)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -69,3 +74,4 @@ DEPENDENCIES
   rb-inotify
   rspec
   vagrant!
+  vagrant-lxc!
