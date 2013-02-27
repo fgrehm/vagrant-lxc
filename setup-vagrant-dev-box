@@ -58,6 +58,9 @@ end
 # Cache development dependencies
 `mkdir -p cache`
 
+# Fetches vagrant submodule
+`git submodule update --init`
+
 # Cache container image between vagrant box destructions
 download "#{IMAGE_ROOT}/#{IMAGE_NAME}", IMAGE_NAME
 
@@ -117,9 +120,8 @@ vagrant_ssh 'sudo chown vagrant:vagrant /etc/rinetd.conf'
 vagrant_ssh 'cd /vagrant && bundle && cd /vagrant/dev && bundle'
 
 # Setup vagrant default ssh key
-# FIXME: This is wrong
-vagrant_keys_path = '~/gems/bundler/gems/vagrant-803269f72917/keys'
-vagrant_ssh "cd /vagrant && mkdir -p ~/.ssh && cp #{vagrant_keys_path}/vagrant ~/.ssh/id_rsa && cp #{vagrant_keys_path}/vagrant.pub ~/.ssh/id_rsa.pub && chmod 600 ~/.ssh/id_rsa"
+vagrant_keys_path = '/vagrant/vagrant/keys'
+vagrant_ssh "mkdir -p ~/.ssh && cd /vagrant && cp #{vagrant_keys_path}/vagrant ~/.ssh/id_rsa && cp #{vagrant_keys_path}/vagrant.pub ~/.ssh/id_rsa.pub && chmod 600 ~/.ssh/id_rsa"
 
 # Setup lxc cache
 vagrant_ssh "sudo mkdir -p /var/cache/lxc/cloud-quantal && sudo cp /vagrant/cache/#{IMAGE_NAME} /var/cache/lxc/cloud-quantal/#{IMAGE_NAME}"

@@ -5,5 +5,5 @@ end
 
 source "https://rubygems.org"
 
-gem 'vagrant',     github: 'mitchellh/vagrant'
+gem 'vagrant',     path: '../vagrant'
 gem 'vagrant-lxc', path: '../'

@@ -1,6 +1,10 @@
-GIT
-  remote: git://github.com/mitchellh/vagrant.git
-  revision: 803269f7291719715011c5c76d66e20101f7af50
+PATH
+  remote: .
+  specs:
+    vagrant-lxc (0.0.1)
+
+PATH
+  remote: ./vagrant
   specs:
     vagrant (1.1.0.dev)
       childprocess (~> 0.3.7)
@@ -10,11 +14,6 @@ GIT
       log4r (~> 1.1.9)
       net-scp (~> 1.0.4)
       net-ssh (~> 2.2.2)
-
-PATH
-  remote: .
-  specs:
-    vagrant-lxc (0.0.1)
 
 GEM
   remote: https://rubygems.org/
@@ -34,7 +33,7 @@ GEM
     guard-rspec (2.4.1)
       guard (>= 1.1)
       rspec (~> 2.11)
-    i18n (0.6.1)
+    i18n (0.6.2)
     json (1.6.8)
     listen (0.7.3)
     log4r (1.1.10)

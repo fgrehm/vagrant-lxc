@@ -7,7 +7,7 @@ end
 
 gemspec
 
-gem 'vagrant', github: 'mitchellh/vagrant'
+gem 'vagrant', path: './vagrant'
 gem 'rake'
 gem 'net-ssh'
 gem 'rspec'
