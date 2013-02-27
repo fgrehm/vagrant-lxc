@@ -1,47 +1,7 @@
 # vagrant-lxc
 
-Highly experimental, soon to come, Linux Containers support for the unreleased Vagrant 1.1
-
-
-## WARNING
-
-Please keep in mind that this is not even alpha software and things might go wrong.
-Although I'm brave enough to use it on my physical machine, its recommended that you
-try it out on the Vagrant dev box ;)
-
-
-## Development
-
-On your host:
-
-```terminal
-./setup-vagrant-dev-box
-vagrant ssh
-```
-
-*NOTE: This takes around 12 minutes on a 15mb connection after the [base vagrant box](https://github.com/fgrehm/vagrant-lxc/blob/master/Vagrantfile#L5-L6)
-and ubuntu [lxc cloud img](https://github.com/fgrehm/vagrant-lxc/blob/master/setup-vagrant-dev-box#L8-L9)
-have been downloaded*
-
-On the guest machine:
-
-```terminal
-mkdir /tmp/vagrant-lxc
-cp /vagrant/config.yml.sample /tmp/vagrant-lxc/config.yml
-cd /tmp/vagrant-lxc
-/vagrant/lib/provider up
-/vagrant/lib/provider ssh
-```
-
-
-## Troubleshooting
-
-If your container / dev box start acting weird, run `vagrant reload` to see if
-things get back to normal.
-
-In case `vagrant reload` doesn't work, restore the VirtualBox snapshot that was
-created automagically right after `./setup-vagrant-dev-box` finished by running
-the same script again and selecting the `[r]estore snapshot` option when asked.
+Highly experimental, soon to come, Linux Containers support for the unreleased
+Vagrant 1.1. More information coming out soon...
 
 
 ## Contributing
