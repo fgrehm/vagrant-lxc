@@ -78,7 +78,7 @@ vagrant_ssh 'sudo sed -i -e "s/be.archive/br.archive/g" /etc/apt/sources.list'
 vagrant_ssh "sudo apt-get update && sudo apt-get upgrade -y"
 
 # Install dependencies
-vagrant_ssh "sudo apt-get install lxc rinetd libffi-dev bsdtar libffi-ruby ruby1.9.1-dev htop git virtualbox virtualbox-ose-dkms linux-headers-generic linux-headers-3.5.0-17-generic -y && sudo gem install bundler --no-ri --no-rdoc -v 1.2.5"
+vagrant_ssh "sudo apt-get install lxc rinetd libffi-dev bsdtar exuberant-ctags libffi-ruby ruby1.9.1-dev htop git virtualbox virtualbox-ose-dkms linux-headers-generic linux-headers-3.5.0-17-generic -y && sudo gem install bundler --no-ri --no-rdoc -v 1.2.5"
 vagrant_ssh "sudo dkms install virtualbox/4.1.18"
 vagrant_ssh "sudo service virtualbox start"
 

@@ -2,4 +2,8 @@ raise 'This Rakefile is meant to be used from the dev box' unless ENV['USER'] ==
 
 Dir['./tasks/**/*.rake'].each { |f| load f }
 
-task :default => :spec
+begin
+  require 'rspec/core/rake_task'
+  RSpec::Core::RakeTask.new(:spec)
+  task :default => :coverage
+rescue LoadError; end

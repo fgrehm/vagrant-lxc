@@ -17,5 +17,7 @@ tmp
 _yardoc
 doc/
 
+/gems.tags
+
 .vagrant
 /cache
