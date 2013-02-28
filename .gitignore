@@ -21,3 +21,5 @@ doc/
 
 .vagrant
 /cache
+
+/dummy-ubuntu-cloudimg.box
