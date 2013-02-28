@@ -1,3 +1,4 @@
+require "vagrant-lxc/actions"
 require "vagrant-lxc/machine_state"
 
 require "log4r"
@@ -9,6 +10,16 @@ module Vagrant
       def initialize(machine)
         @logger  = Log4r::Logger.new("vagrant::provider::lxc")
         @machine = machine
+      end
+
+      # @see Vagrant::Plugin::V1::Provider#action
+      def action(name)
+        # Attempt to get the action method from the Action class if it
+        # exists, otherwise return nil to show that we don't support the
+        # given action.
+        action_method = "action_#{name}"
+        return LXC::Actions.send(action_method) if LXC::Actions.respond_to?(action_method)
+        nil
       end
 
       def state
