@@ -17,5 +17,9 @@ tmp
 _yardoc
 doc/
 
+/gems.tags
+
 .vagrant
 /cache
+
+/dummy-ubuntu-cloudimg.box
