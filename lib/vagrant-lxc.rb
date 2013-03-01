@@ -1,7 +1,8 @@
 require "vagrant-lxc/version"
 
+require "vagrant-lxc/plugin"
+
 module Vagrant
   module LXC
-    # Your code goes here...
   end
 end
