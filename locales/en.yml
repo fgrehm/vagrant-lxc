@@ -1,3 +1,8 @@
 en:
   vagrant:
     errors:
+      lxc_execute_error: |-
+        There was an error executing %{command}
+
+        For more information on the failure, enable detailed logging by setting
+        the environment variable VAGRANT_LOG to DEBUG.

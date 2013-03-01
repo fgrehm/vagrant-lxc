@@ -166,8 +166,7 @@ module Vagrant
       class Create < BaseAction
         def call(env)
           puts "TODO: Create container"
-          env[:machine].id = 'TODO-set-a-proper-machine-id' unless env[:machine].id
-          env[:machine].provider.container.create
+          env[:machine].id = env[:machine].provider.container.create
           @app.call env
         end
       end
