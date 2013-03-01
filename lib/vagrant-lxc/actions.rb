@@ -91,7 +91,7 @@ module Vagrant
               # TODO: b2.use Vagrant::Action::Builtin::GracefulHalt, :poweroff, :running
               unless env[:machine].state.off?
                 puts 'TODO: Halt container using Vagrant::Action::Builtin::GracefulHalt'
-                env[:machine].state.update!(:poweroff)
+                env[:machine].provider.container.halt
               end
             else
               b2.use VagrantPlugins::ProviderVirtualBox::Action::MessageNotCreated
@@ -167,23 +167,22 @@ module Vagrant
         def call(env)
           puts "TODO: Create container"
           env[:machine].id = 'TODO-set-a-proper-machine-id' unless env[:machine].id
+          env[:machine].provider.container.create
           @app.call env
         end
       end
 
       class Destroy < BaseAction
         def call(env)
-          puts "TODO: Destroy container"
           env[:machine].id = nil
-          env[:machine].state.update!(:not_created)
+          env[:machine].provider.container.destroy
           @app.call env
         end
       end
 
       class Boot < BaseAction
         def call(env)
-          puts 'TODO: Start container'
-          env[:machine].state.update!(:running)
+          env[:machine].provider.container.start
           @app.call env
         end
       end
