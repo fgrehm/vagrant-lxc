@@ -30,45 +30,41 @@ describe Vagrant::LXC::Container do
   end
 
   describe 'guard for container state' do
-    let(:last_command) { @last_command }
     let(:machine_id)   { 'random-machine-id' }
     let(:machine)      { fire_double('Vagrant::Machine', id: machine_id) }
 
     before do
-      subject.stub(:lxc) do |*cmds|
-        @last_command = cmds.join(' ')
-        mock(exit_code: 0, stdout: '')
-      end
+      subject.stub :lxc
       subject.wait_until :running
     end
 
-    it 'runs lxc-wait with the machine id' do
-      last_command.should include "--name #{machine_id}"
-    end
-
-    it 'runs lxc-wait with upcased state' do
-      last_command.should include "--state RUNNING"
+    it 'runs lxc-wait with the machine id and upcased state' do
+      subject.should have_received(:lxc).with(
+        :wait,
+        '--name', machine_id,
+        '--state', 'RUNNING'
+      )
     end
   end
 
   describe 'creation' do
-    let(:last_command)   { @last_command }
-    let(:new_machine_id) { 'random-machine-id' }
+    let(:new_machine_id)  { 'random-machine-id' }
+    let(:public_key_path) { Vagrant.source_root.join('..', 'keys', 'vagrant.pub').expand_path.to_s }
 
     before do
-      subject.stub(:lxc) do |*cmds|
-        @last_command = cmds.join(' ')
-        mock(exit_code: 0, stdout: '')
-      end
+      subject.stub(:lxc)
       SecureRandom.stub(hex: new_machine_id)
       subject.create
     end
 
     it 'calls lxc-create with the right arguments' do
-      last_command.should =~ /^create/
-      last_command.should include "--name #{new_machine_id}"
-      last_command.should include "--template ubuntu-cloud"
-      last_command.should =~ /\-\- \-S (\w|\/|\.)+\/id_rsa\.pub$/
+      subject.should have_received(:lxc).with(
+        :create,
+        '--template', 'ubuntu-cloud',
+        '--name', new_machine_id,
+        '--',
+        '-S', public_key_path
+      )
     end
   end
 
@@ -82,7 +78,11 @@ describe Vagrant::LXC::Container do
     end
 
     it 'calls lxc-start with the right arguments' do
-      subject.should have_received(:lxc).with(:start, '-d', '--name', machine.id)
+      subject.should have_received(:lxc).with(
+        :start,
+        '-d',
+        '--name', machine.id
+      )
     end
 
     it 'waits for container state to be RUNNING' do
