@@ -12,8 +12,6 @@ module Vagrant
       # Include this so we can use `Subprocess` more easily.
       include Vagrant::Util::Retryable
 
-      CONTAINER_STATE_FILE_PATH = '/tmp/vagrant-lxc-container-state-%<id>s'
-
       def initialize(machine)
         @machine = machine
         @logger  = Log4r::Logger.new("vagrant::provider::lxc::container")
@@ -54,16 +52,12 @@ module Vagrant
         File.open(state_file_path, 'w') { |f| f.print state }
       end
 
-      def read_state_from_file
-        if File.exists?(state_file_path)
-          File.read(state_file_path).to_sym
+      def state
+        if lxc(:info, '--name', @machine.id) =~ /^state:[^A-Z]+([A-Z]+)$/
+          $1.downcase.to_sym
         elsif @machine.id
           :unknown
         end
-      end
-
-      def state_file_path
-        CONTAINER_STATE_FILE_PATH % {id: @machine.id}
       end
 
       # TODO: Review code below this line, it was pretty much a copy and paste from VirtualBox base driver

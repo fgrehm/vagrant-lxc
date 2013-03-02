@@ -89,4 +89,25 @@ describe Vagrant::LXC::Container do
       subject.should have_received(:wait_until).with(:running)
     end
   end
+
+  describe 'state' do
+    let(:machine_id) { 'random-machine-id' }
+    let(:machine)    { fire_double('Vagrant::Machine', id: machine_id) }
+
+    before do
+      subject.stub(lxc: "state: STOPPED\npid: 2")
+    end
+
+    it 'calls lxc-info with the right arguments' do
+      subject.state
+      subject.should have_received(:lxc).with(
+        :info,
+        '--name', machine_id
+      )
+    end
+
+    it 'maps the output of lxc-info status out to a symbol' do
+      subject.state.should == :stopped
+    end
+  end
 end
