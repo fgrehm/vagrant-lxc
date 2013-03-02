@@ -16,6 +16,8 @@ module Vagrant
       # an UUID.
       class NotFound < StandardError; end
 
+      CONTAINERS_PATH = '/var/lib/lxc'
+
       attr_reader :name
 
       def initialize(name)
@@ -30,13 +32,26 @@ module Vagrant
       def create(metadata = {})
         # FIXME: Ruby 1.8 users dont have SecureRandom
         # @logger.info('Creating container...')
-        name       = SecureRandom.hex(6)
+        @name      = SecureRandom.hex(6)
         public_key = Vagrant.source_root.join('keys', 'vagrant.pub').expand_path.to_s
 
         # TODO: Handle errors
-        lxc :create, '--template', metadata['template-name'], '--name', name, '--', '-S', public_key, '-T', metadata['tar-cache']
+        lxc :create, '--template', metadata['template-name'], '--name', @name, '--', '-S', public_key, '-T', metadata['tar-cache']
 
-        @name = name
+        @name
+      end
+
+      def run_after_create_script(script)
+        private_key = Vagrant.source_root.join('keys', 'vagrant').expand_path.to_s
+
+        @logger.debug 'Running after-create-script from box metadata'
+        cmd = [
+          script,
+          '-r', "#{CONTAINERS_PATH}/#{@name}/rootfs",
+          '-k', private_key,
+          '-i', dhcp_ip
+        ]
+        execute *cmd
       end
 
       def start
