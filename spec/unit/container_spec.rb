@@ -175,4 +175,20 @@ describe Vagrant::LXC::Container do
       subject.state.should == :stopped
     end
   end
+
+  describe 'dhcp ip' do
+    let(:name) { 'random-container-name' }
+    let(:ip)   { "10.0.3.123" }
+
+    before do
+      subject.stub(:raw) {
+        mock(stdout: "#{ip}\n", exit_code: 0)
+      }
+    end
+
+    it 'digs the container ip from lxc dns server' do
+      subject.dhcp_ip.should == ip
+      subject.should have_received(:raw).with('dig', name, '@10.0.3.1', '+short')
+    end
+  end
 end
