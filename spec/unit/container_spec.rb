@@ -77,21 +77,24 @@ describe Vagrant::LXC::Container do
 
   describe 'creation' do
     let(:name)            { 'random-container-name' }
+    let(:template_name)   { 'template-name' }
+    let(:tar_cache_path)  { '/path/to/tar/cache' }
     let(:public_key_path) { Vagrant.source_root.join('keys', 'vagrant.pub').expand_path.to_s }
 
     before do
       subject.stub(:lxc)
       SecureRandom.stub(hex: name)
-      subject.create
+      subject.create 'template-name' => template_name, 'tar-cache' => tar_cache_path
     end
 
     it 'calls lxc-create with the right arguments' do
       subject.should have_received(:lxc).with(
         :create,
-        '--template', 'ubuntu-cloud',
+        '--template', template_name,
         '--name', name,
         '--',
-        '-S', public_key_path
+        '-S', public_key_path,
+        '-T', tar_cache_path
       )
     end
   end

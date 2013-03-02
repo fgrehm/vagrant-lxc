@@ -1,5 +1,7 @@
-# TODO: Split action classes into their own files
+require 'vagrant-lxc/action/base_action'
+require 'vagrant-lxc/action/handle_box_metadata'
 
+# TODO: Split action classes into their own files
 module Vagrant
   module LXC
     module Action
@@ -71,8 +73,8 @@ module Vagrant
           b.use Vagrant::Action::Builtin::Call, Created do |env, b2|
             # If the VM is NOT created yet, then do the setup steps
             if !env[:result]
+              b2.use HandleBoxMetadata
               b2.use Create
-              # We'll probably have other actions down here...
             end
           end
           b.use action_start
@@ -129,18 +131,6 @@ module Vagrant
         end
       end
 
-
-      class BaseAction
-        def initialize(app, env)
-          @app = app
-        end
-
-        def call(env)
-          puts "TODO: Implement #{self.class.name}"
-          @app.call(env)
-        end
-      end
-
       class Created < BaseAction
         def call(env)
           # Set the result to be true if the machine is created.
@@ -165,8 +155,8 @@ module Vagrant
 
       class Create < BaseAction
         def call(env)
-          puts "TODO: Create container"
-          env[:machine].id = env[:machine].provider.container.create
+          machine_id       = env[:machine].provider.container.create(env[:machine].box.metadata)
+          env[:machine].id = machine_id
           @app.call env
         end
       end

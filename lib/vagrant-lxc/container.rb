@@ -27,12 +27,15 @@ module Vagrant
         raise NotFound if @name && ! lxc(:ls).split("\n").include?(@name)
       end
 
-      def create
+      def create(metadata = {})
         # FIXME: Ruby 1.8 users dont have SecureRandom
-        name        = SecureRandom.hex(6)
-        public_key  = Vagrant.source_root.join('keys', 'vagrant.pub').expand_path.to_s
-        log, status = lxc :create, '--template', 'ubuntu-cloud', '--name', name, '--', '-S', public_key
+        # @logger.info('Creating container...')
+        name       = SecureRandom.hex(6)
+        public_key = Vagrant.source_root.join('keys', 'vagrant.pub').expand_path.to_s
+
         # TODO: Handle errors
+        lxc :create, '--template', metadata['template-name'], '--name', name, '--', '-S', public_key, '-T', metadata['tar-cache']
+
         @name = name
       end
 
