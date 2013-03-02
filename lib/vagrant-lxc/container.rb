@@ -22,7 +22,7 @@ module Vagrant
       def create
         # FIXME: Ruby 1.8 users dont have SecureRandom
         machine_id  = SecureRandom.hex(6)
-        public_key  = Vagrant.source_root.join('../keys/vagrant.pub').expand_path.to_s
+        public_key  = Vagrant.source_root.join('keys', 'vagrant.pub').expand_path.to_s
         log, status = lxc :create, '--template', 'ubuntu-cloud', '--name', machine_id, '--', '-S', public_key
         # TODO: Handle errors
         machine_id

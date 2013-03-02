@@ -49,7 +49,7 @@ describe Vagrant::LXC::Container do
 
   describe 'creation' do
     let(:new_machine_id)  { 'random-machine-id' }
-    let(:public_key_path) { Vagrant.source_root.join('..', 'keys', 'vagrant.pub').expand_path.to_s }
+    let(:public_key_path) { Vagrant.source_root.join('keys', 'vagrant.pub').expand_path.to_s }
 
     before do
       subject.stub(:lxc)
