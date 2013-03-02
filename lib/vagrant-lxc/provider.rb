@@ -45,6 +45,18 @@ module Vagrant
         nil
       end
 
+      # Returns the SSH info for accessing the Container.
+      def ssh_info
+        # If the Container is not created then we cannot possibly SSH into it, so
+        # we return nil.
+        return nil if state == :not_created
+
+        {
+          :host => @container.dhcp_ip,
+          :port => 22 # @driver.ssh_port(@machine.config.ssh.guest_port)
+        }
+      end
+
       def state
         state_id = nil
         state_id = :not_created if !@container.name
