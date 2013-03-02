@@ -22,13 +22,12 @@ module Vagrant
       def create
         # FIXME: Ruby 1.8 users dont have SecureRandom
         machine_id  = SecureRandom.hex(6)
-        log, status = lxc(:create, {'--template' => 'ubuntu-cloud', '--name' => machine_id}, {'-S' => '/home/vagrant/.ssh/id_rsa.pub'})
+        log, status = lxc :create, '--template', 'ubuntu-cloud', '--name', machine_id, '--', '-S', '/home/vagrant/.ssh/id_rsa.pub'
         machine_id
       end
 
       def start
-        puts 'TODO: Start container'
-        update!(:running)
+        lxc :start, '-d', '--name', @machine.id
       end
 
       def halt
@@ -40,19 +39,8 @@ module Vagrant
         File.delete(state_file_path) if state_file_path
       end
 
-      def state
-        # TODO: Grab the real machine state here
-        read_state_from_file
-      end
-
-      private
-
-      def lxc(command, params, extra = {})
-        params = params.map { |opt, val| "#{opt}='#{val}'" }
-        params << '--' if extra.any?
-        # Handles extra options passed to templates when using lxc-create
-        params << extra.map { |opt, val| "#{opt} #{val}" }
-        execute('sudo', "lxc-#{command}", *params.flatten)
+      def lxc(command, *args)
+        execute('sudo', "lxc-#{command}", *args)
       end
 
       def update!(state)
