@@ -96,6 +96,22 @@ describe Vagrant::LXC::Container do
     end
   end
 
+  describe 'destruction' do
+    let(:name) { 'container-name' }
+
+    before do
+      subject.stub(lxc: true)
+      subject.destroy
+    end
+
+    it 'calls lxc-create with the right arguments' do
+      subject.should have_received(:lxc).with(
+        :destroy,
+        '--name', name,
+      )
+    end
+  end
+
   describe 'start' do
     let(:name) { 'container-name' }
 

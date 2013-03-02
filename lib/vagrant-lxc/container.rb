@@ -47,8 +47,7 @@ module Vagrant
       end
 
       def destroy
-        puts "TODO: Destroy container"
-        File.delete(state_file_path) if state_file_path
+        lxc :destroy, '--name', @name
       end
 
       def wait_until(state)
