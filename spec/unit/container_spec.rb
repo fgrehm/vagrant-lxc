@@ -23,13 +23,35 @@ describe Vagrant::LXC::Container do
       args[1].should == 'lxc-command'
     end
 
-    it 'sends remaining arguments for execution' do
+    it 'pass through remaining arguments' do
       args[2].should == '--state'
       args[3].should == 'RUNNING'
     end
   end
 
-  describe 'create' do
+  describe 'guard for container state' do
+    let(:last_command) { @last_command }
+    let(:machine_id)   { 'random-machine-id' }
+    let(:machine)      { fire_double('Vagrant::Machine', id: machine_id) }
+
+    before do
+      subject.stub(:lxc) do |*cmds|
+        @last_command = cmds.join(' ')
+        mock(exit_code: 0, stdout: '')
+      end
+      subject.wait_until :running
+    end
+
+    it 'runs lxc-wait with the machine id' do
+      last_command.should include "--name #{machine_id}"
+    end
+
+    it 'runs lxc-wait with upcased state' do
+      last_command.should include "--state RUNNING"
+    end
+  end
+
+  describe 'creation' do
     let(:last_command)   { @last_command }
     let(:new_machine_id) { 'random-machine-id' }
 

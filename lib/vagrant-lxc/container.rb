@@ -39,6 +39,10 @@ module Vagrant
         File.delete(state_file_path) if state_file_path
       end
 
+      def wait_until(state)
+        lxc :wait, '--name', @machine.id, '--state', state.to_s.upcase
+      end
+
       def lxc(command, *args)
         execute('sudo', "lxc-#{command}", *args)
       end
