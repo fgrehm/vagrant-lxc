@@ -1,13 +1,7 @@
 source 'https://rubygems.org'
 
-unless ENV['USER'] == 'vagrant'
-  puts 'This Gemfile is meant to be used from the dev box'
-  exit 1
-end
-
 gemspec
 
-gem 'vagrant', path: './vagrant'
 gem 'rake'
 gem 'net-ssh'
 gem 'rspec'

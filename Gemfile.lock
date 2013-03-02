@@ -2,15 +2,10 @@ PATH
   remote: .
   specs:
     vagrant-lxc (0.0.1)
-
-PATH
-  remote: ./vagrant
-  specs:
-    vagrant (1.1.0.dev)
       childprocess (~> 0.3.7)
       erubis (~> 2.7.0)
       i18n (~> 0.6.0)
-      json (~> 1.6.6)
+      json (>= 1.5.1, < 1.8.0)
       log4r (~> 1.1.9)
       net-scp (~> 1.0.4)
       net-ssh (~> 2.2.2)
@@ -38,7 +33,7 @@ GEM
     guard-rspec (2.4.1)
       guard (>= 1.1)
       rspec (~> 2.11)
-    i18n (0.6.2)
+    i18n (0.6.3)
     json (1.6.8)
     listen (0.7.3)
     log4r (1.1.10)
@@ -91,5 +86,4 @@ DEPENDENCIES
   rspec-fire
   rspec-spies
   simplecov
-  vagrant!
   vagrant-lxc!

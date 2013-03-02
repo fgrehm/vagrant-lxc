@@ -1,8 +1,9 @@
 # FIXME: Ruby 1.8 users dont have SecureRandom
 require 'securerandom'
 
-require 'vagrant/util/retryable'
-require 'vagrant/util/subprocess'
+require "vendored_vagrant"
+require "vagrant/util/retryable"
+require "vagrant/util/subprocess"
 
 require "vagrant-lxc/errors"
 
