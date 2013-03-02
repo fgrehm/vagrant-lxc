@@ -6,14 +6,32 @@ require "log4r"
 
 module Vagrant
   module LXC
-    # DISCUSS: VirtualBox provider has a #machine_id_changed, do we need to handle it as well?
     class Provider < Vagrant.plugin("2", :provider)
       attr_reader :container
 
       def initialize(machine)
         @logger    = Log4r::Logger.new("vagrant::provider::lxc")
         @machine   = machine
-        @container = Container.new(@machine.id)
+
+        machine_id_changed
+      end
+
+      # If the machine ID changed, then we need to rebuild our underlying
+      # container.
+      def machine_id_changed
+        id = @machine.id
+
+        begin
+          @logger.debug("Instantiating the container for: #{id.inspect}")
+          @container = Container.new(id)
+          @container.validate!
+        rescue Container::NotFound
+          # The container doesn't exist, so we probably have a stale
+          # ID. Just clear the id out of the machine and reload it.
+          @logger.debug("Container not found! Clearing saved machine ID and reloading.")
+          id = nil
+          retry
+        end
       end
 
       # @see Vagrant::Plugin::V1::Provider#action
@@ -28,7 +46,11 @@ module Vagrant
       end
 
       def state
-        LXC::MachineState.new(@container.state)
+        state_id = nil
+        state_id = :not_created if !@container.name
+        state_id = @container.state if !state_id
+        state_id = :unknown if !state_id
+        LXC::MachineState.new(state_id)
       end
 
       def to_s

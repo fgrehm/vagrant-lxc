@@ -12,9 +12,19 @@ module Vagrant
       # Include this so we can use `Subprocess` more easily.
       include Vagrant::Util::Retryable
 
+      # This is raised if the container can't be found when initializing it with
+      # an UUID.
+      class NotFound < StandardError; end
+
+      attr_reader :name
+
       def initialize(name)
         @name   = name
         @logger = Log4r::Logger.new("vagrant::provider::lxc::container")
+      end
+
+      def validate!
+        raise NotFound if @name && ! lxc(:ls).split("\n").include?(@name)
       end
 
       def create
@@ -53,7 +63,7 @@ module Vagrant
       end
 
       def state
-        if lxc(:info, '--name', @name) =~ /^state:[^A-Z]+([A-Z]+)$/
+        if @name && lxc(:info, '--name', @name) =~ /^state:[^A-Z]+([A-Z]+)$/
           $1.downcase.to_sym
         elsif @name
           :unknown

@@ -7,6 +7,35 @@ describe Vagrant::LXC::Container do
   let(:name) { nil }
   subject { described_class.new(name) }
 
+  describe 'container name validation' do
+    let(:unknown_container) { described_class.new('unknown') }
+    let(:valid_container)   { described_class.new('valid') }
+    let(:new_container)     { described_class.new(nil) }
+
+    before do
+      unknown_container.stub(lxc: 'valid')
+      valid_container.stub(lxc: 'valid')
+    end
+
+    it 'raises a NotFound error if an unknown container name gets provided' do
+      expect {
+        unknown_container.validate!
+      }.to raise_error(Vagrant::LXC::Container::NotFound)
+    end
+
+    it 'does not raise a NotFound error if a valid container name gets provided' do
+      expect {
+        valid_container.validate!
+      }.to_not raise_error(Vagrant::LXC::Container::NotFound)
+    end
+
+    it 'does not raise a NotFound error if nil is provider as name' do
+      expect {
+        new_container.validate!
+      }.to_not raise_error(Vagrant::LXC::Container::NotFound)
+    end
+  end
+
   describe 'lxc commands execution' do
     let(:args) { @args }
 
