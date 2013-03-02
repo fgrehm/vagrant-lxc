@@ -22,4 +22,5 @@ doc/
 .vagrant
 /cache
 
-/dummy-ubuntu-cloudimg.box
+/boxes/**/*.tar.gz
+/boxes/output/

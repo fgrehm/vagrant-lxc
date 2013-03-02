@@ -5,12 +5,11 @@ raise 'You should not run this script from the dev box' if ENV['USER'] == 'vagra
 require 'bundler'
 require 'json'
 
-IMAGE_ROOT   = 'https://cloud-images.ubuntu.com/releases/quantal/release-20130206'
-IMAGE_NAME   = 'ubuntu-12.10-server-cloudimg-amd64-root.tar.gz'
-VAGRANT_REPO = 'https://raw.github.com/mitchellh/vagrant/master'
+IMAGE_ROOT = 'https://cloud-images.ubuntu.com/releases/quantal/release-20130206'
+IMAGE_NAME = 'ubuntu-12.10-server-cloudimg-amd64-root.tar.gz'
 
 def download(source, destination)
-  destination = "#{File.dirname __FILE__}/cache/#{destination}"
+  destination = "#{File.dirname __FILE__}/#{destination}"
   return if File.exists?(destination)
 
   sh "wget #{source} -O #{destination}"
@@ -61,8 +60,8 @@ end
 # Fetches vagrant submodule
 `git submodule update --init`
 
-# Cache container image between vagrant box destructions
-download "#{IMAGE_ROOT}/#{IMAGE_NAME}", IMAGE_NAME
+# Download container image for building the base ubuntu-cloud box
+download "#{IMAGE_ROOT}/#{IMAGE_NAME}", "boxes/ubuntu-cloud/#{IMAGE_NAME}"
 
 # Start vagrant
 sh 'vagrant up'

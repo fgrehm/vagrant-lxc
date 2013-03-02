@@ -1,0 +1,7 @@
+{
+	"provider":            "lxc",
+	"vagrant-lxc-version": "0.0.1",
+	"template-name":       "lxc-ubuntu-cloud",
+	"after-create-script": "set-vagrant-user.sh",
+	"tar-cache":           "ubuntu-12.10-server-cloudimg-amd64-root.tar.gz"
+}
