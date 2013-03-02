@@ -17,9 +17,14 @@ module Vagrant
           metadata      = box.metadata
           template_name = metadata['template-name']
 
+          after_create  = metadata['after-create-script'] ?
+            box.directory.join(metadata['after-create-script']).to_s :
+            nil
+
           metadata.merge!(
-            'template-name' => "vagrant-#{box.name}-#{template_name}",
-            'tar-cache'     => box.directory.join(metadata['tar-cache']).to_s
+            'template-name'       => "vagrant-#{box.name}-#{template_name}",
+            'tar-cache'           => box.directory.join(metadata['tar-cache']).to_s,
+            'after-create-script' => after_create
           )
 
           # Prepends "lxc-" to the template file so that `lxc-create` is able to find it

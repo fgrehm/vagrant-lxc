@@ -5,7 +5,8 @@ require 'vagrant-lxc/action/handle_box_metadata'
 describe Vagrant::LXC::Action::HandleBoxMetadata do
   let(:tar_cache)     { 'template.zip' }
   let(:template_name) { 'ubuntu-lts' }
-  let(:metadata)      { {'template-name' => template_name, 'tar-cache' => tar_cache} }
+  let(:after_create)  { 'setup-vagrant-user.sh' }
+  let(:metadata)      { {'template-name' => template_name, 'tar-cache' => tar_cache, 'after-create-script' => after_create} }
   let(:box)						{ mock(:box, name: 'box-name', metadata: metadata, directory: Pathname.new('/path/to/box')) }
   let(:machine)       { mock(:machine, box: box) }
   let(:app)           { mock(:app, call: true) }
@@ -20,6 +21,10 @@ describe Vagrant::LXC::Action::HandleBoxMetadata do
 
   it 'prepends box directory to tar-cache' do
     metadata['tar-cache'].should == "#{box.directory.to_s}/#{tar_cache}"
+  end
+
+  it 'prepends box directory to after-create-script' do
+    metadata['after-create-script'].should == "#{box.directory.to_s}/#{after_create}"
   end
 
   it 'prepends vagrant and box name to template-name' do
