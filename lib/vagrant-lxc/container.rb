@@ -28,6 +28,7 @@ module Vagrant
 
       def start
         lxc :start, '-d', '--name', @machine.id
+        wait_until :running
       end
 
       def halt

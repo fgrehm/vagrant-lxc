@@ -15,7 +15,7 @@ describe Vagrant::LXC::Container do
       subject.lxc :command, '--state', 'RUNNING'
     end
 
-    it 'prepends sudo for execution' do
+    it 'prepends sudo' do
       args[0].should == 'sudo'
     end
 
@@ -73,22 +73,20 @@ describe Vagrant::LXC::Container do
   end
 
   describe 'start' do
-    let(:last_command) { @last_command }
-    let(:machine_id)   { 'random-machine-id' }
-    let(:machine)      { fire_double('Vagrant::Machine', id: machine_id) }
+    let(:machine_id) { 'random-machine-id' }
+    let(:machine)    { fire_double('Vagrant::Machine', id: machine_id) }
 
     before do
-      subject.stub(:lxc) do |*cmds|
-        @last_command = cmds.join(' ')
-        mock(exit_code: 0, stdout: '')
-      end
+      subject.stub(lxc: true, wait_until: true)
       subject.start
     end
 
     it 'calls lxc-start with the right arguments' do
-      last_command.should =~ /^start/
-      last_command.should include "--name #{machine_id}"
-      last_command.should include '-d'
+      subject.should have_received(:lxc).with(:start, '-d', '--name', machine.id)
+    end
+
+    it 'waits for container state to be RUNNING' do
+      subject.should have_received(:wait_until).with(:running)
     end
   end
 end
