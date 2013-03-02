@@ -132,6 +132,52 @@ module Vagrant
         end
       end
 
+      # This is the action that will exec into an SSH shell.
+      def self.action_ssh
+        Vagrant::Action::Builder.new.tap do |b|
+          b.use CheckLXC
+          b.use CheckCreated
+          # b.use CheckAccessible
+          b.use CheckRunning
+          b.use Vagrant::Action::Builtin::SSHExec
+        end
+      end
+
+      # This is the action that will run a single SSH command.
+      def self.action_ssh_run
+        Vagrant::Action::Builder.new.tap do |b|
+          b.use CheckLXC
+          b.use CheckCreated
+          # b.use CheckAccessible
+          b.use CheckRunning
+          b.use Vagrant::Action::Builtin::SSHRun
+        end
+      end
+
+      class CheckCreated < BaseAction
+        def call(env)
+          unless env[:machine].state.created?
+            raise Vagrant::Errors::VMNotCreatedError
+          end
+
+          # Call the next if we have one (but we shouldn't, since this
+          # middleware is built to run with the Call-type middlewares)
+          @app.call(env)
+        end
+      end
+
+      class CheckRunning < BaseAction
+        def call(env)
+          unless env[:machine].state.running?
+            raise Vagrant::Errors::VMNotCreatedError
+          end
+
+          # Call the next if we have one (but we shouldn't, since this
+          # middleware is built to run with the Call-type middlewares)
+          @app.call(env)
+        end
+      end
+
       class Created < BaseAction
         def call(env)
           # Set the result to be true if the machine is created.
