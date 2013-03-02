@@ -78,6 +78,7 @@ module Vagrant
             end
           end
           b.use action_start
+          b.use AfterCreate
         end
       end
 
@@ -155,8 +156,18 @@ module Vagrant
 
       class Create < BaseAction
         def call(env)
-          machine_id       = env[:machine].provider.container.create(env[:machine].box.metadata)
-          env[:machine].id = machine_id
+          machine_id         = env[:machine].provider.container.create(env[:machine].box.metadata)
+          env[:machine].id   = machine_id
+          env[:just_created] = true
+          @app.call env
+        end
+      end
+
+      class AfterCreate < BaseAction
+        def call(env)
+          if env[:just_created] && (script = env[:machine].box.metadata['after-create-script'])
+            env[:machine].provider.container.run_after_create_script script
+          end
           @app.call env
         end
       end
