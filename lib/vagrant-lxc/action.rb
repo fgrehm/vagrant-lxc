@@ -1,8 +1,10 @@
-# TODO: Split action classes into their own files
+require 'vagrant-lxc/action/base_action'
+require 'vagrant-lxc/action/handle_box_metadata'
 
+# TODO: Split action classes into their own files
 module Vagrant
   module LXC
-    module Actions
+    module Action
       # This action is responsible for reloading the machine, which
       # brings it down, sucks in new configuration, and brings the
       # machine back up with the new configuration.
@@ -71,11 +73,12 @@ module Vagrant
           b.use Vagrant::Action::Builtin::Call, Created do |env, b2|
             # If the VM is NOT created yet, then do the setup steps
             if !env[:result]
+              b2.use HandleBoxMetadata
               b2.use Create
-              # We'll probably have other actions down here...
             end
           end
           b.use action_start
+          b.use AfterCreate
         end
       end
 
@@ -129,14 +132,48 @@ module Vagrant
         end
       end
 
-
-      class BaseAction
-        def initialize(app, env)
-          @app = app
+      # This is the action that will exec into an SSH shell.
+      def self.action_ssh
+        Vagrant::Action::Builder.new.tap do |b|
+          b.use CheckLXC
+          b.use CheckCreated
+          # b.use CheckAccessible
+          b.use CheckRunning
+          b.use Vagrant::Action::Builtin::SSHExec
         end
+      end
 
+      # This is the action that will run a single SSH command.
+      def self.action_ssh_run
+        Vagrant::Action::Builder.new.tap do |b|
+          b.use CheckLXC
+          b.use CheckCreated
+          # b.use CheckAccessible
+          b.use CheckRunning
+          b.use Vagrant::Action::Builtin::SSHRun
+        end
+      end
+
+      class CheckCreated < BaseAction
         def call(env)
-          puts "TODO: Implement #{self.class.name}"
+          unless env[:machine].state.created?
+            raise Vagrant::Errors::VMNotCreatedError
+          end
+
+          # Call the next if we have one (but we shouldn't, since this
+          # middleware is built to run with the Call-type middlewares)
+          @app.call(env)
+        end
+      end
+
+      class CheckRunning < BaseAction
+        def call(env)
+          unless env[:machine].state.running?
+            raise Vagrant::Errors::VMNotCreatedError
+          end
+
+          # Call the next if we have one (but we shouldn't, since this
+          # middleware is built to run with the Call-type middlewares)
           @app.call(env)
         end
       end
@@ -165,17 +202,26 @@ module Vagrant
 
       class Create < BaseAction
         def call(env)
-          puts "TODO: Create container"
-          env[:machine].id = 'TODO-set-a-proper-machine-id' unless env[:machine].id
-          env[:machine].provider.container.create
+          machine_id         = env[:machine].provider.container.create(env[:machine].box.metadata)
+          env[:machine].id   = machine_id
+          env[:just_created] = true
+          @app.call env
+        end
+      end
+
+      class AfterCreate < BaseAction
+        def call(env)
+          if env[:just_created] && (script = env[:machine].box.metadata['after-create-script'])
+            env[:machine].provider.container.run_after_create_script script
+          end
           @app.call env
         end
       end
 
       class Destroy < BaseAction
         def call(env)
-          env[:machine].id = nil
           env[:machine].provider.container.destroy
+          env[:machine].id = nil
           @app.call env
         end
       end

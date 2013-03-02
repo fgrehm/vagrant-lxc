@@ -29,8 +29,8 @@ describe Vagrant::LXC::MachineState do
     it { should_not be_off }
   end
 
-  context 'when state id is :poweroff' do
-    subject { described_class.new(:poweroff) }
+  context 'when state id is :stopped' do
+    subject { described_class.new(:stopped) }
 
     it { should be_created }
     it { should be_off }

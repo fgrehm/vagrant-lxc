@@ -5,6 +5,7 @@ module UnitExampleGroup
       Object.any_instance.stub(:system) { |*args, &block|
         UnitExampleGroup.prevent_system_calls(*args, &block)
       }
+      require 'vagrant/util/subprocess'
       Vagrant::Util::Subprocess.stub(:execute) { |*args, &block|
         UnitExampleGroup.prevent_system_calls(*args, &block)
       }

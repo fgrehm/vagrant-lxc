@@ -1,7 +1,7 @@
 module Vagrant
   module LXC
     class MachineState < Vagrant::MachineState
-      CREATED_STATES = %w( running poweroff ).map!(&:to_sym)
+      CREATED_STATES = %w( running stopped ).map!(&:to_sym)
 
       def initialize(state_id)
         short = state_id.to_s.gsub("_", " ")
@@ -14,7 +14,7 @@ module Vagrant
       end
 
       def off?
-        self.id == :poweroff
+        self.id == :stopped
       end
 
       def running?
