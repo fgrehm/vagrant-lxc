@@ -1,8 +1,6 @@
 # A sample Guardfile
 # More info at https://github.com/guard/guard#readme
 
-raise 'You should start guard from the dev box!' unless ENV['USER'] == 'vagrant'
-
 guard 'bundler' do
   watch('Gemfile')
   watch(/^.+\.gemspec/)
