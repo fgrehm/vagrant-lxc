@@ -42,7 +42,8 @@ module Vagrant
       end
 
       def halt
-        update!(:poweroff)
+        lxc :shutdown, '--name', @name
+        wait_until :stopped
       end
 
       def destroy

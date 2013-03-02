@@ -117,6 +117,26 @@ describe Vagrant::LXC::Container do
     end
   end
 
+  describe 'halt' do
+    let(:name) { 'random-container-name' }
+
+    before do
+      subject.stub(lxc: true, wait_until: true)
+      subject.halt
+    end
+
+    it 'calls lxc-shutdown with the right arguments' do
+      subject.should have_received(:lxc).with(
+        :shutdown,
+        '--name', name
+      )
+    end
+
+    it 'waits for container state to be STOPPED' do
+      subject.should have_received(:wait_until).with(:stopped)
+    end
+  end
+
   describe 'state' do
     let(:name) { 'random-container-name' }
 
