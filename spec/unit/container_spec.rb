@@ -128,7 +128,7 @@ describe Vagrant::LXC::Container do
       subject.destroy
     end
 
-    it 'calls lxc-create with the right arguments' do
+    it 'calls lxc-destroy with the right arguments' do
       subject.should have_received(:lxc).with(
         :destroy,
         '--name', name,
