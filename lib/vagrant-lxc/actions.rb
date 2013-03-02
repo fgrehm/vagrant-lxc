@@ -173,8 +173,8 @@ module Vagrant
 
       class Destroy < BaseAction
         def call(env)
-          env[:machine].id = nil
           env[:machine].provider.container.destroy
+          env[:machine].id = nil
           @app.call env
         end
       end
