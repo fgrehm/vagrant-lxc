@@ -13,7 +13,7 @@ module Vagrant
       def initialize(machine)
         @logger    = Log4r::Logger.new("vagrant::provider::lxc")
         @machine   = machine
-        @container = Container.new(@machine)
+        @container = Container.new(@machine.id)
       end
 
       # @see Vagrant::Plugin::V1::Provider#action

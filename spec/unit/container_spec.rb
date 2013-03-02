@@ -3,9 +3,9 @@ require 'unit_helper'
 require 'vagrant-lxc/container'
 
 describe Vagrant::LXC::Container do
-  # Default subject and machine for specs
-  let(:machine) { fire_double('Vagrant::Machine') }
-  subject { described_class.new(machine) }
+  # Default subject and container name for specs
+  let(:name) { nil }
+  subject { described_class.new(name) }
 
   describe 'lxc commands execution' do
     let(:args) { @args }
@@ -30,8 +30,7 @@ describe Vagrant::LXC::Container do
   end
 
   describe 'guard for container state' do
-    let(:machine_id)   { 'random-machine-id' }
-    let(:machine)      { fire_double('Vagrant::Machine', id: machine_id) }
+    let(:name) { 'random-container-name' }
 
     before do
       subject.stub :lxc
@@ -41,19 +40,19 @@ describe Vagrant::LXC::Container do
     it 'runs lxc-wait with the machine id and upcased state' do
       subject.should have_received(:lxc).with(
         :wait,
-        '--name', machine_id,
+        '--name', name,
         '--state', 'RUNNING'
       )
     end
   end
 
   describe 'creation' do
-    let(:new_machine_id)  { 'random-machine-id' }
+    let(:name)            { 'random-container-name' }
     let(:public_key_path) { Vagrant.source_root.join('keys', 'vagrant.pub').expand_path.to_s }
 
     before do
       subject.stub(:lxc)
-      SecureRandom.stub(hex: new_machine_id)
+      SecureRandom.stub(hex: name)
       subject.create
     end
 
@@ -61,7 +60,7 @@ describe Vagrant::LXC::Container do
       subject.should have_received(:lxc).with(
         :create,
         '--template', 'ubuntu-cloud',
-        '--name', new_machine_id,
+        '--name', name,
         '--',
         '-S', public_key_path
       )
@@ -69,8 +68,7 @@ describe Vagrant::LXC::Container do
   end
 
   describe 'start' do
-    let(:machine_id) { 'random-machine-id' }
-    let(:machine)    { fire_double('Vagrant::Machine', id: machine_id) }
+    let(:name) { 'container-name' }
 
     before do
       subject.stub(lxc: true, wait_until: true)
@@ -81,7 +79,7 @@ describe Vagrant::LXC::Container do
       subject.should have_received(:lxc).with(
         :start,
         '-d',
-        '--name', machine.id
+        '--name', name
       )
     end
 
@@ -91,8 +89,7 @@ describe Vagrant::LXC::Container do
   end
 
   describe 'state' do
-    let(:machine_id) { 'random-machine-id' }
-    let(:machine)    { fire_double('Vagrant::Machine', id: machine_id) }
+    let(:name) { 'random-container-name' }
 
     before do
       subject.stub(lxc: "state: STOPPED\npid: 2")
@@ -102,7 +99,7 @@ describe Vagrant::LXC::Container do
       subject.state
       subject.should have_received(:lxc).with(
         :info,
-        '--name', machine_id
+        '--name', name
       )
     end
 

@@ -12,22 +12,22 @@ module Vagrant
       # Include this so we can use `Subprocess` more easily.
       include Vagrant::Util::Retryable
 
-      def initialize(machine)
-        @machine = machine
-        @logger  = Log4r::Logger.new("vagrant::provider::lxc::container")
+      def initialize(name)
+        @name   = name
+        @logger = Log4r::Logger.new("vagrant::provider::lxc::container")
       end
 
       def create
         # FIXME: Ruby 1.8 users dont have SecureRandom
-        machine_id  = SecureRandom.hex(6)
+        name        = SecureRandom.hex(6)
         public_key  = Vagrant.source_root.join('keys', 'vagrant.pub').expand_path.to_s
-        log, status = lxc :create, '--template', 'ubuntu-cloud', '--name', machine_id, '--', '-S', public_key
+        log, status = lxc :create, '--template', 'ubuntu-cloud', '--name', name, '--', '-S', public_key
         # TODO: Handle errors
-        machine_id
+        @name = name
       end
 
       def start
-        lxc :start, '-d', '--name', @machine.id
+        lxc :start, '-d', '--name', @name
         wait_until :running
       end
 
@@ -41,7 +41,7 @@ module Vagrant
       end
 
       def wait_until(state)
-        lxc :wait, '--name', @machine.id, '--state', state.to_s.upcase
+        lxc :wait, '--name', @name, '--state', state.to_s.upcase
       end
 
       def lxc(command, *args)
@@ -53,9 +53,9 @@ module Vagrant
       end
 
       def state
-        if lxc(:info, '--name', @machine.id) =~ /^state:[^A-Z]+([A-Z]+)$/
+        if lxc(:info, '--name', @name) =~ /^state:[^A-Z]+([A-Z]+)$/
           $1.downcase.to_sym
-        elsif @machine.id
+        elsif @name
           :unknown
         end
       end
