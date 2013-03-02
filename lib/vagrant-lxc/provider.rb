@@ -1,4 +1,4 @@
-require "vagrant-lxc/actions"
+require "vagrant-lxc/action"
 require "vagrant-lxc/container"
 require "vagrant-lxc/machine_state"
 
@@ -41,7 +41,7 @@ module Vagrant
         # given action.
         action_method = "action_#{name}"
         # TODO: Rename to singular
-        return LXC::Actions.send(action_method) if LXC::Actions.respond_to?(action_method)
+        return LXC::Action.send(action_method) if LXC::Action.respond_to?(action_method)
         nil
       end
 

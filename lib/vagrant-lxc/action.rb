@@ -2,7 +2,7 @@
 
 module Vagrant
   module LXC
-    module Actions
+    module Action
       # This action is responsible for reloading the machine, which
       # brings it down, sucks in new configuration, and brings the
       # machine back up with the new configuration.
