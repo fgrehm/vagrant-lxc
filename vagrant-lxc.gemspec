@@ -6,11 +6,11 @@ require 'vagrant-lxc/version'
 Gem::Specification.new do |gem|
   gem.name          = "vagrant-lxc"
   gem.version       = Vagrant::LXC::VERSION
-  gem.authors       = ["TODO: Write your name"]
-  gem.email         = ["TODO: Write your email address"]
-  gem.description   = %q{TODO: Write a gem description}
-  gem.summary       = %q{TODO: Write a gem summary}
-  gem.homepage      = ""
+  gem.authors       = ["Fabio Rehm"]
+  gem.email         = ["fgrehm@gmail.com"]
+  gem.description   = %q{Linux Containers provider for Vagrant}
+  gem.summary       = gem.description
+  gem.homepage      = "https://github.com/fgrehm/vagrant-lxc"
 
   gem.files = `git ls-files`.split($/)
   gem.files << `cd vendor/vagrant && git ls-files`.split($/).map{|file| "vendor/vagrant/#{file}"}
