@@ -1,5 +1,3 @@
-require 'vagrant-lxc/action/base_action'
-
 module Vagrant
   module LXC
     module Action

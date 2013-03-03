@@ -1,5 +1,6 @@
 require 'unit_helper'
 
+require 'vagrant-lxc/action/base_action'
 require 'vagrant-lxc/action/handle_box_metadata'
 
 describe Vagrant::LXC::Action::HandleBoxMetadata do

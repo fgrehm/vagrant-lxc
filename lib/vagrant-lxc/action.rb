@@ -1,7 +1,15 @@
 require 'vagrant-lxc/action/base_action'
-require 'vagrant-lxc/action/handle_box_metadata'
 
-# TODO: Split action classes into their own files
+require 'vagrant-lxc/action/after_create'
+require 'vagrant-lxc/action/boot'
+require 'vagrant-lxc/action/check_created'
+require 'vagrant-lxc/action/check_running'
+require 'vagrant-lxc/action/create'
+require 'vagrant-lxc/action/created'
+require 'vagrant-lxc/action/destroy'
+require 'vagrant-lxc/action/handle_box_metadata'
+require 'vagrant-lxc/action/is_running'
+
 module Vagrant
   module LXC
     module Action
@@ -151,85 +159,6 @@ module Vagrant
           # b.use CheckAccessible
           b.use CheckRunning
           b.use Vagrant::Action::Builtin::SSHRun
-        end
-      end
-
-      class CheckCreated < BaseAction
-        def call(env)
-          unless env[:machine].state.created?
-            raise Vagrant::Errors::VMNotCreatedError
-          end
-
-          # Call the next if we have one (but we shouldn't, since this
-          # middleware is built to run with the Call-type middlewares)
-          @app.call(env)
-        end
-      end
-
-      class CheckRunning < BaseAction
-        def call(env)
-          unless env[:machine].state.running?
-            raise Vagrant::Errors::VMNotRunningError
-          end
-
-          # Call the next if we have one (but we shouldn't, since this
-          # middleware is built to run with the Call-type middlewares)
-          @app.call(env)
-        end
-      end
-
-      class Created < BaseAction
-        def call(env)
-          # Set the result to be true if the machine is created.
-          env[:result] = env[:machine].state.created?
-
-          # Call the next if we have one (but we shouldn't, since this
-          # middleware is built to run with the Call-type middlewares)
-          @app.call(env)
-        end
-      end
-
-      class IsRunning < BaseAction
-        def call(env)
-          # Set the result to be true if the machine is created.
-          env[:result] = env[:machine].state.running?
-
-          # Call the next if we have one (but we shouldn't, since this
-          # middleware is built to run with the Call-type middlewares)
-          @app.call(env)
-        end
-      end
-
-      class Create < BaseAction
-        def call(env)
-          machine_id         = env[:machine].provider.container.create(env[:machine].box.metadata)
-          env[:machine].id   = machine_id
-          env[:just_created] = true
-          @app.call env
-        end
-      end
-
-      class AfterCreate < BaseAction
-        def call(env)
-          if env[:just_created] && (script = env[:machine].box.metadata['after-create-script'])
-            env[:machine].provider.container.run_after_create_script script
-          end
-          @app.call env
-        end
-      end
-
-      class Destroy < BaseAction
-        def call(env)
-          env[:machine].provider.container.destroy
-          env[:machine].id = nil
-          @app.call env
-        end
-      end
-
-      class Boot < BaseAction
-        def call(env)
-          env[:machine].provider.container.start
-          @app.call env
         end
       end
 
