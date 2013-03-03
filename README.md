@@ -1,7 +1,119 @@
 # vagrant-lxc
 
 Highly experimental, soon to come, Linux Containers support for the unreleased
-Vagrant 1.1. More information coming out soon...
+Vagrant 1.1.
+
+Please refer to the [closed issues](https://github.com/fgrehm/vagrant-lxc/issues?labels=&milestone=&page=1&state=closed)
+to find out whats currently supported.
+
+
+## WARNING
+
+Please keep in mind that this is not even alpha software and things might go wrong.
+
+
+## Dependencies
+
+Just LXC as of now, which on Ubuntu 12.10 means:
+
+```
+sudo apt-get install lxc
+```
+
+
+## Current limitations that I can remember
+
+* Ruby >= 1.9.3 only, patches for 1.8.7 are welcome
+* There is no support for setting a static IP. I'm using
+  [LXC's built in dns server](lib/vagrant-lxc/container.rb#98) to determine
+  containers' IPs
+* No provisioning [yet](#16)
+* `sudo`s
+* plus a bunch of other [core features](https://github.com/fgrehm/vagrant-lxc/issues?labels=core&milestone=&page=1&state=open)
+
+
+## Usage
+
+For now you'll need to install the gem from sources:
+
+```
+git clone git://github.com/fgrehm/vagrant-lxc.git
+cd vagrant-lxc
+bundle install
+bundle exec rake install
+bundle exec rake boxes:build:ubuntu-cloud
+vagrant-lxc box add boxes/output/ubuntu-cloud.box lxc
+```
+
+Since Vagrant 1.1 has not been released yet and to avoid messing up with you
+current Vagrant installation, I've vendored Vagrant's sources from the master
+and made it available from [`vagrant-lxc`](bin/vagrant-lxc). So after `vagrant-lxc`
+gets installed, create a `Vagrantfile` like the one below and run `vagrant-lxc up --provider=lxc`:
+
+```ruby
+Vagrant.configure("2") do |config|
+  config.vm.box = "ubuntu-cloud"
+  config.vm.provider :lxc do |lxc|
+    # ... some lxc options that will come here soon ...
+  end
+end
+```
+
+If you don't trust me and believe that it will mess up with your current Vagrant
+and / or are afraid that something might go wrong with your machine, fire up the
+[same Vagrant VirtualBox machine I'm using for development](#using-virtualbox-for-development)
+to try things out and do the same as above. That might also get you up and running
+if you are working on a mac ;)
+
+
+## Development
+
+If you know what you'll be doing and want to develop from your physical machine,
+just sing that same old song:
+
+```
+git clone git://github.com/fgrehm/vagrant-lxc.git --recurse
+cd vagrant-lxc
+bundle install
+bundle exec rake boxes:build:ubuntu-cloud
+bundle exec rake # to run all specs
+```
+
+### Using VirtualBox for development
+
+I've also prepared a Vagrant 1.0 VirtualBox machine for development that you can
+get up and running with the [`setup-vagrant-dev-box`](setup-vagrant-dev-box)
+script. Feel free to use it :)
+
+```
+cp Vagrantfile.dev Vagrantfile
+./setup-vagrant-dev-box
+vagrant ssh
+```
+
+*NOTE: `setup-vagrant-dev-box` takes around 10 minutes on a 15mb connection
+after the [base vagrant box](Vagrantfile#L5) and ubuntu [lxc cloud img](setup-vagrant-dev-box#L12-L13)
+have been downloaded*
+
+
+## Protip
+
+If you want to find out more about what's going on under the hood, prepend `VAGRANT_LOG=debug`
+to your `vagrant-lxc` commands like:
+
+```
+VAGRANT_LOG=debug vagrant-lxc up
+```
+
+
+## Help! I've accidentaly ran `vagrant-lxc` on a Vagrant 1.0 project and I can't use it anymore
+
+That happened to me before so here's how to recover:
+
+```
+rm -rf .vagrant
+mv .vagrant.v1* .vagrant
+```
 
 
 ## Contributing
