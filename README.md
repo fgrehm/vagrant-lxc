@@ -14,10 +14,10 @@ Please keep in mind that this is not even alpha software and things might go wro
 
 ## Dependencies
 
-Just LXC as of now, which on Ubuntu 12.10 means:
+Just LXC and `bsdtar` as of now, which on Ubuntu 12.10 means:
 
 ```
-sudo apt-get install lxc
+sudo apt-get install lxc bsdtar
 ```
 
 
@@ -25,9 +25,9 @@ sudo apt-get install lxc
 
 * Ruby >= 1.9.3 only, patches for 1.8.7 are welcome
 * There is no support for setting a static IP. I'm using
-  [LXC's built in dns server](lib/vagrant-lxc/container.rb#98) to determine
+  [LXC's built in dns server](lib/vagrant-lxc/container.rb#L100) to determine
   containers' IPs
-* No provisioning [yet](#16)
+* No provisioning [yet](https://github.com/fgrehm/vagrant-lxc/issues/16)
 * `sudo`s
 * plus a bunch of other [core features](https://github.com/fgrehm/vagrant-lxc/issues?labels=core&milestone=&page=1&state=open)
 
@@ -37,12 +37,12 @@ sudo apt-get install lxc
 For now you'll need to install the gem from sources:
 
 ```
-git clone git://github.com/fgrehm/vagrant-lxc.git
+git clone git://github.com/fgrehm/vagrant-lxc.git --recurse
 cd vagrant-lxc
 bundle install
 bundle exec rake install
 bundle exec rake boxes:build:ubuntu-cloud
-vagrant-lxc box add boxes/output/ubuntu-cloud.box lxc
+vagrant-lxc box add ubuntu-cloud boxes/output/ubuntu-cloud.box
 ```
 
 Since Vagrant 1.1 has not been released yet and to avoid messing up with you
@@ -60,8 +60,8 @@ end
 ```
 
 If you don't trust me and believe that it will mess up with your current Vagrant
-and / or are afraid that something might go wrong with your machine, fire up the
-[same Vagrant VirtualBox machine I'm using for development](#using-virtualbox-for-development)
+installation and / or are afraid that something might go wrong with your machine,
+fire up the [same Vagrant VirtualBox machine I'm using for development](#using-virtualbox-for-development)
 to try things out and do the same as above. That might also get you up and running
 if you are working on a mac ;)
 
@@ -92,7 +92,7 @@ vagrant ssh
 ```
 
 *NOTE: `setup-vagrant-dev-box` takes around 10 minutes on a 15mb connection
-after the [base vagrant box](Vagrantfile#L5) and ubuntu [lxc cloud img](setup-vagrant-dev-box#L12-L13)
+after the [base vagrant box](Vagrantfile.dev#L5) and ubuntu [lxc cloud img](setup-vagrant-dev-box#L15-L16)
 have been downloaded*
 
 
