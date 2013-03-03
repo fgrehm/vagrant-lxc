@@ -29,6 +29,8 @@ sudo apt-get install lxc bsdtar
   containers' IPs
 * No provisioning [yet](https://github.com/fgrehm/vagrant-lxc/issues/16)
 * `sudo`s
+* only ubuntu cloudimg supported, I'm still [figuring out what should go on the .box](https://github.com/fgrehm/vagrant-lxc/issues/4)
+* "[works](https://github.com/fgrehm/vagrant-lxc/issues/20) on [my machine](https://github.com/fgrehm/vagrant-lxc/issues/7)" (TM)
 * plus a bunch of other [core features](https://github.com/fgrehm/vagrant-lxc/issues?labels=core&milestone=&page=1&state=open)
 
 
@@ -54,7 +56,10 @@ gets installed, create a `Vagrantfile` like the one below and run `vagrant-lxc u
 Vagrant.configure("2") do |config|
   config.vm.box = "ubuntu-cloud"
   config.vm.provider :lxc do |lxc|
-    # ... some lxc options that will come here soon ...
+    # Same as 'customize ["modifyvm", :id, "--memory", "1024"]' for VirtualBox
+    lxc.start_opts << 'lxc.cgroup.memory.limit_in_bytes=400M'
+    # Limits swap size
+    lxc.start_opts << 'lxc.cgroup.memory.memsw.limit_in_bytes=500M'
   end
 end
 ```
