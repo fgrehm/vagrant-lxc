@@ -8,6 +8,7 @@ Vagrant.configure("2") do |config|
   config.vm.hostname = 'ubuntu-cloud-box'
 
   config.vm.provider :lxc do |lxc|
-    # ... soon to come lxc configs...
+    lxc.start_opts << 'lxc.cgroup.memory.limit_in_bytes=400M'
+    lxc.start_opts << 'lxc.cgroup.memory.memsw.limit_in_bytes=500M'
   end
 end

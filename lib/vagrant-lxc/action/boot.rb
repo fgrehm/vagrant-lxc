@@ -3,7 +3,8 @@ module Vagrant
     module Action
       class Boot < BaseAction
         def call(env)
-          env[:machine].provider.container.start
+          config = env[:machine].provider_config
+          env[:machine].provider.container.start(config)
           @app.call env
         end
       end

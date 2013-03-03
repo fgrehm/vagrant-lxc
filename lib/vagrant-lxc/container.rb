@@ -66,8 +66,10 @@ module Vagrant
         end
       end
 
-      def start
-        lxc :start, '-d', '--name', @name
+      def start(config)
+        # @logger.info('Starting container...')
+        opts = config.start_opts.map { |opt| ["-s", opt] }.flatten
+        lxc :start, '-d', '--name', @name, *opts
         wait_until :running
       end
 

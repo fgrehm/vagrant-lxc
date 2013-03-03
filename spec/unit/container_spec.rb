@@ -139,18 +139,21 @@ describe Vagrant::LXC::Container do
   end
 
   describe 'start' do
-    let(:name) { 'container-name' }
+    let(:config) { mock(:config, start_opts: ['a=1', 'b=2']) }
+    let(:name)   { 'container-name' }
 
     before do
       subject.stub(lxc: true, wait_until: true)
-      subject.start
+      subject.start(config)
     end
 
     it 'calls lxc-start with the right arguments' do
       subject.should have_received(:lxc).with(
         :start,
         '-d',
-        '--name', name
+        '--name', name,
+        '-s', 'a=1',
+        '-s', 'b=2'
       )
     end
 
