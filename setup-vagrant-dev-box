@@ -123,7 +123,7 @@ vagrant_ssh "cp /etc/rinetd.conf /vagrant/cache/rinetd.conf"
 vagrant_ssh 'sudo chown vagrant:vagrant /etc/rinetd.conf'
 
 # Bundle!
-vagrant_ssh 'cd /vagrant && bundle && cd /vagrant/dev && bundle'
+vagrant_ssh 'cd /vagrant && bundle && cd /vagrant/example && bundle'
 
 # Setup vagrant default ssh key
 vagrant_keys_path = '/vagrant/vendor/vagrant/keys'
