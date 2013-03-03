@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# This is a modified version of /usr/share/lxc/templates/lxc-ubuntu-cloudimg
+# that comes with Ubuntu 12.10
+# Search for ORIGINAL to find out what has been changed
+
 # template script for generating ubuntu container for LXC based on released cloud
 # images
 #
@@ -120,6 +124,7 @@ Generic Options
 [ -T | --tarball ]: Location of tarball
 [ -d | --debug ]: Run with 'set -x' to debug errors
 [ -s | --stream]: Use specified stream rather than 'released'
+[  --cache-path]: Sets cache path used by vagrant-lxc
 
 Options, mutually exclusive of "-C" and "--cloud":
   [ -i | --hostid ]:    HostID for cloud-init, defaults to random string
@@ -131,7 +136,9 @@ EOF
     return 0
 }
 
-options=$(getopt -o a:hp:r:n:Fi:CLS:T:ds:u: -l arch:,help,path:,release:,name:,flush-cache,hostid:,auth-key:,cloud,no_locales,tarball:,debug,stream:,userdata: -- "$@")
+# ORIGINAL options=$(getopt -o a:hp:r:n:Fi:CLS:T:ds:u: -l arch:,help,path:,release:,name:,flush-cache,hostid:,auth-key:,cloud,no_locales,tarball:,debug,stream:,userdata: -- "$@")
+# NEW one introduces the --cache-path option
+options=$(getopt -o a:hp:r:n:Fi:CLS:T:ds:u: -l arch:,help,path:,release:,name:,flush-cache,hostid:,auth-key:,cloud,no_locales,tarball:,debug,stream:,userdata:,cache-path: -- "$@")
 if [ $? -ne 0 ]; then
     usage $(basename $0)
     exit 1
@@ -176,6 +183,8 @@ cloud=0
 locales=1
 flushcache=0
 stream="released"
+# ORIGINAL version didn't have this option
+cache=
 while true
 do
     case "$1" in
@@ -193,6 +202,8 @@ do
     -T|--tarball)      tarball=$2; shift 2;;
     -d|--debug)        debug=1; shift 1;;
     -s|--stream)       stream=$2; shift 2;;
+    # ORIGINAL version didn't have --cache-path option
+    --cache-path)      cache=$2; shift 2;;
     --)                shift 1; break ;;
         *)              break ;;
     esac
@@ -249,6 +260,12 @@ if [ "$(id -u)" != "0" ]; then
     exit 1
 fi
 
+# ORIGINAL version didn't have the cache-path option
+if [ -z "$cache" ]; then
+    echo "'--cache-path' parameter is required"
+    exit 1
+fi
+
 # detect rootfs
 config="$path/config"
 if grep -q '^lxc.rootfs' $config 2>/dev/null ; then
@@ -262,7 +279,9 @@ type wget
 
 # determine the url, tarball, and directory names
 # download if needed
-cache="/var/cache/lxc/cloud-$release"
+
+# ORIGINAL: cache="/var/cache/lxc/cloud-$release"
+# NEW:      cache can be provided with --cache-path so we can use vagrant's box directory path
 
 mkdir -p $cache
 
