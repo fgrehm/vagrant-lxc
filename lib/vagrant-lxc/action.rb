@@ -97,12 +97,11 @@ module Vagrant
           b.use CheckLXC
           b.use Vagrant::Action::Builtin::Call, Created do |env, b2|
             if env[:result]
-              # TODO: If is paused, should resume and then halt
               # TODO: If could not gracefully halt, force it
-              # TODO: b2.use Vagrant::Action::Builtin::GracefulHalt, :poweroff, :running
-              unless env[:machine].state.off?
-                puts 'TODO: Halt container using Vagrant::Action::Builtin::GracefulHalt'
-                env[:machine].provider.container.halt
+              b2.use Vagrant::Action::Builtin::Call, Vagrant::Action::Builtin::GracefulHalt, :stopped, :running do |env2, b3|
+                if !env2[:result] && env2[:machine].provider.state.running?
+                  env2[:machine].provider.container.halt
+                end
               end
             else
               b2.use VagrantPlugins::ProviderVirtualBox::Action::MessageNotCreated
