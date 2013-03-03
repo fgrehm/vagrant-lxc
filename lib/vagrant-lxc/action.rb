@@ -169,7 +169,7 @@ module Vagrant
       class CheckRunning < BaseAction
         def call(env)
           unless env[:machine].state.running?
-            raise Vagrant::Errors::VMNotCreatedError
+            raise Vagrant::Errors::VMNotRunningError
           end
 
           # Call the next if we have one (but we shouldn't, since this
