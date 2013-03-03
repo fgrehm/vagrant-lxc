@@ -19,8 +19,8 @@ describe Vagrant::LXC::Action::HandleBoxMetadata do
     subject.call(env)
   end
 
-  it 'prepends box directory to tar-cache' do
-    metadata['tar-cache'].should == "#{box.directory.to_s}/#{tar_cache}"
+  it 'sets box directory as lxc-cache-path' do
+    metadata['lxc-cache-path'].should == box.directory.to_s
   end
 
   it 'prepends box directory to after-create-script' do

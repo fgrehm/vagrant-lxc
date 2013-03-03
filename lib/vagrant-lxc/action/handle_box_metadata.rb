@@ -23,7 +23,7 @@ module Vagrant
 
           metadata.merge!(
             'template-name'       => "vagrant-#{box.name}-#{template_name}",
-            'tar-cache'           => box.directory.join(metadata['tar-cache']).to_s,
+            'lxc-cache-path'      => box.directory.to_s,
             'after-create-script' => after_create
           )
 

@@ -37,7 +37,15 @@ module Vagrant
         public_key = Vagrant.source_root.join('keys', 'vagrant.pub').expand_path.to_s
 
         # TODO: Handle errors
-        lxc :create, '--template', metadata['template-name'], '--name', @name, '--', '-S', public_key, '-T', metadata['tar-cache']
+        lxc :create,
+            # lxc-create options
+            '--template', metadata['template-name'],
+            '--name', @name,
+            '--',
+              # Template options
+              '-S', public_key,
+              '--cache-path', metadata['lxc-cache-path'],
+              '-T', metadata['tar-cache']
 
         @name
       end
