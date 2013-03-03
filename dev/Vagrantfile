@@ -1,7 +1,7 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
-require '../lib/vagrant-lxc'
+Vagrant.require_plugin 'vagrant-lxc'
 
 Vagrant.configure("2") do |config|
   config.vm.box = "ubuntu-cloud"
