@@ -125,7 +125,7 @@ module Vagrant
           # Sometimes lxc reports the container as running before DNS is returning
           # the right IP, so have to try a couple of times sometimes.
           # Tks to https://github.com/neerolyte/vagueant/blob/master/bin/vagueant#L318-L330
-          r = raw "ping -c 1 #{ip} > /dev/null 2>&1"
+          r = raw 'ping', '-c', '1', ip
           if r.exit_code != 0
             raise LXC::Errors::ExecuteError, 'Unable to reach container'
           end
