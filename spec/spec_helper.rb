@@ -4,6 +4,7 @@ if ENV['COVERAGE']
     # This can probably go away once we stop using vagrant as submodule
     add_filter { |source_file| source_file.filename =~ /\/vagrant\/plugins\// }
     add_filter { |source_file| source_file.filename =~ /\/vagrant\/lib\/vagrant(\/|\.rb)/ }
+    add_filter { |source_file| source_file.filename =~ /\/spec\/support/ }
   end
 end
 
