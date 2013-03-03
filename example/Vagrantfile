@@ -4,7 +4,9 @@
 Vagrant.require_plugin 'vagrant-lxc'
 
 Vagrant.configure("2") do |config|
-  config.vm.box = "ubuntu-cloud"
+  config.vm.box      = "ubuntu-cloud"
+  config.vm.hostname = 'ubuntu-cloud-box'
+
   config.vm.provider :lxc do |lxc|
     # ... soon to come lxc configs...
   end

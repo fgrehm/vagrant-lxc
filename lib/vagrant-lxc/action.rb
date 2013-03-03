@@ -50,7 +50,6 @@ module Vagrant
           b.use ShareFolders
           b.use Network
           b.use ForwardPorts
-          b.use HostName
           b.use SaneDefaults
           b.use Customize
           b.use Boot
@@ -87,6 +86,7 @@ module Vagrant
           end
           b.use action_start
           b.use AfterCreate
+          b.use Vagrant::Action::Builtin::SetHostname
         end
       end
 
@@ -122,7 +122,7 @@ module Vagrant
               next
             end
 
-            # TODO: Implement our own DestroyConfirm or propose a builtin action for Vagrant core
+            # TODO: Implement our own DestroyConfirm
             b2.use Vagrant::Action::Builtin::Call, VagrantPlugins::ProviderVirtualBox::Action::DestroyConfirm do |env2, b3|
               if env2[:result]
                 b3.use Vagrant::Action::Builtin::ConfigValidate
@@ -132,7 +132,7 @@ module Vagrant
                 # TODO: VirtualBox provider has a CleanMachineFolder action, do we need something similar?
                 # TODO: VirtualBox provider has a DestroyUnusedNetworkInterfaces action, do we need something similar?
               else
-                # TODO: Implement our own DestroyConfirm or propose a builtin action for Vagrant core
+                # TODO: Implement our own MessageWillNotDestroy
                 b3.use VagrantPlugins::ProviderVirtualBox::Action::MessageWillNotDestroy
               end
             end
@@ -182,7 +182,6 @@ module Vagrant
       class ClearForwardedPorts < BaseAction; end
       class PrepareForwardedPortCollisionParams < BaseAction; end
       class ClearSharedFolders < BaseAction; end
-      class HostName < BaseAction; end
       class Customize < BaseAction; end
     end
   end

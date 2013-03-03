@@ -3,7 +3,6 @@ module Vagrant
     module Action
       class IsRunning < BaseAction
         def call(env)
-          # Set the result to be true if the machine is created.
           env[:result] = env[:machine].state.running?
 
           # Call the next if we have one (but we shouldn't, since this
