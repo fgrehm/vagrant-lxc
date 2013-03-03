@@ -54,13 +54,16 @@ module Vagrant
         private_key = Vagrant.source_root.join('keys', 'vagrant').expand_path.to_s
 
         @logger.debug 'Running after-create-script from box metadata'
-        cmd = [
-          script,
-          '-r', "#{CONTAINERS_PATH}/#{@name}/rootfs",
-          '-k', private_key,
-          '-i', dhcp_ip
-        ]
-        execute *cmd
+
+        # TODO: Gotta write somewhere that it has to be indempotent
+        retryable(:tries => 5, :sleep => 1.5) do
+          execute *[
+            script,
+            '-r', "#{CONTAINERS_PATH}/#{@name}/rootfs",
+            '-k', private_key,
+            '-i', dhcp_ip
+          ]
+        end
       end
 
       def start
@@ -101,7 +104,7 @@ module Vagrant
         ip = ''
         # Right after creation lxc reports the container as running
         # before DNS is returning the right IP, so have to wait for a while
-        retryable(:on => LXC::Errors::ExecuteError, :tries => 10, :sleep => 1) do
+        retryable(:on => LXC::Errors::ExecuteError, :tries => 10, :sleep => 3) do
           # By default LXC supplies a dns server on 10.0.3.1 so we request the IP
           # of our target from there.
           # Tks to: https://github.com/neerolyte/vagueant/blob/master/bin/vagueant#L340
