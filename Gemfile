@@ -2,7 +2,10 @@ source 'https://rubygems.org'
 
 gemspec
 
+# TODO: Group gems
+
 gem 'rake'
+# TODO: setup rake-notes
 gem 'net-ssh'
 gem 'rspec'
 gem 'rspec-fire', require: 'rspec/fire'

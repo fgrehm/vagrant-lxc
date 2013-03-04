@@ -9,6 +9,7 @@ require "vagrant-lxc/errors"
 
 module Vagrant
   module LXC
+    # REFACTOR: Encapsulate lxc commands with name
     class Container
       # Include this so we can use `Subprocess` more easily.
       include Vagrant::Util::Retryable
@@ -96,12 +97,16 @@ module Vagrant
       def halt
         lxc :shutdown, '--name', @name
         wait_until :stopped
+        # TODO: issue an lxc-stop if a timeout gets reached
       end
 
       def destroy
         lxc :destroy, '--name', @name
       end
 
+      # REFACTOR:
+      #   transition_to :state do
+      #     ... code ...
       def wait_until(state)
         lxc :wait, '--name', @name, '--state', state.to_s.upcase
       end

@@ -122,9 +122,11 @@ module Vagrant
           b.use CheckLXC
           b.use Vagrant::Action::Builtin::Call, Created do |env, b2|
             if env[:result]
-              # TODO: If could not gracefully halt, force it
               b2.use Vagrant::Action::Builtin::Call, Vagrant::Action::Builtin::GracefulHalt, :stopped, :running do |env2, b3|
                 if !env2[:result] && env2[:machine].provider.state.running?
+                  # TODO: Container#halt is kinda graceful as well, if it doesn't
+                  # or we can issue a lxc-stop. Might as well be handled by the
+                  # container itself, who knows, we just need to handle it :P
                   env2[:machine].provider.container.halt
                 end
               end
