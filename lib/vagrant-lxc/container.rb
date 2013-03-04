@@ -66,6 +66,26 @@ module Vagrant
         end
       end
 
+      def rootfs_path
+        Pathname.new("#{CONTAINERS_PATH}/#{@name}/rootfs")
+      end
+
+      def share_folders(folders, config)
+        folders.each do |folder|
+          guestpath = rootfs_path.join(folder[:guestpath].gsub(/^\//, ''))
+          unless guestpath.directory?
+            begin
+              system "sudo mkdir -p #{guestpath.to_s}"
+            rescue Errno::EACCES
+              raise Vagrant::Errors::SharedFolderCreateFailed,
+                :path => guestpath.to_s
+            end
+          end
+
+          config.start_opts << "lxc.mount.entry=#{folder[:hostpath]} #{guestpath} none bind 0 0"
+        end
+      end
+
       def start(config)
         # @logger.info('Starting container...')
         opts = config.start_opts.map { |opt| ["-s", opt] }.flatten

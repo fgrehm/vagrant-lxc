@@ -9,6 +9,7 @@ require 'vagrant-lxc/action/created'
 require 'vagrant-lxc/action/destroy'
 require 'vagrant-lxc/action/handle_box_metadata'
 require 'vagrant-lxc/action/is_running'
+require 'vagrant-lxc/action/share_folders'
 
 module Vagrant
   module LXC
@@ -46,7 +47,7 @@ module Vagrant
           b.use Vagrant::Action::Builtin::Provision
           b.use Vagrant::Action::Builtin::EnvSet, :port_collision_repair => true
           b.use PrepareForwardedPortCollisionParams
-          b.use ClearSharedFolders
+          # b.use ClearSharedFolders
           b.use ShareFolders
           b.use Network
           b.use ForwardPorts
@@ -86,7 +87,7 @@ module Vagrant
           end
           b.use action_start
           b.use AfterCreate
-          b.use Vagrant::Action::Builtin::SetHostname
+          # b.use Vagrant::Action::Builtin::SetHostname
         end
       end
 
@@ -163,9 +164,6 @@ module Vagrant
 
       # TODO: Check if our requirements are met.
       class CheckLXC < BaseAction; end
-
-      # TODO: Implement folder sharing with "mount"
-      class ShareFolders < BaseAction; end
 
       # TODO: Sets up all networking for the container instance. This includes
       # host only networks, bridged networking, forwarded ports, etc.

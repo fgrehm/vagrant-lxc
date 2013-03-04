@@ -55,6 +55,13 @@ gets installed, create a `Vagrantfile` like the one below and run `vagrant-lxc u
 ```ruby
 Vagrant.configure("2") do |config|
   config.vm.box = "ubuntu-cloud"
+
+  # Share an additional folder to the guest Container. The first argument
+  # is the path on the host to the actual folder. The second argument is
+  # the path on the guest to mount the folder. And the optional third
+  # argument is a set of non-required options.
+  config.vm.synced_folder "/tmp", "/host_tmp"
+
   config.vm.provider :lxc do |lxc|
     # Same as 'customize ["modifyvm", :id, "--memory", "1024"]' for VirtualBox
     lxc.start_opts << 'lxc.cgroup.memory.limit_in_bytes=400M'
