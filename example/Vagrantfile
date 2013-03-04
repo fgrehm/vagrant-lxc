@@ -13,4 +13,26 @@ Vagrant.configure("2") do |config|
     lxc.start_opts << 'lxc.cgroup.memory.limit_in_bytes=400M'
     lxc.start_opts << 'lxc.cgroup.memory.memsw.limit_in_bytes=500M'
   end
+
+  config.vm.provision :shell, :inline => <<-SCRIPT
+echo "Hi there I'm the shell script used for provisioning"
+if `which puppet > /dev/null`; then
+  echo "Looks like puppet has already been installed, moving on"
+  exit 0
+fi
+echo "I'm about to install puppet!"
+sleep 1
+echo "Hang tight, I just need to wait for a while since vagrant-lxc is not handling network properly ;)"
+sleep 5
+sudo apt-get update
+sudo apt-get install puppet -y
+  SCRIPT
+
+  config.vm.provision :puppet do |puppet|
+    puppet.module_path    = "puppet/modules"
+    puppet.manifests_path = "puppet/manifests"
+    puppet.manifest_file  = "site.pp"
+    # If you want to make some noise
+    # puppet.options << [ '--verbose', '--debug' ]
+  end
 end
