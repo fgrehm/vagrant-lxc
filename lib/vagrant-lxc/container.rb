@@ -59,7 +59,7 @@ module Vagrant
           @logger.debug 'Attempt to run after-create-script from box metadata'
           execute *[
             script,
-            '-r', "#{CONTAINERS_PATH}/#{@name}/rootfs",
+            '-r', rootfs_path.to_s,
             '-k', private_key,
             '-i', dhcp_ip
           ]
