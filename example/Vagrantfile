@@ -10,6 +10,7 @@ Vagrant.configure("2") do |config|
   config.vm.synced_folder "/tmp", "/vagrant_data"
 
   config.vm.provider :lxc do |lxc|
+    config.vm.box_url = '../boxes/output/ubuntu-cloud.box'
     lxc.start_opts << 'lxc.cgroup.memory.limit_in_bytes=400M'
     lxc.start_opts << 'lxc.cgroup.memory.memsw.limit_in_bytes=500M'
   end

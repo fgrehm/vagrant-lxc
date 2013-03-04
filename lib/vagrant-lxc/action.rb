@@ -106,6 +106,7 @@ module Vagrant
           b.use Vagrant::Action::Builtin::Call, Created do |env, b2|
             # If the VM is NOT created yet, then do the setup steps
             if !env[:result]
+              b2.use Vagrant::Action::Builtin::HandleBoxUrl
               b2.use HandleBoxMetadata
               b2.use Create
             end
