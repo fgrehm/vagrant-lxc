@@ -134,6 +134,15 @@ mv .vagrant.v1* .vagrant
 There is some hidden bug which I wasn't able to reproduce properly, if that
 happens to you, just run `lxc-shutdown -n container_name` and try again.
 
+### I'm unable to start containers!
+
+Sometimes the Virtual Box dev machine I'm using is not able to `lxc-start`
+containers anymore. Most of the times it was an issue with the [arguments](https://github.com/fgrehm/vagrant-lxc/blob/master/lib/vagrant-lxc/container.rb#L85)
+[I provided](https://github.com/fgrehm/vagrant-lxc/blob/master/example/Vagrantfile#L12-L15)
+to it. If you run into that, just try to `vagrant reload` the dev box since most
+of the times things get back to normal. If it still doesn't work, you can try
+to run `setup-vagrant-dev-box` again to restore an snapshot that [it creates](https://github.com/fgrehm/vagrant-lxc/blob/master/setup-vagrant-dev-box#L132-L137)
+automagically for you.
 
 ## Contributing
 
