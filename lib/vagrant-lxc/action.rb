@@ -117,7 +117,7 @@ module Vagrant
           b.use CheckLXC
           b.use Vagrant::Action::Builtin::Call, Created do |env1, b2|
             if !env1[:result]
-              b2.use MessageNotCreated
+              b2.use VagrantPlugins::ProviderVirtualBox::Action::MessageNotCreated
               next
             end
 
