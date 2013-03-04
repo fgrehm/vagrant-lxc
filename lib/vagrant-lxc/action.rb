@@ -53,6 +53,7 @@ module Vagrant
           b.use ForwardPorts
           b.use SaneDefaults
           b.use Customize
+          b.use AfterCreate
           b.use Boot
         end
       end
@@ -86,7 +87,6 @@ module Vagrant
             end
           end
           b.use action_start
-          b.use AfterCreate
           # b.use Vagrant::Action::Builtin::SetHostname
         end
       end
