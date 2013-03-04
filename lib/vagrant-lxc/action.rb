@@ -58,6 +58,30 @@ module Vagrant
         end
       end
 
+      # This action just runs the provisioners on the machine.
+      def self.action_provision
+        Vagrant::Action::Builder.new.tap do |b|
+          b.use CheckLXC
+          b.use Vagrant::Action::Builtin::ConfigValidate
+          b.use Vagrant::Action::Builtin::Call, Created do |env1, b2|
+            if !env1[:result]
+              b2.use VagrantPlugins::ProviderVirtualBox::Action::MessageNotCreated
+              next
+            end
+
+            b2.use Vagrant::Action::Builtin::Call, IsRunning do |env2, b3|
+              if !env2[:result]
+                b3.use VagrantPlugins::ProviderVirtualBox::Action::MessageNotRunning
+                next
+              end
+
+              # b3.use CheckAccessible
+              b3.use Vagrant::Action::Builtin::Provision
+            end
+          end
+        end
+      end
+
       # This action starts a container, assuming it is already created and exists.
       # A precondition of this action is that the container exists.
       def self.action_start

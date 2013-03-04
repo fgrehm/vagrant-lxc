@@ -27,7 +27,6 @@ sudo apt-get install lxc bsdtar
 * There is no support for setting a static IP. I'm using
   [LXC's built in dns server](lib/vagrant-lxc/container.rb#L100) to determine
   containers' IPs
-* No provisioning [yet](https://github.com/fgrehm/vagrant-lxc/issues/16)
 * `sudo`s
 * only ubuntu cloudimg supported, I'm still [figuring out what should go on the .box](https://github.com/fgrehm/vagrant-lxc/issues/4)
 * "[works](https://github.com/fgrehm/vagrant-lxc/issues/20) on [my machine](https://github.com/fgrehm/vagrant-lxc/issues/7)" (TM)
