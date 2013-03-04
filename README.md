@@ -97,14 +97,14 @@ get up and running with the [`setup-vagrant-dev-box`](setup-vagrant-dev-box)
 script. Feel free to use it :)
 
 ```
-cp Vagrantfile.dev Vagrantfile
+cp Vagrantfile.dev.1.0 Vagrantfile
 ./setup-vagrant-dev-box
 vagrant ssh
 ```
 
 *NOTE: `setup-vagrant-dev-box` takes around 10 minutes on a 15mb connection
-after the [base vagrant box](Vagrantfile.dev#L5) and ubuntu [lxc cloud img](setup-vagrant-dev-box#L15-L16)
-have been downloaded*
+after the [base vagrant box](Vagrantfile.dev.1.0#L5) and ubuntu [lxc cloud
+img](setup-vagrant-dev-box#L15-L16) have been downloaded*
 
 
 ## Protip

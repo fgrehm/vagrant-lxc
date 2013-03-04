@@ -1,9 +1,18 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
+if Vagrant::VERSION =~ /^1\.1/
+  raise 'This Vagrantfile is meant to be used with Vagrant 1.0'
+end
+
 Vagrant::Config.run do |config|
   config.vm.box     = "quantal64"
   config.vm.box_url = "https://github.com/downloads/roderik/VagrantQuantal64Box/quantal64.box"
+
+  if defined? VagrantVbguest::Config
+    config.vbguest.auto_update = false
+    config.vbguest.no_remote   = true
+  end
 
   config.vm.network :hostonly, "192.168.33.10"
   config.vm.customize [
