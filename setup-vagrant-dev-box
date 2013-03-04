@@ -81,14 +81,17 @@ vagrant_ssh 'echo "alias be=\"bundle exec\"" >> ~/.bashrc'
 vagrant_ssh 'sudo sed -i -e "s/be.archive/br.archive/g" /etc/apt/sources.list'
 
 # Ensure we have the latest packages around
-vagrant_ssh "sudo apt-get update && sudo apt-get upgrade -y"
-
-# Install dependencies
-vagrant_ssh "sudo apt-get install lxc rinetd libffi-dev bsdtar exuberant-ctags libffi-ruby ruby1.9.1-dev htop git virtualbox virtualbox-ose-dkms linux-headers-generic linux-headers-3.5.0-17-generic -y && sudo gem install bundler --no-ri --no-rdoc -v 1.2.5"
-vagrant_ssh "sudo dkms install virtualbox/4.1.18"
-vagrant_ssh "sudo service virtualbox start"
+vagrant_ssh "sudo apt-get update && sudo apt-get dist-upgrade -y"
 
 # Ensure the machine can boot properly after upgrades and dependencies have been installed
+sh 'vagrant reload'
+
+# Install dependencies
+vagrant_ssh "sudo apt-get install lxc rinetd libffi-dev bsdtar exuberant-ctags libffi-ruby ruby1.9.1-dev htop git virtualbox virtualbox-ose-dkms linux-headers-generic linux-headers-3.5.0-25-generic -y && sudo gem install bundler --no-ri --no-rdoc"
+# vagrant_ssh "sudo dkms install virtualbox/4.1.18"
+# vagrant_ssh "sudo service virtualbox start"
+
+# Ensure the machine can boot properly after dependencies have been installed
 sh 'vagrant reload'
 
 # Allow gems to be installed on vagrant user home avoiding "sudo"s
@@ -122,12 +125,15 @@ vagrant_ssh "cp /etc/rinetd.conf /vagrant/cache/rinetd.conf"
 # Make rinetd writable by vagrant user
 vagrant_ssh 'sudo chown vagrant:vagrant /etc/rinetd.conf'
 
-# Bundle!
-vagrant_ssh 'cd /vagrant && bundle && cd /vagrant/example && bundle'
-
 # Setup vagrant default ssh key
 vagrant_keys_path = '/vagrant/vendor/vagrant/keys'
 vagrant_ssh "mkdir -p ~/.ssh && cd /vagrant && cp #{vagrant_keys_path}/vagrant ~/.ssh/id_rsa && cp #{vagrant_keys_path}/vagrant.pub ~/.ssh/id_rsa.pub && chmod 600 ~/.ssh/id_rsa"
+
+# Bundle!
+vagrant_ssh 'cd /vagrant && bundle && cd /vagrant/example && bundle'
+
+# Add base box
+vagrant_ssh 'cd /vagrant && rake boxes:build:ubuntu-cloud'
 
 # Click
 sh 'vagrant halt'
