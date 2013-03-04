@@ -38,7 +38,7 @@ sed -i -e 's/%admin\s\+ALL=(ALL)\s\+ALL/%admin ALL=NOPASSWD:ALL/g' /etc/sudoers
 service sudo restart
 sudo su vagrant -c "mkdir -p /home/vagrant/.ssh"
 sudo su vagrant -c "curl -s -o /home/vagrant/.ssh/authorized_keys https://raw.github.com/mitchellh/vagrant/master/keys/vagrant.pub"
-sudo apt-get install -y puppet
+sudo apt-get update && sudo apt-get install -y puppet
 EOF
 }
 
