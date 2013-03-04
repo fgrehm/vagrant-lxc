@@ -111,7 +111,9 @@ VAGRANT_LOG=debug vagrant-lxc up
 ```
 
 
-## Help! I've accidentaly ran `vagrant-lxc` on a Vagrant 1.0 project and I can't use it anymore
+## Help!
+
+### I've accidentaly ran `vagrant-lxc` on a Vagrant 1.0 project and I can't use it anymore
 
 That happened to me before so here's how to recover:
 
@@ -119,6 +121,11 @@ That happened to me before so here's how to recover:
 rm -rf .vagrant
 mv .vagrant.v1* .vagrant
 ```
+
+### The container does not stop from `vagrant halt`
+
+There is some hidden bug which I wasn't able to reproduce properly, if that
+happens to you, just run `lxc-shutdown -n container_name` and try again.
 
 
 ## Contributing
