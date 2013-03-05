@@ -9,6 +9,7 @@ require 'vagrant-lxc/action/created'
 require 'vagrant-lxc/action/destroy'
 require 'vagrant-lxc/action/handle_box_metadata'
 require 'vagrant-lxc/action/is_running'
+require 'vagrant-lxc/action/network'
 require 'vagrant-lxc/action/share_folders'
 
 module Vagrant
@@ -191,10 +192,6 @@ module Vagrant
 
       # TODO: Check if our requirements are met.
       class CheckLXC < BaseAction; end
-
-      # TODO: Sets up all networking for the container instance. This includes
-      # host only networks, bridged networking, forwarded ports, etc.
-      class Network < BaseAction; end
 
       # TODO: Implement port forwarding with rinetd
       class ForwardPorts < BaseAction; end
