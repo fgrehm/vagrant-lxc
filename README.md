@@ -9,28 +9,39 @@ to find out whats currently supported.
 
 ## WARNING
 
-Please keep in mind that this is not even alpha software and things might go wrong.
+Please keep in mind that although I'm already using this on my laptop, this is
+"almost alpha" software and things might go wrong.
 
 
 ## Dependencies
 
-Just LXC and `bsdtar` as of now, which on Ubuntu 12.10 means:
+LXC, `bsdtar` packages and a Kernel [higher than 3.5.0-17.28](#im-unable-to-restart-containers),
+which on Ubuntu 12.10 means:
 
 ```
+sudo apt-get update && sudo apt-get dist-upgrade
 sudo apt-get install lxc bsdtar
 ```
 
 
-## Current limitations that I can remember
+## What is currently supported?
+
+* Vagrant's `up`, `halt`, `reload`, `destroy`, and `ssh` commands
+* Shared folders
+* Provisioners
+* Setting container's host name
+* Host-only / private networking
+
+
+## Current limitations
 
 * Ruby >= 1.9.3 only, patches for 1.8.7 are welcome
-* There is no support for setting a static IP. I'm using
-  [LXC's built in dns server](lib/vagrant-lxc/container.rb#L100) to determine
-  containers' IPs
-* `sudo`s
-* only ubuntu cloudimg supported, I'm still [figuring out what should go on the .box](https://github.com/fgrehm/vagrant-lxc/issues/4)
+* A hell lot of `sudo`s
+* Only a [single box supported](boxes), I'm still [figuring out what should go
+  on the .box file](https://github.com/fgrehm/vagrant-lxc/issues/4)
 * "[works](https://github.com/fgrehm/vagrant-lxc/issues/20) on [my machine](https://github.com/fgrehm/vagrant-lxc/issues/7)" (TM)
-* plus a bunch of other [core features](https://github.com/fgrehm/vagrant-lxc/issues?labels=core&milestone=&page=1&state=open)
+* + bunch of other [core features](https://github.com/fgrehm/vagrant-lxc/issues?labels=core&milestone=&page=1&state=open)
+  and a some known [bugs](https://github.com/fgrehm/vagrant-lxc/issues?labels=bug&page=1&state=open)
 
 
 ## Usage
@@ -48,12 +59,17 @@ vagrant-lxc box add ubuntu-cloud boxes/output/ubuntu-cloud.box
 
 Since Vagrant 1.1 has not been released yet and to avoid messing up with you
 current Vagrant installation, I've vendored Vagrant's sources from the master
-and made it available from [`vagrant-lxc`](bin/vagrant-lxc). So after `vagrant-lxc`
-gets installed, create a `Vagrantfile` like the one below and run `vagrant-lxc up --provider=lxc`:
+and made it available from [`vagrant-lxc`](bin/vagrant-lxc). So after installing
+`vagrant-lxc` and adding the base box, create a `Vagrantfile` like the one below
+and run `vagrant-lxc up --provider=lxc`:
 
 ```ruby
 Vagrant.configure("2") do |config|
   config.vm.box = "ubuntu-cloud"
+
+  # Create a private network, which allows host-only access to the machine
+  # using a specific IP.
+  # config.vm.network :private_network, ip: "192.168.33.10"
 
   # Share an additional folder to the guest Container. The first argument
   # is the path on the host to the actual folder. The second argument is
@@ -67,6 +83,8 @@ Vagrant.configure("2") do |config|
     # Limits swap size
     lxc.start_opts << 'lxc.cgroup.memory.memsw.limit_in_bytes=500M'
   end
+
+  # ... your puppet / chef / shell provisioner configs here ...
 end
 ```
 
@@ -74,7 +92,7 @@ If you don't trust me and believe that it will mess up with your current Vagrant
 installation and / or are afraid that something might go wrong with your machine,
 fire up the [same Vagrant VirtualBox machine I'm using for development](#using-virtualbox-for-development)
 to try things out and do the same as above. That might also get you up and running
-if you are working on a mac ;)
+if you are working on a mac or windows host ;)
 
 
 ## Development
@@ -102,19 +120,22 @@ cp Vagrantfile.dev.1.0 Vagrantfile
 vagrant ssh
 ```
 
-*NOTE: `setup-vagrant-dev-box` takes around 10 minutes on a 15mb connection
-after the [base vagrant box](Vagrantfile.dev.1.0#L5) and ubuntu [lxc cloud
-img](setup-vagrant-dev-box#L15-L16) have been downloaded*
 
+## Protips
 
-## Protip
-
-If you want to find out more about what's going on under the hood, prepend `VAGRANT_LOG=debug`
-to your `vagrant-lxc` commands like:
+If you want to find out more about what's going on under the hood on vagrant,
+prepend `VAGRANT_LOG=debug` to your `vagrant-lxc` commands. For `lxc-start`s
+debugging set `LXC_START_LOG_FILE`:
 
 ```
-VAGRANT_LOG=debug vagrant-lxc up
+LXC_START_LOG_FILE=/tmp/lxc-start.log VAGRANT_LOG=debug vagrant-lxc up
 ```
+
+This will output A LOT of information on your terminal and some useful information
+about `lxc-start` to `/tmp/lxc-start.log`.
+
+Debugging whats going on with the container itself is a pain, there are some
+nice little scripts on the [/dev](dev) folder of the project.
 
 
 ## Help!
@@ -128,20 +149,22 @@ rm -rf .vagrant
 mv .vagrant.v1* .vagrant
 ```
 
-### The container does not stop from `vagrant halt`
+### I'm unable to restart containers!
 
-There is some hidden bug which I wasn't able to reproduce properly, if that
-happens to you, just run `lxc-shutdown -n container_name` and try again.
+It happened to me quite a few times in the past and it seems that it is related
+to to a bug on linux kernel, so make sure you are using a bug-free kernel
+(>= 3.5.0-17.28). More information can be found on:
 
-### I'm unable to start containers!
+* https://bugzilla.kernel.org/show_bug.cgi?id=47181
+* https://bugs.launchpad.net/ubuntu/+source/linux/+bug/1021471
+* https://bugs.launchpad.net/ubuntu/+source/linux/+bug/1065434
 
 Sometimes the Virtual Box dev machine I'm using is not able to `lxc-start`
 containers anymore. Most of the times it was an issue with the [arguments](https://github.com/fgrehm/vagrant-lxc/blob/master/lib/vagrant-lxc/container.rb#L85)
 [I provided](https://github.com/fgrehm/vagrant-lxc/blob/master/example/Vagrantfile#L12-L15)
-to it. If you run into that, just try to `vagrant reload` the dev box since most
-of the times things get back to normal. If it still doesn't work, you can try
-to run `setup-vagrant-dev-box` again to restore an snapshot that [it creates](https://github.com/fgrehm/vagrant-lxc/blob/master/setup-vagrant-dev-box#L132-L137)
-automagically for you.
+to it. If you run into that, rollback your changes and try to `vagrant reload`
+the dev box. If it still doesn't work, please file a bug at the issue tracker
+
 
 ## Contributing
 
