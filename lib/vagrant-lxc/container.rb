@@ -55,7 +55,7 @@ module Vagrant
         private_key = Vagrant.source_root.join('keys', 'vagrant').expand_path.to_s
 
         # TODO: Gotta write somewhere that it has to be indempotent
-        retryable(:tries => 5, :sleep => 1.5) do
+        retryable(:tries => 5, :sleep => 2) do
           @logger.debug 'Attempt to run after-create-script from box metadata'
           execute *[
             script,
@@ -89,6 +89,7 @@ module Vagrant
       def start(config)
         # @logger.info('Starting container...')
         opts = config.start_opts.map { |opt| ["-s", opt] }.flatten
+        opts += ['-o', ENV['LXC_START_LOG_FILE'], '-l', 'DEBUG'] if ENV['LXC_START_LOG_FILE']
         lxc :start, '-d', '--name', @name, *opts
         wait_until :running
       end
