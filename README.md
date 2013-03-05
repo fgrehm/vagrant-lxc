@@ -41,7 +41,7 @@ sudo apt-get install lxc bsdtar
   on the .box file](https://github.com/fgrehm/vagrant-lxc/issues/4)
 * "[works](https://github.com/fgrehm/vagrant-lxc/issues/20) on [my machine](https://github.com/fgrehm/vagrant-lxc/issues/7)" (TM)
 * + bunch of other [core features](https://github.com/fgrehm/vagrant-lxc/issues?labels=core&milestone=&page=1&state=open)
-  and a some known [bugs](https://github.com/fgrehm/vagrant-lxc/issues?labels=bug&page=1&state=open)
+  and some known [bugs](https://github.com/fgrehm/vagrant-lxc/issues?labels=bug&page=1&state=open)
 
 
 ## Usage
@@ -152,7 +152,7 @@ mv .vagrant.v1* .vagrant
 ### I'm unable to restart containers!
 
 It happened to me quite a few times in the past and it seems that it is related
-to to a bug on linux kernel, so make sure you are using a bug-free kernel
+to a bug on linux kernel, so make sure you are using a bug-free kernel
 (>= 3.5.0-17.28). More information can be found on:
 
 * https://bugzilla.kernel.org/show_bug.cgi?id=47181
@@ -161,7 +161,7 @@ to to a bug on linux kernel, so make sure you are using a bug-free kernel
 
 Sometimes the Virtual Box dev machine I'm using is not able to `lxc-start`
 containers anymore. Most of the times it was an issue with the [arguments](https://github.com/fgrehm/vagrant-lxc/blob/master/lib/vagrant-lxc/container.rb#L85)
-[I provided](https://github.com/fgrehm/vagrant-lxc/blob/master/example/Vagrantfile#L12-L15)
+[I provided](https://github.com/fgrehm/vagrant-lxc/blob/master/example/Vagrantfile#L14-L18)
 to it. If you run into that, rollback your changes and try to `vagrant reload`
 the dev box. If it still doesn't work, please file a bug at the issue tracker
 
