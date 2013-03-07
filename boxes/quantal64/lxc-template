@@ -104,6 +104,11 @@ finalize_user()
         chroot $rootfs adduser ${user} $group >/dev/null 2>&1 || true
     done
 
+    chroot $rootfs cp /etc/sudoers /etc/sudoers.orig >/dev/null 2>&1 || true
+    chroot $rootfs sed -i -e 's/%sudo\s\+ALL=(ALL:ALL)\s\+ALL/%sudo ALL=NOPASSWD:ALL/g' /etc/sudoers >/dev/null 2>&1 || true
+    chroot $rootfs locale-gen en_US en_US.UTF-8 hu_HU hu_HU.UTF-8 >/dev/null 2>&1 || true
+    chroot $rootfs dpkg-reconfigure locales >/dev/null 2>&1 || true
+
     if [ -n "$auth_key" -a -f "$auth_key" ]; then
         u_path="/home/${user}/.ssh"
         root_u_path="$rootfs/$u_path"
@@ -148,79 +153,6 @@ EOF
     fi
 }
 
-cleanup()
-{
-    rm -rf $cache/partial-$arch
-    rm -rf $cache/rootfs-$arch
-}
-
-suggest_flush()
-{
-    echo "Container upgrade failed.  The container cache may be out of date,"
-    echo "in which case flushing the case (see -F in the hep output) may help."
-}
-
-download_ubuntu()
-{
-    cache=$1
-    arch=$2
-    release=$3
-
-    packages=vim,ssh
-    echo "installing packages: $packages"
-
-    trap cleanup EXIT SIGHUP SIGINT SIGTERM
-    # check the mini ubuntu was not already downloaded
-    mkdir -p "$cache/partial-$arch"
-    if [ $? -ne 0 ]; then
-        echo "Failed to create '$cache/partial-$arch' directory"
-        return 1
-    fi
-
-    # download a mini ubuntu into a cache
-    echo "Downloading ubuntu $release minimal ..."
-    if [ -n "$(which qemu-debootstrap)" ]; then
-        qemu-debootstrap --verbose --components=main,universe --arch=$arch --include=$packages $release $cache/partial-$arch $MIRROR
-    else
-        debootstrap --verbose --components=main,universe --arch=$arch --include=$packages $release $cache/partial-$arch $MIRROR
-    fi
-
-    if [ $? -ne 0 ]; then
-        echo "Failed to download the rootfs, aborting."
-            return 1
-    fi
-
-    # Serge isn't sure whether we should avoid doing this when
-    # $release == `distro-info -d`
-    echo "Installing updates"
-    > $cache/partial-$arch/etc/apt/sources.list
-    write_sourceslist $cache/partial-$arch/ $arch
-
-    chroot "$1/partial-${arch}" apt-get update
-    if [ $? -ne 0 ]; then
-        echo "Failed to update the apt cache"
-        return 1
-    fi
-    cat > "$1/partial-${arch}"/usr/sbin/policy-rc.d << EOF
-#!/bin/sh
-exit 101
-EOF
-    chmod +x "$1/partial-${arch}"/usr/sbin/policy-rc.d
-
-    lxc-unshare -s MOUNT -- chroot "$1/partial-${arch}" apt-get dist-upgrade -y || { suggest_flush; false; }
-    rm -f "$1/partial-${arch}"/usr/sbin/policy-rc.d
-
-    chroot "$1/partial-${arch}" apt-get clean
-
-    mv "$1/partial-$arch" "$1/rootfs-$arch"
-    trap EXIT
-    trap SIGINT
-    trap SIGTERM
-    trap SIGHUP
-    echo "Download complete"
-    return 0
-}
-
 copy_ubuntu()
 {
     cache=$1
@@ -238,8 +170,7 @@ install_ubuntu()
 {
     rootfs=$1
     release=$2
-    flushcache=$3
-    cache="/var/cache/lxc/$release"
+    cache=$3 # "/var/cache/lxc/$release"
     mkdir -p /var/lock/subsys/
 
     (
@@ -247,22 +178,6 @@ install_ubuntu()
         if [ $? -ne 0 ]; then
             echo "Cache repository is busy."
             return 1
-        fi
-
-
-        if [ $flushcache -eq 1 ]; then
-            echo "Flushing cache..."
-            rm -rf "$cache/partial-$arch"
-            rm -rf "$cache/rootfs-$arch"
-        fi
-
-        echo "Checking cache download in $cache/rootfs-$arch ... "
-        if [ ! -e "$cache/rootfs-$arch" ]; then
-            download_ubuntu $cache $arch $release
-            if [ $? -ne 0 ]; then
-                echo "Failed to download 'ubuntu $release base'"
-                return 1
-            fi
         fi
 
         echo "Copy $cache/rootfs-$arch to $rootfs ... "
@@ -537,7 +452,7 @@ EOF
     return 0
 }
 
-options=$(getopt -o a:b:hp:r:xn:FS:d -l arch:,help,path:,release:,trim,name:,flush-cache,auth-key:,debug -- "$@")
+options=$(getopt -o a:b:hp:r:xn:FS:d:C -l arch:,help,path:,release:,trim,name:,flush-cache,auth-key:,debug:,cache: -- "$@")
 if [ $? -ne 0 ]; then
     usage $(basename $0)
     exit 1
@@ -573,14 +488,13 @@ fi
 debug=0
 trim_container=0
 hostarch=$arch
-flushcache=0
 while true
 do
     case "$1" in
     -h|--help)      usage $0 && exit 0;;
     -p|--path)      path=$2; shift 2;;
     -n|--name)      name=$2; shift 2;;
-    -F|--flush-cache) flushcache=1; shift 1;;
+    -C|--cache)     cache=$2; shift 2;;
     -r|--release)   release=$2; shift 2;;
     -a|--arch)      arch=$2; shift 2;;
     -x|--trim)      trim_container=1; shift 1;;
@@ -605,12 +519,6 @@ if [ $hostarch = "i386" -a $arch = "amd64" ]; then
     exit 1
 fi
 
-type debootstrap
-if [ $? -ne 0 ]; then
-    echo "'debootstrap' command is missing"
-    exit 1
-fi
-
 if [ -z "$path" ]; then
     echo "'path' parameter is required"
     exit 1
@@ -629,7 +537,7 @@ else
     rootfs=$path/rootfs
 fi
 
-install_ubuntu $rootfs $release $flushcache
+install_ubuntu $rootfs $release $cache
 if [ $? -ne 0 ]; then
     echo "failed to install ubuntu $release"
     exit 1

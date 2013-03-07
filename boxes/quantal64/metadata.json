@@ -3,7 +3,7 @@
   "vagrant-lxc-version": "0.0.1",
 
   "template-opts": {
-    "--arch":    "x86_64",
+    "--arch":    "amd64",
     "--release": "quantal"
   }
 }

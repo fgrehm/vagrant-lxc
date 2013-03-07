@@ -19,19 +19,16 @@ namespace :boxes do
       sh 'cd boxes/ubuntu-cloud && tar -czf ../output/ubuntu-cloud.box ./*'
     end
 
-    desc 'Build Ubuntu Quantal x64 Vagrant LXC box'
-    task 'quantal-64' do
-      unless File.exists?('/var/cache/lxc/quantal/rootfs-amd64')
-        puts "Right now you need to run `lxc-create` with the right arguments to build debootstrap's cache " +
-             "prior to building the box.\n" +
-             "Please contact me at the mail you'll find at https://github.com/fgrehm/vagrant-lxc/issues\n" +
-             "if you want to find out how to get this going."
-        exit 1
+    desc 'Build Ubuntu Quantal 64 bits Vagrant LXC box'
+    task 'quantal64' do
+      unless File.exists?('./boxes/quantal64/rootfs-amd64')
+        sh 'cd boxes/quantal64 && ./download-ubuntu'
       end
 
       sh 'mkdir -p boxes/output'
-      sh 'rm -f output/lxc-quantal-64.box'
-      sh 'cd boxes/quantal-64 && tar -czf ../output/lxc-quantal-64.box ./*'
+      sh 'sudo rm -f output/lxc-quantal64.box boxes/quantal64/rootfs.tar.gz'
+      sh 'cd boxes/quantal64 && sudo tar --numeric-owner -czf rootfs.tar.gz ./rootfs-amd64/*'
+      sh "cd boxes/quantal64 && sudo chown #{ENV['USER']}:#{ENV['USER']} rootfs.tar.gz && tar -czf ../output/lxc-quantal64.box ./* --exclude=rootfs-amd64 --exclude=download-ubuntu"
     end
   end
 end
