@@ -1,13 +1,16 @@
 #!/bin/bash
 
+# This is a modified version of /usr/share/lxc/templates/lxc-ubuntu
+# that comes with Ubuntu 12.10 changed to suit vagrant-lxc needs
+
 #
 # template script for generating ubuntu container for LXC
 #
 # This script consolidates and extends the existing lxc ubuntu scripts
 #
 
-# Copyright © 2011 Serge Hallyn <serge.hallyn@canonical.com>
-# Copyright © 2010 Wilhelm Meier
+# Copyright Â© 2011 Serge Hallyn <serge.hallyn@canonical.com>
+# Copyright Â© 2010 Wilhelm Meier
 # Author: Wilhelm Meier <wilhelm.meier@fh-kl.de>
 #
 # This program is free software; you can redistribute it and/or modify
@@ -76,8 +79,8 @@ EOF
     fi
 
     if [ -z "$bindhome" ]; then
-        chroot $rootfs useradd --create-home -s /bin/bash ubuntu
-        echo "ubuntu:ubuntu" | chroot $rootfs chpasswd
+        chroot $rootfs useradd --create-home -s /bin/bash vagrant
+        echo "vagrant:vagrant" | chroot $rootfs chpasswd
     fi
 
     return 0
@@ -85,7 +88,7 @@ EOF
 
 # finish setting up the user in the container by injecting ssh key and
 # adding sudo group membership.
-# passed-in user is either 'ubuntu' or the user to bind in from host.
+# passed-in user is 'vagrant'
 finalize_user()
 {
     user=$1
@@ -703,7 +706,7 @@ if [ -n "$bindhome" ]; then
     do_bindhome $rootfs $bindhome
     finalize_user $bindhome
 else
-    finalize_user ubuntu
+    finalize_user vagrant
 fi
 
 echo ""
@@ -711,7 +714,7 @@ echo "##"
 if [ -n "$bindhome" ]; then
 	echo "# Log in as user $bindhome"
 else
-	echo "# The default user is 'ubuntu' with password 'ubuntu'!"
+	echo "# The default user is 'vagrant' with password 'vagrant'!"
 	echo "# Use the 'sudo' command to run tasks as root in the container."
 fi
 echo "##"
