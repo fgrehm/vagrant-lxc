@@ -1,0 +1,9 @@
+{
+  "provider":            "lxc",
+  "vagrant-lxc-version": "0.0.1",
+
+  "template-opts": {
+    "--arch":    "x86_64",
+    "--release": "quantal"
+  }
+}
