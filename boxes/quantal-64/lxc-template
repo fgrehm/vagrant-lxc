@@ -78,10 +78,8 @@ EOF
         rm -f $rootfs/etc/init/tty{5,6}.conf
     fi
 
-    if [ -z "$bindhome" ]; then
-        chroot $rootfs useradd --create-home -s /bin/bash vagrant
-        echo "vagrant:vagrant" | chroot $rootfs chpasswd
-    fi
+    chroot $rootfs useradd --create-home -s /bin/bash vagrant
+    echo "vagrant:vagrant" | chroot $rootfs chpasswd
 
     return 0
 }
@@ -526,61 +524,20 @@ post_process()
     fi
 }
 
-do_bindhome()
-{
-    rootfs=$1
-    user=$2
-
-    # copy /etc/passwd, /etc/shadow, and /etc/group entries into container
-    pwd=`getent passwd $user` || { echo "Failed to copy password entry for $user"; false; }
-    echo $pwd >> $rootfs/etc/passwd
-
-    # make sure user's shell exists in the container
-    shell=`echo $pwd | cut -d: -f 7`
-    if [ ! -x $rootfs/$shell ]; then
-        echo "shell $shell for user $user was not found in the container."
-        pkg=`dpkg -S $(readlink -m $shell) | cut -d ':' -f1`
-        echo "Installing $pkg"
-        chroot $rootfs apt-get --force-yes -y install $pkg
-    fi
-
-    shad=`getent shadow $user`
-    echo "$shad" >> $rootfs/etc/shadow
-
-    # bind-mount the user's path into the container's /home
-    h=`getent passwd $user | cut -d: -f 6`
-    mkdir -p $rootfs/$h
-
-    # use relative path in container
-    h2=${h#/}
-    while [ ${h2:0:1} = "/" ]; do
-        h2=${h2#/}
-    done
-    echo "$h $h2 none bind 0 0" >> $path/fstab
-
-    # Make sure the group exists in container
-    grp=`echo $pwd | cut -d: -f 4`  # group number for $user
-    grpe=`getent group $grp` || return 0  # if host doesn't define grp, ignore in container
-    chroot $rootfs getent group "$grpe" || echo "$grpe" >> $rootfs/etc/group
-}
-
 usage()
 {
     cat <<EOF
-$1 -h|--help [-a|--arch] [-b|--bindhome <user>] [--trim] [-d|--debug]
+$1 -h|--help [-a|--arch] [--trim] [-d|--debug]
    [-F | --flush-cache] [-r|--release <release>] [ -S | --auth-key <keyfile>]
 release: the ubuntu release (e.g. precise): defaults to host release on ubuntu, otherwise uses latest LTS
 trim: make a minimal (faster, but not upgrade-safe) container
-bindhome: bind <user>'s home into the container
-          The ubuntu user will not be created, and <user> will have
-          sudo access.
 arch: the container architecture (e.g. amd64): defaults to host arch
 auth-key: SSH Public key file to inject into container
 EOF
     return 0
 }
 
-options=$(getopt -o a:b:hp:r:xn:FS:d -l arch:,bindhome:,help,path:,release:,trim,name:,flush-cache,auth-key:,debug -- "$@")
+options=$(getopt -o a:b:hp:r:xn:FS:d -l arch:,help,path:,release:,trim,name:,flush-cache,auth-key:,debug -- "$@")
 if [ $? -ne 0 ]; then
     usage $(basename $0)
     exit 1
@@ -595,7 +552,6 @@ if [ -f /etc/lsb-release ]; then
     fi
 fi
 
-bindhome=
 arch=$(arch)
 
 # Code taken from debootstrap
@@ -626,7 +582,6 @@ do
     -n|--name)      name=$2; shift 2;;
     -F|--flush-cache) flushcache=1; shift 1;;
     -r|--release)   release=$2; shift 2;;
-    -b|--bindhome)  bindhome=$2; shift 2;;
     -a|--arch)      arch=$2; shift 2;;
     -x|--trim)      trim_container=1; shift 1;;
     -S|--auth-key)  auth_key=$2; shift 2;;
@@ -638,14 +593,6 @@ done
 
 if [ $debug -eq 1 ]; then
     set -x
-fi
-
-if [ -n "$bindhome" ]; then
-    pwd=`getent passwd $bindhome`
-    if [ $? -ne 0 ]; then
-        echo "Error: no password entry found for $bindhome"
-        exit 1
-    fi
 fi
 
 
@@ -702,20 +649,11 @@ fi
 
 post_process $rootfs $release $trim_container
 
-if [ -n "$bindhome" ]; then
-    do_bindhome $rootfs $bindhome
-    finalize_user $bindhome
-else
-    finalize_user vagrant
-fi
+finalize_user vagrant
 
 echo ""
 echo "##"
-if [ -n "$bindhome" ]; then
-	echo "# Log in as user $bindhome"
-else
-	echo "# The default user is 'vagrant' with password 'vagrant'!"
-	echo "# Use the 'sudo' command to run tasks as root in the container."
-fi
+echo "# The default user is 'vagrant' with password 'vagrant'!"
+echo "# Use the 'sudo' command to run tasks as root in the container."
 echo "##"
 echo ""
