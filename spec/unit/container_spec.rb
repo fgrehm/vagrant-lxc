@@ -100,27 +100,6 @@ describe Vagrant::LXC::Container do
     end
   end
 
-  describe 'after create script execution' do
-    let(:name)              { 'random-container-name' }
-    let(:after_create_path) { '/path/to/after/create' }
-    let(:execute_cmd)       { @execute_cmd }
-    let(:priv_key_path)     { Vagrant.source_root.join('keys', 'vagrant').expand_path.to_s }
-    let(:ip)                { '10.0.3.234' }
-
-    before do
-      subject.stub(dhcp_ip: ip)
-      subject.stub(:execute) { |*args| @execute_cmd = args.join(' ') }
-      subject.run_after_create_script after_create_path
-    end
-
-    it 'runs after-create-script when present passing required variables' do
-      execute_cmd.should include after_create_path
-      execute_cmd.should include "-r /var/lib/lxc/#{name}/rootfs"
-      execute_cmd.should include "-k #{priv_key_path}"
-      execute_cmd.should include "-i #{ip}"
-    end
-  end
-
   describe 'destruction' do
     let(:name) { 'container-name' }
 

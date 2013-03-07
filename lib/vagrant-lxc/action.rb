@@ -1,6 +1,5 @@
 require 'vagrant-lxc/action/base_action'
 
-require 'vagrant-lxc/action/after_create'
 require 'vagrant-lxc/action/boot'
 require 'vagrant-lxc/action/check_created'
 require 'vagrant-lxc/action/check_running'
@@ -54,7 +53,6 @@ module Vagrant
           b.use ForwardPorts
           b.use SaneDefaults
           b.use Customize
-          b.use AfterCreate
           b.use Boot
         end
       end

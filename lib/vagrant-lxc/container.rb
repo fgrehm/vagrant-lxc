@@ -55,21 +55,6 @@ module Vagrant
         @name
       end
 
-      def run_after_create_script(script)
-        private_key = Vagrant.source_root.join('keys', 'vagrant').expand_path.to_s
-
-        # TODO: Gotta write somewhere that it has to be indempotent
-        retryable(:tries => 5, :sleep => 2) do
-          @logger.debug 'Attempt to run after-create-script from box metadata'
-          execute *[
-            script,
-            '-r', rootfs_path.to_s,
-            '-k', private_key,
-            '-i', dhcp_ip
-          ]
-        end
-      end
-
       def rootfs_path
         Pathname.new("#{CONTAINERS_PATH}/#{@name}/rootfs")
       end
