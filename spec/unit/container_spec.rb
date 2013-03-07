@@ -78,14 +78,13 @@ describe Vagrant::LXC::Container do
   describe 'creation' do
     let(:name)            { 'random-container-name' }
     let(:template_name)   { 'template-name' }
-    let(:tar_cache_path)  { '/path/to/tar/cache' }
     let(:lxc_cache)       { '/path/to/cache' }
     let(:public_key_path) { Vagrant.source_root.join('keys', 'vagrant.pub').expand_path.to_s }
 
     before do
       subject.stub(lxc: true)
       SecureRandom.stub(hex: name)
-      subject.create 'template-name' => template_name, 'tar-cache' => tar_cache_path, 'lxc-cache-path' => lxc_cache
+      subject.create 'template-name' => template_name, 'lxc-cache-path' => lxc_cache, 'template-opts' => { '--foo' => 'bar'}
     end
 
     it 'calls lxc-create with the right arguments' do
@@ -94,9 +93,9 @@ describe Vagrant::LXC::Container do
         '--template', template_name,
         '--name', name,
         '--',
-        '-S', public_key_path,
-        '--cache-path', lxc_cache,
-        '-T', tar_cache_path
+        '--auth-key', public_key_path,
+        '--cache', lxc_cache,
+        '--foo', 'bar'
       )
     end
   end

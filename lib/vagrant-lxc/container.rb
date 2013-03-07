@@ -37,6 +37,10 @@ module Vagrant
         @name      = SecureRandom.hex(6)
         public_key = Vagrant.source_root.join('keys', 'vagrant.pub').expand_path.to_s
 
+        meta_opts  = metadata.fetch('template-opts', {}).map do |opt, value|
+          [opt, value]
+        end.flatten
+
         # TODO: Handle errors
         lxc :create,
             # lxc-create options
@@ -44,9 +48,9 @@ module Vagrant
             '--name', @name,
             '--',
               # Template options
-              '-S', public_key,
-              '--cache-path', metadata['lxc-cache-path'],
-              '-T', metadata['tar-cache']
+              '--auth-key',   public_key,
+              '--cache', metadata['lxc-cache-path'],
+              *meta_opts
 
         @name
       end
