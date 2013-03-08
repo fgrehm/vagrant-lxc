@@ -1,5 +1,7 @@
 # vagrant-lxc
 
+[![Build Status](https://travis-ci.org/fgrehm/vagrant-lxc.png?branch=master)](https://travis-ci.org/fgrehm/vagrant-lxc)
+
 Highly experimental, soon to come, Linux Containers support for the unreleased
 Vagrant 1.1.
 
