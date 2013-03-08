@@ -2,11 +2,11 @@ Exec { path => [ '/bin/', '/sbin/' , '/usr/bin/', '/usr/sbin/', '/usr/local/bin'
 
 # Because I'm lazy ;)
 exec {
-  'echo "alias be=\"bundle exec\"" >> ~/.bashrc':
-    unless => 'grep -q "bundle exec" ~/.bashrc';
+  'echo "alias be=\"bundle exec\"" >> /home/vagrant/.bashrc':
+    unless => 'grep -q "bundle exec" /home/vagrant/.bashrc';
 
-  'echo "cd /vagrant" >> ~/.bashrc':
-    unless => 'grep -q "cd /vagrant" ~/.bashrc';
+  'echo "cd /vagrant" >> /home/vagrant/.bashrc':
+    unless => 'grep -q "cd /vagrant" /home/vagrant/.bashrc';
 }
 
 # Overwrite LXC default configs
@@ -15,12 +15,13 @@ exec {
      # We need to do this otherwise IPs will collide with the host's lxc dhcp server.
      # If we install the package prior to setting this configs the container will go crazy.
      command => 'cp /vagrant/development/lxc-configs/lxc-dev-default /etc/default/lxc',
-     unless  => 'grep -q "10.0.4" /etc/default/lxc'
+     unless  => 'grep -q "10.0.254" /etc/default/lxc'
 }
 
 # Install dependencies
 package {
-  [ 'libffi-dev', 'bsdtar', 'exuberant-ctags', 'ruby1.9.1-dev', 'htop', 'git', 'build-essential' ]:
+  [ 'libffi-dev', 'bsdtar', 'exuberant-ctags', 'ruby1.9.1-dev', 'htop', 'git',
+    'build-essential', 'dnsutils' ]:
     ensure   => 'installed'
   ;
 
