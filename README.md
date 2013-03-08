@@ -37,7 +37,7 @@ sudo apt-get install lxc bsdtar
 
 * Ruby >= 1.9.3 only, patches for 1.8.7 are welcome
 * A hell lot of `sudo`s
-* Only a [single box supported](boxes), I'm still [figuring out what should go
+* Only a [single ubuntu box supported](boxes), I'm still [figuring out what should go
   on the .box file](https://github.com/fgrehm/vagrant-lxc/issues/4)
 * "[works](https://github.com/fgrehm/vagrant-lxc/issues/20) on [my machine](https://github.com/fgrehm/vagrant-lxc/issues/7)" (TM)
 * + bunch of other [core features](https://github.com/fgrehm/vagrant-lxc/issues?labels=core&milestone=&page=1&state=open)
@@ -53,8 +53,8 @@ git clone git://github.com/fgrehm/vagrant-lxc.git --recurse
 cd vagrant-lxc
 bundle install
 bundle exec rake install
-bundle exec rake boxes:build:ubuntu-cloud
-vagrant-lxc box add ubuntu-cloud boxes/output/ubuntu-cloud.box
+bundle exec rake boxes:quantal64:build
+vagrant-lxc box add quantal64 boxes/output/lxc-quantal64.box
 ```
 
 Since Vagrant 1.1 has not been released yet and to avoid messing up with you
@@ -65,7 +65,7 @@ and run `vagrant-lxc up --provider=lxc`:
 
 ```ruby
 Vagrant.configure("2") do |config|
-  config.vm.box = "ubuntu-cloud"
+  config.vm.box = "quantal64"
 
   # Create a private network, which allows host-only access to the machine
   # using a specific IP.
@@ -104,7 +104,7 @@ just sing that same old song:
 git clone git://github.com/fgrehm/vagrant-lxc.git --recurse
 cd vagrant-lxc
 bundle install
-bundle exec rake boxes:build:ubuntu-cloud
+bundle exec rake boxes:quantal64:build
 bundle exec rake # to run all specs
 ```
 
