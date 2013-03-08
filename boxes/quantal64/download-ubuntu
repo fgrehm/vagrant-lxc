@@ -23,7 +23,7 @@ write_sourceslist()
     # $1 => path to the rootfs
     # $2 => architecture we want to add
 
-    MIRROR=${MIRROR:-http://archive.ubuntu.com/ubuntu}
+    MIRROR=${MIRROR:-mirror://mirrors.ubuntu.com/mirrors.txt}
     SECURITY_MIRROR=${SECURITY_MIRROR:-http://security.ubuntu.com/ubuntu}
 
     cat >> "$1/etc/apt/sources.list" << EOF
