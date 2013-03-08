@@ -33,13 +33,12 @@ module Vagrant
 
       def create(metadata = {})
         # FIXME: Ruby 1.8 users dont have SecureRandom
-        # @logger.info('Creating container...')
+        @logger.debug('Creating container using lxc-create...')
+
         @name      = SecureRandom.hex(6)
         public_key = Vagrant.source_root.join('keys', 'vagrant.pub').expand_path.to_s
 
-        meta_opts  = metadata.fetch('template-opts', {}).map do |opt, value|
-          [opt, value]
-        end.flatten
+        meta_opts  = metadata.fetch('template-opts', {}).to_a.flatten
 
         # TODO: Handle errors
         lxc :create,
@@ -49,7 +48,7 @@ module Vagrant
             '--',
               # Template options
               '--auth-key',   public_key,
-              '--cache', metadata['lxc-cache-path'],
+              '--cache', metadata['rootfs-cache-path'],
               *meta_opts
 
         @name
