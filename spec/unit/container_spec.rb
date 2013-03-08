@@ -181,8 +181,9 @@ describe Vagrant::LXC::Container do
   end
 
   describe 'dhcp ip' do
-    let(:name) { 'random-container-name' }
-    let(:ip)   { "10.0.3.123" }
+    let(:name)      { 'random-container-name' }
+    let(:ip)        { "10.0.4.123" }
+    let(:server_ip) { "10.0.4.1" }
 
     before do
       subject.stub(:raw) {
@@ -191,8 +192,8 @@ describe Vagrant::LXC::Container do
     end
 
     it 'digs the container ip from lxc dns server' do
-      subject.dhcp_ip.should == ip
-      subject.should have_received(:raw).with('dig', name, '@10.0.3.1', '+short')
+      subject.dhcp_ip(server_ip).should == ip
+      subject.should have_received(:raw).with('dig', name, "@#{server_ip}", '+short')
     end
   end
 end
