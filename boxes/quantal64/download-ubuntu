@@ -1,0 +1,103 @@
+#!/bin/bash
+
+# This is the code extracted from /usr/share/lxc/templates/lxc-ubuntu
+# that comes with Ubuntu 12.10 which is responsible for downloading the
+# rootfs files / packages
+
+set -e
+
+suggest_flush()
+{
+    echo "Container upgrade failed.  The container cache may be out of date,"
+    echo "in which case flushing the case (see -F in the hep output) may help."
+}
+
+cleanup()
+{
+    rm -rf $cache/partial-$arch
+    rm -rf $cache/rootfs-$arch
+}
+
+write_sourceslist()
+{
+    # $1 => path to the rootfs
+    # $2 => architecture we want to add
+
+    MIRROR=${MIRROR:-mirror://mirrors.ubuntu.com/mirrors.txt}
+    SECURITY_MIRROR=${SECURITY_MIRROR:-http://security.ubuntu.com/ubuntu}
+
+    cat >> "$1/etc/apt/sources.list" << EOF
+deb $MIRROR ${release} main restricted universe multiverse
+deb $MIRROR ${release}-updates main restricted universe multiverse
+deb $SECURITY_MIRROR ${release}-security main restricted universe multiverse
+EOF
+}
+
+download_ubuntu()
+{
+    packages=vim,ssh,curl,wget,bash-completion
+    echo "installing packages: $packages"
+
+    trap cleanup EXIT SIGHUP SIGINT SIGTERM
+    # check the mini ubuntu was not already downloaded
+    mkdir -p "$cache/partial-$arch"
+    if [ $? -ne 0 ]; then
+        echo "Failed to create '$cache/partial-$arch' directory"
+        return 1
+    fi
+
+    # download a mini ubuntu into a cache
+    echo "Downloading ubuntu $release minimal ..."
+    if [ -n "$(which qemu-debootstrap)" ]; then
+        qemu-debootstrap --verbose --components=main,universe --arch=$arch --include=$packages $release $cache/partial-$arch $MIRROR
+    else
+        debootstrap --verbose --components=main,universe --arch=$arch --include=$packages $release $cache/partial-$arch $MIRROR
+    fi
+
+    if [ $? -ne 0 ]; then
+        echo "Failed to download the rootfs, aborting."
+            return 1
+    fi
+
+    # Serge isn't sure whether we should avoid doing this when
+    # $release == `distro-info -d`
+    echo "Installing updates"
+    > $cache/partial-$arch/etc/apt/sources.list
+    write_sourceslist $cache/partial-$arch/ $arch
+
+    chroot "$1/partial-${arch}" apt-get update
+    if [ $? -ne 0 ]; then
+        echo "Failed to update the apt cache"
+        return 1
+    fi
+    cat > "$1/partial-${arch}"/usr/sbin/policy-rc.d << EOF
+#!/bin/sh
+exit 101
+EOF
+    chmod +x "$1/partial-${arch}"/usr/sbin/policy-rc.d
+
+    lxc-unshare -s MOUNT -- chroot "$1/partial-${arch}" apt-get dist-upgrade -y || { suggest_flush; false; }
+
+    rm -f "$1/partial-${arch}"/usr/sbin/policy-rc.d
+
+    chroot "$1/partial-${arch}" apt-get clean
+
+    mv "$1/partial-$arch" "$1/rootfs-$arch"
+    trap EXIT
+    trap SIGINT
+    trap SIGTERM
+    trap SIGHUP
+    echo "Download complete"
+    return 0
+}
+
+declare cache=`readlink -f .` \
+        arch=amd64 \
+        release=quantal
+
+if [ -d "${cache}/rootfs-${arch}" ]; then
+  echo 'The rootfs cache has been downloaded already, please remove it if you want to update'
+  exit 1
+fi
+
+download_ubuntu $cache $arch $release

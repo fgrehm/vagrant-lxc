@@ -37,7 +37,7 @@ sudo apt-get install lxc bsdtar
 
 * Ruby >= 1.9.3 only, patches for 1.8.7 are welcome
 * A hell lot of `sudo`s
-* Only a [single box supported](boxes), I'm still [figuring out what should go
+* Only a [single ubuntu box supported](boxes), I'm still [figuring out what should go
   on the .box file](https://github.com/fgrehm/vagrant-lxc/issues/4)
 * "[works](https://github.com/fgrehm/vagrant-lxc/issues/20) on [my machine](https://github.com/fgrehm/vagrant-lxc/issues/7)" (TM)
 * + bunch of other [core features](https://github.com/fgrehm/vagrant-lxc/issues?labels=core&milestone=&page=1&state=open)
@@ -53,19 +53,18 @@ git clone git://github.com/fgrehm/vagrant-lxc.git --recurse
 cd vagrant-lxc
 bundle install
 bundle exec rake install
-bundle exec rake boxes:build:ubuntu-cloud
-vagrant-lxc box add ubuntu-cloud boxes/output/ubuntu-cloud.box
 ```
 
 Since Vagrant 1.1 has not been released yet and to avoid messing up with you
 current Vagrant installation, I've vendored Vagrant's sources from the master
 and made it available from [`vagrant-lxc`](bin/vagrant-lxc). So after installing
-`vagrant-lxc` and adding the base box, create a `Vagrantfile` like the one below
-and run `vagrant-lxc up --provider=lxc`:
+`vagrant-lxc`, create a `Vagrantfile` like the one below and run
+`vagrant-lxc up --provider=lxc`:
 
 ```ruby
 Vagrant.configure("2") do |config|
-  config.vm.box = "ubuntu-cloud"
+  config.vm.box     = "lxc-quantal64"
+  config.vm.box_url = 'http://dl.dropbox.com/u/13510779/lxc-quantal64-2013-03-08.box'
 
   # Create a private network, which allows host-only access to the machine
   # using a specific IP.
@@ -104,9 +103,16 @@ just sing that same old song:
 git clone git://github.com/fgrehm/vagrant-lxc.git --recurse
 cd vagrant-lxc
 bundle install
-bundle exec rake boxes:build:ubuntu-cloud
 bundle exec rake # to run all specs
 ```
+
+To rebuild and add the new quantal64 box:
+
+```
+bundle exec rake boxes:quantal64:build
+vagrant-lxc box add quantal64 boxes/output/lxc-quantal64.box
+```
+
 
 ### Using VirtualBox for development
 
