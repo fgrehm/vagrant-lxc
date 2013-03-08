@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+
+set -e
+
+# Package ubuntu-cloud
+if ! [ -f ../boxes/output/ubuntu-cloud.box ]; then
+  bundle exec rake boxes:build:ubuntu-cloud
+fi
+
+# Fresh start
+bundle exec vagrant-lxc destroy
+
+# Skip provisioning as we need to apt-get update first
+bundle exec vagrant-lxc up --provider=lxc --no-provision
+
+# Trigger an update from here instead of doing it from puppet as we don't need to
+# apt-get update every time we boot the container. If there is a way to do it
+# from puppet I don't know. If you do, feel free to send a pull request ;)
+bundle exec vagrant-lxc ssh -c '
+sudo sed -i -e "s/archive./br.archive./g" /etc/apt/sources.list &&
+sudo apt-get update'
+bundle exec vagrant-lxc provision
+
+# Reload the container just to ensure it can boot properly after the upgrades
+bundle exec vagrant-lxc reload
