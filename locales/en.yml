@@ -6,3 +6,7 @@ en:
 
         For more information on the failure, enable detailed logging by setting
         the environment variable VAGRANT_LOG to DEBUG.
+
+      lxc_template_file_missing: |-
+        The template file used for creating the container was not found for %{name}
+        box.

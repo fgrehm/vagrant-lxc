@@ -33,9 +33,12 @@ module Vagrant
 
       def create(metadata = {})
         # FIXME: Ruby 1.8 users dont have SecureRandom
-        # @logger.info('Creating container...')
+        @logger.debug('Creating container using lxc-create...')
+
         @name      = SecureRandom.hex(6)
         public_key = Vagrant.source_root.join('keys', 'vagrant.pub').expand_path.to_s
+
+        meta_opts  = metadata.fetch('template-opts', {}).to_a.flatten
 
         # TODO: Handle errors
         lxc :create,
@@ -44,26 +47,11 @@ module Vagrant
             '--name', @name,
             '--',
               # Template options
-              '-S', public_key,
-              '--cache-path', metadata['lxc-cache-path'],
-              '-T', metadata['tar-cache']
+              '--auth-key',   public_key,
+              '--cache', metadata['rootfs-cache-path'],
+              *meta_opts
 
         @name
-      end
-
-      def run_after_create_script(script)
-        private_key = Vagrant.source_root.join('keys', 'vagrant').expand_path.to_s
-
-        # TODO: Gotta write somewhere that it has to be indempotent
-        retryable(:tries => 5, :sleep => 2) do
-          @logger.debug 'Attempt to run after-create-script from box metadata'
-          execute *[
-            script,
-            '-r', rootfs_path.to_s,
-            '-k', private_key,
-            '-i', dhcp_ip
-          ]
-        end
       end
 
       def rootfs_path
