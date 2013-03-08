@@ -35,7 +35,7 @@ EOF
 
 download_ubuntu()
 {
-    packages=vim,ssh
+    packages=vim,ssh,curl,wget,bash-completion
     echo "installing packages: $packages"
 
     trap cleanup EXIT SIGHUP SIGINT SIGTERM
@@ -77,6 +77,7 @@ EOF
     chmod +x "$1/partial-${arch}"/usr/sbin/policy-rc.d
 
     lxc-unshare -s MOUNT -- chroot "$1/partial-${arch}" apt-get dist-upgrade -y || { suggest_flush; false; }
+
     rm -f "$1/partial-${arch}"/usr/sbin/policy-rc.d
 
     chroot "$1/partial-${arch}" apt-get clean
@@ -95,7 +96,7 @@ declare cache=`readlink -f .` \
         release=quantal
 
 if [ -d "${cache}/rootfs-${arch}" ]; then
-  echo 'The cache has been downloaded already, please remove it if you want to update'
+  echo 'The rootfs cache has been downloaded already, please remove it if you want to update'
   exit 1
 fi
 
