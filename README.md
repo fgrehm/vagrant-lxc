@@ -17,7 +17,7 @@ Please keep in mind that although I'm already using this on my laptop, this is
 
 ## Dependencies
 
-LXC, `bsdtar` packages and a Kernel [higher than 3.5.0-17.28](#im-unable-to-restart-containers),
+LXC and `bsdtar` packages and a Kernel [higher than 3.5.0-17.28](#im-unable-to-restart-containers),
 which on Ubuntu 12.10 means:
 
 ```
@@ -91,7 +91,7 @@ end
 
 If you don't trust me and believe that it will mess up with your current Vagrant
 installation and / or are afraid that something might go wrong with your machine,
-fire up the [same Vagrant VirtualBox machine I'm using for development](#using-virtualbox-for-development)
+fire up the [same Vagrant VirtualBox machine I'm using for development](#using-virtualbox-and-vagrant-10-for-development)
 to try things out and do the same as above. That might also get you up and running
 if you are working on a mac or windows host ;)
 
