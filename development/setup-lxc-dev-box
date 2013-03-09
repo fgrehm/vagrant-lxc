@@ -2,19 +2,17 @@
 
 set -e
 
-# Package quantal64
-if ! [ -f ../boxes/output/lxc-quantal64.box ]; then
-  bundle exec rake boxes:quantal64:build
-fi
-
 # Fresh start
 bundle exec vagrant-lxc destroy
 
 # Skip provisioning as we need to apt-get update first
-bundle exec vagrant-lxc up --provider=lxc --no-provision
+bundle exec vagrant-lxc up --no-provision --provider=lxc
 
-bundle exec vagrant-lxc ssh -c 'sudo apt-get update && sudo apt-get install puppet -y'
-bundle exec vagrant-lxc provision
+# apt-get and install puppet so we can provision the dev machine
+bundle exec vagrant-lxc provision --provision-with=shell
 
-# Reload the container just to ensure it can boot properly after the upgrades
+# Actual setup
+bundle exec vagrant-lxc provision --provision-with=puppet
+
+# Reload the container just to ensure it can boot properly after provisioning
 bundle exec vagrant-lxc reload
