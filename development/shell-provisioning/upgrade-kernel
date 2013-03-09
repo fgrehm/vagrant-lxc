@@ -1,0 +1,15 @@
+#!/bin/bash
+
+set -e
+
+
+if [[ `uname -r` != "3.5.0-17-generic" ]]; then
+  exit 0
+fi
+echo 'An old kernel was found on the guest machine and it will be upgraded' 1>&2
+echo 'Please reload the box after provisioning when finished' 1>&2
+sudo apt-get update
+sudo apt-get install linux-image-3.5.0-25-generic linux-headers-3.5.0-25-generic -y
+sudo apt-get dist-upgrade -y
+sudo apt-get clean
+sudo apt-get autoremove -y

@@ -25,6 +25,8 @@ Vagrant::Config.run do |config|
     config.vbguest.no_remote   = true
   end
 
+  config.vm.provision :shell, :path => 'shell-provisioning/upgrade-kernel'
+
   config.vm.provision :puppet do |puppet|
     puppet.manifests_path = "."
     puppet.manifest_file  = "site.pp"
