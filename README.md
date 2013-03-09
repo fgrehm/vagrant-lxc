@@ -128,8 +128,9 @@ bundle install
 cd development
 cp Vagrantfile.lxc Vagrantfile
 # Required in order to allow nested containers to be started
-sudo apt-get install apparmor-utils && sudo aa-complain /usr/bin/lxc-start
-./setup-lxc-dev-box
+sudo apt-get install apparmor-utils
+sudo aa-complain /usr/bin/lxc-start
+bundle exec vagrant-lxc up
 ```
 
 That should result in a container ready to be `bundle exec vagrant-lxc ssh`ed.
@@ -152,7 +153,7 @@ vagrant up
 ```
 cd development
 cp Vagrantfile.vb.1.1 Vagrantfile
-vagrant up
+bundle exec vagrant-lxc up
 ```
 
 
