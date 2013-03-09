@@ -108,7 +108,7 @@ bundle install
 bundle exec rake # to run all specs
 ```
 
-To rebuild and add the new quantal64 box:
+To rebuild and add the provided quantal64 box:
 
 ```
 bundle exec rake boxes:quantal64:build
@@ -116,16 +116,35 @@ vagrant-lxc box add quantal64 boxes/output/lxc-quantal64.box
 ```
 
 
-### Using VirtualBox for development
+### Using `vagrant-lxc` to develop itself
 
-I've also prepared a Vagrant 1.0 VirtualBox machine for development that you can
-get up and running with the [`setup-vagrant-dev-box`](setup-vagrant-dev-box)
-script. Feel free to use it :)
+Yes! The gem has been [bootstrapped](http://en.wikipedia.org/wiki/Bootstrapping_(compilers)
+and since you can boot a container from within another, after cloning the
+project you can run the commands below from the host machine to get a container
+ready for development:
+
+```sh
+bundle install
+cd development
+cp Vagrantfile.dev.lxc Vagrantfile
+# Required in order to allow nested containers to be started
+sudo apt-get install apparmor-utils && sudo aa-complain /usr/bin/lxc-start
+./setup-lxc-dev-box
+```
+
+That should result in a container ready to be `bundle exec vagrant-lxc ssh`ed.
+Once you've SSH into the guest container, you'll be already on the project's root.
+Keep in mind that you'll probably need to run `sudo aa-complain /usr/bin/lxc-start`
+on the host whenever you want to hack on it, otherwise you won't be able to
+start nested containers there to try things out.
+
+
+### Using VirtualBox and Vagrant 1.0 for development
 
 ```
-cp Vagrantfile.dev.1.0 Vagrantfile
-./setup-vagrant-dev-box
-vagrant ssh
+cd development
+cp Vagrantfile.dev.vb Vagrantfile
+vagrant up
 ```
 
 

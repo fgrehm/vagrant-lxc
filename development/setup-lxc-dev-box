@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+set -e
+
+# Fresh start
+bundle exec vagrant-lxc destroy
+
+# Skip provisioning as we need to apt-get update first
+bundle exec vagrant-lxc up --no-provision --provider=lxc
+
+# apt-get and install puppet so we can provision the dev machine
+bundle exec vagrant-lxc provision --provision-with=shell
+
+# Actual setup
+bundle exec vagrant-lxc provision --provision-with=puppet
+
+# Reload the container just to ensure it can boot properly after provisioning
+bundle exec vagrant-lxc reload

@@ -22,8 +22,7 @@ doc/
 .vagrant
 /cache
 
-Vagrantfile
-
 /boxes/**/*.tar.gz
 /boxes/quantal64/rootfs-amd64/
 /boxes/output/
+/development/Vagrantfile
