@@ -18,9 +18,7 @@ Vagrant.configure('2') do |config|
   config.vm.synced_folder "../", "/vagrant", name: 'vagrant-root'
 
   cache_dir = local_cache(config.vm.box)
-  config.vm.synced_folder cache_dir,
-                          "/var/cache/apt/archives/",
-                          name: "vagrant-cache"
+  config.vm.synced_folder cache_dir, "/var/cache/apt/archives"
 
   config.vm.provision :shell, :path => 'shell-provisioning/upgrade-kernel'
 

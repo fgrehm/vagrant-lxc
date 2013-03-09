@@ -22,7 +22,7 @@ Vagrant.configure("2") do |config|
 
   cache_dir = local_cache(config.vm.box)
   config.vm.synced_folder cache_dir,
-                          "/var/cache/apt/archives/",
+                          "/var/cache/apt/archives",
                           name: "vagrant-cache"
 
   config.vm.provider :lxc do |lxc|
