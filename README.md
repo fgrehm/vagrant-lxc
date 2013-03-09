@@ -126,7 +126,7 @@ ready for development:
 ```sh
 bundle install
 cd development
-cp Vagrantfile.dev.lxc Vagrantfile
+cp Vagrantfile.lxc Vagrantfile
 # Required in order to allow nested containers to be started
 sudo apt-get install apparmor-utils && sudo aa-complain /usr/bin/lxc-start
 ./setup-lxc-dev-box
@@ -143,7 +143,7 @@ start nested containers there to try things out.
 
 ```
 cd development
-cp Vagrantfile.dev.vb Vagrantfile
+cp Vagrantfile.vb.1.0 Vagrantfile
 vagrant up
 ```
 
@@ -160,9 +160,6 @@ LXC_START_LOG_FILE=/tmp/lxc-start.log VAGRANT_LOG=debug vagrant-lxc up
 
 This will output A LOT of information on your terminal and some useful information
 about `lxc-start` to `/tmp/lxc-start.log`.
-
-Debugging whats going on with the container itself is a pain, there are some
-nice little scripts on the [/dev](dev) folder of the project.
 
 
 ## Help!
