@@ -17,7 +17,7 @@ Vagrant::Config.run do |config|
 
   cache_dir = local_cache(config.vm.box)
   config.vm.share_folder "v-root",  "/vagrant", "../"
-  config.vm.share_folder "v-cache", "/var/apt/archives/", cache_dir
+  config.vm.share_folder "v-cache", "/var/cache/apt/archives/", cache_dir
 
   if defined? VagrantVbguest::Config
     config.vbguest.auto_update = false
