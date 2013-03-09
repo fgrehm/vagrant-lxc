@@ -11,19 +11,16 @@ def local_cache(box_name)
   cache_dir
 end
 
-Vagrant::Config.run do |config|
+Vagrant.configure('2') do |config|
   config.vm.box     = "quantal64"
   config.vm.box_url = "https://github.com/downloads/roderik/VagrantQuantal64Box/quantal64.box"
 
-  config.vm.share_folder "vagrant-root",  "/vagrant", "../"
+  config.vm.synced_folder "../", "/vagrant", name: 'vagrant-root'
 
   cache_dir = local_cache(config.vm.box)
-  config.vm.share_folder "vagrant-cache", "/var/cache/apt/archives", cache_dir
-
-  if defined? VagrantVbguest::Config
-    config.vbguest.auto_update = false
-    config.vbguest.no_remote   = true
-  end
+  config.vm.synced_folder cache_dir,
+                          "/var/cache/apt/archives/",
+                          name: "vagrant-cache"
 
   config.vm.provision :shell, :path => 'shell-provisioning/upgrade-kernel'
 
