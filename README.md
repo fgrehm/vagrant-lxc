@@ -146,6 +146,7 @@ start nested containers there to try things out.
 cd development
 cp Vagrantfile.vb.1.0 Vagrantfile
 vagrant up
+vagrant reload
 ```
 
 ### Using VirtualBox and Vagrant 1.1 for development
@@ -154,6 +155,7 @@ vagrant up
 cd development
 cp Vagrantfile.vb.1.1 Vagrantfile
 bundle exec vagrant-lxc up
+bundle exec vagrant-lxc reload
 ```
 
 
