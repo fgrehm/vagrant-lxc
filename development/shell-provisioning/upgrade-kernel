@@ -11,5 +11,4 @@ echo 'Please reload the box after provisioning when finished' 1>&2
 sudo apt-get update
 sudo apt-get install linux-image-3.5.0-25-generic linux-headers-3.5.0-25-generic -y
 sudo apt-get dist-upgrade -y
-sudo apt-get clean
 sudo apt-get autoremove -y
