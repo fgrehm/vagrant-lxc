@@ -1,0 +1,33 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+def local_cache(box_name)
+  cache_dir = File.join(File.expand_path(Vagrant::Environment::DEFAULT_HOME),
+                        'cache',
+                        'apt',
+                        box_name)
+  partial_dir = File.join(cache_dir, 'partial')
+  FileUtils.mkdir_p(partial_dir) unless File.exists? partial_dir
+  cache_dir
+end
+
+Vagrant::Config.run do |config|
+  config.vm.box     = "quantal64"
+  config.vm.box_url = "https://github.com/downloads/roderik/VagrantQuantal64Box/quantal64.box"
+
+  cache_dir = local_cache(config.vm.box)
+  config.vm.share_folder "v-root",  "/vagrant", "../"
+  config.vm.share_folder "v-cache", "/var/apt/archives/", cache_dir
+
+  if defined? VagrantVbguest::Config
+    config.vbguest.auto_update = false
+    config.vbguest.no_remote   = true
+  end
+
+  config.vm.provision :puppet do |puppet|
+    puppet.manifests_path = "."
+    puppet.manifest_file  = "site.pp"
+    # Pass DEBUG=1 to vagrant commands if you want to make some debugging noise
+    puppet.options << [ "--verbose", "--debug" ] if ENV["DEBUG"] == '1'
+  end
+end

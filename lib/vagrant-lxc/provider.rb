@@ -52,7 +52,7 @@ module Vagrant
         return nil if state == :not_created
 
         {
-          :host => @container.dhcp_ip,
+          :host => @container.dhcp_ip(@machine.provider_config.lxc_dhcp_ip),
           :port => 22 # @driver.ssh_port(@machine.config.ssh.guest_port)
         }
       end

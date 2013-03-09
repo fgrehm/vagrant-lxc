@@ -115,7 +115,7 @@ module Vagrant
         end
       end
 
-      def dhcp_ip
+      def dhcp_ip(server_ip)
         ip = ''
         # Right after creation lxc reports the container as running
         # before DNS is returning the right IP, so have to wait for a while
@@ -123,7 +123,7 @@ module Vagrant
           # By default LXC supplies a dns server on 10.0.3.1 so we request the IP
           # of our target from there.
           # Tks to: https://github.com/neerolyte/vagueant/blob/master/bin/vagueant#L340
-          r = (raw 'dig', @name, '@10.0.3.1', '+short')
+          r = (raw 'dig', @name, "@#{server_ip}", '+short')
 
           # If the command was a failure then raise an exception that is nicely
           # handled by Vagrant.
@@ -131,7 +131,7 @@ module Vagrant
             if @interrupted
               @logger.info("Exit code != 0, but interrupted. Ignoring.")
             else
-              raise LXC::Errors::ExecuteError, :command => command.inspect
+              raise LXC::Errors::ExecuteError, :command => ['dig', @name, "@#{server_ip}", '+short'].inspect
             end
           end
 
