@@ -1,6 +1,16 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
+def local_cache(box_name)
+  cache_dir = File.join(File.expand_path(Vagrant::Environment::DEFAULT_HOME),
+                        'cache',
+                        'apt',
+                        box_name)
+  partial_dir = File.join(cache_dir, 'partial')
+  FileUtils.mkdir_p(partial_dir) unless File.exists? partial_dir
+  cache_dir
+end
+
 Vagrant.require_plugin 'vagrant-lxc'
 
 Vagrant.configure("2") do |config|
@@ -9,6 +19,9 @@ Vagrant.configure("2") do |config|
   config.vm.hostname = 'lxc-quantal64'
 
   config.vm.synced_folder "/tmp", "/vagrant_data"
+
+  cache_dir = local_cache(config.vm.box)
+  config.vm.synced_folder cache_dir, "/var/cache/apt/archives"
 
   config.vm.provider :lxc do |lxc|
     lxc.lxc_dhcp_ip = '10.0.254.1' if ENV['USER'] == 'vagrant'
