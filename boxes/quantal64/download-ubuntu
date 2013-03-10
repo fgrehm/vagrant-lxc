@@ -35,7 +35,7 @@ EOF
 
 download_ubuntu()
 {
-    packages=vim,ssh,curl,wget,bash-completion
+    packages=vim,ssh,curl,wget,bash-completion,manpages,puppet
     echo "installing packages: $packages"
 
     trap cleanup EXIT SIGHUP SIGINT SIGTERM
