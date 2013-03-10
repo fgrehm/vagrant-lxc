@@ -24,7 +24,6 @@ Vagrant.configure("2") do |config|
   config.vm.synced_folder cache_dir, "/var/cache/apt/archives"
 
   config.vm.provider :lxc do |lxc|
-    lxc.lxc_dhcp_ip = '10.0.254.1' if ENV['USER'] == 'vagrant'
     lxc.start_opts << 'lxc.cgroup.memory.limit_in_bytes=400M'
     lxc.start_opts << 'lxc.cgroup.memory.memsw.limit_in_bytes=500M'
   end

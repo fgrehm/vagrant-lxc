@@ -4,7 +4,6 @@ require "vendored_vagrant"
 require 'vagrant-lxc/container'
 
 describe Vagrant::LXC::Container do
-  # Default subject and container name for specs
   let(:name) { nil }
   subject { described_class.new(name) }
 
@@ -181,20 +180,23 @@ describe Vagrant::LXC::Container do
     end
   end
 
-  describe 'dhcp ip' do
-    let(:name)      { 'random-container-name' }
-    let(:ip)        { "10.0.4.123" }
-    let(:server_ip) { "10.0.4.1" }
+  describe 'assigned ip' do
+    # This ip is set on the sample-arp-output based on mac address from sample-config
+    let(:ip)                 { "10.0.3.30" }
+    let(:conf_file_contents) { File.read('spec/fixtures/sample-config') }
+    let(:name)               { 'random-container-name' }
 
     before do
+      @arp_output = File.read('spec/fixtures/sample-arp-output')
       subject.stub(:raw) {
-        mock(stdout: "#{ip}\n", exit_code: 0)
+        mock(stdout: "#{@arp_output}\n", exit_code: 0)
       }
+      File.stub(read: conf_file_contents)
     end
 
-    it 'digs the container ip from lxc dns server' do
-      subject.dhcp_ip(server_ip).should == ip
-      subject.should have_received(:raw).with('dig', name, "@#{server_ip}", '+short')
+    it 'gets parsed from `arp` based on lxc mac address' do
+      subject.assigned_ip.should == ip
+      subject.should have_received(:raw).with('arp', '-n')
     end
   end
 end

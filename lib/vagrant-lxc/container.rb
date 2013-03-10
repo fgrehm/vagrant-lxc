@@ -9,14 +9,15 @@ require "vagrant-lxc/errors"
 module Vagrant
   module LXC
     class Container
+      # Root folder where containers are stored
+      CONTAINERS_PATH = '/var/lib/lxc'
+
       # Include this so we can use `Subprocess` more easily.
       include Vagrant::Util::Retryable
 
       # This is raised if the container can't be found when initializing it with
       # a name.
       class NotFound < StandardError; end
-
-      CONTAINERS_PATH = '/var/lib/lxc'
 
       attr_reader :name
 
@@ -27,6 +28,14 @@ module Vagrant
 
       def validate!
         raise NotFound if @name && ! lxc(:ls).split("\n").include?(@name)
+      end
+
+      def base_path
+        Pathname.new("#{CONTAINERS_PATH}/#{@name}")
+      end
+
+      def rootfs_path
+        Pathname.new("#{base_path}/rootfs")
       end
 
       def create(metadata = {})
@@ -50,10 +59,6 @@ module Vagrant
               *meta_opts
 
         @name
-      end
-
-      def rootfs_path
-        Pathname.new("#{CONTAINERS_PATH}/#{@name}/rootfs")
       end
 
       def share_folders(folders, config)
@@ -109,15 +114,18 @@ module Vagrant
         end
       end
 
-      def dhcp_ip(server_ip)
+      def assigned_ip
+        unless File.read(base_path.join('config')) =~ /^lxc\.network\.hwaddr\s*=\s*([a-z0-9:]+)\s*$/
+          raise 'Unknown Container MAC Address'
+        end
+        mac_addr = $1
+
+        #`ip neigh flush all > /dev/null`
+
         ip = ''
-        # Right after creation lxc reports the container as running
-        # before DNS is returning the right IP, so have to wait for a while
+        # See: http://programminglinuxblog.blogspot.com.br/2007/11/detecting-ip-address-from-mac-address.html
         retryable(:on => LXC::Errors::ExecuteError, :tries => 10, :sleep => 3) do
-          # By default LXC supplies a dns server on 10.0.3.1 so we request the IP
-          # of our target from there.
-          # Tks to: https://github.com/neerolyte/vagueant/blob/master/bin/vagueant#L340
-          r = (raw 'dig', @name, "@#{server_ip}", '+short')
+          r = (raw 'arp', '-n')
 
           # If the command was a failure then raise an exception that is nicely
           # handled by Vagrant.
@@ -125,14 +133,15 @@ module Vagrant
             if @interrupted
               @logger.info("Exit code != 0, but interrupted. Ignoring.")
             else
-              raise LXC::Errors::ExecuteError, :command => ['dig', @name, "@#{server_ip}", '+short'].inspect
+              raise LXC::Errors::ExecuteError, :command => ['arp', '-n'].inspect
             end
           end
 
-          ip = r.stdout.gsub("\r\n", "\n").strip
-          if ip.empty?
+
+          unless r.stdout.gsub("\r\n", "\n").strip =~ /^([0-9.]+).+#{Regexp.escape mac_addr}/
             raise LXC::Errors::ExecuteError, 'Unable to identify container ip'
           end
+          ip = $1.to_s
 
           # Sometimes lxc reports the container as running before DNS is returning
           # the right IP, so have to try a couple of times sometimes.
