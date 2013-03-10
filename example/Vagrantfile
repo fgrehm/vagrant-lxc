@@ -15,7 +15,7 @@ Vagrant.require_plugin 'vagrant-lxc'
 
 Vagrant.configure("2") do |config|
   config.vm.box      = "quantal64"
-  config.vm.box_url  = 'http://dl.dropbox.com/u/13510779/lxc-quantal64-2013-03-08.box'
+  config.vm.box_url  = 'http://dl.dropbox.com/u/13510779/lxc-quantal64-2013-03-10.box'
   config.vm.hostname = 'lxc-quantal64'
 
   config.vm.synced_folder "/tmp", "/vagrant_data"
@@ -30,16 +30,6 @@ Vagrant.configure("2") do |config|
 
   config.vm.provision :shell, :inline => <<-SCRIPT
 echo "Hi there I'm a shell script used for provisioning"
-if `which puppet > /dev/null`; then
-  echo "Looks like puppet has already been installed, moving on"
-  exit 0
-fi
-echo "I'm about to install puppet!"
-sleep 1
-echo "Hang tight, I just need to wait for a while since vagrant-lxc is not handling network properly ;)"
-sleep 5
-sudo apt-get update
-sudo apt-get install puppet -y
   SCRIPT
 
   config.vm.provision :puppet do |puppet|
