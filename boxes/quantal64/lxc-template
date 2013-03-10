@@ -36,8 +36,8 @@ fi
 configure_ubuntu()
 {
     rootfs=$1
-    hostname=$2
     release=$3
+    hostname='quantal64'
 
    # configure the network using the dhcp
     cat <<EOF > $rootfs/etc/network/interfaces
@@ -543,7 +543,7 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
-configure_ubuntu $rootfs $name $release
+configure_ubuntu $rootfs $release
 if [ $? -ne 0 ]; then
     echo "failed to configure ubuntu $release for a container"
     exit 1
