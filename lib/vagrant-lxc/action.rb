@@ -19,7 +19,7 @@ module Vagrant
       # machine back up with the new configuration.
       def self.action_reload
         Vagrant::Action::Builder.new.tap do |b|
-          b.use CheckLXC
+          # b.use CheckLXC
           b.use Vagrant::Action::Builtin::Call, Created do |env1, b2|
             if !env1[:result]
               b2.use VagrantPlugins::ProviderVirtualBox::Action::MessageNotCreated
@@ -43,16 +43,16 @@ module Vagrant
       # a bootup (i.e. not saved).
       def self.action_boot
         Vagrant::Action::Builder.new.tap do |b|
-          b.use ClearForwardedPorts
+          # b.use ClearForwardedPorts
           b.use Vagrant::Action::Builtin::Provision
           b.use Vagrant::Action::Builtin::EnvSet, :port_collision_repair => true
-          b.use PrepareForwardedPortCollisionParams
+          # b.use PrepareForwardedPortCollisionParams
           # b.use ClearSharedFolders
           b.use ShareFolders
           b.use Network
-          b.use ForwardPorts
-          b.use SaneDefaults
-          b.use Customize
+          # b.use ForwardPorts
+          # b.use SaneDefaults
+          # b.use Customize
           b.use Boot
         end
       end
@@ -60,7 +60,7 @@ module Vagrant
       # This action just runs the provisioners on the machine.
       def self.action_provision
         Vagrant::Action::Builder.new.tap do |b|
-          b.use CheckLXC
+          # b.use CheckLXC
           b.use Vagrant::Action::Builtin::ConfigValidate
           b.use Vagrant::Action::Builtin::Call, Created do |env1, b2|
             if !env1[:result]
@@ -85,7 +85,7 @@ module Vagrant
       # A precondition of this action is that the container exists.
       def self.action_start
         Vagrant::Action::Builder.new.tap do |b|
-          b.use CheckLXC
+          # b.use CheckLXC
           b.use Vagrant::Action::Builtin::ConfigValidate
           b.use Vagrant::Action::Builtin::Call, IsRunning do |env, b2|
             # If the VM is running, then our work here is done, exit
@@ -100,7 +100,7 @@ module Vagrant
       # container, configuring metadata, and booting.
       def self.action_up
         Vagrant::Action::Builder.new.tap do |b|
-          b.use CheckLXC
+          # b.use CheckLXC
           b.use Vagrant::Action::Builtin::ConfigValidate
           b.use Vagrant::Action::Builtin::Call, Created do |env, b2|
             # If the VM is NOT created yet, then do the setup steps
@@ -119,7 +119,7 @@ module Vagrant
       # the virtual machine, gracefully or by force.
       def self.action_halt
         Vagrant::Action::Builder.new.tap do |b|
-          b.use CheckLXC
+          # b.use CheckLXC
           b.use Vagrant::Action::Builtin::Call, Created do |env, b2|
             if env[:result]
               b2.use Vagrant::Action::Builtin::Call, Vagrant::Action::Builtin::GracefulHalt, :stopped, :running do |env2, b3|
@@ -141,7 +141,7 @@ module Vagrant
       # freeing the resources of the underlying virtual machine.
       def self.action_destroy
         Vagrant::Action::Builder.new.tap do |b|
-          b.use CheckLXC
+          # b.use CheckLXC
           b.use Vagrant::Action::Builtin::Call, Created do |env1, b2|
             if !env1[:result]
               b2.use VagrantPlugins::ProviderVirtualBox::Action::MessageNotCreated
@@ -169,7 +169,7 @@ module Vagrant
       # This is the action that will exec into an SSH shell.
       def self.action_ssh
         Vagrant::Action::Builder.new.tap do |b|
-          b.use CheckLXC
+          # b.use CheckLXC
           b.use CheckCreated
           # b.use CheckAccessible
           b.use CheckRunning
@@ -180,28 +180,13 @@ module Vagrant
       # This is the action that will run a single SSH command.
       def self.action_ssh_run
         Vagrant::Action::Builder.new.tap do |b|
-          b.use CheckLXC
+          # b.use CheckLXC
           b.use CheckCreated
           # b.use CheckAccessible
           b.use CheckRunning
           b.use Vagrant::Action::Builtin::SSHRun
         end
       end
-
-      # TODO: Check if our requirements are met.
-      class CheckLXC < BaseAction; end
-
-      # TODO: Implement port forwarding with rinetd
-      class ForwardPorts < BaseAction; end
-
-      # TODO: Find out which defaults are sane for LXC ;)
-      class SaneDefaults < BaseAction; end
-
-      # TODO: Find out if the actions below will be needed
-      class ClearForwardedPorts < BaseAction; end
-      class PrepareForwardedPortCollisionParams < BaseAction; end
-      class ClearSharedFolders < BaseAction; end
-      class Customize < BaseAction; end
     end
   end
 end
