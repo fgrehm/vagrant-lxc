@@ -1,5 +1,3 @@
-require 'unit_helper'
-
 require "vagrant/util/retryable"
 require "vagrant/util/subprocess"
 
@@ -9,6 +7,10 @@ module Vagrant
   module LXC
     class Container
       class CLI
+        attr_accessor :name
+
+        class TransitionBlockNotProvided < RuntimeError; end
+
         # Include this so we can use `Subprocess` more easily.
         include Vagrant::Util::Retryable
 
@@ -18,17 +20,57 @@ module Vagrant
         end
 
         def list
-          containers = lxc :ls
-          containers.split(/\s+/).uniq
+          run(:ls).split(/\s+/).uniq
+        end
+
+        def state
+          if @name && run(:info, '--name', @name) =~ /^state:[^A-Z]+([A-Z]+)$/
+            $1.downcase.to_sym
+          elsif @name
+            :unknown
+          end
+        end
+
+        def create(template, template_opts = {})
+          extra = template_opts.to_a.flatten
+          extra.unshift '--' unless extra.empty?
+
+          run :create,
+              # lxc-create options
+              '--template', template,
+              '--name',     @name,
+              *extra
+        end
+
+        def destroy
+          run :destroy, '--name', @name
+        end
+
+        def start(configs = {})
+          configs = configs.map { |key, value| ["-s", "#{key}=#{value}"] }.flatten
+          run :start, '-d', '--name', @name, *configs
+        end
+
+        def shutdown
+          run :shutdown, '--name', @name
+        end
+
+        def transition_to(state, &block)
+          raise TransitionBlockNotProvided unless block_given?
+
+          yield self
+
+          run :wait, '--name', @name, '--state', state.to_s.upcase
         end
 
         private
 
-        def lxc(command, *args)
+        def run(command, *args)
           execute('sudo', "lxc-#{command}", *args)
         end
 
-        # TODO: Review code below this line, it was pretty much a copy and paste from VirtualBox base driver
+        # TODO: Review code below this line, it was pretty much a copy and
+        #       paste from VirtualBox base driver and has no tests
         def execute(*command, &block)
           # Get the options hash if it exists
           opts = {}
