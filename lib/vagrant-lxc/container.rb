@@ -15,7 +15,7 @@ module Vagrant
       include Vagrant::Util::Retryable
 
       # This is raised if the container can't be found when initializing it with
-      # an UUID.
+      # a name.
       class NotFound < StandardError; end
 
       CONTAINERS_PATH = '/var/lib/lxc'
@@ -101,10 +101,6 @@ module Vagrant
 
       def lxc(command, *args)
         execute('sudo', "lxc-#{command}", *args)
-      end
-
-      def update!(state)
-        File.open(state_file_path, 'w') { |f| f.print state }
       end
 
       def state
