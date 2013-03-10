@@ -1,8 +1,8 @@
+require "log4r"
+
 require "vagrant-lxc/action"
 require "vagrant-lxc/container"
 require "vagrant-lxc/machine_state"
-
-require "log4r"
 
 module Vagrant
   module LXC

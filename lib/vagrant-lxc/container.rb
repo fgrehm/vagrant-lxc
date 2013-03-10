@@ -1,7 +1,6 @@
 # FIXME: Ruby 1.8 users dont have SecureRandom
 require 'securerandom'
 
-require "vendored_vagrant"
 require "vagrant/util/retryable"
 require "vagrant/util/subprocess"
 
@@ -9,7 +8,6 @@ require "vagrant-lxc/errors"
 
 module Vagrant
   module LXC
-    # REFACTOR: Encapsulate lxc commands with name
     class Container
       # Include this so we can use `Subprocess` more easily.
       include Vagrant::Util::Retryable
