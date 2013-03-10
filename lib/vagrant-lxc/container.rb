@@ -50,12 +50,12 @@ module Vagrant
         # TODO: Handle errors
         lxc :create,
             # lxc-create options
-            '--template', metadata['template-name'],
+            '--template', metadata.fetch('template-name'),
             '--name', @name,
             '--',
               # Template options
-              '--auth-key',   public_key,
-              '--cache', metadata['rootfs-cache-path'],
+              '--auth-key', public_key,
+              '--cache', metadata.fetch('rootfs-cache-path'),
               *meta_opts
 
         @name
