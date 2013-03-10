@@ -8,14 +8,10 @@ describe Vagrant::LXC::Container do
   subject { described_class.new(name) }
 
   describe 'container name validation' do
-    let(:unknown_container) { described_class.new('unknown') }
-    let(:valid_container)   { described_class.new('valid') }
+    let(:unknown_container) { described_class.new('unknown', cli) }
+    let(:valid_container)   { described_class.new('valid', cli) }
     let(:new_container)     { described_class.new(nil) }
-
-    before do
-      unknown_container.stub(lxc: 'valid')
-      valid_container.stub(lxc: 'valid')
-    end
+    let(:cli)               { fire_double('Vagrant::LXC::CLI', list: ['valid']) }
 
     it 'raises a NotFound error if an unknown container name gets provided' do
       expect {

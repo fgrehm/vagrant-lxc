@@ -1,10 +1,11 @@
 # FIXME: Ruby 1.8 users dont have SecureRandom
 require 'securerandom'
 
+require "vagrant-lxc/errors"
+require "vagrant-lxc/container/cli"
+
 require "vagrant/util/retryable"
 require "vagrant/util/subprocess"
-
-require "vagrant-lxc/errors"
 
 module Vagrant
   module LXC
@@ -21,13 +22,14 @@ module Vagrant
 
       attr_reader :name
 
-      def initialize(name)
+      def initialize(name, cli = CLI.new(name))
         @name   = name
+        @cli    = cli
         @logger = Log4r::Logger.new("vagrant::provider::lxc::container")
       end
 
       def validate!
-        raise NotFound if @name && ! lxc(:ls).split("\n").include?(@name)
+        raise NotFound if @name && ! @cli.list.include?(@name)
       end
 
       def base_path
