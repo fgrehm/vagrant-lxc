@@ -11,7 +11,7 @@ describe Vagrant::LXC::Container do
     let(:unknown_container) { described_class.new('unknown', cli) }
     let(:valid_container)   { described_class.new('valid', cli) }
     let(:new_container)     { described_class.new(nil) }
-    let(:cli)               { fire_double('Vagrant::LXC::CLI', list: ['valid']) }
+    let(:cli)               { fire_double('Vagrant::LXC::Container::CLI', list: ['valid']) }
 
     it 'raises a NotFound error if an unknown container name gets provided' do
       expect {
@@ -32,147 +32,95 @@ describe Vagrant::LXC::Container do
     end
   end
 
-  describe 'lxc commands execution' do
-    let(:args) { @args }
-
-    before do
-      subject.stub(:execute) { |*args| @args = args }
-      subject.lxc :command, '--state', 'RUNNING'
-    end
-
-    it 'prepends sudo' do
-      args[0].should == 'sudo'
-    end
-
-    it 'uses the first argument as lxc command suffix' do
-      args[1].should == 'lxc-command'
-    end
-
-    it 'pass through remaining arguments' do
-      args[2].should == '--state'
-      args[3].should == 'RUNNING'
-    end
-  end
-
-  describe 'guard for container state' do
-    let(:name) { 'random-container-name' }
-
-    before do
-      subject.stub :lxc
-      subject.wait_until :running
-    end
-
-    it 'runs lxc-wait with the machine id and upcased state' do
-      subject.should have_received(:lxc).with(
-        :wait,
-        '--name', name,
-        '--state', 'RUNNING'
-      )
-    end
-  end
-
   describe 'creation' do
     let(:name)            { 'random-container-name' }
     let(:template_name)   { 'template-name' }
     let(:rootfs_cache)    { '/path/to/cache' }
     let(:public_key_path) { Vagrant.source_root.join('keys', 'vagrant.pub').expand_path.to_s }
+    let(:cli)             { fire_double('Vagrant::LXC::Container::CLI', :create => true, :name= => true) }
+
+    subject { described_class.new(name, cli) }
 
     before do
-      subject.stub(lxc: true)
       SecureRandom.stub(hex: name)
       subject.create 'template-name' => template_name, 'rootfs-cache-path' => rootfs_cache, 'template-opts' => { '--foo' => 'bar'}
     end
 
-    it 'calls lxc-create with the right arguments' do
-      subject.should have_received(:lxc).with(
-        :create,
-        '--template', template_name,
-        '--name', name,
-        '--',
-        '--auth-key', public_key_path,
-        '--cache', rootfs_cache,
-        '--foo', 'bar'
+    it 'creates container with the right arguments' do
+      cli.should have_received(:create).with(
+        template_name,
+        '--auth-key' => public_key_path,
+        '--cache'    => rootfs_cache,
+        '--foo'      => 'bar'
       )
     end
   end
 
   describe 'destruction' do
     let(:name) { 'container-name' }
+    let(:cli)  { fire_double('Vagrant::LXC::Container::CLI', destroy: true) }
 
-    before do
-      subject.stub(lxc: true)
-      subject.destroy
-    end
+    subject { described_class.new(name, cli) }
 
-    it 'calls lxc-destroy with the right arguments' do
-      subject.should have_received(:lxc).with(
-        :destroy,
-        '--name', name,
-      )
+    before { subject.destroy }
+
+    it 'delegates to cli object' do
+      cli.should have_received(:destroy)
     end
   end
 
   describe 'start' do
-    let(:config) { mock(:config, start_opts: ['a=1', 'b=2']) }
+    let(:config) { mock(:config, start_opts: {'a' => '1', 'b' => '2'}) }
     let(:name)   { 'container-name' }
+    let(:cli)    { fire_double('Vagrant::LXC::Container::CLI', start: true) }
+
+    subject { described_class.new(name, cli) }
 
     before do
-      subject.stub(lxc: true, wait_until: true)
+      cli.stub(:transition_to).and_yield(cli)
+    end
+
+    it 'starts container with configured lxc settings' do
+      cli.should_receive(:start).with('a' => '1', 'b' => '2')
       subject.start(config)
     end
 
-    it 'calls lxc-start with the right arguments' do
-      subject.should have_received(:lxc).with(
-        :start,
-        '-d',
-        '--name', name,
-        '-s', 'a=1',
-        '-s', 'b=2'
-      )
-    end
-
-    it 'waits for container state to be RUNNING' do
-      subject.should have_received(:wait_until).with(:running)
+    it 'expects a transition to running state to take place' do
+      cli.should_receive(:transition_to).with(:running)
+      subject.start(config)
     end
   end
 
   describe 'halt' do
-    let(:name) { 'random-container-name' }
+    let(:name) { 'container-name' }
+    let(:cli)  { fire_double('Vagrant::LXC::Container::CLI', shutdown: true) }
+
+    subject { described_class.new(name, cli) }
 
     before do
-      subject.stub(lxc: true, wait_until: true)
+      cli.stub(:transition_to).and_yield(cli)
+    end
+
+    it 'delegates to cli shutdown' do
+      cli.should_receive(:shutdown)
       subject.halt
     end
 
-    it 'calls lxc-shutdown with the right arguments' do
-      subject.should have_received(:lxc).with(
-        :shutdown,
-        '--name', name
-      )
-    end
-
-    it 'waits for container state to be STOPPED' do
-      subject.should have_received(:wait_until).with(:stopped)
+    it 'expects a transition to running state to take place' do
+      cli.should_receive(:transition_to).with(:stopped)
+      subject.halt
     end
   end
 
   describe 'state' do
-    let(:name) { 'random-container-name' }
+    let(:name)      { 'random-container-name' }
+    let(:cli_state) { :something }
+    let(:cli)       { fire_double('Vagrant::LXC::Container::CLI', state: cli_state) }
 
-    before do
-      subject.stub(lxc: "state: STOPPED\npid: 2")
-    end
+    subject { described_class.new(name, cli) }
 
-    it 'calls lxc-info with the right arguments' do
-      subject.state
-      subject.should have_received(:lxc).with(
-        :info,
-        '--name', name
-      )
-    end
-
-    it 'maps the output of lxc-info status out to a symbol' do
-      subject.state.should == :stopped
+    it 'delegates to cli' do
+      subject.state.should == cli_state
     end
   end
 

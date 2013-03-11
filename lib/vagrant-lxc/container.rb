@@ -46,19 +46,13 @@ module Vagrant
 
         @name      = SecureRandom.hex(6)
         public_key = Vagrant.source_root.join('keys', 'vagrant.pub').expand_path.to_s
+        meta_opts  = metadata.fetch('template-opts', {}).merge(
+          '--auth-key' => public_key,
+          '--cache'    => metadata.fetch('rootfs-cache-path')
+        )
 
-        meta_opts  = metadata.fetch('template-opts', {}).to_a.flatten
-
-        # TODO: Handle errors
-        lxc :create,
-            # lxc-create options
-            '--template', metadata.fetch('template-name'),
-            '--name', @name,
-            '--',
-              # Template options
-              '--auth-key', public_key,
-              '--cache', metadata.fetch('rootfs-cache-path'),
-              *meta_opts
+        @cli.name = @name
+        @cli.create(metadata.fetch('template-name'), meta_opts)
 
         @name
       end
@@ -75,44 +69,36 @@ module Vagrant
             end
           end
 
+          # http://blog.smartlogicsolutions.com/2009/06/04/mount-options-to-improve-ext4-file-system-performance/
           config.start_opts << "lxc.mount.entry=#{folder[:hostpath]} #{guestpath} none bind 0 0"
         end
       end
 
       def start(config)
-        # @logger.info('Starting container...')
-        opts = config.start_opts.map { |opt| ["-s", opt] }.flatten
-        opts += ['-o', ENV['LXC_START_LOG_FILE'], '-l', 'DEBUG'] if ENV['LXC_START_LOG_FILE']
-        lxc :start, '-d', '--name', @name, *opts
-        wait_until :running
+        @logger.info('Starting container...')
+
+        opts = config.start_opts.dup
+        if ENV['LXC_START_LOG_FILE']
+          opts.merge!('-o' => ENV['LXC_START_LOG_FILE'], '-l' => 'DEBUG')
+        end
+
+        @cli.transition_to(:running) { |c| c.start(opts) }
       end
 
       def halt
-        lxc :shutdown, '--name', @name
-        wait_until :stopped
+        @logger.info('Shutting down container...')
+
         # TODO: issue an lxc-stop if a timeout gets reached
+        @cli.transition_to(:stopped) { |c| c.shutdown }
       end
 
       def destroy
-        lxc :destroy, '--name', @name
-      end
-
-      # REFACTOR:
-      #   transition_to :state do
-      #     ... code ...
-      def wait_until(state)
-        lxc :wait, '--name', @name, '--state', state.to_s.upcase
-      end
-
-      def lxc(command, *args)
-        execute('sudo', "lxc-#{command}", *args)
+        @cli.destroy
       end
 
       def state
-        if @name && lxc(:info, '--name', @name) =~ /^state:[^A-Z]+([A-Z]+)$/
-          $1.downcase.to_sym
-        elsif @name
-          :unknown
+        if @name
+          @cli.state
         end
       end
 
@@ -122,7 +108,7 @@ module Vagrant
         end
         mac_addr = $1
 
-        #`ip neigh flush all > /dev/null`
+        # TODO: We might need to `ip neigh flush all > /dev/null` before running `arp`
 
         ip = ''
         # See: http://programminglinuxblog.blogspot.com.br/2007/11/detecting-ip-address-from-mac-address.html
@@ -157,36 +143,6 @@ module Vagrant
       end
 
       # TODO: Review code below this line, it was pretty much a copy and paste from VirtualBox base driver
-      def execute(*command, &block)
-        # Get the options hash if it exists
-        opts = {}
-        opts = command.pop if command.last.is_a?(Hash)
-
-        tries = 0
-        tries = 3 if opts[:retryable]
-
-        # Variable to store our execution result
-        r = nil
-
-        retryable(:on => LXC::Errors::ExecuteError, :tries => tries, :sleep => 1) do
-          # Execute the command
-          r = raw(*command, &block)
-
-          # If the command was a failure, then raise an exception that is
-          # nicely handled by Vagrant.
-          if r.exit_code != 0
-            if @interrupted
-              @logger.info("Exit code != 0, but interrupted. Ignoring.")
-            else
-              raise LXC::Errors::ExecuteError, :command => command.inspect
-            end
-          end
-        end
-
-        # Return the output, making sure to replace any Windows-style
-        # newlines with Unix-style.
-        r.stdout.gsub("\r\n", "\n")
-      end
 
       # Executes a command and returns the raw result object.
       def raw(*command, &block)
