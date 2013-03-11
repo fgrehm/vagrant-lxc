@@ -52,6 +52,7 @@ module Vagrant
           b.use ShareFolders
           b.use Network
           # b.use ForwardPorts
+          b.use Vagrant::Action::Builtin::SetHostname
           # b.use SaneDefaults
           # b.use Customize
           b.use Boot
@@ -112,7 +113,6 @@ module Vagrant
             end
           end
           b.use action_start
-          # b.use Vagrant::Action::Builtin::SetHostname
         end
       end
 
