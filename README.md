@@ -17,12 +17,12 @@ Please keep in mind that although I'm already using this on my laptop, this is
 
 ## Dependencies
 
-LXC, `bsdtar` and `ifping` packages and a Kernel [higher than 3.5.0-17.28](#im-unable-to-restart-containers),
+LXC, `bsdtar` and `fping` packages and a Kernel [higher than 3.5.0-17.28](#im-unable-to-restart-containers),
 which on Ubuntu 12.10 means:
 
 ```
 sudo apt-get update && sudo apt-get dist-upgrade
-sudo apt-get install lxc bsdtar ifping
+sudo apt-get install lxc bsdtar fping
 ```
 
 
