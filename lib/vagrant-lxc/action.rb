@@ -6,6 +6,7 @@ require 'vagrant-lxc/action/check_running'
 require 'vagrant-lxc/action/create'
 require 'vagrant-lxc/action/created'
 require 'vagrant-lxc/action/destroy'
+require 'vagrant-lxc/action/forced_halt'
 require 'vagrant-lxc/action/handle_box_metadata'
 require 'vagrant-lxc/action/is_running'
 require 'vagrant-lxc/action/network'
@@ -124,10 +125,7 @@ module Vagrant
             if env[:result]
               b2.use Vagrant::Action::Builtin::Call, Vagrant::Action::Builtin::GracefulHalt, :stopped, :running do |env2, b3|
                 if !env2[:result] && env2[:machine].provider.state.running?
-                  # TODO: Container#halt is kinda graceful as well, if it doesn't
-                  # or we can issue a lxc-stop. Might as well be handled by the
-                  # container itself, who knows, we just need to handle it :P
-                  env2[:machine].provider.container.halt
+                  b3.use ForcedHalt
                 end
               end
             else
