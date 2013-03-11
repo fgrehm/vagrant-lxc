@@ -116,7 +116,7 @@ module Vagrant
           # See: http://programminglinuxblog.blogspot.com.br/2007/11/detecting-ip-address-from-mac-address.html
           unless ip = get_container_ip_from_arp(mac_addr)
             # Ping subnet and try to get ip again
-            ping_subnet! and raise LXC::Errors::ExecuteError
+            ping_subnet!
           end
         end
         ip
@@ -147,7 +147,10 @@ module Vagrant
         raise LXC::Errors::UnknownLxcBridgeAddress unless
           File.read(LXC_DEFAULTS_PATH) =~ /^LXC_ADDR\="?([0-9.]+)"?.*$/
 
-        raw 'fping', '-c', '1', '-g', '-q', "#{$1}/24"
+        cmd = ['fping', '-c', '1', '-g', '-q', "#{$1}/24"]
+        raw(*cmd)
+
+        raise LXC::Errors::ExecuteError, :command => cmd.inspect
       end
 
       # TODO: Review code below this line, it was pretty much a copy and paste from VirtualBox base driver
