@@ -13,6 +13,9 @@ module Vagrant
       # Root folder where containers are stored
       CONTAINERS_PATH = '/var/lib/lxc'
 
+      # Default LXC configs
+      LXC_DEFAULTS_PATH = '/etc/default/lxc'
+
       # Include this so we can use `Subprocess` more easily.
       include Vagrant::Util::Retryable
 
@@ -108,43 +111,46 @@ module Vagrant
         end
         mac_addr = $1
 
-        # TODO: We might need to `ip neigh flush all > /dev/null` before running `arp`
-
         ip = ''
-        # See: http://programminglinuxblog.blogspot.com.br/2007/11/detecting-ip-address-from-mac-address.html
         retryable(:on => LXC::Errors::ExecuteError, :tries => 10, :sleep => 3) do
-          r = (raw 'arp', '-n')
-
-          # If the command was a failure then raise an exception that is nicely
-          # handled by Vagrant.
-          if r.exit_code != 0
-            if @interrupted
-              @logger.info("Exit code != 0, but interrupted. Ignoring.")
-            else
-              raise LXC::Errors::ExecuteError, :command => ['arp', '-n'].inspect
-            end
-          end
-
-
-          unless r.stdout.gsub("\r\n", "\n").strip =~ /^([0-9.]+).+#{Regexp.escape mac_addr}/
-            raise LXC::Errors::ExecuteError, 'Unable to identify container ip'
-          end
-          ip = $1.to_s
-
-          # Sometimes lxc reports the container as running before DNS is returning
-          # the right IP, so have to try a couple of times sometimes.
-          # Tks to https://github.com/neerolyte/vagueant/blob/master/bin/vagueant#L318-L330
-          r = raw 'ping', '-c', '1', ip
-          if r.exit_code != 0
-            raise LXC::Errors::ExecuteError, 'Unable to reach container'
+          # See: http://programminglinuxblog.blogspot.com.br/2007/11/detecting-ip-address-from-mac-address.html
+          unless ip = get_container_ip_from_arp(mac_addr)
+            # Ping subnet and try to get ip again
+            ping_subnet! and raise LXC::Errors::ExecuteError
           end
         end
         ip
       end
 
-      # TODO: Review code below this line, it was pretty much a copy and paste from VirtualBox base driver
+      def get_container_ip_from_arp(mac_addr)
+        r = raw 'arp', '-n'
 
-      # Executes a command and returns the raw result object.
+        # If the command was a failure then raise an exception that is nicely
+        # handled by Vagrant.
+        if r.exit_code != 0
+          if @interrupted
+            @logger.info("Exit code != 0, but interrupted. Ignoring.")
+          else
+            raise LXC::Errors::ExecuteError, :command => ['arp', '-n'].inspect
+          end
+        end
+
+        if r.stdout.gsub("\r\n", "\n").strip =~ /^([0-9.]+).+#{Regexp.escape mac_addr}/
+          return $1.to_s
+        end
+      end
+
+      # FIXME: Should output an error friendly message in case fping is not installed
+      def ping_subnet!
+        raise LXC::Errors::UnknownLxcConfigFile unless File.exists?(LXC_DEFAULTS_PATH)
+
+        raise LXC::Errors::UnknownLxcBridgeAddress unless
+          File.read(LXC_DEFAULTS_PATH) =~ /^LXC_ADDR\="?([0-9.]+)"?.*$/
+
+        raw 'fping', '-c', '1', '-g', '-q', "#{$1}/24"
+      end
+
+      # TODO: Review code below this line, it was pretty much a copy and paste from VirtualBox base driver
       def raw(*command, &block)
         int_callback = lambda do
           @interrupted = true
