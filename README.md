@@ -17,12 +17,12 @@ Please keep in mind that although I'm already using this on my laptop, this is
 
 ## Dependencies
 
-LXC and `bsdtar` packages and a Kernel [higher than 3.5.0-17.28](#im-unable-to-restart-containers),
+LXC, `bsdtar` and `ifping` packages and a Kernel [higher than 3.5.0-17.28](#im-unable-to-restart-containers),
 which on Ubuntu 12.10 means:
 
 ```
 sudo apt-get update && sudo apt-get dist-upgrade
-sudo apt-get install lxc bsdtar
+sudo apt-get install lxc bsdtar ifping
 ```
 
 
@@ -194,11 +194,11 @@ to a bug on linux kernel, so make sure you are using a bug-free kernel
 * https://bugs.launchpad.net/ubuntu/+source/linux/+bug/1021471
 * https://bugs.launchpad.net/ubuntu/+source/linux/+bug/1065434
 
-Sometimes the Virtual Box dev machine I'm using is not able to `lxc-start`
-containers anymore. Most of the times it was an issue with the [arguments](https://github.com/fgrehm/vagrant-lxc/blob/master/lib/vagrant-lxc/container.rb#L85)
-[I provided](https://github.com/fgrehm/vagrant-lxc/blob/master/example/Vagrantfile#L14-L18)
-to it. If you run into that, rollback your changes and try to `vagrant reload`
-the dev box. If it still doesn't work, please file a bug at the issue tracker
+Sometimes the dev boxes I'm using are not able to `lxc-start` containers
+anymore. Most of the times it was an issue with the arguments [I provided](https://github.com/fgrehm/vagrant-lxc/blob/master/example/Vagrantfile#L14-L18)
+to it (or a *buggy* kernel). If you run into that, rollback your changes
+and try to `vagrant reload` the dev box. If it still doesn't work,
+please file a bug at the [issue tracker](https://github.com/fgrehm/vagrant-lxc/issues).
 
 
 ## Contributing
