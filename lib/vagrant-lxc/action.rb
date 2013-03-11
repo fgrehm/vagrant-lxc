@@ -153,8 +153,6 @@ module Vagrant
                 b3.use Vagrant::Action::Builtin::EnvSet, :force_halt => true
                 b3.use action_halt
                 b3.use Destroy
-                # TODO: VirtualBox provider has a CleanMachineFolder action, do we need something similar?
-                # TODO: VirtualBox provider has a DestroyUnusedNetworkInterfaces action, do we need something similar?
               else
                 # TODO: Implement our own MessageWillNotDestroy
                 b3.use VagrantPlugins::ProviderVirtualBox::Action::MessageWillNotDestroy
