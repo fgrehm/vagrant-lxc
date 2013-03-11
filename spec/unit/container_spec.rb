@@ -125,22 +125,27 @@ describe Vagrant::LXC::Container do
   end
 
   describe 'assigned ip' do
-    # This ip is set on the sample-arp-output based on mac address from sample-config
+    # This ip is set on the sample-arp-output fixture based on mac address from
+    # sample-config fixture
     let(:ip)                 { "10.0.3.30" }
     let(:conf_file_contents) { File.read('spec/fixtures/sample-config') }
     let(:name)               { 'random-container-name' }
 
-    before do
-      @arp_output = File.read('spec/fixtures/sample-arp-output')
-      subject.stub(:raw) {
-        mock(stdout: "#{@arp_output}\n", exit_code: 0)
-      }
-      File.stub(read: conf_file_contents)
+    context 'when container mac address gets returned from the first `arp` call' do
+      before do
+        @arp_output = File.read('spec/fixtures/sample-arp-output')
+        subject.stub(:raw) {
+          mock(stdout: "#{@arp_output}\n", exit_code: 0)
+        }
+        File.stub(read: conf_file_contents)
+      end
+
+      it 'gets parsed from `arp` based on lxc mac address' do
+        subject.assigned_ip.should == ip
+        subject.should have_received(:raw).with('arp', '-n')
+      end
     end
 
-    it 'gets parsed from `arp` based on lxc mac address' do
-      subject.assigned_ip.should == ip
-      subject.should have_received(:raw).with('arp', '-n')
-    end
+    pending 'when mac address is not returned from an `arp` call'
   end
 end
