@@ -12,15 +12,9 @@ module Vagrant
         end
 
         def call(env)
-          # We _could_ extract the rootfs to a folder under ~/.vagrant.d/boxes
-          # but it would open up for a few issues:
-          #   * The rootfs owner is the root user, so we'd need to prepend "sudo" to
-          #     `vagrant box remove`
-          #   * We'd waste a lot of disk space: a compressed Ubuntu rootfs fits 80mb,
-          #     extracted it takes 262mb
-          #   * If something goes wrong during the Container creation process and
-          #     somehow we don't handle, writing to /tmp means that things will get
-          #     flushed on next reboot
+          env[:ui].info I18n.t("vagrant.actions.vm.import.importing",
+                               :name => env[:machine].box.name)
+
           rootfs_cache  = Dir.mktmpdir(TEMP_PREFIX)
           box           = env[:machine].box
           template_name = "vagrant-#{box.name}"

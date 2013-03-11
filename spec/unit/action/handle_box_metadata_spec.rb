@@ -9,7 +9,7 @@ describe Vagrant::LXC::Action::HandleBoxMetadata do
   let(:box_directory) { Pathname.new('/path/to/box') }
   let(:machine)       { mock(:machine, box: box) }
   let(:app)           { mock(:app, call: true) }
-  let(:env)           { {machine: machine} }
+  let(:env)           { {machine: machine, ui: stub(info: true)} }
   let(:tmpdir)        { '/tmp/rootfs/dir' }
 
   subject { described_class.new(app, env) }

@@ -44,7 +44,7 @@ module Vagrant
         end
 
         def add_start_opts
-          @env[:ui].info I18n.t("vagrant.actions.vm.share_folders.creating")
+          @env[:ui].info I18n.t("vagrant.actions.lxc.share_folders.preparing")
 
           folders = []
           shared_folders.each do |id, data|
@@ -53,6 +53,8 @@ module Vagrant
               :hostpath  => File.expand_path(data[:hostpath], @env[:root_path]),
               :guestpath => data[:guestpath]
             }
+            @env[:ui].info(I18n.t("vagrant.actions.vm.share_folders.mounting_entry",
+                                  :guest_path => data[:guestpath]))
           end
           config = @env[:machine].provider_config
           @env[:machine].provider.container.share_folders(folders, config)
