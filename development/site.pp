@@ -67,7 +67,7 @@ gem: --no-ri --no-rdoc
 :backtrace: false
 :bulk_threshold: 1000
 :benchmark: false
-gemhome: $HOME/gems
+gemhome: /home/vagrant/gems
 gempath:
 - /home/vagrant/gems
 - /usr/local/lib/ruby/gems/1.8
@@ -78,7 +78,7 @@ exec {
     command => 'cat << EOF >> /home/vagrant/.profile
 export GEM_HOME=/home/vagrant/gems
 export GEM_PATH=/home/vagrant/gems:/var/lib/gems/1.9.1
-export PATH=$PATH:/vagrant/gems/bin
+export PATH=$PATH:/home/vagrant/gems/bin
 EOF',
     unless => 'grep -q "GEM_HOME" /home/vagrant/.profile'
 }
