@@ -38,6 +38,7 @@ sudo apt-get install lxc bsdtar fping
 ## Current limitations
 
 * Ruby >= 1.9.3 only, patches for 1.8.7 are welcome
+* Port forwarding does not work [yet](https://github.com/fgrehm/vagrant-lxc/issues/4)
 * A hell lot of `sudo`s
 * Only a [single ubuntu box supported](boxes), I'm still [figuring out what should go
   on the .box file](https://github.com/fgrehm/vagrant-lxc/issues/4)
