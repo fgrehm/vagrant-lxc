@@ -46,8 +46,9 @@ module Vagrant
           run :destroy, '--name', @name
         end
 
-        def start(configs = [])
+        def start(configs = [], extra_opts = [])
           configs = configs.map { |conf| ["-s", conf] }.flatten
+          configs += extra_opts if extra_opts
           run :start, '-d', '--name', @name, *configs
         end
 

@@ -44,7 +44,6 @@ module Vagrant
       end
 
       def create(metadata = {})
-        # FIXME: Ruby 1.8 users dont have SecureRandom
         @logger.debug('Creating container using lxc-create...')
 
         @name      = SecureRandom.hex(6)
@@ -72,7 +71,6 @@ module Vagrant
             end
           end
 
-          # http://blog.smartlogicsolutions.com/2009/06/04/mount-options-to-improve-ext4-file-system-performance/
           config.start_opts << "lxc.mount.entry=#{folder[:hostpath]} #{guestpath} none bind 0 0"
         end
       end
@@ -82,10 +80,10 @@ module Vagrant
 
         opts = config.start_opts.dup
         if ENV['LXC_START_LOG_FILE']
-          opts.merge!('-o' => ENV['LXC_START_LOG_FILE'], '-l' => 'DEBUG')
+          extra = ['-o', ENV['LXC_START_LOG_FILE'], '-l', 'DEBUG']
         end
 
-        @cli.transition_to(:running) { |c| c.start(opts) }
+        @cli.transition_to(:running) { |c| c.start(opts, (extra || nil)) }
       end
 
       def halt

@@ -94,8 +94,7 @@ if you are working on a mac or windows host ;)
 
 ## Development
 
-If you know what you'll be doing and want to develop from your physical machine,
-just sing that same old song:
+If  want to develop from your physical machine, just sing that same old song:
 
 ```
 git clone git://github.com/fgrehm/vagrant-lxc.git --recurse
@@ -104,7 +103,7 @@ bundle install
 bundle exec rake # to run all specs
 ```
 
-To rebuild and add the provided quantal64 box:
+To build the provided quantal64 box:
 
 ```
 bundle exec rake boxes:quantal64:build

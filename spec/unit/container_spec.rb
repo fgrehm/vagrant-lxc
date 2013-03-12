@@ -70,7 +70,7 @@ describe Vagrant::LXC::Container do
   end
 
   describe 'start' do
-    let(:config) { mock(:config, start_opts: {'a' => '1', 'b' => '2'}) }
+    let(:config) { mock(:config, start_opts: ['a=1', 'b=2']) }
     let(:name)   { 'container-name' }
     let(:cli)    { fire_double('Vagrant::LXC::Container::CLI', start: true) }
 
@@ -81,7 +81,7 @@ describe Vagrant::LXC::Container do
     end
 
     it 'starts container with configured lxc settings' do
-      cli.should_receive(:start).with('a' => '1', 'b' => '2')
+      cli.should_receive(:start).with(['a=1', 'b=2'], nil)
       subject.start(config)
     end
 
