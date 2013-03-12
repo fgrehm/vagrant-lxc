@@ -68,10 +68,6 @@ Vagrant.configure("2") do |config|
   config.vm.box     = "lxc-quantal64"
   config.vm.box_url = 'http://dl.dropbox.com/u/13510779/lxc-quantal64-2013-03-08.box'
 
-  # Create a private network, which allows host-only access to the machine
-  # using a specific IP.
-  # config.vm.network :private_network, ip: "192.168.33.10"
-
   # Share an additional folder to the guest Container. The first argument
   # is the path on the host to the actual folder. The second argument is
   # the path on the guest to mount the folder. And the optional third
@@ -126,11 +122,12 @@ ready for development:
 ```sh
 bundle install
 cd development
-cp Vagrantfile.lxc Vagrantfile
+cp Vagrantfile.1.1 Vagrantfile
 # Required in order to allow nested containers to be started
 sudo apt-get install apparmor-utils
 sudo aa-complain /usr/bin/lxc-start
-bundle exec vagrant-lxc up
+bundle exec vagrant-lxc up lxc --provider=lxc
+bundle exec vagrant-lxc ssh lxc
 ```
 
 That should result in a container ready to be `bundle exec vagrant-lxc ssh`ed.
@@ -144,18 +141,20 @@ start nested containers there to try things out.
 
 ```
 cd development
-cp Vagrantfile.vb.1.0 Vagrantfile
+cp Vagrantfile.1.0 Vagrantfile
 vagrant up
 vagrant reload
+vagrant ssh
 ```
 
 ### Using VirtualBox and Vagrant 1.1 for development
 
 ```
 cd development
-cp Vagrantfile.vb.1.1 Vagrantfile
-bundle exec vagrant-lxc up
-bundle exec vagrant-lxc reload
+cp Vagrantfile.1.1 Vagrantfile
+bundle exec vagrant-lxc up vbox
+bundle exec vagrant-lxc reload vbox
+bundle exec vagrant-lxc ssh vbox
 ```
 
 
