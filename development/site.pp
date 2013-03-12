@@ -35,6 +35,12 @@ package {
   ;
 }
 
+# Make sure we can create and boot nested containers
+if $hostname == 'vbox' {
+  package { 'apparmor-utils': }
+  exec    { 'aa-complain /usr/bin/lxc-start': }
+}
+
 # Allow gems to be installed on vagrant user home avoiding "sudo"s
 # Tks to http://wiki.railsplayground.com/railsplayground/show/How+to+install+gems+and+non+root+user
 file {
