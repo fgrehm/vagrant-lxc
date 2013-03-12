@@ -41,6 +41,11 @@ if $hostname == 'vbox' {
   exec    { 'aa-complain /usr/bin/lxc-start': }
 }
 
+# TMUX
+package {
+  'tmux':       ensure => 'installed';
+}
+
 # Allow gems to be installed on vagrant user home avoiding "sudo"s
 # Tks to http://wiki.railsplayground.com/railsplayground/show/How+to+install+gems+and+non+root+user
 file {
