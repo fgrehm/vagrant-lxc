@@ -46,8 +46,8 @@ module Vagrant
           run :destroy, '--name', @name
         end
 
-        def start(configs = {})
-          configs = configs.map { |key, value| ["-s", "#{key}=#{value}"] }.flatten
+        def start(configs = [])
+          configs = configs.map { |conf| ["-s", conf] }.flatten
           run :start, '-d', '--name', @name, *configs
         end
 

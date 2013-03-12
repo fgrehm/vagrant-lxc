@@ -82,7 +82,7 @@ describe Vagrant::LXC::Container::CLI do
     end
 
     it 'uses provided hash to configure the container' do
-      subject.start('lxc.config' => 'value', 'lxc.other' => 'value')
+      subject.start(['lxc.config=value', 'lxc.other=value'])
       subject.should have_received(:run).with(:start, '-d', '--name', name,
         '-s', 'lxc.config=value',
         '-s', 'lxc.other=value'
