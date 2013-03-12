@@ -12,10 +12,10 @@ exec {
 # Overwrite LXC default configs
 exec {
   'config-lxc':
-     # We need to do this otherwise IPs will collide with the host's lxc dhcp server.
-     # If we install the package prior to setting this configs the container will go crazy.
-     command => 'cp /vagrant/development/lxc-configs/lxc-dev-default /etc/default/lxc',
-     unless  => 'grep -q "10.0.254" /etc/default/lxc'
+    # We need to do this otherwise IPs will collide with the host's lxc dhcp server.
+    # If we install the package prior to setting this configs the container will go crazy.
+    command => "cp /vagrant/development/lxc-configs/${hostname} /etc/default/lxc"
+  ;
 }
 
 # Install dependencies
