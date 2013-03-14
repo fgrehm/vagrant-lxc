@@ -1,7 +1,8 @@
-PATH
-  remote: .
+GIT
+  remote: https://github.com/mitchellh/vagrant.git
+  revision: 327ca544efdd6a0d0988509152a369fdb09c904d
   specs:
-    vagrant-lxc (0.0.1)
+    vagrant (1.1.1.dev)
       childprocess (~> 0.3.7)
       erubis (~> 2.7.0)
       i18n (~> 0.6.0)
@@ -9,6 +10,11 @@ PATH
       log4r (~> 1.1.9)
       net-scp (~> 1.0.4)
       net-ssh (~> 2.2.2)
+
+PATH
+  remote: .
+  specs:
+    vagrant-lxc (0.0.1)
 
 GEM
   remote: https://rubygems.org/
@@ -78,12 +84,11 @@ DEPENDENCIES
   guard-bundler
   guard-ctags-bundler
   guard-rspec
-  log4r
-  net-ssh
   rake
   rb-inotify
   rspec
   rspec-fire
   rspec-spies
   simplecov
+  vagrant!
   vagrant-lxc!

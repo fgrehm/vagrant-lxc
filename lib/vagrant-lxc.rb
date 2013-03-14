@@ -1,5 +1,3 @@
-require "vendored_vagrant"
-
 require "vagrant-lxc/version"
 require "vagrant-lxc/plugin"
 

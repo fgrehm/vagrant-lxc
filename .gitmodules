@@ -1,3 +1,0 @@
-[submodule "vendor/vagrant"]
-	path = vendor/vagrant
-	url = git://github.com/mitchellh/vagrant.git
