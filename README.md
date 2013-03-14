@@ -9,6 +9,12 @@ Please refer to the [closed issues](https://github.com/fgrehm/vagrant-lxc/issues
 to find out whats currently supported.
 
 
+## Vagrant 1.1 is out!
+
+Yeah, I know :) I just need to remove the vendorized vagrant code that I used to
+get started and turn this into a real plugin. I'll do that ASAP.
+
+
 ## WARNING
 
 Please keep in mind that although I'm already using this on my laptop, this is
