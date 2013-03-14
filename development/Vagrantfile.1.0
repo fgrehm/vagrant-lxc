@@ -12,8 +12,9 @@ def local_cache(box_name)
 end
 
 Vagrant::Config.run do |config|
-  config.vm.box     = "quantal64"
-  config.vm.box_url = "https://github.com/downloads/roderik/VagrantQuantal64Box/quantal64.box"
+  config.vm.box       = "quantal64"
+  config.vm.box_url   = "https://github.com/downloads/roderik/VagrantQuantal64Box/quantal64.box"
+  config.vm.host_name = 'lxc-dev-box'
 
   cache_dir = local_cache(config.vm.box)
   config.vm.share_folder "v-root",  "/vagrant", "../"
