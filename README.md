@@ -2,23 +2,10 @@
 
 [![Build Status](https://travis-ci.org/fgrehm/vagrant-lxc.png?branch=master)](https://travis-ci.org/fgrehm/vagrant-lxc)
 
-Highly experimental, soon to come, Linux Containers support for the unreleased
-Vagrant 1.1.
+Highly experimental Linux Containers support for Vagrant 1.1.
 
 Please refer to the [closed issues](https://github.com/fgrehm/vagrant-lxc/issues?labels=&milestone=&page=1&state=closed)
 to find out whats currently supported.
-
-
-## Vagrant 1.1 is out!
-
-Yeah, I know :) I just need to remove the vendorized vagrant code that I used to
-get started and turn this into a real plugin. I'll do that ASAP.
-
-
-## WARNING
-
-Please keep in mind that although I'm already using this on my laptop, this is
-"almost alpha" software and things might go wrong.
 
 
 ## Dependencies
@@ -43,7 +30,6 @@ sudo apt-get install lxc bsdtar fping
 
 ## Current limitations
 
-* Ruby >= 1.9.3 only, patches for 1.8.7 are welcome
 * Port forwarding does not work [yet](https://github.com/fgrehm/vagrant-lxc/issues/4)
 * A hell lot of `sudo`s
 * Only a [single ubuntu box supported](boxes), I'm still [figuring out what should go
@@ -55,20 +41,13 @@ sudo apt-get install lxc bsdtar fping
 
 ## Usage
 
-For now you'll need to install the gem from sources:
+Make sure you have [Vagrant 1.1](http://downloads.vagrantup.com/tags/v1.1.0) and run:
 
 ```
-git clone git://github.com/fgrehm/vagrant-lxc.git --recurse
-cd vagrant-lxc
-bundle install
-bundle exec rake install
+vagrant plugin install vagrant-lxc
 ```
 
-Since Vagrant 1.1 has not been released yet and to avoid messing up with you
-current Vagrant installation, I've vendored Vagrant's sources from the master
-and made it available from [`vagrant-lxc`](bin/vagrant-lxc). So after installing
-`vagrant-lxc`, create a `Vagrantfile` like the one below and run
-`vagrant-lxc up --provider=lxc`:
+After that you can create a `Vagrantfile` like the one below and run `vagrant up --provider=lxc`:
 
 ```ruby
 Vagrant.configure("2") do |config|
@@ -114,7 +93,7 @@ To build the provided quantal64 box:
 
 ```
 bundle exec rake boxes:quantal64:build
-vagrant-lxc box add quantal64 boxes/output/lxc-quantal64.box
+vagrant box add quantal64 boxes/output/lxc-quantal64.box
 ```
 
 
@@ -126,17 +105,17 @@ project you can run the commands below from the host machine to get a container
 ready for development:
 
 ```sh
-bundle install
-cd development
-cp Vagrantfile.1.1 Vagrantfile
 # Required in order to allow nested containers to be started
 sudo apt-get install apparmor-utils
 sudo aa-complain /usr/bin/lxc-start
-bundle exec vagrant-lxc up lxc --provider=lxc
-bundle exec vagrant-lxc ssh lxc
+bundle install
+cd development
+ln -s Vagrantfile.1.1 Vagrantfile
+bundle exec vagrant up lxc --provider=lxc
+bundle exec vagrant ssh lxc
 ```
 
-That should result in a container ready to be `bundle exec vagrant-lxc ssh`ed.
+That should result in a container ready to be `bundle exec vagrant ssh`ed.
 Once you've SSH into the guest container, you'll be already on the project's root.
 Keep in mind that you'll probably need to run `sudo aa-complain /usr/bin/lxc-start`
 on the host whenever you want to hack on it, otherwise you won't be able to
@@ -147,7 +126,7 @@ start nested containers there to try things out.
 
 ```
 cd development
-cp Vagrantfile.1.0 Vagrantfile
+ln -s Vagrantfile.1.0 Vagrantfile
 vagrant up
 vagrant reload
 vagrant ssh
@@ -157,21 +136,21 @@ vagrant ssh
 
 ```
 cd development
-cp Vagrantfile.1.1 Vagrantfile
-bundle exec vagrant-lxc up vbox
-bundle exec vagrant-lxc reload vbox
-bundle exec vagrant-lxc ssh vbox
+ln -s Vagrantfile.1.1 Vagrantfile
+bundle exec vagrant up vbox
+bundle exec vagrant reload vbox
+bundle exec vagrant ssh vbox
 ```
 
 
 ## Protips
 
 If you want to find out more about what's going on under the hood on vagrant,
-prepend `VAGRANT_LOG=debug` to your `vagrant-lxc` commands. For `lxc-start`s
+prepend `VAGRANT_LOG=debug` to your `vagrant` commands. For `lxc-start`s
 debugging set `LXC_START_LOG_FILE`:
 
 ```
-LXC_START_LOG_FILE=/tmp/lxc-start.log VAGRANT_LOG=debug vagrant-lxc up
+LXC_START_LOG_FILE=/tmp/lxc-start.log VAGRANT_LOG=debug vagrant up
 ```
 
 This will output A LOT of information on your terminal and some useful information
@@ -179,15 +158,6 @@ about `lxc-start` to `/tmp/lxc-start.log`.
 
 
 ## Help!
-
-### I've accidentaly ran `vagrant-lxc` on a Vagrant 1.0 project and I can't use it anymore
-
-That happened to me before so here's how to recover:
-
-```
-rm -rf .vagrant
-mv .vagrant.v1* .vagrant
-```
 
 ### I'm unable to restart containers!
 
