@@ -8,7 +8,7 @@ if ENV['COVERAGE']
   end
 end
 
-require 'bundler'
+require 'bundler/setup'
 
 require 'rspec-spies'
 

@@ -1,6 +1,6 @@
 require 'unit_helper'
 
-require "vendored_vagrant"
+require 'vagrant'
 require 'vagrant-lxc/container'
 
 describe Vagrant::LXC::Container do
