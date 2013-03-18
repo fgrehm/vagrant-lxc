@@ -30,7 +30,7 @@ for the most up to date list.*
 
 ## Current limitations
 
-* Port forwarding does not work [yet](https://github.com/fgrehm/vagrant-lxc/issues/4)
+* Port forwarding does not work [yet](https://github.com/fgrehm/vagrant-lxc/issues/6)
 * A hell lot of `sudo`s
 * Only a [single ubuntu box supported](boxes), I'm still [figuring out what should go
   on the .box file](https://github.com/fgrehm/vagrant-lxc/issues/4)
