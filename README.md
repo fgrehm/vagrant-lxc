@@ -4,9 +4,6 @@
 
 Highly experimental Linux Containers support for Vagrant 1.1.
 
-Please refer to the [closed issues](https://github.com/fgrehm/vagrant-lxc/issues?labels=&milestone=&page=1&state=closed)
-to find out whats currently supported.
-
 
 ## Dependencies
 
@@ -23,9 +20,12 @@ sudo apt-get install lxc bsdtar fping
 
 * Vagrant's `up`, `halt`, `reload`, `destroy`, and `ssh` commands
 * Shared folders
-* Provisioners
+* Provisioning with shell scripts and puppet (should work with chef but I [haven't had the chance](https://github.com/fgrehm/vagrant-lxc/issues/37) to set it up on the base box)
 * Setting container's host name
 * Host-only / private networking
+
+*Please refer to the [closed issues](https://github.com/fgrehm/vagrant-lxc/issues?labels=&milestone=&page=1&state=closed)
+for the most up to date list.*
 
 
 ## Current limitations
@@ -71,11 +71,8 @@ Vagrant.configure("2") do |config|
 end
 ```
 
-If you don't trust me and believe that it will mess up with your current Vagrant
-installation and / or are afraid that something might go wrong with your machine,
-fire up the [same Vagrant VirtualBox machine I'm using for development](#using-virtualbox-and-vagrant-10-for-development)
-to try things out and do the same as above. That might also get you up and running
-if you are working on a mac or windows host ;)
+If you are on a mac or window host and still want to try this plugin out, you
+can use the [same Vagrant VirtualBox machine I use for development](#using-virtualbox-and-vagrant-11-for-development).
 
 
 ## Development
@@ -121,6 +118,15 @@ Keep in mind that you'll probably need to run `sudo aa-complain /usr/bin/lxc-sta
 on the host whenever you want to hack on it, otherwise you won't be able to
 start nested containers there to try things out.
 
+### Using VirtualBox and Vagrant 1.1 for development
+
+```
+cd development
+ln -s Vagrantfile.1.1 Vagrantfile
+bundle exec vagrant up vbox
+bundle exec vagrant reload vbox
+bundle exec vagrant ssh vbox
+```
 
 ### Using VirtualBox and Vagrant 1.0 for development
 
@@ -130,16 +136,6 @@ ln -s Vagrantfile.1.0 Vagrantfile
 vagrant up
 vagrant reload
 vagrant ssh
-```
-
-### Using VirtualBox and Vagrant 1.1 for development
-
-```
-cd development
-ln -s Vagrantfile.1.1 Vagrantfile
-bundle exec vagrant up vbox
-bundle exec vagrant reload vbox
-bundle exec vagrant ssh vbox
 ```
 
 
@@ -157,9 +153,7 @@ This will output A LOT of information on your terminal and some useful informati
 about `lxc-start` to `/tmp/lxc-start.log`.
 
 
-## Help!
-
-### I'm unable to restart containers!
+## Help! I'm unable to restart containers!
 
 It happened to me quite a few times in the past and it seems that it is related
 to a bug on linux kernel, so make sure you are using a bug-free kernel
