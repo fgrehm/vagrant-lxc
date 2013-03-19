@@ -6,6 +6,7 @@ require 'vagrant-lxc/action/check_running'
 require 'vagrant-lxc/action/create'
 require 'vagrant-lxc/action/created'
 require 'vagrant-lxc/action/destroy'
+require 'vagrant-lxc/action/disconnect'
 require 'vagrant-lxc/action/forced_halt'
 require 'vagrant-lxc/action/handle_box_metadata'
 require 'vagrant-lxc/action/is_running'
@@ -123,6 +124,7 @@ module Vagrant
           # b.use CheckLXC
           b.use Vagrant::Action::Builtin::Call, Created do |env, b2|
             if env[:result]
+              b2.use Disconnect
               b2.use Vagrant::Action::Builtin::Call, Vagrant::Action::Builtin::GracefulHalt, :stopped, :running do |env2, b3|
                 if !env2[:result] && env2[:machine].provider.state.running?
                   b3.use ForcedHalt
