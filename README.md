@@ -24,7 +24,6 @@ sudo dpkg -i /tmp/vagrant.deb
 * Shared folders
 * Provisioning with shell scripts and puppet (should work with chef but I [haven't had the chance](https://github.com/fgrehm/vagrant-lxc/issues/37) to set it up on the base box)
 * Setting container's host name
-* Host-only / private networking
 
 *Please refer to the [closed issues](https://github.com/fgrehm/vagrant-lxc/issues?labels=&milestone=&page=1&state=closed)
 for the most up to date list.*
