@@ -1,4 +1,0 @@
-Address                  HWtype  HWaddress           Flags Mask            Iface
-120.0.3.30               ether   10:16:3e:c8:f9:b7   C                     lxcbr0
-10.0.3.30                ether   00:16:3e:64:d6:74   C                     lxcbr0
-192.168.25.1             ether   2c:e4:12:95:90:45   C                     wlan0

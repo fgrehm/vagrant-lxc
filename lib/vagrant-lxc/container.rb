@@ -103,65 +103,20 @@ module Vagrant
       end
 
       def assigned_ip
-        unless File.read(base_path.join('config')) =~ /^lxc\.network\.hwaddr\s*=\s*([a-z0-9:]+)\s*$/
-          raise 'Unknown Container MAC Address'
-        end
-        mac_addr = $1
-
         ip = ''
         retryable(:on => LXC::Errors::ExecuteError, :tries => 10, :sleep => 3) do
-          # See: http://programminglinuxblog.blogspot.com.br/2007/11/detecting-ip-address-from-mac-address.html
-          unless ip = get_container_ip_from_arp(mac_addr)
-            # Ping subnet and try to get ip again
-            ping_subnet!
+          unless ip = get_container_ip_from_ifconfig
+            # retry
+            raise LXC::Errors::ExecuteError, :command => ['arp', '-n'].inspect
           end
         end
         ip
       end
 
-      def get_container_ip_from_arp(mac_addr)
-        r = raw 'arp', '-n'
-
-        # If the command was a failure then raise an exception that is nicely
-        # handled by Vagrant.
-        if r.exit_code != 0
-          if @interrupted
-            @logger.info("Exit code != 0, but interrupted. Ignoring.")
-          else
-            raise LXC::Errors::ExecuteError, :command => ['arp', '-n'].inspect
-          end
-        end
-
-        if r.stdout.gsub("\r\n", "\n").strip =~ /^([0-9.]+).+#{Regexp.escape mac_addr}/
+      def get_container_ip_from_ifconfig
+        output = @cli.attach '/sbin/ifconfig', '-v', 'eth0', namespaces: 'network'
+        if output =~ /\s+inet addr:([0-9.]+)\s+/
           return $1.to_s
-        end
-      end
-
-      # FIXME: Should output an error friendly message in case fping is not installed
-      def ping_subnet!
-        raise LXC::Errors::UnknownLxcConfigFile unless File.exists?(LXC_DEFAULTS_PATH)
-
-        raise LXC::Errors::UnknownLxcBridgeAddress unless
-          File.read(LXC_DEFAULTS_PATH) =~ /^LXC_ADDR\="?([0-9.]+)"?.*$/
-
-        cmd = ['fping', '-c', '1', '-g', '-q', "#{$1}/24"]
-        raw(*cmd)
-
-        raise LXC::Errors::ExecuteError, :command => cmd.inspect
-      end
-
-      # TODO: Review code below this line, it was pretty much a copy and paste from VirtualBox base driver
-      def raw(*command, &block)
-        int_callback = lambda do
-          @interrupted = true
-          @logger.info("Interrupted.")
-        end
-
-        # Append in the options for subprocess
-        command << { :notify => [:stdout, :stderr] }
-
-        Vagrant::Util::Busy.busy(int_callback) do
-          Vagrant::Util::Subprocess.execute(*command, &block)
         end
       end
     end
