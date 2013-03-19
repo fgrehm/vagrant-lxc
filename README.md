@@ -7,12 +7,14 @@ Highly experimental Linux Containers support for Vagrant 1.1.
 
 ## Dependencies
 
-LXC, `bsdtar` and `fping` packages and a Kernel [higher than 3.5.0-17.28](#im-unable-to-restart-containers),
-which on Ubuntu 12.10 means:
+Vagrant >= 1.1.0, the `lxc` package and a Kernel [higher than 3.5.0-17.28](#help-im-unable-to-restart-containers),
+which on Ubuntu 12.10 means something like:
 
 ```
 sudo apt-get update && sudo apt-get dist-upgrade
-sudo apt-get install lxc bsdtar fping
+sudo apt-get install lxc
+wget "http://files.vagrantup.com/packages/67bd4d30f7dbefa7c0abc643599f0244986c38c8/vagrant_`uname -m`.deb" -O /tmp/vagrant.deb
+sudo dpkg -i /tmp/vagrant.deb
 ```
 
 
