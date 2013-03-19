@@ -56,6 +56,18 @@ module Vagrant
           run :shutdown, '--name', @name
         end
 
+        def attach(*cmd)
+          cmd = ['--'] + cmd
+
+          if cmd.last.is_a?(Hash)
+            opts       = cmd.pop
+            namespaces = Array(opts[:namespaces]).map(&:upcase).join('|')
+            extra      = ['--namespaces', namespaces] if namespaces
+          end
+
+          run :attach, '--name', @name, *((extra || []) + cmd)
+        end
+
         def transition_to(state, &block)
           raise TransitionBlockNotProvided unless block_given?
 

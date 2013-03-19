@@ -1,4 +1,3 @@
-# FIXME: Ruby 1.8 users dont have SecureRandom
 require 'securerandom'
 
 require "vagrant-lxc/errors"

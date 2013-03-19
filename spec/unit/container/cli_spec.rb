@@ -122,6 +122,27 @@ describe Vagrant::LXC::Container::CLI do
     end
   end
 
+  describe 'attach' do
+    let(:name)           { 'a-running-container' }
+    let(:command)        { ['ls', 'cat /tmp/file'] }
+    let(:command_output) { 'folders list' }
+    subject              { described_class.new(name) }
+
+    before do
+      subject.stub(run: command_output)
+    end
+
+    it 'calls lxc-attach with specified command' do
+      subject.attach(*command)
+      subject.should have_received(:run).with(:attach, '--name', name, '--', *command)
+    end
+
+    it 'supports a "namespaces" parameter' do
+      subject.attach *(command + [{namespaces: ['network', 'mount']}])
+      subject.should have_received(:run).with(:attach, '--name', name, '--namespaces', 'NETWORK|MOUNT', '--', *command)
+    end
+  end
+
   describe 'transition block' do
     let(:name) { 'a-running-container' }
     subject    { described_class.new(name) }
