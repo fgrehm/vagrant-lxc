@@ -1,7 +1,6 @@
 if ENV['COVERAGE']
   require 'simplecov'
   SimpleCov.start do
-    # This can probably go away once we stop using vagrant as submodule
     add_filter { |source_file| source_file.filename =~ /\/spec\/support/ }
   end
 end
