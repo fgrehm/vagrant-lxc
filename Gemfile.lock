@@ -1,20 +1,20 @@
 GIT
   remote: https://github.com/mitchellh/vagrant.git
-  revision: 327ca544efdd6a0d0988509152a369fdb09c904d
+  revision: 87613ec9392d4660ffcb1d5755307136c06af08c
   specs:
-    vagrant (1.1.1.dev)
+    vagrant (1.1.4)
       childprocess (~> 0.3.7)
       erubis (~> 2.7.0)
       i18n (~> 0.6.0)
       json (>= 1.5.1, < 1.8.0)
       log4r (~> 1.1.9)
-      net-scp (~> 1.0.4)
-      net-ssh (~> 2.2.2)
+      net-scp (~> 1.1.0)
+      net-ssh (~> 2.6.6)
 
 PATH
   remote: .
   specs:
-    vagrant-lxc (0.0.3.dev)
+    vagrant-lxc (0.0.4.dev)
 
 GEM
   remote: https://rubygems.org/
@@ -24,7 +24,7 @@ GEM
     coderay (1.0.9)
     diff-lcs (1.2.1)
     erubis (2.7.0)
-    ffi (1.4.0)
+    ffi (1.6.0)
     guard (1.6.2)
       listen (>= 0.6.0)
       lumberjack (>= 1.0.2)
@@ -36,45 +36,45 @@ GEM
       guard (~> 1.1)
     guard-ctags-bundler (0.1.6)
       guard (>= 1.1)
-    guard-rspec (2.5.0)
+    guard-rspec (2.5.1)
       guard (>= 1.1)
       rspec (~> 2.11)
     i18n (0.6.4)
     json (1.7.7)
     listen (0.7.3)
     log4r (1.1.10)
-    lumberjack (1.0.2)
+    lumberjack (1.0.3)
     method_source (0.8.1)
-    multi_json (1.6.1)
-    net-scp (1.0.4)
-      net-ssh (>= 1.99.1)
-    net-ssh (2.2.2)
+    multi_json (1.7.2)
+    net-scp (1.1.0)
+      net-ssh (>= 2.6.5)
+    net-ssh (2.6.6)
     pry (0.9.12)
       coderay (~> 1.0.5)
       method_source (~> 0.8)
       slop (~> 3.4)
-    rake (10.0.3)
+    rake (10.0.4)
     rb-inotify (0.9.0)
       ffi (>= 0.5.0)
     rspec (2.13.0)
       rspec-core (~> 2.13.0)
       rspec-expectations (~> 2.13.0)
       rspec-mocks (~> 2.13.0)
-    rspec-core (2.13.0)
+    rspec-core (2.13.1)
     rspec-expectations (2.13.0)
       diff-lcs (>= 1.1.3, < 2.0)
     rspec-fire (1.1.3)
       rspec (~> 2.11)
     rspec-mocks (2.13.0)
-    rspec-spies (2.1.3)
+    rspec-spies (2.1.4)
       rspec (~> 2.0)
     simplecov (0.7.1)
       multi_json (~> 1.0)
       simplecov-html (~> 0.7.1)
     simplecov-html (0.7.1)
-    slop (3.4.3)
+    slop (3.4.4)
     terminal-table (1.4.5)
-    thor (0.17.0)
+    thor (0.18.0)
 
 PLATFORMS
   ruby
