@@ -20,7 +20,8 @@ exec {
 
 # Install dependencies
 package {
-  [ 'libffi-dev', 'bsdtar', 'exuberant-ctags', 'ruby1.9.1-dev', 'htop', 'git', 'build-essential' ]:
+  [ 'libffi-dev', 'bsdtar', 'exuberant-ctags', 'ruby1.9.1-dev', 'htop', 'git',
+    'build-essential', 'redir' ]:
     ensure   => 'installed'
   ;
 
