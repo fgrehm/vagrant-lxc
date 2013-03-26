@@ -10,6 +10,7 @@ require 'vagrant-lxc/action/created'
 require 'vagrant-lxc/action/destroy'
 require 'vagrant-lxc/action/disconnect'
 require 'vagrant-lxc/action/forced_halt'
+require 'vagrant-lxc/action/forward_ports'
 require 'vagrant-lxc/action/handle_box_metadata'
 require 'vagrant-lxc/action/is_running'
 require 'vagrant-lxc/action/network'
@@ -55,10 +56,10 @@ module Vagrant
           # b.use ClearSharedFolders
           b.use ShareFolders
           b.use Network
-          # b.use ForwardPorts
           b.use Vagrant::Action::Builtin::SetHostname
           # b.use SaneDefaults
           # b.use Customize
+          b.use ForwardPorts
           b.use Boot
         end
       end
