@@ -1,6 +1,6 @@
 # vagrant-lxc [![Build Status](https://travis-ci.org/fgrehm/vagrant-lxc.png?branch=master)](https://travis-ci.org/fgrehm/vagrant-lxc) [![Gem Version](https://badge.fury.io/rb/vagrant-lxc.png)](http://badge.fury.io/rb/vagrant-lxc) [![Code Climate](https://codeclimate.com/github/fgrehm/vagrant-lxc.png)](https://codeclimate.com/github/fgrehm/vagrant-lxc)
 
-Experimental Linux Containers support for Vagrant > 1.1.
+Experimental Linux Containers support for Vagrant >= 1.1.
 
 
 ## Dependencies
