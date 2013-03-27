@@ -1,5 +1,7 @@
+# TODO: Remove base action
 require 'vagrant-lxc/action/base_action'
 
+# TODO: Use require_relative
 require 'vagrant-lxc/action/boot'
 require 'vagrant-lxc/action/check_created'
 require 'vagrant-lxc/action/check_running'
@@ -21,9 +23,10 @@ module Vagrant
       # machine back up with the new configuration.
       def self.action_reload
         Vagrant::Action::Builder.new.tap do |b|
-          # b.use CheckLXC
+          # b.use CheckDependencies
           b.use Vagrant::Action::Builtin::Call, Created do |env1, b2|
             if !env1[:result]
+              # TODO: Implement our own MessageNotCreated
               b2.use VagrantPlugins::ProviderVirtualBox::Action::MessageNotCreated
               next
             end
@@ -63,16 +66,18 @@ module Vagrant
       # This action just runs the provisioners on the machine.
       def self.action_provision
         Vagrant::Action::Builder.new.tap do |b|
-          # b.use CheckLXC
+          # b.use CheckDependencies
           b.use Vagrant::Action::Builtin::ConfigValidate
           b.use Vagrant::Action::Builtin::Call, Created do |env1, b2|
             if !env1[:result]
+              # TODO: Implement our own MessageNotCreated
               b2.use VagrantPlugins::ProviderVirtualBox::Action::MessageNotCreated
               next
             end
 
             b2.use Vagrant::Action::Builtin::Call, IsRunning do |env2, b3|
               if !env2[:result]
+                # TODO: Implement our own MessageNotRunning
                 b3.use VagrantPlugins::ProviderVirtualBox::Action::MessageNotRunning
                 next
               end
@@ -88,7 +93,7 @@ module Vagrant
       # A precondition of this action is that the container exists.
       def self.action_start
         Vagrant::Action::Builder.new.tap do |b|
-          # b.use CheckLXC
+          # b.use CheckDependencies
           b.use Vagrant::Action::Builtin::ConfigValidate
           b.use Vagrant::Action::Builtin::Call, IsRunning do |env, b2|
             # If the VM is running, then our work here is done, exit
@@ -103,7 +108,7 @@ module Vagrant
       # container, configuring metadata, and booting.
       def self.action_up
         Vagrant::Action::Builder.new.tap do |b|
-          # b.use CheckLXC
+          # b.use CheckDependencies
           b.use Vagrant::Action::Builtin::ConfigValidate
           b.use Vagrant::Action::Builtin::Call, Created do |env, b2|
             # If the VM is NOT created yet, then do the setup steps
@@ -121,9 +126,10 @@ module Vagrant
       # the virtual machine, gracefully or by force.
       def self.action_halt
         Vagrant::Action::Builder.new.tap do |b|
-          # b.use CheckLXC
+          # b.use CheckDependencies
           b.use Vagrant::Action::Builtin::Call, Created do |env, b2|
             if env[:result]
+              # TODO: If vagrant >=...
               b2.use Disconnect
               b2.use Vagrant::Action::Builtin::Call, Vagrant::Action::Builtin::GracefulHalt, :stopped, :running do |env2, b3|
                 if !env2[:result] && env2[:machine].provider.state.running?
@@ -131,6 +137,7 @@ module Vagrant
                 end
               end
             else
+              # TODO: Implement our own MessageNotCreated
               b2.use VagrantPlugins::ProviderVirtualBox::Action::MessageNotCreated
             end
           end
@@ -141,9 +148,10 @@ module Vagrant
       # freeing the resources of the underlying virtual machine.
       def self.action_destroy
         Vagrant::Action::Builder.new.tap do |b|
-          # b.use CheckLXC
+          # b.use CheckDependencies
           b.use Vagrant::Action::Builtin::Call, Created do |env1, b2|
             if !env1[:result]
+              # TODO: Implement our own MessageNotCreated
               b2.use VagrantPlugins::ProviderVirtualBox::Action::MessageNotCreated
               next
             end
@@ -167,7 +175,7 @@ module Vagrant
       # This is the action that will exec into an SSH shell.
       def self.action_ssh
         Vagrant::Action::Builder.new.tap do |b|
-          # b.use CheckLXC
+          # b.use CheckDependencies
           b.use CheckCreated
           # b.use CheckAccessible
           b.use CheckRunning
@@ -178,7 +186,7 @@ module Vagrant
       # This is the action that will run a single SSH command.
       def self.action_ssh_run
         Vagrant::Action::Builder.new.tap do |b|
-          # b.use CheckLXC
+          # b.use CheckDependencies
           b.use CheckCreated
           # b.use CheckAccessible
           b.use CheckRunning
