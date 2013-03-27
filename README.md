@@ -1,6 +1,4 @@
-# vagrant-lxc
-
-[![Build Status](https://travis-ci.org/fgrehm/vagrant-lxc.png?branch=master)](https://travis-ci.org/fgrehm/vagrant-lxc)
+# vagrant-lxc [![Build Status](https://travis-ci.org/fgrehm/vagrant-lxc.png?branch=master)](https://travis-ci.org/fgrehm/vagrant-lxc)
 
 Highly experimental Linux Containers support for Vagrant 1.1.
 
@@ -22,7 +20,7 @@ sudo dpkg -i /tmp/vagrant.deb
 
 * Vagrant's `up`, `halt`, `reload`, `destroy`, and `ssh` commands
 * Shared folders
-* Provisioning with shell scripts and puppet (should work with chef but I [haven't had the chance](https://github.com/fgrehm/vagrant-lxc/issues/37) to set it up on the base box)
+* Provisioning
 * Setting container's host name
 
 *Please refer to the [closed issues](https://github.com/fgrehm/vagrant-lxc/issues?labels=&milestone=&page=1&state=closed)
