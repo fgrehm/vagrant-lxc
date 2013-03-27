@@ -1,3 +1,7 @@
+## 0.1.1 (unreleased)
+
+  - Removed support for development under Vagrant < 1.1
+
 ## 0.1.0
 
   - Support for chef added to base quantal64 box

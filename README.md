@@ -109,7 +109,6 @@ sudo apt-get install apparmor-utils
 sudo aa-complain /usr/bin/lxc-start
 bundle install
 cd development
-ln -s Vagrantfile.1.1 Vagrantfile
 bundle exec vagrant up lxc --provider=lxc
 bundle exec vagrant ssh lxc
 ```
@@ -120,24 +119,13 @@ Keep in mind that you'll probably need to run `sudo aa-complain /usr/bin/lxc-sta
 on the host whenever you want to hack on it, otherwise you won't be able to
 start nested containers there to try things out.
 
-### Using VirtualBox and Vagrant 1.1 for development
+### Using VirtualBox for development
 
 ```
 cd development
-ln -s Vagrantfile.1.1 Vagrantfile
 bundle exec vagrant up vbox
 bundle exec vagrant reload vbox
 bundle exec vagrant ssh vbox
-```
-
-### Using VirtualBox and Vagrant 1.0 for development
-
-```
-cd development
-ln -s Vagrantfile.1.0 Vagrantfile
-vagrant up
-vagrant reload
-vagrant ssh
 ```
 
 
