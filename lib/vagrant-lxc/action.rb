@@ -5,6 +5,7 @@ require 'vagrant-lxc/action/base_action'
 require 'vagrant-lxc/action/boot'
 require 'vagrant-lxc/action/check_created'
 require 'vagrant-lxc/action/check_running'
+require 'vagrant-lxc/action/clear_forwarded_ports'
 require 'vagrant-lxc/action/create'
 require 'vagrant-lxc/action/created'
 require 'vagrant-lxc/action/destroy'
@@ -132,6 +133,7 @@ module Vagrant
             if env[:result]
               # TODO: If vagrant >=...
               b2.use Disconnect
+              b2.use ClearForwardedPorts
               b2.use Vagrant::Action::Builtin::Call, Vagrant::Action::Builtin::GracefulHalt, :stopped, :running do |env2, b3|
                 if !env2[:result] && env2[:machine].provider.state.running?
                   b3.use ForcedHalt
