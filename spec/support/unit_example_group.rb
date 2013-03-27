@@ -8,6 +8,12 @@ module UnitExampleGroup
       Object.any_instance.stub(:`) { |*args, &block|
         UnitExampleGroup.prevent_system_calls(*args, &block)
       }
+      Object.any_instance.stub(:exec) { |*args, &block|
+        UnitExampleGroup.prevent_system_calls(*args, &block)
+      }
+      Object.any_instance.stub(:fork) { |*args, &block|
+        UnitExampleGroup.prevent_system_calls(*args, &block)
+      }
       require 'vagrant/util/subprocess'
       Vagrant::Util::Subprocess.stub(:execute) { |*args, &block|
         UnitExampleGroup.prevent_system_calls(*args, &block)
@@ -22,6 +28,7 @@ module UnitExampleGroup
 Somehow your code under test is trying to execute a command on your system,
 please stub it out or move your spec code to an acceptance spec.
 
+Block:   #{block.inspect}
 Command: "#{args.join(' ')}"
     MSG
   end
