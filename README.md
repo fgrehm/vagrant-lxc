@@ -5,12 +5,12 @@ Highly experimental Linux Containers support for Vagrant 1.1.
 
 ## Dependencies
 
-Vagrant >= 1.1.0, the `lxc` package and a Kernel [higher than 3.5.0-17.28](#help-im-unable-to-restart-containers),
+Vagrant >= 1.1.0, `lxc` and `redir` packages and a Kernel [higher than 3.5.0-17.28](#help-im-unable-to-restart-containers),
 which on Ubuntu 12.10 means something like:
 
 ```
 sudo apt-get update && sudo apt-get dist-upgrade
-sudo apt-get install lxc
+sudo apt-get install lxc redir
 wget "http://files.vagrantup.com/packages/67bd4d30f7dbefa7c0abc643599f0244986c38c8/vagrant_`uname -m`.deb" -O /tmp/vagrant.deb
 sudo dpkg -i /tmp/vagrant.deb
 ```
@@ -22,6 +22,7 @@ sudo dpkg -i /tmp/vagrant.deb
 * Shared folders
 * Provisioning
 * Setting container's host name
+* Port forwarding
 
 *Please refer to the [closed issues](https://github.com/fgrehm/vagrant-lxc/issues?labels=&milestone=&page=1&state=closed)
 for the most up to date list.*
@@ -29,7 +30,7 @@ for the most up to date list.*
 
 ## Current limitations
 
-* Port forwarding does not work [yet](https://github.com/fgrehm/vagrant-lxc/issues/6)
+* Port forwarding collision detection
 * A hell lot of `sudo`s
 * Only a [single ubuntu box supported](boxes), I'm still [figuring out what should go
   on the .box file](https://github.com/fgrehm/vagrant-lxc/issues/4)

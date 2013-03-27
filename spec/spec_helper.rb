@@ -7,6 +7,8 @@ end
 
 require 'bundler/setup'
 
+require 'i18n'
+
 require 'rspec-spies'
 
 Dir[File.dirname(__FILE__) + "/support/**/*.rb"].each { |f| require f }
