@@ -3,6 +3,7 @@
 # This is the code extracted from /usr/share/lxc/templates/lxc-ubuntu
 # that comes with Ubuntu 12.10 which is responsible for downloading the
 # rootfs files / packages
+# It also installs puppet and chef on the container
 
 set -e
 
@@ -109,3 +110,11 @@ wget http://apt.puppetlabs.com/puppetlabs-release-precise.deb -O "${rootfs}/tmp/
 chroot $rootfs dpkg -i "/tmp/puppetlabs-release-${release}.deb"
 chroot $rootfs apt-get update
 chroot $rootfs apt-get install puppet -y
+
+echo "installing chef"
+cat > $rootfs/tmp/install-chef.sh << EOF
+#!/bin/sh
+curl -L https://www.opscode.com/chef/install.sh -k | sudo bash
+EOF
+chmod +x $rootfs/tmp/install-chef.sh
+chroot $rootfs /tmp/install-chef.sh
