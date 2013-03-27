@@ -21,8 +21,8 @@ cleanup()
 write_sourceslist()
 {
     # $1 => path to the rootfs
-    # $2 => architecture we want to add
 
+    # TODO: Mirrors sometimes are giving us some 404s
     MIRROR=${MIRROR:-mirror://mirrors.ubuntu.com/mirrors.txt}
     SECURITY_MIRROR=${SECURITY_MIRROR:-http://security.ubuntu.com/ubuntu}
 
@@ -35,7 +35,7 @@ EOF
 
 download_ubuntu()
 {
-    packages=vim,ssh,curl,wget,bash-completion,manpages,puppet
+    packages=vim,ssh,curl,wget,bash-completion,manpages
     echo "installing packages: $packages"
 
     trap cleanup EXIT SIGHUP SIGINT SIGTERM
@@ -101,3 +101,11 @@ if [ -d "${cache}/rootfs-${arch}" ]; then
 fi
 
 download_ubuntu $cache $arch $release
+
+rootfs="${cache}/rootfs-${arch}"
+
+echo "installing puppet"
+wget http://apt.puppetlabs.com/puppetlabs-release-precise.deb -O "${rootfs}/tmp/puppetlabs-release-${release}.deb"
+chroot $rootfs dpkg -i "/tmp/puppetlabs-release-${release}.deb"
+chroot $rootfs apt-get update
+chroot $rootfs apt-get install puppet -y
