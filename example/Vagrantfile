@@ -15,7 +15,7 @@ Vagrant.require_plugin 'vagrant-lxc'
 
 Vagrant.configure("2") do |config|
   config.vm.box      = "quantal64"
-  config.vm.box_url  = 'http://dl.dropbox.com/u/13510779/lxc-quantal64-2013-03-10.box'
+  config.vm.box_url  = 'http://dl.dropbox.com/u/13510779/lxc-quantal64-2013-03-26.box'
   config.vm.hostname = 'lxc-quantal64'
 
   config.vm.synced_folder "/tmp", "/vagrant_data"
