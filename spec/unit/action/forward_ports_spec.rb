@@ -1,6 +1,5 @@
 require 'unit_helper'
 
-require 'i18n'
 require 'vagrant-lxc/action/forward_ports'
 
 describe Vagrant::LXC::Action::ForwardPorts do
