@@ -36,6 +36,8 @@ for the most up to date list.*
 * Only a [single ubuntu box supported](boxes), I'm still [figuring out what should go
   on the .box file](https://github.com/fgrehm/vagrant-lxc/issues/4)
 * "[works on  my machine](https://github.com/fgrehm/vagrant-lxc/issues/20)" (TM)
+* [Does not tell you if dependencies are not met](https://github.com/fgrehm/vagrant-lxc/issues/11)
+  (will probably just throw up some random error)
 * + bunch of other [core features](https://github.com/fgrehm/vagrant-lxc/issues?labels=core&milestone=&page=1&state=open)
   and some known [bugs](https://github.com/fgrehm/vagrant-lxc/issues?labels=bug&page=1&state=open)
 
