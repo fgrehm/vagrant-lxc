@@ -11,7 +11,7 @@ which on Ubuntu 12.10 means something like:
 ```
 sudo apt-get update && sudo apt-get dist-upgrade
 sudo apt-get install lxc redir
-wget "http://files.vagrantup.com/packages/67bd4d30f7dbefa7c0abc643599f0244986c38c8/vagrant_`uname -m`.deb" -O /tmp/vagrant.deb
+wget "http://files.vagrantup.com/packages/87613ec9392d4660ffcb1d5755307136c06af08c/vagrant_`uname -m`.deb" -O /tmp/vagrant.deb
 sudo dpkg -i /tmp/vagrant.deb
 ```
 
