@@ -26,15 +26,13 @@ Vagrant.configure("2") do |config|
     vb_config.vm.hostname = 'vbox'
 
     vb_config.vm.provider :virtualbox do |vb|
-      # Configure VM to use 1.5gb of ram and 3 cpus
+      # Configure VM to use 1.5gb of ram and 2 cpus
       vb.customize [
         "modifyvm", :id,
         "--memory", '1536',
-        "--cpus", '4'
+        "--cpus", '2'
       ]
     end
-
-    vb_config.vm.provision :shell, :path => 'shell-provisioning/upgrade-kernel'
   end
 
   config.vm.define :lxc do |lxc_config|
@@ -46,6 +44,8 @@ Vagrant.configure("2") do |config|
       lxc.start_opts << 'lxc.aa_profile=unconfined'
     end
   end
+
+  config.vm.provision :shell, :path => 'shell-provisioning/upgrade-kernel'
 
   config.vm.provision :puppet do |puppet|
     puppet.manifests_path = "."
