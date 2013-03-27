@@ -5,11 +5,13 @@ require 'vagrant-lxc/action/base_action'
 require 'vagrant-lxc/action/boot'
 require 'vagrant-lxc/action/check_created'
 require 'vagrant-lxc/action/check_running'
+require 'vagrant-lxc/action/clear_forwarded_ports'
 require 'vagrant-lxc/action/create'
 require 'vagrant-lxc/action/created'
 require 'vagrant-lxc/action/destroy'
 require 'vagrant-lxc/action/disconnect'
 require 'vagrant-lxc/action/forced_halt'
+require 'vagrant-lxc/action/forward_ports'
 require 'vagrant-lxc/action/handle_box_metadata'
 require 'vagrant-lxc/action/is_running'
 require 'vagrant-lxc/action/network'
@@ -55,10 +57,10 @@ module Vagrant
           # b.use ClearSharedFolders
           b.use ShareFolders
           b.use Network
-          # b.use ForwardPorts
           b.use Vagrant::Action::Builtin::SetHostname
           # b.use SaneDefaults
           # b.use Customize
+          b.use ForwardPorts
           b.use Boot
         end
       end
@@ -131,6 +133,7 @@ module Vagrant
             if env[:result]
               # TODO: If vagrant >=...
               b2.use Disconnect
+              b2.use ClearForwardedPorts
               b2.use Vagrant::Action::Builtin::Call, Vagrant::Action::Builtin::GracefulHalt, :stopped, :running do |env2, b3|
                 if !env2[:result] && env2[:machine].provider.state.running?
                   b3.use ForcedHalt
