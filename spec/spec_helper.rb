@@ -11,6 +11,12 @@ require 'rspec-spies'
 
 Dir[File.dirname(__FILE__) + "/support/**/*.rb"].each { |f| require f }
 
+# If we should verify constant names, eager loads
+if ENV['VERIFY_CONSTANT_NAMES']
+  require 'vagrant-lxc/plugin'
+  require 'vagrant-lxc/provider'
+end
+
 require 'rspec/fire'
 RSpec::Fire.configure do |config|
   config.verify_constant_names = ENV['VERIFY_CONSTANT_NAMES'] == '1'
