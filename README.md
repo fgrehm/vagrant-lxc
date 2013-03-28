@@ -52,8 +52,6 @@ vagrant plugin install vagrant-lxc
 After that you can create a `Vagrantfile` like the one below and run `vagrant up --provider=lxc`:
 
 ```ruby
-Vagrant.require_plugin 'vagrant-lxc'
-
 Vagrant.configure("2") do |config|
   config.vm.box     = "lxc-quantal64"
   config.vm.box_url = 'http://dl.dropbox.com/u/13510779/lxc-quantal64-2013-03-26.box'
