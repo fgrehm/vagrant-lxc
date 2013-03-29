@@ -11,12 +11,15 @@ def local_cache(box_name)
   cache_dir
 end
 
+# Not really needed, but useful while developing so that vagrant picks it up
 Vagrant.require_plugin 'vagrant-lxc'
 
 Vagrant.configure("2") do |config|
   config.vm.box      = "quantal64"
   config.vm.box_url  = 'http://dl.dropbox.com/u/13510779/lxc-quantal64-2013-03-26.box'
-  config.vm.hostname = 'lxc-quantal64'
+  # Uncomment if you want to try out a box built locally
+  # config.vm.box_url  = '../boxes/output/lxc-quantal64.box'
+  config.vm.hostname = 'lxc-quantal64-example'
 
   config.vm.synced_folder "/tmp", "/vagrant_data"
 
@@ -36,8 +39,6 @@ echo "Hi there I'm a shell script used for provisioning"
     puppet.module_path    = "puppet/modules"
     puppet.manifests_path = "puppet/manifests"
     puppet.manifest_file  = "site.pp"
-    # If you want to make some debugging noise
-    # puppet.options << [ '--verbose', '--debug' ]
   end
 
   config.vm.provision :chef_solo do |chef|
