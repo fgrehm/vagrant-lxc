@@ -1,11 +1,11 @@
 # vagrant-lxc [![Build Status](https://travis-ci.org/fgrehm/vagrant-lxc.png?branch=master)](https://travis-ci.org/fgrehm/vagrant-lxc) [![Gem Version](https://badge.fury.io/rb/vagrant-lxc.png)](http://badge.fury.io/rb/vagrant-lxc) [![Code Climate](https://codeclimate.com/github/fgrehm/vagrant-lxc.png)](https://codeclimate.com/github/fgrehm/vagrant-lxc)
 
-Experimental Linux Containers support for Vagrant >= 1.1.
+Experimental Linux Containers support for Vagrant 1.1+
 
 
 ## Dependencies
 
-Vagrant >= 1.1.0, `lxc` and `redir` packages and a Kernel [higher than 3.5.0-17.28](#help-im-unable-to-restart-containers),
+Vagrant 1.1+ (1.1.4+ recommended), `lxc` and `redir` packages and a Kernel [higher than 3.5.0-17.28](#help-im-unable-to-restart-containers),
 which on Ubuntu 12.10 means something like:
 
 ```
@@ -16,7 +16,7 @@ sudo dpkg -i /tmp/vagrant.deb
 ```
 
 
-## What is currently supported? (v0.1.0)
+## What is currently supported? (v0.1.1)
 
 * Vagrant's `up`, `halt`, `reload`, `destroy`, and `ssh` commands
 * Shared folders
@@ -43,7 +43,7 @@ for the most up to date list.*
 
 ## Usage
 
-Make sure you have [Vagrant 1.1](http://downloads.vagrantup.com/tags/v1.1.0) and run:
+Make sure you have [Vagrant 1.1+](http://downloads.vagrantup.com/) and run:
 
 ```
 vagrant plugin install vagrant-lxc
@@ -63,6 +63,8 @@ Vagrant.configure("2") do |config|
   config.vm.synced_folder "/tmp", "/host_tmp"
 
   config.vm.provider :lxc do |lxc|
+    # Set the folder where container's rootfs will be stored when created
+    lxc.target_rootfs_path = '/path/to/container/rootfs'
     # Same as 'customize ["modifyvm", :id, "--memory", "1024"]' for VirtualBox
     lxc.start_opts << 'lxc.cgroup.memory.limit_in_bytes=400M'
     # Limits swap size
@@ -124,6 +126,7 @@ start nested containers there to try things out.
 ```
 cd development
 bundle exec vagrant up vbox
+# A reload is needed to ensure the updated kernel gets loaded
 bundle exec vagrant reload vbox
 bundle exec vagrant ssh vbox
 ```
