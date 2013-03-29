@@ -37,6 +37,7 @@ describe Vagrant::LXC::Container do
     let(:suffix)          { 'random-suffix' }
     let(:template_name)   { 'template-name' }
     let(:rootfs_cache)    { '/path/to/cache' }
+    let(:target_rootfs)   { '/path/to/rootfs' }
     let(:public_key_path) { Vagrant.source_root.join('keys', 'vagrant.pub').expand_path.to_s }
     let(:cli)             { fire_double('Vagrant::LXC::Container::CLI', :create => true, :name= => true) }
 
@@ -44,13 +45,14 @@ describe Vagrant::LXC::Container do
 
     before do
       SecureRandom.stub(hex: suffix)
-      subject.create base_name, 'template-name' => template_name, 'rootfs-cache-path' => rootfs_cache, 'template-opts' => { '--foo' => 'bar'}
+      subject.create base_name, target_rootfs, 'template-name' => template_name, 'rootfs-cache-path' => rootfs_cache, 'template-opts' => { '--foo' => 'bar'}
     end
 
     it 'creates container with the right arguments' do
       cli.should have_received(:name=).with("#{base_name}-#{suffix}")
       cli.should have_received(:create).with(
         template_name,
+        target_rootfs,
         '--auth-key' => public_key_path,
         '--cache'    => rootfs_cache,
         '--foo'      => 'bar'
