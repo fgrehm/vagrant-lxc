@@ -107,7 +107,7 @@ module Vagrant
         retryable(:on => LXC::Errors::ExecuteError, :tries => 10, :sleep => 3) do
           unless ip = get_container_ip_from_ifconfig
             # retry
-            raise LXC::Errors::ExecuteError, :command => ['arp', '-n'].inspect
+            raise LXC::Errors::ExecuteError, :command => "lxc-attach"
           end
         end
         ip
