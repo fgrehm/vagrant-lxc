@@ -1,4 +1,4 @@
-## [0.1.1](https://github.com/fgrehm/vagrant-lxc/pull/43)
+## [0.1.1](https://github.com/fgrehm/vagrant-lxc/compare/v0.1.0...v0.1.1)
 
   - Removed support for development under Vagrant < 1.1
   - Removed rsync from base quantal64 box to speed up containers creation [#40](https://github.com/fgrehm/vagrant-lxc/issues/40)
@@ -6,7 +6,7 @@
   - Skip Vagrant's built in SSH redirect
   - Allow setting rootfs from Vagrantfile [#30](https://github.com/fgrehm/vagrant-lxc/issues/30)
 
-## 0.1.0
+## [0.1.0](https://github.com/fgrehm/vagrant-lxc/compare/v0.0.3...v0.1.0)
 
   - Support for chef added to base quantal64 box
   - Puppet upgraded to 3.1.1 on base quantal64 box
