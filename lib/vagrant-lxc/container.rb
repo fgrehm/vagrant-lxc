@@ -12,9 +12,6 @@ module Vagrant
       # Root folder where containers are stored
       CONTAINERS_PATH = '/var/lib/lxc'
 
-      # Default LXC configs
-      LXC_DEFAULTS_PATH = '/etc/default/lxc'
-
       # Include this so we can use `Subprocess` more easily.
       include Vagrant::Util::Retryable
 
