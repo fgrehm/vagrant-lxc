@@ -53,7 +53,7 @@ module Vagrant
 
         {
           :host => @container.assigned_ip,
-          :port => 22 # @driver.ssh_port(@machine.config.ssh.guest_port)
+          :port => @machine.config.ssh.guest_port
         }
       end
 
