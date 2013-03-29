@@ -42,10 +42,10 @@ module Vagrant
         Pathname.new("#{base_path}/rootfs")
       end
 
-      def create(metadata = {})
+      def create(base_name, metadata = {})
         @logger.debug('Creating container using lxc-create...')
 
-        @name      = SecureRandom.hex(6)
+        @name      = "#{base_name}-#{SecureRandom.hex(6)}"
         public_key = Vagrant.source_root.join('keys', 'vagrant.pub').expand_path.to_s
         meta_opts  = metadata.fetch('template-opts', {}).merge(
           '--auth-key' => public_key,
