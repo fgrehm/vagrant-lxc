@@ -12,9 +12,6 @@ module Vagrant
       # Root folder where containers are stored
       CONTAINERS_PATH = '/var/lib/lxc'
 
-      # Default LXC configs
-      LXC_DEFAULTS_PATH = '/etc/default/lxc'
-
       # Include this so we can use `Subprocess` more easily.
       include Vagrant::Util::Retryable
 
@@ -39,13 +36,13 @@ module Vagrant
       end
 
       def rootfs_path
-        Pathname.new("#{base_path}/rootfs")
+        Pathname.new(base_path.join('config').read.match(/^lxc\.rootfs\s+=\s+(.+)$/)[1])
       end
 
-      def create(metadata = {})
+      def create(base_name, target_rootfs_path, metadata = {})
         @logger.debug('Creating container using lxc-create...')
 
-        @name      = SecureRandom.hex(6)
+        @name      = "#{base_name}-#{SecureRandom.hex(6)}"
         public_key = Vagrant.source_root.join('keys', 'vagrant.pub').expand_path.to_s
         meta_opts  = metadata.fetch('template-opts', {}).merge(
           '--auth-key' => public_key,
@@ -53,7 +50,7 @@ module Vagrant
         )
 
         @cli.name = @name
-        @cli.create(metadata.fetch('template-name'), meta_opts)
+        @cli.create(metadata.fetch('template-name'), target_rootfs_path, meta_opts)
 
         @name
       end
@@ -107,7 +104,7 @@ module Vagrant
         retryable(:on => LXC::Errors::ExecuteError, :tries => 10, :sleep => 3) do
           unless ip = get_container_ip_from_ifconfig
             # retry
-            raise LXC::Errors::ExecuteError, :command => ['arp', '-n'].inspect
+            raise LXC::Errors::ExecuteError, :command => "lxc-attach"
           end
         end
         ip

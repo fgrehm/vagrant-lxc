@@ -33,19 +33,31 @@ describe Vagrant::LXC::Container::CLI do
     subject { described_class.new(name) }
 
     before do
-      subject.stub(:run)
-      subject.create(template, template_args)
+      subject.stub(:run) { |*args| @run_args = args }
+      subject.create(template, rootfs, template_args)
     end
 
-    it 'issues a lxc-create with provided template, container name and hash of arguments' do
-      subject.should have_received(:run).with(
-        :create,
-        '--template', template,
-        '--name',     name,
-        '--',
-        '--extra-param', 'param',
-        '--other',       'value'
-      )
+    context 'when no rootfs is passed' do
+      let(:rootfs) { nil }
+
+      it 'issues a lxc-create with provided template, container name and hash of arguments' do
+        subject.should have_received(:run).with(
+          :create,
+          '--template', template,
+          '--name',     name,
+          '--',
+          '--extra-param', 'param',
+          '--other',       'value'
+        )
+      end
+    end
+
+    context 'when the rootfs is passed' do
+      let(:rootfs) { 'rootfs_path' }
+
+      it 'issues a lxc-create with the right rootfs arguments' do
+        @run_args.join(' ').should =~ /-B dir --dir #{rootfs}/
+      end
     end
   end
 

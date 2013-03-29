@@ -50,6 +50,8 @@ Vagrant.configure("2") do |config|
 
   config.vm.define :lxc do |lxc_config|
     lxc_config.vm.hostname = 'lxc-dev-box'
+    # Uncomment to test boxes built locally:
+    # lxc_config.vm.box_url  = '../boxes/output/lxc-quantal64.box'
     lxc_config.vm.box_url  = 'http://dl.dropbox.com/u/13510779/lxc-quantal64-2013-03-26.box'
 
     lxc_config.vm.provider :lxc do |lxc|

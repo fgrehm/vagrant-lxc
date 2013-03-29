@@ -1,3 +1,11 @@
+## [0.1.1](https://github.com/fgrehm/vagrant-lxc/pull/43)
+
+  - Removed support for development under Vagrant < 1.1
+  - Removed rsync from base quantal64 box to speed up containers creation [#40](https://github.com/fgrehm/vagrant-lxc/issues/40)
+  - Containers are now named after project's root dir [#14](https://github.com/fgrehm/vagrant-lxc/issues/14)
+  - Skip Vagrant's built in SSH redirect
+  - Allow setting rootfs from Vagrantfile [#30](https://github.com/fgrehm/vagrant-lxc/issues/30)
+
 ## 0.1.0
 
   - Support for chef added to base quantal64 box
