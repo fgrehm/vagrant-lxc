@@ -39,4 +39,9 @@ echo "Hi there I'm a shell script used for provisioning"
     # If you want to make some debugging noise
     # puppet.options << [ '--verbose', '--debug' ]
   end
+
+  config.vm.provision :chef_solo do |chef|
+    chef.add_recipe "hello-world"
+    chef.log_level = :debug
+  end
 end
