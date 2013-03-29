@@ -34,7 +34,7 @@ module Vagrant
         end
       end
 
-      # @see Vagrant::Plugin::V1::Provider#action
+      # @see Vagrant::Plugin::V2::Provider#action
       def action(name)
         # Attempt to get the action method from the Action class if it
         # exists, otherwise return nil to show that we don't support the
