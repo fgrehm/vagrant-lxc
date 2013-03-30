@@ -16,9 +16,11 @@ sudo dpkg -i /tmp/vagrant.deb
 ```
 
 
-## What is currently supported? (v0.1.1)
+## What is currently supported? (v0.2.0)
 
-* Vagrant's `up`, `halt`, `reload`, `destroy`, and `ssh` commands
+Pretty much everything you need from Vagrant:
+
+* Vagrant's `up`, `halt`, `reload`, `destroy`, `ssh` and `package` commands (box packaging is kind of experimental)
 * Shared folders
 * Provisioning
 * Setting container's host name
@@ -32,8 +34,7 @@ for the most up to date list.*
 
 * Does not detect forwarded ports collision, right now you are responsible for taking care of that
 * A hell lot of `sudo`s
-* Only a [single ubuntu box supported](boxes), I'm still [figuring out what should go
-  on the .box file](https://github.com/fgrehm/vagrant-lxc/issues/4)
+* Only a [single ubuntu box supported](boxes)
 * "[works on  my machine](https://github.com/fgrehm/vagrant-lxc/issues/20)" (TM)
 * [Does not tell you if dependencies are not met](https://github.com/fgrehm/vagrant-lxc/issues/11)
   (will probably just throw up some random error)

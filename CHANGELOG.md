@@ -1,3 +1,7 @@
+## [0.2.0](https://github.com/fgrehm/vagrant-lxc/compare/v0.1.1...v0.2.0)
+
+  - Experimental box packaging (only tested with Ubuntu 64 base box)
+
 ## [0.1.1](https://github.com/fgrehm/vagrant-lxc/compare/v0.1.0...v0.1.1)
 
   - Removed support for development under Vagrant < 1.1
