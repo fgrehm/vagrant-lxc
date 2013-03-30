@@ -78,8 +78,10 @@ EOF
         rm -f $rootfs/etc/init/tty{5,6}.conf
     fi
 
-    chroot $rootfs useradd --create-home -s /bin/bash vagrant
-    echo "vagrant:vagrant" | chroot $rootfs chpasswd
+    if ! (grep -q vagrant $rootfs/etc/passwd); then
+      chroot $rootfs useradd --create-home -s /bin/bash vagrant
+      echo "vagrant:vagrant" | chroot $rootfs chpasswd
+    fi
 
     return 0
 }
