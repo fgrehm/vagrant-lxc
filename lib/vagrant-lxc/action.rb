@@ -58,7 +58,6 @@ module Vagrant
           b.use ShareFolders
           b.use Network
           b.use Vagrant::Action::Builtin::SetHostname
-          # b.use SaneDefaults
           # b.use Customize
           b.use ForwardPorts
           b.use Boot
@@ -84,7 +83,6 @@ module Vagrant
                 next
               end
 
-              # b3.use CheckAccessible
               b3.use Vagrant::Action::Builtin::Provision
             end
           end
@@ -180,7 +178,6 @@ module Vagrant
         Vagrant::Action::Builder.new.tap do |b|
           # b.use CheckDependencies
           b.use CheckCreated
-          # b.use CheckAccessible
           b.use CheckRunning
           b.use Vagrant::Action::Builtin::SSHExec
         end
@@ -191,7 +188,6 @@ module Vagrant
         Vagrant::Action::Builder.new.tap do |b|
           # b.use CheckDependencies
           b.use CheckCreated
-          # b.use CheckAccessible
           b.use CheckRunning
           b.use Vagrant::Action::Builtin::SSHRun
         end
