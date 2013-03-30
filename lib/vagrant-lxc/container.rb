@@ -93,6 +93,26 @@ module Vagrant
         @cli.destroy
       end
 
+      # TODO: This needs to be reviewed and specs needs to be written
+      def compress_rootfs
+        # TODO: Our template should not depend on container's arch
+        arch           = base_path.join('config').read.match(/^lxc\.arch\s+=\s+(.+)$/)[1]
+        rootfs_dirname = File.dirname rootfs_path
+        basename       = rootfs_path.to_s.gsub(/^#{Regexp.escape rootfs_dirname}\//, '')
+        # TODO: Pass in tmpdir so we can clean up from outside
+        target_path    = "#{Dir.mktmpdir}/rootfs.tar.gz"
+
+        Dir.chdir base_path do
+          @logger.info "Compressing '#{rootfs_path}' rootfs to #{target_path}"
+          system "sudo rm -f rootfs.tar.gz && sudo bsdtar -s /#{basename}/rootfs-#{arch}/ --numeric-owner -czf #{target_path} #{basename}/* 2>/dev/null"
+
+          @logger.info "Changing rootfs tarbal owner"
+          system "sudo chown #{ENV['USER']}:#{ENV['USER']} #{target_path}"
+        end
+
+        target_path
+      end
+
       def state
         if @name
           @cli.state
