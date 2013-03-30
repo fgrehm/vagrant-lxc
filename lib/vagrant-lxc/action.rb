@@ -10,11 +10,13 @@ require 'vagrant-lxc/action/create'
 require 'vagrant-lxc/action/created'
 require 'vagrant-lxc/action/destroy'
 require 'vagrant-lxc/action/disconnect'
+require 'vagrant-lxc/action/compress_rootfs'
 require 'vagrant-lxc/action/forced_halt'
 require 'vagrant-lxc/action/forward_ports'
 require 'vagrant-lxc/action/handle_box_metadata'
 require 'vagrant-lxc/action/is_running'
 require 'vagrant-lxc/action/network'
+require 'vagrant-lxc/action/setup_package_files'
 require 'vagrant-lxc/action/share_folders'
 
 module Vagrant
@@ -169,6 +171,25 @@ module Vagrant
                 b3.use VagrantPlugins::ProviderVirtualBox::Action::MessageWillNotDestroy
               end
             end
+          end
+        end
+      end
+
+      # This action packages the virtual machine into a single box file.
+      def self.action_package
+        Vagrant::Action::Builder.new.tap do |b|
+          # b.use CheckDependencies
+          b.use Vagrant::Action::Builtin::Call, Created do |env1, b2|
+            if !env1[:result]
+              # TODO: Implement our own MessageNotCreated
+              b2.use VagrantPlugins::ProviderVirtualBox::Action::MessageNotCreated
+              next
+            end
+
+            b2.use action_halt
+            b2.use CompressRootFS
+            b2.use SetupPackageFiles
+            b2.use Vagrant::Action::General::Package
           end
         end
       end
