@@ -27,13 +27,13 @@ Vagrant.require_plugin 'vagrant-lxc'
 Vagrant.configure("2") do |config|
   config.vm.box = "quantal64"
 
-  config.vm.synced_folder "../", "/vagrant", name: 'vagrant-root'
+  config.vm.synced_folder "../", "/vagrant", id: 'vagrant-root'
 
   cache_dir = local_apt_cache(config.vm.box)
-  config.vm.synced_folder cache_dir, "/var/cache/apt/archives", name: "vagrant-apt-cache"
+  config.vm.synced_folder cache_dir, "/var/cache/apt/archives", id: "vagrant-apt-cache"
 
   cache_dir = local_gem_cache(config.vm.box)
-  config.vm.synced_folder cache_dir, "/home/vagrant/gems/cache", name: "vagrant-gem-cache"
+  config.vm.synced_folder cache_dir, "/home/vagrant/gems/cache", id: "vagrant-gem-cache"
 
   config.vm.define :vbox do |vb_config|
     vb_config.vm.box_url  = "https://github.com/downloads/roderik/VagrantQuantal64Box/quantal64.box"
