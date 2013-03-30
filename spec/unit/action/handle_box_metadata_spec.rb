@@ -39,6 +39,6 @@ describe Vagrant::LXC::Action::HandleBoxMetadata do
 
   it 'extracts rootfs into a tmp folder' do
     subject.should have_received(:system).
-                   with(%Q[sudo su root -c "cd #{box_directory} && tar xfz rootfs.tar.gz -C #{tmpdir}"])
+                   with(%Q[sudo su root -c "cd #{box_directory} && tar xfz rootfs.tar.gz -C #{tmpdir} 2>/dev/null"])
   end
 end
