@@ -2,6 +2,8 @@ en:
   vagrant:
     actions:
       lxc:
+        compressing_rootfs: Compressing container's rootfs...
+
         share_folders:
           preparing: Setting up mount entries for shared folders...
 

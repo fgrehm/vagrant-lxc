@@ -1,6 +1,6 @@
 {
-  "provider":            "lxc",
-  "vagrant-lxc-version": "0.0.1",
+  "provider": "lxc",
+  "version":  "1",
 
   "template-opts": {
     "--arch":    "amd64",
