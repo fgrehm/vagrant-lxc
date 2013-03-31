@@ -77,7 +77,7 @@ end
 ```
 
 If you are on a mac or window host and still want to try this plugin out, you
-can use the [same Vagrant VirtualBox machine I use for development](#using-virtualbox-and-vagrant-11-for-development).
+can use the [same Vagrant VirtualBox machine I use for development](#using-virtualbox-for-development).
 
 
 ## Development
