@@ -40,7 +40,6 @@ module Vagrant
         # exists, otherwise return nil to show that we don't support the
         # given action.
         action_method = "action_#{name}"
-        # TODO: Rename to singular
         return LXC::Action.send(action_method) if LXC::Action.respond_to?(action_method)
         nil
       end
