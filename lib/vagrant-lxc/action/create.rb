@@ -1,7 +1,11 @@
 module Vagrant
   module LXC
     module Action
-      class Create < BaseAction
+      class Create
+        def initialize(app, env)
+          @app = app
+        end
+
         def call(env)
           base_name = env[:root_path].basename.to_s
           base_name.gsub!(/[^-a-z0-9_]/i, "")

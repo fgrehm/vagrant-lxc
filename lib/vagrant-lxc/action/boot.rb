@@ -1,7 +1,11 @@
 module Vagrant
   module LXC
     module Action
-      class Boot < BaseAction
+      class Boot
+        def initialize(app, env)
+          @app = app
+        end
+
         def call(env)
           @env = env
 

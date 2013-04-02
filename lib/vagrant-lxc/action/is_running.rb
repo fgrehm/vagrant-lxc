@@ -1,7 +1,11 @@
 module Vagrant
   module LXC
     module Action
-      class IsRunning < BaseAction
+      class IsRunning
+        def initialize(app, env)
+          @app = app
+        end
+
         def call(env)
           env[:result] = env[:machine].state.running?
 

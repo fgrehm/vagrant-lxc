@@ -1,9 +1,12 @@
 module Vagrant
   module LXC
     module Action
-      class Network < BaseAction
+      class Network
+        def initialize(app, env)
+          @app = app
+        end
+
         def call(env)
-          # TODO: Validate network configuration prior to anything below
           @env = env
 
           env[:machine].config.vm.networks.each do |type, options|

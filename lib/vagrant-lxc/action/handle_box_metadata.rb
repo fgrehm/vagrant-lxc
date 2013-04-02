@@ -2,12 +2,12 @@ module Vagrant
   module LXC
     module Action
       # Prepare arguments to be used for lxc-create
-      class HandleBoxMetadata < BaseAction
+      class HandleBoxMetadata
         LXC_TEMPLATES_PATH = Pathname.new("/usr/share/lxc/templates")
         TEMP_PREFIX        = "vagrant-lxc-rootfs-temp-"
 
         def initialize(app, env)
-          super
+          @app    = app
           @logger = Log4r::Logger.new("vagrant::lxc::action::handle_box_metadata")
         end
 

@@ -1,7 +1,11 @@
 module Vagrant
   module LXC
     module Action
-      class Created < BaseAction
+      class Created
+        def initialize(app, env)
+          @app = app
+        end
+
         def call(env)
           # Set the result to be true if the machine is created.
           env[:result] = env[:machine].state.created?

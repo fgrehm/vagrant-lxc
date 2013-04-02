@@ -1,7 +1,11 @@
 module Vagrant
   module LXC
     module Action
-      class CheckCreated < BaseAction
+      class CheckCreated
+        def initialize(app, env)
+          @app = app
+        end
+
         def call(env)
           unless env[:machine].state.created?
             raise Vagrant::Errors::VMNotCreatedError

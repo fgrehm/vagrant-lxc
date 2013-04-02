@@ -1,7 +1,11 @@
 module Vagrant
   module LXC
     module Action
-      class Disconnect < BaseAction
+      class Disconnect
+        def initialize(app, env)
+          @app = app
+        end
+
         def call(env)
           @app.call env
           # FIXME: Vagrant >= 1.1.3 should not need this

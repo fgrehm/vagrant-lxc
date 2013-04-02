@@ -1,7 +1,11 @@
 module Vagrant
   module LXC
     module Action
-      class ShareFolders < BaseAction
+      class ShareFolders
+        def initialize(app, env)
+          @app = app
+        end
+
         def call(env)
           @env = env
           prepare_folders

@@ -1,7 +1,3 @@
-# TODO: Remove base action
-require 'vagrant-lxc/action/base_action'
-
-# TODO: Use require_relative
 require 'vagrant-lxc/action/boot'
 require 'vagrant-lxc/action/check_created'
 require 'vagrant-lxc/action/check_running'
