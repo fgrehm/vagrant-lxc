@@ -38,11 +38,6 @@ module Vagrant
         end
       end
 
-      # We could do this here as VirtualBox does, but at least for now its better
-      # to be explicit and have the full constant name in order to easily spot
-      # what we implemented and what is builtin on Vagrant.
-      #
-      #   include Vagrant::Action::Builtin
 
       # This action boots the VM, assuming the VM is in a state that requires
       # a bootup (i.e. not saved).
