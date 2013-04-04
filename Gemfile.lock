@@ -1,8 +1,9 @@
 GIT
   remote: https://github.com/mitchellh/vagrant.git
-  revision: bc2a9fe780e44fcf3fb989178b0582a8f2514895
+  revision: 64e360814c3ad960d810456add977fd4c7d47ce6
+  tag: v1.1.5
   specs:
-    vagrant (1.1.5.dev)
+    vagrant (1.1.5)
       childprocess (~> 0.3.7)
       erubis (~> 2.7.0)
       i18n (~> 0.6.0)
@@ -37,7 +38,7 @@ GEM
       guard (~> 1.1)
     guard-ctags-bundler (0.1.6)
       guard (>= 1.1)
-    guard-rspec (2.5.1)
+    guard-rspec (2.5.2)
       guard (>= 1.1)
       rspec (~> 2.11)
     i18n (0.6.4)
