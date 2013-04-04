@@ -23,8 +23,7 @@ write_sourceslist()
 {
     # $1 => path to the rootfs
 
-    # TODO: Mirrors sometimes are giving us some 404s
-    MIRROR=${MIRROR:-mirror://mirrors.ubuntu.com/mirrors.txt}
+    MIRROR=${MIRROR:-http://archive.ubuntu.com/ubuntu}
     SECURITY_MIRROR=${SECURITY_MIRROR:-http://security.ubuntu.com/ubuntu}
 
     cat >> "$1/etc/apt/sources.list" << EOF
