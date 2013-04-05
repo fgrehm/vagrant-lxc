@@ -125,9 +125,9 @@ describe Vagrant::LXC::Driver do
   end
 
   describe 'assigned ip' do
-    # This ip is set on the sample-ifconfig-output fixture
-    let(:ip)              { "10.0.3.109" }
-    let(:ifconfig_output) { File.read('spec/fixtures/sample-ifconfig-output') }
+    # This ip is set on the sample-ip-addr-output fixture
+    let(:ip)              { "10.0.254.137" }
+    let(:ifconfig_output) { File.read('spec/fixtures/sample-ip-addr-output') }
     let(:name)            { 'random-container-name' }
     let(:cli)             { fire_double('Vagrant::LXC::Driver::CLI', :attach => ifconfig_output) }
 
@@ -136,7 +136,16 @@ describe Vagrant::LXC::Driver do
     context 'when ip for eth0 gets returned from lxc-attach call' do
       it 'gets parsed from ifconfig output' do
         subject.assigned_ip.should == ip
-        cli.should have_received(:attach).with('/sbin/ifconfig', '-v', 'eth0', namespaces: 'network')
+        cli.should have_received(:attach).with(
+          '/sbin/ip',
+          '-4',
+          'addr',
+          'show',
+          'scope',
+          'global',
+          'eth0',
+          namespaces: 'network'
+        )
       end
     end
   end

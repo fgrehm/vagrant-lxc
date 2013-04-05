@@ -1,0 +1,2 @@
+49: eth0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast state UP qlen 1000
+    inet 10.0.254.137/24 brd 10.0.254.255 scope global eth0
