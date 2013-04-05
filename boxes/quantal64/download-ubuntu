@@ -15,8 +15,8 @@ suggest_flush()
 
 cleanup()
 {
-    rm -rf $cache/partial-$arch
-    rm -rf $cache/rootfs-$arch
+    rm -rf $cache/partial
+    rm -rf $cache/rootfs
 }
 
 write_sourceslist()
@@ -40,18 +40,18 @@ download_ubuntu()
 
     trap cleanup EXIT SIGHUP SIGINT SIGTERM
     # check the mini ubuntu was not already downloaded
-    mkdir -p "$cache/partial-$arch"
+    mkdir -p "$cache/partial"
     if [ $? -ne 0 ]; then
-        echo "Failed to create '$cache/partial-$arch' directory"
+        echo "Failed to create '$cache/partial' directory"
         return 1
     fi
 
     # download a mini ubuntu into a cache
     echo "Downloading ubuntu $release minimal ..."
     if [ -n "$(which qemu-debootstrap)" ]; then
-        qemu-debootstrap --verbose --components=main,universe --arch=$arch --include=$packages $release $cache/partial-$arch $MIRROR
+        qemu-debootstrap --verbose --components=main,universe --arch=$arch --include=$packages $release $cache/partial $MIRROR
     else
-        debootstrap --verbose --components=main,universe --arch=$arch --include=$packages $release $cache/partial-$arch $MIRROR
+        debootstrap --verbose --components=main,universe --arch=$arch --include=$packages $release $cache/partial $MIRROR
     fi
 
     if [ $? -ne 0 ]; then
@@ -62,27 +62,27 @@ download_ubuntu()
     # Serge isn't sure whether we should avoid doing this when
     # $release == `distro-info -d`
     echo "Installing updates"
-    > $cache/partial-$arch/etc/apt/sources.list
-    write_sourceslist $cache/partial-$arch/ $arch
+    > $cache/partial/etc/apt/sources.list
+    write_sourceslist $cache/partial/ $arch
 
-    chroot "$1/partial-${arch}" apt-get update
+    chroot "$1/partial" apt-get update
     if [ $? -ne 0 ]; then
         echo "Failed to update the apt cache"
         return 1
     fi
-    cat > "$1/partial-${arch}"/usr/sbin/policy-rc.d << EOF
+    cat > "$1/partial"/usr/sbin/policy-rc.d << EOF
 #!/bin/sh
 exit 101
 EOF
-    chmod +x "$1/partial-${arch}"/usr/sbin/policy-rc.d
+    chmod +x "$1/partial"/usr/sbin/policy-rc.d
 
-    lxc-unshare -s MOUNT -- chroot "$1/partial-${arch}" apt-get dist-upgrade -y || { suggest_flush; false; }
+    lxc-unshare -s MOUNT -- chroot "$1/partial" apt-get dist-upgrade -y || { suggest_flush; false; }
 
-    rm -f "$1/partial-${arch}"/usr/sbin/policy-rc.d
+    rm -f "$1/partial"/usr/sbin/policy-rc.d
 
-    chroot "$1/partial-${arch}" apt-get clean
+    chroot "$1/partial" apt-get clean
 
-    mv "$1/partial-$arch" "$1/rootfs-$arch"
+    mv "$1/partial" "$1/rootfs"
     trap EXIT
     trap SIGINT
     trap SIGTERM
@@ -95,14 +95,14 @@ declare cache=`readlink -f .` \
         arch=amd64 \
         release=quantal
 
-if [ -d "${cache}/rootfs-${arch}" ]; then
-  echo 'The rootfs cache has been downloaded already, please remove it if you want to update'
+if [ -d "${cache}/rootfs" ]; then
+  echo 'The rootfs cache has been built already, please remove it if you want to update'
   exit 1
 fi
 
 download_ubuntu $cache $arch $release
 
-rootfs="${cache}/rootfs-${arch}"
+rootfs="${cache}/rootfs"
 
 echo "installing puppet"
 wget http://apt.puppetlabs.com/puppetlabs-release-precise.deb -O "${rootfs}/tmp/puppetlabs-release-${release}.deb"
