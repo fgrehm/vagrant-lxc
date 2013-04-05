@@ -12,7 +12,7 @@ module Vagrant
       provider(:lxc) do
         require File.expand_path("../provider", __FILE__)
 
-        I18n.load_path << File.expand_path(File.dirname(__FILE__) + '/../locales/en.yml')
+        I18n.load_path << File.expand_path(File.dirname(__FILE__) + '/../../locales/en.yml')
         I18n.reload!
 
         Provider
