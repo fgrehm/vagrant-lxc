@@ -28,19 +28,13 @@ module Vagrant
           @logger.debug('Copying LXC template into place')
           system(%Q[sudo su root -c "cp #{lxc_template_src} #{dest}"])
 
-          @logger.debug('Extracting rootfs')
-          # TODO: Ideally the compressed rootfs should not output errors...
-          system(%Q[sudo su root -c "cd #{box.directory} && tar xfz rootfs.tar.gz -C #{rootfs_cache} 2>/dev/null"])
-
+          @logger.debug('Merging metadata with template name and rootfs tarball')
           box.metadata.merge!(
-            'template-name'     => template_name,
-            'rootfs-cache-path' => rootfs_cache
+            'template-name'  => template_name,
+            'rootfs-tarball' => box.directory.join('rootfs.tar.gz')
           )
 
           @app.call(env)
-
-        ensure
-          system %Q[sudo su root -c "rm -rf #{rootfs_cache}"]
         end
       end
     end
