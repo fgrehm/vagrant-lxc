@@ -24,7 +24,7 @@ module Vagrant
       def initialize(name, cli = CLI.new(name))
         @name   = name
         @cli    = cli
-        @logger = Log4r::Logger.new("vagrant::provider::lxc::container")
+        @logger = Log4r::Logger.new("vagrant::provider::lxc::driver")
       end
 
       def validate!
