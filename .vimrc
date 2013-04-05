@@ -1,1 +1,1 @@
-set wildignore+=*/vagrant-1.1/*
+set wildignore+=*/boxes/quantal64/rootfs/*,*/boxes/quantal64/partial/*
