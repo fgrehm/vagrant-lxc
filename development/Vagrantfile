@@ -64,8 +64,6 @@ Vagrant.configure("2") do |config|
     lxc_config.vm.provider :lxc do |lxc|
       # Required to boot nested containers
       lxc.start_opts << 'lxc.aa_profile=unconfined'
-      # Change this to override the path where the rootfs gets stored
-      # lxc.target_rootfs_path = '/path/to/vagrant-lxc-dev-box-rootfs'
     end
   end
 

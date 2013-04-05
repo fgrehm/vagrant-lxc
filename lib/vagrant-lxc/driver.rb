@@ -39,7 +39,7 @@ module Vagrant
         Pathname.new(base_path.join('config').read.match(/^lxc\.rootfs\s+=\s+(.+)$/)[1])
       end
 
-      def create(base_name, target_rootfs_path, metadata = {})
+      def create(base_name, metadata = {})
         @logger.debug('Creating container using lxc-create...')
 
         @name      = "#{base_name}-#{SecureRandom.hex(6)}"
@@ -50,7 +50,7 @@ module Vagrant
         )
 
         @cli.name = @name
-        @cli.create(metadata.fetch('template-name'), target_rootfs_path, meta_opts)
+        @cli.create(metadata.fetch('template-name'), meta_opts)
 
         @name
       end

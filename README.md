@@ -64,8 +64,6 @@ Vagrant.configure("2") do |config|
   config.vm.synced_folder "/tmp", "/host_tmp"
 
   config.vm.provider :lxc do |lxc|
-    # Set the folder where container's rootfs will be stored when created
-    lxc.target_rootfs_path = '/path/to/container/rootfs'
     # Same as 'customize ["modifyvm", :id, "--memory", "1024"]' for VirtualBox
     lxc.start_opts << 'lxc.cgroup.memory.limit_in_bytes=400M'
     # Limits swap size

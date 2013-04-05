@@ -33,11 +33,8 @@ describe Vagrant::LXC::Driver::CLI do
 
     before do
       subject.stub(:run) { |*args| @run_args = args }
-      subject.create(template, rootfs, template_args)
+      subject.create(template, template_args)
     end
-
-    context 'when no rootfs is passed' do
-      let(:rootfs) { nil }
 
       it 'issues a lxc-create with provided template, container name and hash of arguments' do
         subject.should have_received(:run).with(
@@ -49,15 +46,6 @@ describe Vagrant::LXC::Driver::CLI do
           '--other',       'value'
         )
       end
-    end
-
-    context 'when the rootfs is passed' do
-      let(:rootfs) { 'rootfs_path' }
-
-      it 'issues a lxc-create with the right rootfs arguments' do
-        @run_args.join(' ').should =~ /-B dir --dir #{rootfs}/
-      end
-    end
   end
 
   describe 'destroy' do

@@ -31,18 +31,14 @@ module Vagrant
           end
         end
 
-        def create(template, target_rootfs_path, template_opts = {})
+        def create(template, template_opts = {})
           extra = template_opts.to_a.flatten
           extra.unshift '--' unless extra.empty?
-
-          rootfs_args = target_rootfs_path ?
-            ['-B', 'dir', '--dir', target_rootfs_path] :
-            []
 
           run :create,
               '--template', template,
               '--name',     @name,
-              *(rootfs_args + extra)
+              *extra
         end
 
         def destroy

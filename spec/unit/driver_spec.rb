@@ -37,7 +37,6 @@ describe Vagrant::LXC::Driver do
     let(:suffix)          { 'random-suffix' }
     let(:template_name)   { 'template-name' }
     let(:rootfs_tarball)  { '/path/to/cache/rootfs.tar.gz' }
-    let(:target_rootfs)   { '/path/to/rootfs' }
     let(:public_key_path) { Vagrant.source_root.join('keys', 'vagrant.pub').expand_path.to_s }
     let(:cli)             { fire_double('Vagrant::LXC::Driver::CLI', :create => true, :name= => true) }
 
@@ -45,14 +44,13 @@ describe Vagrant::LXC::Driver do
 
     before do
       SecureRandom.stub(hex: suffix)
-      subject.create base_name, target_rootfs, 'template-name' => template_name, 'rootfs-tarball' => rootfs_tarball, 'template-opts' => { '--foo' => 'bar'}
+      subject.create base_name, 'template-name' => template_name, 'rootfs-tarball' => rootfs_tarball, 'template-opts' => { '--foo' => 'bar'}
     end
 
     it 'creates container with the right arguments' do
       cli.should have_received(:name=).with("#{base_name}-#{suffix}")
       cli.should have_received(:create).with(
         template_name,
-        target_rootfs,
         '--auth-key' => public_key_path,
         '--tarball'  => rootfs_tarball,
         '--foo'      => 'bar'
