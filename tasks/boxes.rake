@@ -11,8 +11,8 @@ namespace :boxes do
       sh 'cd boxes/quantal64 && sudo ./download-ubuntu'
       sh 'rm -f boxes/quantal64/rootfs.tar.gz'
       sh 'cd boxes/quantal64 && sudo tar --numeric-owner -czf rootfs.tar.gz ./rootfs/*'
-      sh "cd boxes/quantal64 && sudo chown #{ENV['USER']}:#{ENV['USER']} rootfs.tar.gz && tar -czf ../output/lxc-quantal64.box ./* --exclude=rootfs/* --exclude=download-ubuntu"
-      sh 'cd boxes/quantal64 && sudo rm -rf rootfs-amd64'
+      sh 'cd boxes/quantal64 && sudo rm -rf rootfs'
+      sh "cd boxes/quantal64 && sudo chown #{ENV['USER']}:#{ENV['USER']} rootfs.tar.gz && tar -czf ../output/lxc-quantal64.box ./* --exclude=download-ubuntu"
     end
   end
 end
