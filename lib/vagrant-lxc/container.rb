@@ -46,7 +46,7 @@ module Vagrant
         public_key = Vagrant.source_root.join('keys', 'vagrant.pub').expand_path.to_s
         meta_opts  = metadata.fetch('template-opts', {}).merge(
           '--auth-key' => public_key,
-          '--cache'    => metadata.fetch('rootfs-cache-path')
+          '--tarball'  => metadata.fetch('rootfs-tarball').to_s
         )
 
         @cli.name = @name
