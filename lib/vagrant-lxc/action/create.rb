@@ -7,12 +7,18 @@ module Vagrant
         end
 
         def call(env)
-          base_name = env[:root_path].basename.to_s
-          base_name.gsub!(/[^-a-z0-9_]/i, "")
+          container_name = env[:root_path].basename.to_s
+          container_name.gsub!(/[^-a-z0-9_]/i, "")
+          container_name << "-#{Time.now.to_i}"
 
-          machine_id         = env[:machine].provider.driver.create(base_name, env[:machine].box.metadata)
-          env[:machine].id   = machine_id
-          env[:just_created] = true
+          env[:machine].provider.driver.create(
+            container_name,
+            env[:lxc_template_src],
+            env[:lxc_template_opts]
+          )
+
+          env[:machine].id = container_name
+
           @app.call env
         end
       end

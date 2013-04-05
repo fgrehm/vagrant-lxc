@@ -1,5 +1,3 @@
-require 'securerandom'
-
 require "vagrant/util/retryable"
 require "vagrant/util/subprocess"
 
@@ -9,9 +7,6 @@ require "vagrant-lxc/driver/cli"
 module Vagrant
   module LXC
     class Driver
-      # Root folder where containers are stored
-      CONTAINERS_PATH = '/var/lib/lxc'
-
       # Include this so we can use `Subprocess` more easily.
       include Vagrant::Util::Retryable
 
@@ -39,20 +34,13 @@ module Vagrant
         Pathname.new(base_path.join('config').read.match(/^lxc\.rootfs\s+=\s+(.+)$/)[1])
       end
 
-      def create(base_name, metadata = {})
-        @logger.debug('Creating container using lxc-create...')
+      def create(name, template_path, template_options = {})
+        @cli.name = @name = name
 
-        @name      = "#{base_name}-#{SecureRandom.hex(6)}"
-        public_key = Vagrant.source_root.join('keys', 'vagrant.pub').expand_path.to_s
-        meta_opts  = metadata.fetch('template-opts', {}).merge(
-          '--auth-key' => public_key,
-          '--tarball'  => metadata.fetch('rootfs-tarball').to_s
-        )
-
-        @cli.name = @name
-        @cli.create(metadata.fetch('template-name'), meta_opts)
-
-        @name
+        import_template(template_path) do |template_name|
+          @logger.debug "Creating container..."
+          @cli.create template_name, template_options
+        end
       end
 
       def share_folders(folders, config)
@@ -135,6 +123,33 @@ module Vagrant
         if output =~ /\s+inet addr:([0-9.]+)\s+/
           return $1.to_s
         end
+      end
+
+      protected
+
+      LXC_TEMPLATES_PATH = Pathname.new("/usr/share/lxc/templates")
+
+      # Root folder where container configs are stored
+      CONTAINERS_PATH = '/var/lib/lxc'
+
+      def base_path
+        Pathname.new("#{CONTAINERS_PATH}/#{@name}")
+      end
+
+      def rootfs_path
+        Pathname.new(base_path.join('config').read.match(/^lxc\.rootfs\s+=\s+(.+)$/)[1])
+      end
+
+      def import_template(path)
+        template_name     = "vagrant-tmp-#{@name}"
+        tmp_template_path = LXC_TEMPLATES_PATH.join("lxc-#{template_name}").to_s
+
+        @logger.debug 'Copying LXC template into place'
+        system(%Q[sudo su root -c "cp #{path} #{tmp_template_path}"])
+
+        yield template_name
+      ensure
+        system(%Q[sudo su root -c "rm #{tmp_template_path}"])
       end
     end
   end

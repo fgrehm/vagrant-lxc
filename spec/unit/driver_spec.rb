@@ -4,9 +4,6 @@ require 'vagrant'
 require 'vagrant-lxc/driver'
 
 describe Vagrant::LXC::Driver do
-  let(:name) { nil }
-  subject { described_class.new(name) }
-
   describe 'container name validation' do
     let(:unknown_container) { described_class.new('unknown', cli) }
     let(:valid_container)   { described_class.new('valid', cli) }
@@ -33,27 +30,28 @@ describe Vagrant::LXC::Driver do
   end
 
   describe 'creation' do
-    let(:base_name)       { 'container-name' }
-    let(:suffix)          { 'random-suffix' }
-    let(:template_name)   { 'template-name' }
-    let(:rootfs_tarball)  { '/path/to/cache/rootfs.tar.gz' }
-    let(:public_key_path) { Vagrant.source_root.join('keys', 'vagrant.pub').expand_path.to_s }
-    let(:cli)             { fire_double('Vagrant::LXC::Driver::CLI', :create => true, :name= => true) }
+    let(:name)           { 'container-name' }
+    let(:template_name)  { 'auto-assigned-template-id' }
+    let(:template_path)  { '/path/to/lxc-template-from-box' }
+    let(:template_opts)  { {'--some' => 'random-option'} }
+    let(:rootfs_tarball) { '/path/to/cache/rootfs.tar.gz' }
+    let(:cli)            { fire_double('Vagrant::LXC::Driver::CLI', :create => true, :name= => true) }
 
-    subject { described_class.new(name, cli) }
+    subject { described_class.new(nil, cli) }
 
     before do
-      SecureRandom.stub(hex: suffix)
-      subject.create base_name, 'template-name' => template_name, 'rootfs-tarball' => rootfs_tarball, 'template-opts' => { '--foo' => 'bar'}
+      subject.stub(:import_template).and_yield(template_name)
+      subject.create name, template_path, template_opts
+    end
+
+    it 'sets the cli object container name' do
+      cli.should have_received(:name=).with(name)
     end
 
     it 'creates container with the right arguments' do
-      cli.should have_received(:name=).with("#{base_name}-#{suffix}")
       cli.should have_received(:create).with(
         template_name,
-        '--auth-key' => public_key_path,
-        '--tarball'  => rootfs_tarball,
-        '--foo'      => 'bar'
+        template_opts
       )
     end
   end
