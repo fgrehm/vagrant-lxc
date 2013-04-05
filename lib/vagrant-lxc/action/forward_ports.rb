@@ -29,7 +29,7 @@ module Vagrant
         end
 
         def forward_ports
-          @container_ip = @env[:machine].provider.container.assigned_ip
+          @container_ip = @env[:machine].provider.driver.assigned_ip
 
           @env[:forwarded_ports].each do |fp|
             message_attributes = {

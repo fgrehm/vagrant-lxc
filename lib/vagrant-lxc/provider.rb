@@ -7,7 +7,7 @@ require "vagrant-lxc/machine_state"
 module Vagrant
   module LXC
     class Provider < Vagrant.plugin("2", :provider)
-      attr_reader :container
+      attr_reader :driver
 
       def initialize(machine)
         @logger    = Log4r::Logger.new("vagrant::provider::lxc")
@@ -23,8 +23,8 @@ module Vagrant
 
         begin
           @logger.debug("Instantiating the container for: #{id.inspect}")
-          @container = Driver.new(id)
-          @container.validate!
+          @driver = Driver.new(id)
+          @driver.validate!
         rescue Driver::ContainerNotFound
           # The container doesn't exist, so we probably have a stale
           # ID. Just clear the id out of the machine and reload it.
@@ -51,15 +51,15 @@ module Vagrant
         return nil if state == :not_created
 
         {
-          :host => @container.assigned_ip,
+          :host => @driver.assigned_ip,
           :port => @machine.config.ssh.guest_port
         }
       end
 
       def state
         state_id = nil
-        state_id = :not_created if !@container.name
-        state_id = @container.state if !state_id
+        state_id = :not_created if !@driver.name
+        state_id = @driver.state if !state_id
         state_id = :unknown if !state_id
         LXC::MachineState.new(state_id)
       end

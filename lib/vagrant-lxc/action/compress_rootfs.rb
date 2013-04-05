@@ -12,7 +12,7 @@ module Vagrant
           raise Vagrant::Errors::VMPowerOffToPackage if env[:machine].provider.state.id != :stopped
 
           env[:ui].info I18n.t("vagrant.actions.lxc.compressing_rootfs")
-          @rootfs = env['package.rootfs'] = env[:machine].provider.container.compress_rootfs
+          @rootfs = env['package.rootfs'] = env[:machine].provider.driver.compress_rootfs
 
           @app.call env
 

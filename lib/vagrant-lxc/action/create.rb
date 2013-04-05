@@ -12,7 +12,7 @@ module Vagrant
 
           target_rootfs_path = env[:machine].provider_config.target_rootfs_path
 
-          machine_id         = env[:machine].provider.container.create(base_name, target_rootfs_path, env[:machine].box.metadata)
+          machine_id         = env[:machine].provider.driver.create(base_name, target_rootfs_path, env[:machine].box.metadata)
           env[:machine].id   = machine_id
           env[:just_created] = true
           @app.call env

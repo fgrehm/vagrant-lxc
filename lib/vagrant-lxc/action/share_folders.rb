@@ -61,7 +61,7 @@ module Vagrant
                                   :guest_path => data[:guestpath]))
           end
           config = @env[:machine].provider_config
-          @env[:machine].provider.container.share_folders(folders, config)
+          @env[:machine].provider.driver.share_folders(folders, config)
         end
       end
     end
