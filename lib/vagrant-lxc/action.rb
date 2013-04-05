@@ -11,7 +11,6 @@ require 'vagrant-lxc/action/forced_halt'
 require 'vagrant-lxc/action/forward_ports'
 require 'vagrant-lxc/action/handle_box_metadata'
 require 'vagrant-lxc/action/is_running'
-require 'vagrant-lxc/action/network'
 require 'vagrant-lxc/action/setup_package_files'
 require 'vagrant-lxc/action/share_folders'
 
@@ -49,7 +48,6 @@ module Vagrant
           # b.use PrepareForwardedPortCollisionParams
           # b.use ClearSharedFolders
           b.use ShareFolders
-          b.use Network
           b.use Vagrant::Action::Builtin::SetHostname
           # b.use Customize
           b.use ForwardPorts
