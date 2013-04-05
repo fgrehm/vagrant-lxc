@@ -1,7 +1,7 @@
 require "log4r"
 
 require "vagrant-lxc/action"
-require "vagrant-lxc/container"
+require "vagrant-lxc/driver"
 require "vagrant-lxc/machine_state"
 
 module Vagrant
@@ -23,9 +23,9 @@ module Vagrant
 
         begin
           @logger.debug("Instantiating the container for: #{id.inspect}")
-          @container = Container.new(id)
+          @container = Driver.new(id)
           @container.validate!
-        rescue Container::NotFound
+        rescue Driver::ContainerNotFound
           # The container doesn't exist, so we probably have a stale
           # ID. Just clear the id out of the machine and reload it.
           @logger.debug("Container not found! Clearing saved machine ID and reloading.")

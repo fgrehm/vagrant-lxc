@@ -1,3 +1,5 @@
+require 'vagrant/errors'
+
 module Vagrant
   module LXC
     module Errors

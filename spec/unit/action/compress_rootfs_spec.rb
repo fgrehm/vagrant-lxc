@@ -7,7 +7,7 @@ describe Vagrant::LXC::Action::CompressRootFS do
   let(:env)                    { {machine: machine, ui: stub(info: true)} }
   let(:machine)                { fire_double('Vagrant::Machine', provider: provider) }
   let(:provider)               { fire_double('Vagrant::LXC::Provider', container: container) }
-  let(:container)              { fire_double('Vagrant::LXC::Container', compress_rootfs: compressed_rootfs_path) }
+  let(:container)              { fire_double('Vagrant::LXC::Driver', compress_rootfs: compressed_rootfs_path) }
   let(:compressed_rootfs_path) { '/path/to/rootfs.tar.gz' }
 
   subject { described_class.new(app, env) }

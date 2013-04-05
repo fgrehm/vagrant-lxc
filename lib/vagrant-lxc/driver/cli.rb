@@ -5,7 +5,7 @@ require "vagrant-lxc/errors"
 
 module Vagrant
   module LXC
-    class Container
+    class Driver
       class CLI
         attr_accessor :name
 

@@ -1,9 +1,9 @@
 require 'unit_helper'
 
 require 'vagrant'
-require 'vagrant-lxc/container'
+require 'vagrant-lxc/driver'
 
-describe Vagrant::LXC::Container do
+describe Vagrant::LXC::Driver do
   let(:name) { nil }
   subject { described_class.new(name) }
 
@@ -11,24 +11,24 @@ describe Vagrant::LXC::Container do
     let(:unknown_container) { described_class.new('unknown', cli) }
     let(:valid_container)   { described_class.new('valid', cli) }
     let(:new_container)     { described_class.new(nil) }
-    let(:cli)               { fire_double('Vagrant::LXC::Container::CLI', list: ['valid']) }
+    let(:cli)               { fire_double('Vagrant::LXC::Driver::CLI', list: ['valid']) }
 
-    it 'raises a NotFound error if an unknown container name gets provided' do
+    it 'raises a ContainerNotFound error if an unknown container name gets provided' do
       expect {
         unknown_container.validate!
-      }.to raise_error(Vagrant::LXC::Container::NotFound)
+      }.to raise_error(Vagrant::LXC::Driver::ContainerNotFound)
     end
 
-    it 'does not raise a NotFound error if a valid container name gets provided' do
+    it 'does not raise a ContainerNotFound error if a valid container name gets provided' do
       expect {
         valid_container.validate!
-      }.to_not raise_error(Vagrant::LXC::Container::NotFound)
+      }.to_not raise_error(Vagrant::LXC::Driver::ContainerNotFound)
     end
 
-    it 'does not raise a NotFound error if nil is provider as name' do
+    it 'does not raise a ContainerNotFound error if nil is provider as name' do
       expect {
         new_container.validate!
-      }.to_not raise_error(Vagrant::LXC::Container::NotFound)
+      }.to_not raise_error(Vagrant::LXC::Driver::ContainerNotFound)
     end
   end
 
@@ -39,7 +39,7 @@ describe Vagrant::LXC::Container do
     let(:rootfs_tarball)  { '/path/to/cache/rootfs.tar.gz' }
     let(:target_rootfs)   { '/path/to/rootfs' }
     let(:public_key_path) { Vagrant.source_root.join('keys', 'vagrant.pub').expand_path.to_s }
-    let(:cli)             { fire_double('Vagrant::LXC::Container::CLI', :create => true, :name= => true) }
+    let(:cli)             { fire_double('Vagrant::LXC::Driver::CLI', :create => true, :name= => true) }
 
     subject { described_class.new(name, cli) }
 
@@ -62,7 +62,7 @@ describe Vagrant::LXC::Container do
 
   describe 'destruction' do
     let(:name) { 'container-name' }
-    let(:cli)  { fire_double('Vagrant::LXC::Container::CLI', destroy: true) }
+    let(:cli)  { fire_double('Vagrant::LXC::Driver::CLI', destroy: true) }
 
     subject { described_class.new(name, cli) }
 
@@ -76,7 +76,7 @@ describe Vagrant::LXC::Container do
   describe 'start' do
     let(:config) { mock(:config, start_opts: ['a=1', 'b=2']) }
     let(:name)   { 'container-name' }
-    let(:cli)    { fire_double('Vagrant::LXC::Container::CLI', start: true) }
+    let(:cli)    { fire_double('Vagrant::LXC::Driver::CLI', start: true) }
 
     subject { described_class.new(name, cli) }
 
@@ -97,7 +97,7 @@ describe Vagrant::LXC::Container do
 
   describe 'halt' do
     let(:name) { 'container-name' }
-    let(:cli)  { fire_double('Vagrant::LXC::Container::CLI', shutdown: true) }
+    let(:cli)  { fire_double('Vagrant::LXC::Driver::CLI', shutdown: true) }
 
     subject { described_class.new(name, cli) }
 
@@ -119,7 +119,7 @@ describe Vagrant::LXC::Container do
   describe 'state' do
     let(:name)      { 'random-container-name' }
     let(:cli_state) { :something }
-    let(:cli)       { fire_double('Vagrant::LXC::Container::CLI', state: cli_state) }
+    let(:cli)       { fire_double('Vagrant::LXC::Driver::CLI', state: cli_state) }
 
     subject { described_class.new(name, cli) }
 
@@ -133,7 +133,7 @@ describe Vagrant::LXC::Container do
     let(:ip)              { "10.0.3.109" }
     let(:ifconfig_output) { File.read('spec/fixtures/sample-ifconfig-output') }
     let(:name)            { 'random-container-name' }
-    let(:cli)             { fire_double('Vagrant::LXC::Container::CLI', :attach => ifconfig_output) }
+    let(:cli)             { fire_double('Vagrant::LXC::Driver::CLI', :attach => ifconfig_output) }
 
     subject { described_class.new(name, cli) }
 

@@ -1,9 +1,8 @@
 require 'unit_helper'
 
-require 'vagrant'
-require 'vagrant-lxc/container/cli'
+require 'vagrant-lxc/driver/cli'
 
-describe Vagrant::LXC::Container::CLI do
+describe Vagrant::LXC::Driver::CLI do
   describe 'list' do
     let(:lxc_ls_out) { "dup-container\na-container dup-container" }
     let(:exec_args)  { @exec_args }

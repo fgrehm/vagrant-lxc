@@ -11,7 +11,7 @@ describe Vagrant::LXC::Action::ForwardPorts do
   let(:host_port)    { 8080 }
   let(:guest_port)   { 80 }
   let(:provider)     { fire_double('Vagrant::LXC::Provider', container: container) }
-  let(:container)    { fire_double('Vagrant::LXC::Container', assigned_ip: container_ip) }
+  let(:container)    { fire_double('Vagrant::LXC::Driver', assigned_ip: container_ip) }
   let(:container_ip) { '10.0.1.234' }
   let(:pid)          { 'a-pid' }
 

@@ -1,14 +1,14 @@
 require 'securerandom'
 
-require "vagrant-lxc/errors"
-require "vagrant-lxc/container/cli"
-
 require "vagrant/util/retryable"
 require "vagrant/util/subprocess"
 
+require "vagrant-lxc/errors"
+require "vagrant-lxc/driver/cli"
+
 module Vagrant
   module LXC
-    class Container
+    class Driver
       # Root folder where containers are stored
       CONTAINERS_PATH = '/var/lib/lxc'
 
@@ -17,7 +17,7 @@ module Vagrant
 
       # This is raised if the container can't be found when initializing it with
       # a name.
-      class NotFound < StandardError; end
+      class ContainerNotFound < StandardError; end
 
       attr_reader :name
 
@@ -28,7 +28,7 @@ module Vagrant
       end
 
       def validate!
-        raise NotFound if @name && ! @cli.list.include?(@name)
+        raise ContainerNotFound if @name && ! @cli.list.include?(@name)
       end
 
       def base_path
