@@ -155,16 +155,17 @@ EOF
     fi
 }
 
-copy_ubuntu()
+extract_rootfs()
 {
-    cache=$1
+    tarball=$1
     arch=$2
     rootfs=$3
 
-    # make a local copy of the miniubuntu
-    echo "Copying rootfs to $rootfs ..."
+    echo "Extracting $tarball ..."
     mkdir -p $(dirname $rootfs)
-    mv $cache/rootfs-$arch $rootfs || return 1
+    # Make sure the rootfs does not exist before extracting
+    rm -rf $rootfs
+    (cd `dirname $rootfs` && tar xfz $tarball)
     return 0
 }
 
@@ -172,7 +173,7 @@ install_ubuntu()
 {
     rootfs=$1
     release=$2
-    cache=$3 # "/var/cache/lxc/$release"
+    tarball=$3
     mkdir -p /var/lock/subsys/
 
     (
@@ -182,8 +183,7 @@ install_ubuntu()
             return 1
         fi
 
-        echo "Copy $cache/rootfs-$arch to $rootfs ... "
-        copy_ubuntu $cache $arch $rootfs
+        extract_rootfs $tarball $arch $rootfs
         if [ $? -ne 0 ]; then
             echo "Failed to copy rootfs"
             return 1
@@ -454,7 +454,7 @@ EOF
     return 0
 }
 
-options=$(getopt -o a:b:hp:r:xn:FS:d:C -l arch:,help,path:,release:,trim,name:,flush-cache,auth-key:,debug:,cache: -- "$@")
+options=$(getopt -o a:b:hp:r:xn:FS:d:C -l arch:,help,path:,release:,trim,name:,flush-cache,auth-key:,debug:,tarball: -- "$@")
 if [ $? -ne 0 ]; then
     usage $(basename $0)
     exit 1
@@ -496,7 +496,7 @@ do
     -h|--help)      usage $0 && exit 0;;
     -p|--path)      path=$2; shift 2;;
     -n|--name)      name=$2; shift 2;;
-    -C|--cache)     cache=$2; shift 2;;
+    -T|--tarball)   tarball=$2; shift 2;;
     -r|--release)   release=$2; shift 2;;
     -a|--arch)      arch=$2; shift 2;;
     -x|--trim)      trim_container=1; shift 1;;
@@ -539,7 +539,7 @@ else
     rootfs=$path/rootfs
 fi
 
-install_ubuntu $rootfs $release $cache
+install_ubuntu $rootfs $release $tarball
 if [ $? -ne 0 ]; then
     echo "failed to install ubuntu $release"
     exit 1
