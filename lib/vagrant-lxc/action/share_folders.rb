@@ -9,7 +9,7 @@ module Vagrant
         def call(env)
           @env = env
           prepare_folders
-          add_start_opts
+          add_override_configs
           @app.call env
         end
 
@@ -47,7 +47,7 @@ module Vagrant
           end
         end
 
-        def add_start_opts
+        def add_override_configs
           @env[:ui].info I18n.t("vagrant.actions.lxc.share_folders.preparing")
 
           folders = []

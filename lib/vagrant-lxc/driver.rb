@@ -55,19 +55,19 @@ module Vagrant
             end
           end
 
-          config.start_opts << "lxc.mount.entry=#{folder[:hostpath]} #{guestpath} none bind 0 0"
+          # TODO: Move outside
+          config.customize 'mount.entry', "#{folder[:hostpath]} #{guestpath} none bind 0 0"
         end
       end
 
       def start(config)
         @logger.info('Starting container...')
 
-        opts = config.start_opts.dup
         if ENV['LXC_START_LOG_FILE']
           extra = ['-o', ENV['LXC_START_LOG_FILE'], '-l', 'DEBUG']
         end
 
-        @cli.transition_to(:running) { |c| c.start(opts, (extra || nil)) }
+        @cli.transition_to(:running) { |c| c.start(config.customizations, (extra || nil)) }
       end
 
       def halt

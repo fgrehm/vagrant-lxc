@@ -65,9 +65,9 @@ Vagrant.configure("2") do |config|
 
   config.vm.provider :lxc do |lxc|
     # Same as 'customize ["modifyvm", :id, "--memory", "1024"]' for VirtualBox
-    lxc.start_opts << 'lxc.cgroup.memory.limit_in_bytes=400M'
+    lxc.customize 'cgroup.memory.limit_in_bytes', '400M'
     # Limits swap size
-    lxc.start_opts << 'lxc.cgroup.memory.memsw.limit_in_bytes=500M'
+    lxc.customize 'cgroup.memory.memsw.limit_in_bytes', '500M'
   end
 
   # ... your puppet / chef / shell provisioner configs here ...

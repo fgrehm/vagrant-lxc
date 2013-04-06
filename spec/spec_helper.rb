@@ -17,6 +17,7 @@ Dir[File.dirname(__FILE__) + "/support/**/*.rb"].each { |f| require f }
 if ENV['VERIFY_CONSTANT_NAMES']
   require 'vagrant-lxc/plugin'
   require 'vagrant-lxc/provider'
+  require 'vagrant-lxc/config'
 end
 
 require 'rspec/fire'

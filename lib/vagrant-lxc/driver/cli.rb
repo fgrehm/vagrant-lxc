@@ -45,10 +45,10 @@ module Vagrant
           run :destroy, '--name', @name
         end
 
-        def start(configs = [], extra_opts = [])
-          configs = configs.map { |conf| ["-s", conf] }.flatten
-          configs += extra_opts if extra_opts
-          run :start, '-d', '--name', @name, *configs
+        def start(overrides = [], extra_opts = [])
+          options = overrides.map { |key, value| ["-s", "lxc.#{key}=#{value}"] }.flatten
+          options += extra_opts if extra_opts
+          run :start, '-d', '--name', @name, *options
         end
 
         def shutdown

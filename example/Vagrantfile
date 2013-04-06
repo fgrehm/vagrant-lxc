@@ -27,8 +27,8 @@ Vagrant.configure("2") do |config|
   config.vm.synced_folder cache_dir, "/var/cache/apt/archives"
 
   config.vm.provider :lxc do |lxc|
-    lxc.start_opts << 'lxc.cgroup.memory.limit_in_bytes=400M'
-    lxc.start_opts << 'lxc.cgroup.memory.memsw.limit_in_bytes=500M'
+    lxc.customize 'cgroup.memory.limit_in_bytes', '400M'
+    lxc.customize 'cgroup.memory.memsw.limit_in_bytes', '500M'
   end
 
   config.vm.provision :shell, :inline => <<-SCRIPT
