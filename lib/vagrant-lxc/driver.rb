@@ -92,7 +92,7 @@ module Vagrant
 
         Dir.chdir base_path do
           @logger.info "Compressing '#{rootfs_path}' rootfs to #{target_path}"
-          system "sudo rm -f rootfs.tar.gz && sudo bsdtar -s /#{basename}/rootfs-#{arch}/ --numeric-owner -czf #{target_path} #{basename}/* 2>/dev/null"
+          system "sudo rm -f rootfs.tar.gz && sudo tar --numeric-owner -czf #{target_path} #{basename}/*"
 
           @logger.info "Changing rootfs tarbal owner"
           system "sudo chown #{ENV['USER']}:#{ENV['USER']} #{target_path}"
