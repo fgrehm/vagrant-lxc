@@ -14,20 +14,20 @@ module Vagrant
       # a name.
       class ContainerNotFound < StandardError; end
 
-      attr_reader :name
+      attr_reader :container_name
 
-      def initialize(name, cli = CLI.new(name))
-        @name   = name
-        @cli    = cli
-        @logger = Log4r::Logger.new("vagrant::provider::lxc::driver")
+      def initialize(container_name, cli = CLI.new(container_name))
+        @container_name = container_name
+        @cli            = cli
+        @logger         = Log4r::Logger.new("vagrant::provider::lxc::driver")
       end
 
       def validate!
-        raise ContainerNotFound if @name && ! @cli.list.include?(@name)
+        raise ContainerNotFound if @container_name && ! @cli.list.include?(@container_name)
       end
 
       def base_path
-        Pathname.new("#{CONTAINERS_PATH}/#{@name}")
+        Pathname.new("#{CONTAINERS_PATH}/#{@container_name}")
       end
 
       def rootfs_path
@@ -35,7 +35,7 @@ module Vagrant
       end
 
       def create(name, template_path, template_options = {})
-        @cli.name = @name = name
+        @cli.name = @container_name = name
 
         import_template(template_path) do |template_name|
           @logger.debug "Creating container..."
@@ -102,7 +102,7 @@ module Vagrant
       end
 
       def state
-        if @name
+        if @container_name
           @cli.state
         end
       end
@@ -134,7 +134,7 @@ module Vagrant
       CONTAINERS_PATH = '/var/lib/lxc'
 
       def base_path
-        Pathname.new("#{CONTAINERS_PATH}/#{@name}")
+        Pathname.new("#{CONTAINERS_PATH}/#{@container_name}")
       end
 
       def rootfs_path
@@ -142,7 +142,7 @@ module Vagrant
       end
 
       def import_template(path)
-        template_name     = "vagrant-tmp-#{@name}"
+        template_name     = "vagrant-tmp-#{@container_name}"
         tmp_template_path = LXC_TEMPLATES_PATH.join("lxc-#{template_name}").to_s
 
         @logger.debug 'Copying LXC template into place'

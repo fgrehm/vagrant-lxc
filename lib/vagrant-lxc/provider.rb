@@ -58,7 +58,7 @@ module Vagrant
 
       def state
         state_id = nil
-        state_id = :not_created if !@driver.name
+        state_id = :not_created if !@driver.container_name
         state_id = @driver.state if !state_id
         state_id = :unknown if !state_id
         LXC::MachineState.new(state_id)
