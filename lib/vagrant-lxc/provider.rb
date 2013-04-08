@@ -2,7 +2,6 @@ require "log4r"
 
 require "vagrant-lxc/action"
 require "vagrant-lxc/driver"
-require "vagrant-lxc/machine_state"
 
 module Vagrant
   module LXC
@@ -61,7 +60,11 @@ module Vagrant
         state_id = :not_created if !@driver.container_name
         state_id = @driver.state if !state_id
         state_id = :unknown if !state_id
-        LXC::MachineState.new(state_id)
+
+        short = state_id.to_s.gsub("_", " ")
+        long  = I18n.t("vagrant.commands.status.#{state_id}")
+
+        Vagrant::MachineState.new(state_id, short, long)
       end
 
       def to_s

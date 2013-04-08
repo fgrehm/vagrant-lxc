@@ -7,7 +7,7 @@ module Vagrant
         end
 
         def call(env)
-          unless env[:machine].state.created?
+          if env[:machine].state.id == :not_created
             raise Vagrant::Errors::VMNotCreatedError
           end
 

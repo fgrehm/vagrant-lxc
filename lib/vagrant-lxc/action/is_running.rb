@@ -7,7 +7,7 @@ module Vagrant
         end
 
         def call(env)
-          env[:result] = env[:machine].state.running?
+          env[:result] = env[:machine].state.id == :running
 
           # Call the next if we have one (but we shouldn't, since this
           # middleware is built to run with the Call-type middlewares)

@@ -11,14 +11,9 @@ module Vagrant
 
           config = env[:machine].provider_config
 
-          # Allows this middleware to be called multiple times. We need to
-          # support this as base boxes might have after create scripts which
-          # require SSH access
-          unless env[:machine].state.running?
-            env[:ui].info I18n.t("vagrant.actions.vm.boot.booting")
-            env[:machine].provider.driver.start(config)
-            raise Vagrant::Errors::VMFailedToBoot if !wait_for_boot
-          end
+          env[:ui].info I18n.t("vagrant.actions.vm.boot.booting")
+          env[:machine].provider.driver.start(config)
+          raise Vagrant::Errors::VMFailedToBoot if !wait_for_boot
 
           @app.call env
         end

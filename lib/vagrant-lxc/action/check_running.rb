@@ -7,7 +7,7 @@ module Vagrant
         end
 
         def call(env)
-          unless env[:machine].state.running?
+          if env[:machine].state.id != :running
             raise Vagrant::Errors::VMNotRunningError
           end
 

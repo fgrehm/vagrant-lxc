@@ -124,7 +124,7 @@ module Vagrant
               b2.use Disconnect
               b2.use ClearForwardedPorts
               b2.use Vagrant::Action::Builtin::Call, Vagrant::Action::Builtin::GracefulHalt, :stopped, :running do |env2, b3|
-                if !env2[:result] && env2[:machine].provider.state.running?
+                if !env2[:result]
                   b3.use ForcedHalt
                 end
               end
