@@ -9,30 +9,49 @@ module Vagrant
         end
 
         def call(env)
-          env[:ui].info I18n.t("vagrant.actions.vm.import.importing",
-                               :name => env[:machine].box.name)
+          @env = env
+          @box = @env[:machine].box
 
-          box = env[:machine].box
+          @env[:ui].info I18n.t("vagrant.actions.vm.import.importing",
+                                :name => @env[:machine].box.name)
 
-          template_src = box.directory.join('lxc-template').to_s
-          unless File.exists?(template_src)
-            raise Errors::TemplateFileMissing.new name: box.name
-          end
+          @logger.debug 'Validating box contents'
+          validate_box
 
-          # TODO: Validate box version
-
-          @logger.debug('Merging metadata with template name and rootfs tarball')
-
-          template_opts = box.metadata.fetch('template-opts', {}).dup
-          template_opts.merge!(
-            '--tarball'  => box.directory.join('rootfs.tar.gz').to_s,
-						'--auth-key' => Vagrant.source_root.join('keys', 'vagrant.pub').expand_path.to_s
-          )
-
-          env[:lxc_template_opts] = template_opts
-          env[:lxc_template_src]  = template_src
+          @logger.debug 'Setting box options on environment'
+          @env[:lxc_template_opts] = template_opts
+          @env[:lxc_template_src]  = template_src
 
           @app.call env
+        end
+
+        def template_src
+          @template_src ||= @box.directory.join('lxc-template').to_s
+        end
+
+        def template_opts
+          @template_opts ||= @box.metadata.fetch('template-opts', {}).dup.merge!(
+            '--tarball'  => rootfs_tarball,
+            '--auth-key' => Vagrant.source_root.join('keys', 'vagrant.pub').expand_path.to_s
+          )
+        end
+
+        def rootfs_tarball
+          @rootfs_tarball ||= @box.directory.join('rootfs.tar.gz').to_s
+        end
+
+        def validate_box
+          if @box.metadata.fetch('version').to_i != 2
+            raise Errors::InvalidBoxVersion.new name: @box.name
+          end
+
+          unless File.exists?(template_src)
+            raise Errors::TemplateFileMissing.new name: @box.name
+          end
+
+          unless File.exists?(rootfs_tarball)
+            raise Errors::RootFSTarballMissing.new name: @box.name
+          end
         end
       end
     end
