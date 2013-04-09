@@ -5,7 +5,6 @@ require 'vagrant-lxc/driver/cli'
 describe Vagrant::LXC::Driver::CLI do
   describe 'list' do
     let(:lxc_ls_out) { "dup-container\na-container dup-container" }
-    let(:exec_args)  { @exec_args }
     let(:result)     { @result }
 
     before do
@@ -21,6 +20,18 @@ describe Vagrant::LXC::Driver::CLI do
 
     it 'removes duplicates from lxc-ls output' do
       result.uniq.should == result
+    end
+  end
+
+  describe 'version' do
+    let(:lxc_version_out) { "lxc version:  0.x.y-rc1\n" }
+
+    before do
+      subject.stub(:run).with(:version).and_return(lxc_version_out)
+    end
+
+    it 'parses the version from the output' do
+      subject.version.should == '0.x.y-rc1'
     end
   end
 

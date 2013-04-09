@@ -23,6 +23,15 @@ module Vagrant
           run(:ls).split(/\s+/).uniq
         end
 
+        def version
+          if run(:version) =~ /lxc version:\s+(.+)\s*$/
+            $1.downcase
+          else
+            # TODO: Raise an user friendly error
+            raise 'Unable to parse lxc version!'
+          end
+        end
+
         def state
           if @name && run(:info, '--name', @name) =~ /^state:[^A-Z]+([A-Z]+)$/
             $1.downcase.to_sym
