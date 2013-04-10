@@ -1,12 +1,16 @@
 # vagrant-lxc [![Build Status](https://travis-ci.org/fgrehm/vagrant-lxc.png?branch=master)](https://travis-ci.org/fgrehm/vagrant-lxc) [![Gem Version](https://badge.fury.io/rb/vagrant-lxc.png)](http://badge.fury.io/rb/vagrant-lxc) [![Code Climate](https://codeclimate.com/github/fgrehm/vagrant-lxc.png)](https://codeclimate.com/github/fgrehm/vagrant-lxc)
 
-Experimental Linux Containers support for Vagrant 1.1+
+Linux Containers support for Vagrant 1.1+
 
 
 ## Dependencies
 
-Vagrant 1.1+ (1.1.4+ recommended), `lxc` and `redir` packages and a Kernel [higher than 3.5.0-17.28](#help-im-unable-to-restart-containers),
-which on Ubuntu 12.10 means something like:
+* Vagrant 1.1+ (1.1.3+ recommended)
+* lxc 0.7.5+ (0.8.0-rc1+ recommended)
+* redir
+* A Kernel [higher than 3.5.0-17.28](#help-im-unable-to-restart-containers)
+
+On Ubuntu 12.10 it means something like:
 
 ```
 sudo apt-get update && sudo apt-get dist-upgrade
@@ -16,7 +20,7 @@ sudo dpkg -i /tmp/vagrant.deb
 ```
 
 
-## What is currently supported? (v0.2.0)
+## What is currently supported? (v0.3.0)
 
 Pretty much everything you need from Vagrant:
 
@@ -27,13 +31,13 @@ Pretty much everything you need from Vagrant:
 * Port forwarding
 
 *Please refer to the [closed issues](https://github.com/fgrehm/vagrant-lxc/issues?labels=&milestone=&page=1&state=closed)
-for the most up to date list.*
+and the [changelog](CHANGELOG.md) for most up to date information.*
 
 
 ## Current limitations
 
 * Does not detect forwarded ports collision, right now you are responsible for taking care of that
-* A hell lot of `sudo`s
+* A hell lot of `sudo`s (this will probably be like this until [user namespaces](http://s3hh.wordpress.com/2013/02/12/user-namespaces-lxc-meeting/) are supported)
 * Only a [single ubuntu box supported](boxes)
 * "[works on  my machine](https://github.com/fgrehm/vagrant-lxc/issues/20)" (TM)
 * [Does not tell you if dependencies are not met](https://github.com/fgrehm/vagrant-lxc/issues/11)
@@ -42,40 +46,52 @@ for the most up to date list.*
   and some known [bugs](https://github.com/fgrehm/vagrant-lxc/issues?labels=bug&page=1&state=open)
 
 
-## Usage
-
-Make sure you have [Vagrant 1.1+](http://downloads.vagrantup.com/) and run:
+## Installation
 
 ```
 vagrant plugin install vagrant-lxc
 ```
 
-After that you can create a `Vagrantfile` like the one below and run `vagrant up --provider=lxc`:
+## Usage
+
+After installing, add the quantal64 base box using any name you want:
+
+```
+vagrant box add lxc-quantal64 http://dl.dropbox.com/u/13510779/lxc-quantal64-2013-04-10.box
+```
+
+Make a Vagrantfile that looks like the following, filling in your information where necessary:
 
 ```ruby
 Vagrant.configure("2") do |config|
-  config.vm.box     = "lxc-quantal64"
-  config.vm.box_url = 'http://dl.dropbox.com/u/13510779/lxc-quantal64-2013-03-31.box'
+  config.vm.box = "lxc-quantal64"
 
-  # Share an additional folder to the guest Container. The first argument
-  # is the path on the host to the actual folder. The second argument is
-  # the path on the guest to mount the folder. And the optional third
-  # argument is a set of non-required options.
-  config.vm.synced_folder "/tmp", "/host_tmp"
-
+  # You can omit this block if you don't need to override any container setting
   config.vm.provider :lxc do |lxc|
-    # Same as 'customize ["modifyvm", :id, "--memory", "1024"]' for VirtualBox
-    lxc.customize 'cgroup.memory.limit_in_bytes', '400M'
-    # Limits swap size
-    lxc.customize 'cgroup.memory.memsw.limit_in_bytes', '500M'
+    # OPTIONAL: Same effect as as 'customize ["modifyvm", :id, "--memory", "1024"]' for VirtualBox
+    lxc.customize 'cgroup.memory.limit_in_bytes', '1024M'
+    # OPTIONAL: Limits swap size
+    lxc.customize 'cgroup.memory.memsw.limit_in_bytes', '512M'
   end
-
-  # ... your puppet / chef / shell provisioner configs here ...
 end
 ```
 
+And finally run `vagrant up --provider=lxc`.
+
 If you are on a mac or window host and still want to try this plugin out, you
 can use the [same Vagrant VirtualBox machine I use for development](#using-virtualbox-for-development).
+
+### Storing container's rootfs on a separate partition
+
+Before the 0.3.0 version of this plugin, there used to be a support for specifying
+the container's rootfs path from the `Vagrantfile`, on 0.3.0 this was removed as you
+can achieve the same effect by symlinking or mounting `/var/lib/lxc` on a separate
+partition.
+
+### NFS shared folders
+
+NFS shared folders are not supported and will behave as a "normal" shared folder
+so we can share the same Vagrantfile with VBox environments.
 
 
 ## Development
@@ -83,7 +99,7 @@ can use the [same Vagrant VirtualBox machine I use for development](#using-virtu
 If  want to develop from your physical machine, just sing that same old song:
 
 ```
-git clone git://github.com/fgrehm/vagrant-lxc.git --recurse
+git clone git://github.com/fgrehm/vagrant-lxc.git
 cd vagrant-lxc
 bundle install
 bundle exec rake # to run all specs
@@ -95,7 +111,6 @@ To build the provided quantal64 box:
 bundle exec rake boxes:quantal64:build
 vagrant box add quantal64 boxes/output/lxc-quantal64.box
 ```
-
 
 ### Using `vagrant-lxc` to develop itself
 
