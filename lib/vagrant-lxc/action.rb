@@ -45,10 +45,8 @@ module Vagrant
           b.use Vagrant::Action::Builtin::Provision
           b.use Vagrant::Action::Builtin::EnvSet, :port_collision_repair => true
           # b.use PrepareForwardedPortCollisionParams
-          # b.use ClearSharedFolders
           b.use ShareFolders
           b.use Vagrant::Action::Builtin::SetHostname
-          # b.use Customize
           b.use ForwardPorts
           b.use Boot
         end
