@@ -70,24 +70,24 @@ describe Vagrant::LXC::Driver do
   end
 
   describe 'start' do
-    let(:name)           { 'container-name' }
-    let(:customizations) { [['a', '1'], ['b', '2']] }
-    let(:cli)            { fire_double('Vagrant::LXC::Driver::CLI', start: true) }
+    let(:customizations)         { [['a', '1'], ['b', '2']] }
+    let(:internal_customization) { ['internal', 'customization'] }
+    let(:cli)                    { fire_double('Vagrant::LXC::Driver::CLI', start: true) }
 
-    subject { described_class.new(name, cli) }
+    subject { described_class.new('name', cli) }
 
     before do
       cli.stub(:transition_to).and_yield(cli)
+      subject.customizations << internal_customization
+      subject.start(customizations)
     end
 
-    it 'starts container with configured lxc settings' do
-      cli.should_receive(:start).with(customizations, nil)
-      subject.start(customizations)
+    it 'starts container with configured customizations' do
+      cli.should have_received(:start).with(customizations + [internal_customization], nil)
     end
 
     it 'expects a transition to running state to take place' do
-      cli.should_receive(:transition_to).with(:running)
-      subject.start(customizations)
+      cli.should have_received(:transition_to).with(:running)
     end
   end
 
@@ -147,6 +147,31 @@ describe Vagrant::LXC::Driver do
           namespaces: 'network'
         )
       end
+    end
+  end
+
+  describe 'folder sharing' do
+    let(:shared_folder)       { {guestpath: '/vagrant', hostpath: '/path/to/host/dir'} }
+    let(:folders)             { [shared_folder] }
+    let(:rootfs_path)         { Pathname('/path/to/rootfs') }
+    let(:expected_guest_path) { "#{rootfs_path}/vagrant" }
+
+    subject { described_class.new('container-name') }
+
+    before do
+      subject.stub(rootfs_path: rootfs_path, system: true)
+      subject.share_folders(folders)
+    end
+
+    it "creates guest folder under container's rootfs" do
+      subject.should have_received(:system).with("sudo mkdir -p #{expected_guest_path}")
+    end
+
+    it 'adds a mount.entry to its local customizations' do
+      subject.customizations.should include [
+        'mount.entry',
+        "#{shared_folder[:hostpath]} #{expected_guest_path} none bind 0 0"
+      ]
     end
   end
 end

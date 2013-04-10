@@ -14,12 +14,14 @@ module Vagrant
       # a name.
       class ContainerNotFound < StandardError; end
 
-      attr_reader :container_name
+      attr_reader :container_name,
+                  :customizations
 
       def initialize(container_name, cli = CLI.new(container_name))
         @container_name = container_name
         @cli            = cli
         @logger         = Log4r::Logger.new("vagrant::provider::lxc::driver")
+        @customizations = []
       end
 
       def validate!
@@ -43,20 +45,19 @@ module Vagrant
         end
       end
 
-      def share_folders(folders, config)
+      def share_folders(folders)
         folders.each do |folder|
           guestpath = rootfs_path.join(folder[:guestpath].gsub(/^\//, ''))
           unless guestpath.directory?
             begin
+              @logger.debug("Guest path doesn't exist, creating: #{guestpath}")
               system "sudo mkdir -p #{guestpath.to_s}"
             rescue Errno::EACCES
-              raise Vagrant::Errors::SharedFolderCreateFailed,
-                :path => guestpath.to_s
+              raise Vagrant::Errors::SharedFolderCreateFailed, :path => guestpath.to_s
             end
           end
 
-          # TODO: Move outside
-          config.customize 'mount.entry', "#{folder[:hostpath]} #{guestpath} none bind 0 0"
+          @customizations << ['mount.entry', "#{folder[:hostpath]} #{guestpath} none bind 0 0"]
         end
       end
 
@@ -66,6 +67,7 @@ module Vagrant
         if ENV['LXC_START_LOG_FILE']
           extra = ['-o', ENV['LXC_START_LOG_FILE'], '-l', 'DEBUG']
         end
+        customizations = customizations + @customizations
 
         @cli.transition_to(:running) { |c| c.start(customizations, (extra || nil)) }
       end
