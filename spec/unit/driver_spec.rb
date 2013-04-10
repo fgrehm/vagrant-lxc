@@ -121,7 +121,7 @@ describe Vagrant::LXC::Driver do
     end
   end
 
-  describe 'assigned ip' do
+  pending 'assigned ip' do
     # This ip is set on the sample-ip-addr-output fixture
     let(:ip)              { "10.0.254.137" }
     let(:ifconfig_output) { File.read('spec/fixtures/sample-ip-addr-output') }

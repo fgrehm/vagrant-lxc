@@ -7,9 +7,6 @@ require "vagrant-lxc/driver/cli"
 module Vagrant
   module LXC
     class Driver
-      # Include this so we can use `Subprocess` more easily.
-      include Vagrant::Util::Retryable
-
       # This is raised if the container can't be found when initializing it with
       # a name.
       class ContainerNotFound < StandardError; end

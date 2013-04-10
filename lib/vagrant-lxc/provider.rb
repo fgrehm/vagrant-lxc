@@ -2,6 +2,7 @@ require "log4r"
 
 require "vagrant-lxc/action"
 require "vagrant-lxc/driver"
+require "vagrant-lxc/driver/builder"
 
 module Vagrant
   module LXC
@@ -22,7 +23,7 @@ module Vagrant
 
         begin
           @logger.debug("Instantiating the container for: #{id.inspect}")
-          @driver = Driver.new(id)
+          @driver = Driver::Builder.build(id)
           @driver.validate!
         rescue Driver::ContainerNotFound
           # The container doesn't exist, so we probably have a stale
