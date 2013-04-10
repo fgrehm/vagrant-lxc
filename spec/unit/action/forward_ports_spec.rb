@@ -30,7 +30,7 @@ describe Vagrant::LXC::Action::ForwardPorts do
 
   it 'forwards ports using redir' do
     subject.should have_received(:exec).with(
-      "sudo redir --laddr=127.0.0.1 --lport=#{host_port} --cport=#{guest_port} --caddr=#{container_ip}"
+      "sudo redir --laddr=127.0.0.1 --lport=#{host_port} --cport=#{guest_port} --caddr=#{container_ip} 2>/dev/null"
     )
   end
 
