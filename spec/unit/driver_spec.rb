@@ -134,7 +134,7 @@ describe Vagrant::LXC::Driver do
     subject { described_class.new(name, cli) }
 
     context 'when ip for eth0 gets returned from lxc-attach call' do
-      it 'gets parsed from ifconfig output' do
+      it 'gets parsed from `ip addr` output' do
         subject.assigned_ip.should == ip
         cli.should have_received(:attach).with(
           '/sbin/ip',
