@@ -85,8 +85,6 @@ module Vagrant
 
       # TODO: This needs to be reviewed and specs needs to be written
       def compress_rootfs
-        # TODO: Our template should not depend on container's arch
-        arch           = base_path.join('config').read.match(/^lxc\.arch\s+=\s+(.+)$/)[1]
         rootfs_dirname = File.dirname rootfs_path
         basename       = rootfs_path.to_s.gsub(/^#{Regexp.escape rootfs_dirname}\//, '')
         # TODO: Pass in tmpdir so we can clean up from outside
