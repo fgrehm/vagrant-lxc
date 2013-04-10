@@ -6,7 +6,7 @@ Vagrant.require_plugin 'vagrant-lxc'
 
 Vagrant.configure("2") do |config|
   config.vm.box      = "quantal64"
-  config.vm.box_url  = 'http://dl.dropbox.com/u/13510779/lxc-quantal64-2013-03-31.box'
+  config.vm.box_url  = 'http://dl.dropbox.com/u/13510779/lxc-quantal64-2013-04-10.box'
   # Uncomment if you want to try out a box built locally
   # config.vm.box_url  = '../boxes/output/lxc-quantal64.box'
   config.vm.hostname = 'lxc-quantal64-example'
