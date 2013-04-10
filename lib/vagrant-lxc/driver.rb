@@ -60,14 +60,14 @@ module Vagrant
         end
       end
 
-      def start(config)
+      def start(customizations)
         @logger.info('Starting container...')
 
         if ENV['LXC_START_LOG_FILE']
           extra = ['-o', ENV['LXC_START_LOG_FILE'], '-l', 'DEBUG']
         end
 
-        @cli.transition_to(:running) { |c| c.start(config.customizations, (extra || nil)) }
+        @cli.transition_to(:running) { |c| c.start(customizations, (extra || nil)) }
       end
 
       def halt

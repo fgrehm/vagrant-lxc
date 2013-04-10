@@ -12,7 +12,7 @@ module Vagrant
           config = env[:machine].provider_config
 
           env[:ui].info I18n.t("vagrant.actions.vm.boot.booting")
-          env[:machine].provider.driver.start(config)
+          env[:machine].provider.driver.start(config.customizations)
           raise Vagrant::Errors::VMFailedToBoot if !wait_for_boot
 
           @app.call env

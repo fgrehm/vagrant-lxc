@@ -70,9 +70,9 @@ describe Vagrant::LXC::Driver do
   end
 
   describe 'start' do
-    let(:name)   { 'container-name' }
-    let(:config) { fire_double('Vagrant::LXC::Config', customizations: [['a', '1'], ['b', '2']]) }
-    let(:cli)    { fire_double('Vagrant::LXC::Driver::CLI', start: true) }
+    let(:name)           { 'container-name' }
+    let(:customizations) { [['a', '1'], ['b', '2']] }
+    let(:cli)            { fire_double('Vagrant::LXC::Driver::CLI', start: true) }
 
     subject { described_class.new(name, cli) }
 
@@ -81,13 +81,13 @@ describe Vagrant::LXC::Driver do
     end
 
     it 'starts container with configured lxc settings' do
-      cli.should_receive(:start).with(config.customizations, nil)
-      subject.start(config)
+      cli.should_receive(:start).with(customizations, nil)
+      subject.start(customizations)
     end
 
     it 'expects a transition to running state to take place' do
       cli.should_receive(:transition_to).with(:running)
-      subject.start(config)
+      subject.start(customizations)
     end
   end
 
