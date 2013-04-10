@@ -128,8 +128,6 @@ module Vagrant
 
       protected
 
-      LXC_TEMPLATES_PATH = Pathname.new("/usr/share/lxc/templates")
-
       # Root folder where container configs are stored
       CONTAINERS_PATH = '/var/lib/lxc'
 
@@ -139,7 +137,7 @@ module Vagrant
 
       def import_template(path)
         template_name     = "vagrant-tmp-#{@container_name}"
-        tmp_template_path = LXC_TEMPLATES_PATH.join("lxc-#{template_name}").to_s
+        tmp_template_path = templates_path.join("lxc-#{template_name}").to_s
 
         @logger.debug 'Copying LXC template into place'
         system(%Q[sudo su root -c "cp #{path} #{tmp_template_path}"])
@@ -147,6 +145,20 @@ module Vagrant
         yield template_name
       ensure
         system(%Q[sudo su root -c "rm #{tmp_template_path}"])
+      end
+
+      TEMPLATES_PATH_LOOKUP = %w(
+        /usr/share/lxc/templates
+        /usr/lib/lxc/templates
+      )
+      def templates_path
+        return @templates_path if @templates_path
+
+        path = TEMPLATES_PATH_LOOKUP.find { |candidate| File.directory?(candidate) }
+        # TODO: Raise an user friendly error
+        raise 'Unable to identify lxc templates path!' unless path
+
+        @templates_path = Pathname(path)
       end
     end
   end
