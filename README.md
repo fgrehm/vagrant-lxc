@@ -10,12 +10,13 @@ Linux Containers support for Vagrant 1.1+
 * redir
 * A Kernel [higher than 3.5.0-17.28](#help-im-unable-to-restart-containers)
 
-On Ubuntu 12.10 it means something like:
+On a clean Ubuntu 12.10 machine it means something like:
 
 ```
 sudo apt-get update && sudo apt-get dist-upgrade
 sudo apt-get install lxc redir
-wget "http://files.vagrantup.com/packages/87613ec9392d4660ffcb1d5755307136c06af08c/vagrant_`uname -m`.deb" -O /tmp/vagrant.deb
+# Downloads and install Vagrant 1.1.5
+wget "http://files.vagrantup.com/packages/64e360814c3ad960d810456add977fd4c7d47ce6/vagrant_`uname -m`.deb" -O /tmp/vagrant.deb
 sudo dpkg -i /tmp/vagrant.deb
 ```
 
