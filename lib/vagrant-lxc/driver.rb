@@ -137,10 +137,6 @@ module Vagrant
         Pathname.new("#{CONTAINERS_PATH}/#{@container_name}")
       end
 
-      def rootfs_path
-        Pathname.new(base_path.join('config').read.match(/^lxc\.rootfs\s+=\s+(.+)$/)[1])
-      end
-
       def import_template(path)
         template_name     = "vagrant-tmp-#{@container_name}"
         tmp_template_path = LXC_TEMPLATES_PATH.join("lxc-#{template_name}").to_s
