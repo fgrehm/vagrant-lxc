@@ -57,10 +57,9 @@ describe Vagrant::LXC::Driver do
   end
 
   describe 'destruction' do
-    let(:name) { 'container-name' }
-    let(:cli)  { fire_double('Vagrant::LXC::Driver::CLI', destroy: true) }
+    let(:cli) { fire_double('Vagrant::LXC::Driver::CLI', destroy: true) }
 
-    subject { described_class.new(name, cli) }
+    subject { described_class.new('name', cli) }
 
     before { subject.destroy }
 
@@ -92,10 +91,9 @@ describe Vagrant::LXC::Driver do
   end
 
   describe 'halt' do
-    let(:name) { 'container-name' }
-    let(:cli)  { fire_double('Vagrant::LXC::Driver::CLI', shutdown: true) }
+    let(:cli) { fire_double('Vagrant::LXC::Driver::CLI', shutdown: true) }
 
-    subject { described_class.new(name, cli) }
+    subject { described_class.new('name', cli) }
 
     before do
       cli.stub(:transition_to).and_yield(cli)
@@ -113,11 +111,10 @@ describe Vagrant::LXC::Driver do
   end
 
   describe 'state' do
-    let(:name)      { 'random-container-name' }
     let(:cli_state) { :something }
     let(:cli)       { fire_double('Vagrant::LXC::Driver::CLI', state: cli_state) }
 
-    subject { described_class.new(name, cli) }
+    subject { described_class.new('name', cli) }
 
     it 'delegates to cli' do
       subject.state.should == cli_state
@@ -128,10 +125,9 @@ describe Vagrant::LXC::Driver do
     # This ip is set on the sample-ip-addr-output fixture
     let(:ip)              { "10.0.254.137" }
     let(:ifconfig_output) { File.read('spec/fixtures/sample-ip-addr-output') }
-    let(:name)            { 'random-container-name' }
     let(:cli)             { fire_double('Vagrant::LXC::Driver::CLI', :attach => ifconfig_output) }
 
-    subject { described_class.new(name, cli) }
+    subject { described_class.new('name', cli) }
 
     context 'when ip for eth0 gets returned from lxc-attach call' do
       it 'gets parsed from `ip addr` output' do
@@ -156,7 +152,7 @@ describe Vagrant::LXC::Driver do
     let(:rootfs_path)         { Pathname('/path/to/rootfs') }
     let(:expected_guest_path) { "#{rootfs_path}/vagrant" }
 
-    subject { described_class.new('container-name') }
+    subject { described_class.new('name') }
 
     before do
       subject.stub(rootfs_path: rootfs_path, system: true)
