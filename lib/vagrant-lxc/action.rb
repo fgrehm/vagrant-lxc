@@ -5,6 +5,7 @@ require 'vagrant-lxc/action/clear_forwarded_ports'
 require 'vagrant-lxc/action/create'
 require 'vagrant-lxc/action/created'
 require 'vagrant-lxc/action/destroy'
+require 'vagrant-lxc/action/disconnect'
 require 'vagrant-lxc/action/compress_rootfs'
 require 'vagrant-lxc/action/forced_halt'
 require 'vagrant-lxc/action/forward_ports'
@@ -117,6 +118,8 @@ module Vagrant
           # b.use CheckDependencies
           b.use Vagrant::Action::Builtin::Call, Created do |env, b2|
             if env[:result]
+              # TODO: If vagrant >=...
+              b2.use Disconnect
               b2.use ClearForwardedPorts
               b2.use Vagrant::Action::Builtin::Call, Vagrant::Action::Builtin::GracefulHalt, :stopped, :running do |env2, b3|
                 if !env2[:result]
