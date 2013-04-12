@@ -12,7 +12,6 @@ group :development do
   gem 'guard-bundler'
   gem 'guard-ctags-bundler'
   gem 'rb-inotify'
-  gem 'simplecov', require: false
 end
 
 
@@ -21,4 +20,5 @@ group :development, :test do
   gem 'rspec'
   gem 'rspec-fire',  require: 'rspec/fire'
   gem 'rspec-spies', require: false
+  gem 'coveralls',   require: false
 end
