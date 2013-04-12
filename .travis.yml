@@ -5,4 +5,4 @@ rvm:
 matrix:
   allow_failures:
     - rvm: 2.0.0
-script: "bundle exec rake ci"
+script: "bundle exec rake"
