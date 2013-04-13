@@ -26,8 +26,7 @@ module Vagrant
           # b.use CheckDependencies
           b.use Vagrant::Action::Builtin::Call, Created do |env1, b2|
             if !env1[:result]
-              # TODO: Implement our own MessageNotCreated
-              b2.use VagrantPlugins::ProviderVirtualBox::Action::MessageNotCreated
+              b2.use Message, :not_created
               next
             end
 
@@ -61,15 +60,13 @@ module Vagrant
           b.use Vagrant::Action::Builtin::ConfigValidate
           b.use Vagrant::Action::Builtin::Call, Created do |env1, b2|
             if !env1[:result]
-              # TODO: Implement our own MessageNotCreated
-              b2.use VagrantPlugins::ProviderVirtualBox::Action::MessageNotCreated
+              b2.use Message, :not_created
               next
             end
 
             b2.use Vagrant::Action::Builtin::Call, IsRunning do |env2, b3|
               if !env2[:result]
-                # TODO: Implement our own MessageNotRunning
-                b3.use VagrantPlugins::ProviderVirtualBox::Action::MessageNotRunning
+                b3.use Message, :not_running
                 next
               end
 
@@ -128,8 +125,7 @@ module Vagrant
                 end
               end
             else
-              # TODO: Implement our own MessageNotCreated
-              b2.use VagrantPlugins::ProviderVirtualBox::Action::MessageNotCreated
+              b2.use Message, :not_created
             end
           end
         end
@@ -142,8 +138,7 @@ module Vagrant
           # b.use CheckDependencies
           b.use Vagrant::Action::Builtin::Call, Created do |env1, b2|
             if !env1[:result]
-              # TODO: Implement our own MessageNotCreated
-              b2.use VagrantPlugins::ProviderVirtualBox::Action::MessageNotCreated
+              b2.use Message, :not_created
               next
             end
 
@@ -155,8 +150,7 @@ module Vagrant
                 b3.use action_halt
                 b3.use Destroy
               else
-                # TODO: Implement our own MessageWillNotDestroy
-                b3.use VagrantPlugins::ProviderVirtualBox::Action::MessageWillNotDestroy
+                b3.use Message, :will_not_destroy
               end
             end
           end
@@ -169,8 +163,7 @@ module Vagrant
           # b.use CheckDependencies
           b.use Vagrant::Action::Builtin::Call, Created do |env1, b2|
             if !env1[:result]
-              # TODO: Implement our own MessageNotCreated
-              b2.use VagrantPlugins::ProviderVirtualBox::Action::MessageNotCreated
+              b2.use Message, :not_created
               next
             end
 

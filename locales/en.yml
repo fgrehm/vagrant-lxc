@@ -1,4 +1,15 @@
 en:
+  vagrant_lxc:
+    messages:
+      not_created: |-
+        The container hasn't been created yet.
+      not_running: |-
+        The container is not currently running.
+      will_not_destroy: |-
+        The container '%{name}' will not be destroyed, since the confirmation
+        was declined.
+
+  # TODO: Review messages below
   vagrant:
     actions:
       lxc:
