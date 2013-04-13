@@ -11,6 +11,7 @@ require 'vagrant-lxc/action/forced_halt'
 require 'vagrant-lxc/action/forward_ports'
 require 'vagrant-lxc/action/handle_box_metadata'
 require 'vagrant-lxc/action/is_running'
+require 'vagrant-lxc/action/message'
 require 'vagrant-lxc/action/setup_package_files'
 require 'vagrant-lxc/action/share_folders'
 
