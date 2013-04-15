@@ -8,6 +8,7 @@ Linux Containers support for Vagrant 1.1+
 * Vagrant 1.1+ (1.1.3+ recommended)
 * lxc 0.7.5+ (0.8.0-rc1+ recommended)
 * redir
+* arch command (uname -m) on PATH
 * A Kernel [higher than 3.5.0-17.28](#help-im-unable-to-restart-containers)
 
 On a clean Ubuntu 12.10 machine it means something like:
