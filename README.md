@@ -173,8 +173,8 @@ to a bug on linux kernel, so make sure you are using a bug-free kernel
 * https://bugs.launchpad.net/ubuntu/+source/linux/+bug/1065434
 
 Sometimes the dev boxes I'm using are not able to `lxc-start` containers
-anymore. Most of the times it was an issue with the arguments [I provided](https://github.com/fgrehm/vagrant-lxc/blob/master/example/Vagrantfile#L14-L18)
-to it (or a *buggy* kernel). If you run into that, rollback your changes
+anymore. Most of the times it was an issue with the arguments I provided
+to it for customization (or a *buggy* kernel). If you run into that, rollback your changes
 and try to `vagrant reload` the dev box. If it still doesn't work,
 please file a bug at the [issue tracker](https://github.com/fgrehm/vagrant-lxc/issues).
 
