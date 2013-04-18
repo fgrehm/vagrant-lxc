@@ -4,7 +4,7 @@ IMPROVEMENTS:
 
   - Improved output to match lxc "verbiage"
 
-## [0.3.0](https://github.com/fgrehm/vagrant-lxc/compare/v0.2.0...v0.3.0)
+## [0.3.0](https://github.com/fgrehm/vagrant-lxc/compare/v0.2.0...v0.3.0) (April 10, 2013)
 
 BACKWARDS INCOMPATIBILITIES:
 
@@ -26,11 +26,11 @@ BUG FIXES:
   - Redirect `redir`'s stderr output to `/dev/null` [#51][]
   - Switch from `ifconfig` to `ip` to grab container's IP to avoid localization issues [#50][]
 
-## [0.2.0](https://github.com/fgrehm/vagrant-lxc/compare/v0.1.1...v0.2.0)
+## [0.2.0](https://github.com/fgrehm/vagrant-lxc/compare/v0.1.1...v0.2.0) (March 30, 2013)
 
   - Experimental box packaging (only tested with Ubuntu 64 base box)
 
-## [0.1.1](https://github.com/fgrehm/vagrant-lxc/compare/v0.1.0...v0.1.1)
+## [0.1.1](https://github.com/fgrehm/vagrant-lxc/compare/v0.1.0...v0.1.1) (March 29, 2013)
 
   - Removed support for development under Vagrant < 1.1
   - Removed rsync from base quantal64 box to speed up containers creation [#40][]
@@ -38,7 +38,7 @@ BUG FIXES:
   - Skip Vagrant's built in SSH redirect
   - Allow setting rootfs from Vagrantfile [#30][]
 
-## [0.1.0](https://github.com/fgrehm/vagrant-lxc/compare/v0.0.3...v0.1.0)
+## [0.1.0](https://github.com/fgrehm/vagrant-lxc/compare/v0.0.3...v0.1.0) (March 27, 2013)
 
   - Support for chef added to base quantal64 box
   - Puppet upgraded to 3.1.1 on base quantal64 box
