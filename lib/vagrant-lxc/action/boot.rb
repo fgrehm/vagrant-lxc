@@ -11,7 +11,7 @@ module Vagrant
 
           config = env[:machine].provider_config
 
-          env[:ui].info I18n.t("vagrant.actions.vm.boot.booting")
+          env[:ui].info I18n.t("vagrant_lxc.messages.starting")
           env[:machine].provider.driver.start(config.customizations)
           raise Vagrant::Errors::VMFailedToBoot if !wait_for_boot
 
@@ -20,11 +20,11 @@ module Vagrant
 
         # Stolen from on VagrantPlugins::ProviderVirtualBox::Action::Boot
         def wait_for_boot
-          @env[:ui].info I18n.t("vagrant.actions.vm.boot.waiting")
+          @env[:ui].info I18n.t("vagrant_lxc.messages.waiting_for_start")
 
           @env[:machine].config.ssh.max_tries.to_i.times do |i|
             if @env[:machine].communicate.ready?
-              @env[:ui].info I18n.t("vagrant.actions.vm.boot.ready")
+              @env[:ui].info I18n.t("vagrant_lxc.messages.container_ready")
               return true
             end
 

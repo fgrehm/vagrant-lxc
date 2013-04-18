@@ -8,6 +8,14 @@ en:
       will_not_destroy: |-
         The container '%{name}' will not be destroyed, since the confirmation
         was declined.
+      starting: |-
+        Starting container...
+      waiting_for_start: |-
+        Waiting for container to start. This should not take long.
+      container_ready: |-
+        Container started and ready for use!
+      force_shutdown: |-
+        Forcing shutdown of container...
 
   # TODO: Review messages below
   vagrant:
