@@ -5,6 +5,7 @@ require 'vagrant-lxc/action/clear_forwarded_ports'
 require 'vagrant-lxc/action/create'
 require 'vagrant-lxc/action/created'
 require 'vagrant-lxc/action/destroy'
+require 'vagrant-lxc/action/destroy_confirm'
 require 'vagrant-lxc/action/disconnect'
 require 'vagrant-lxc/action/compress_rootfs'
 require 'vagrant-lxc/action/forced_halt'
@@ -142,8 +143,7 @@ module Vagrant
               next
             end
 
-            # TODO: Implement our own DestroyConfirm
-            b2.use Vagrant::Action::Builtin::Call, VagrantPlugins::ProviderVirtualBox::Action::DestroyConfirm do |env2, b3|
+            b2.use Vagrant::Action::Builtin::Call, DestroyConfirm do |env2, b3|
               if env2[:result]
                 b3.use Vagrant::Action::Builtin::ConfigValidate
                 b3.use Vagrant::Action::Builtin::EnvSet, :force_halt => true
