@@ -1,4 +1,8 @@
-## [0.3.1](https://github.com/fgrehm/vagrant-lxc/compare/v0.3.0...master) (April 18, 2013)
+## [0.3.2](https://github.com/fgrehm/vagrant-lxc/compare/v0.3.1...v0.3.2) (April 18, 2013)
+
+  - Do not display port forwarding message in case no forwarded ports were set
+
+## [0.3.1](https://github.com/fgrehm/vagrant-lxc/compare/v0.3.0...v0.3.1) (April 18, 2013)
 
   - Improved output to match lxc "verbiage"
 
