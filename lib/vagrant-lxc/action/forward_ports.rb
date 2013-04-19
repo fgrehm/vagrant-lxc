@@ -24,8 +24,10 @@ module Vagrant
             end
           end
 
-          env[:ui].info I18n.t("vagrant.actions.vm.forward_ports.forwarding")
-          forward_ports
+          if @env[:forwarded_ports].any?
+            env[:ui].info I18n.t("vagrant.actions.vm.forward_ports.forwarding")
+            forward_ports
+          end
         end
 
         def forward_ports
