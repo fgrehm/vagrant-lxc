@@ -1,6 +1,4 @@
-## [0.3.1](https://github.com/fgrehm/vagrant-lxc/compare/v0.3.0...master) (UNRELEASED)
-
-IMPROVEMENTS:
+## [0.3.1](https://github.com/fgrehm/vagrant-lxc/compare/v0.3.0...master) (April 18, 2013)
 
   - Improved output to match lxc "verbiage"
 
