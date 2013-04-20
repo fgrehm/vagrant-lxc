@@ -61,14 +61,20 @@ describe 'Sanity check' do
     end
 
     it 'mounts shared folders with the right permissions' do
-      vagrant_ssh 'mkdir -p /vagrant/tmp && echo "Shared" > /vagrant/tmp/shared'
-      shared_file_contents = File.read('/vagrant/spec/tmp/shared').chomp
+      vagrant_ssh 'mkdir -p /vagrant/tmp && echo -n "Shared" > /vagrant/tmp/shared'
+      shared_file_contents = File.read('/vagrant/spec/tmp/shared')
       expect(shared_file_contents).to eq 'Shared'
     end
 
-    it 'provisions the container based on Vagrantfile configs'
+    it 'provisions the container based on Vagrantfile configs' do
+      provisioned_file_contents = File.read('/vagrant/spec/tmp/provisioning')
+      expect(provisioned_file_contents).to eq 'Provisioned'
+    end
 
-    it 'forwards configured ports'
+    it 'forwards configured ports' do
+      output = `curl -s localhost:8080`.strip.chomp
+      expect(output).to include 'It works!'
+    end
   end
 
   context '`vagrant halt` on a running container' do
