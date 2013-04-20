@@ -103,6 +103,7 @@ describe 'Sanity check' do
     `sudo lxc-shutdown -n \`cat /vagrant/spec/.vagrant/machines/default/lxc/id\``
     `sudo lxc-wait -n \`cat /vagrant/spec/.vagrant/machines/default/lxc/id\` --state STOPPED`
     `sudo lxc-destroy -n \`cat /vagrant/spec/.vagrant/machines/default/lxc/id\``
+    `sudo killall -9 redir 2>/dev/null`
   end
 
   def vagrant_up
