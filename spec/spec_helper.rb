@@ -2,14 +2,8 @@ if ENV['COVERAGE']
   require 'simplecov'
   require 'coveralls'
 
-  SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter[
-    SimpleCov::Formatter::HTMLFormatter,
-    Coveralls::SimpleCov::Formatter
-  ]
-
-  SimpleCov.start do
-    add_filter { |source_file| source_file.filename =~ /\/spec\/support/ }
-  end
+  SimpleCov.start { add_filter '/spec/' }
+  SimpleCov.merge_timeout 300
 end
 
 require 'bundler/setup'

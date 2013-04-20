@@ -1,11 +1,15 @@
 begin
   require 'rspec/core/rake_task'
+  require 'coveralls/rake/task'
 
   desc 'Run all specs'
   task :spec => ['spec:unit', 'spec:acceptance']
 
   desc 'Default task which runs all specs with code coverage enabled'
   task :default => ['spec:set_coverage', 'spec']
+
+  Coveralls::RakeTask.new
+  task :ci => [:default, 'coveralls:push']
 rescue LoadError; end
 
 namespace :spec do

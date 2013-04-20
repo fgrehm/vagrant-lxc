@@ -1,5 +1,9 @@
 require 'spec_helper'
 
+if defined? SimpleCov
+  SimpleCov.command_name 'acceptance'
+end
+
 require 'vagrant'
 require 'vagrant-lxc'
 
