@@ -38,23 +38,37 @@ Vagrant::Machine.class_eval do
 end
 
 describe 'Sanity check' do
-  context 'running a `vagrant up` from scratch' do
+  after(:all) { destroy_container }
+
+  context 'running `vagrant up` from scratch' do
     before(:all) do
       destroy_container
       vagrant_up
     end
 
-    it 'creates a the container'
+    it 'creates a container' do
+      containers = `sudo lxc-ls`.chomp.split(/\s+/).uniq
+      expect(containers).to include File.read('/vagrant/spec/.vagrant/machines/default/lxc/id').strip.chomp
+    end
 
-    it 'starts the newly created container'
+    it 'starts the newly created container' do
+      status = `sudo lxc-info -n #{File.read('/vagrant/spec/.vagrant/machines/default/lxc/id').strip.chomp}`
+      expect(status).to include 'RUNNING'
+    end
 
-    it 'mounts shared folders with the right permissions'
+    it "is able to be SSH'ed" do
+      expect(vagrant_ssh('hostname')).to eq 'lxc-test-box'
+    end
+
+    it 'mounts shared folders with the right permissions' do
+      vagrant_ssh 'mkdir -p /vagrant/tmp && echo "Shared" > /vagrant/tmp/shared'
+      shared_file_contents = File.read('/vagrant/spec/tmp/shared').chomp
+      expect(shared_file_contents).to eq 'Shared'
+    end
 
     it 'provisions the container based on Vagrantfile configs'
 
     it 'forwards configured ports'
-
-    it "is able to be SSH'ed"
   end
 
   context '`vagrant halt` on a running container' do
