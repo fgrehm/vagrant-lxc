@@ -1,0 +1,13 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.require_plugin 'vagrant-lxc'
+
+Vagrant.configure("2") do |config|
+  config.vm.box      = "quantal64"
+  config.vm.hostname = 'lxc-test-box'
+
+  config.vm.box_url = 'http://dl.dropbox.com/u/13510779/lxc-quantal64-2013-04-10.box'
+  # Uncomment to test boxes built locally:
+  # config.vm.box_url = '../boxes/output/lxc-quantal64.box'
+end
