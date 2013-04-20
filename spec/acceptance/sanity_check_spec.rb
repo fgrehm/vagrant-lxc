@@ -1,5 +1,42 @@
 require 'acceptance_helper'
 
+class TestUI < Vagrant::UI::Interface
+  attr_reader :messages
+
+  METHODS = [:clear_line, :report_progress, :warn, :error, :info, :success]
+
+  def initialize(resource = nil)
+    super
+    @messages = METHODS.each_with_object({}) { |m, h| h[m] = [] }
+  end
+
+  def ask(*args)
+    super
+    # Automated tests should not depend on user input, obviously.
+    raise Errors::UIExpectsTTY
+  end
+
+  METHODS.each do |method|
+    define_method(method) do |message, *opts|
+      @messages[method].push message
+    end
+  end
+end
+
+# Monkey patch vagrant in order to reuse the UI test object that is set on
+# our Vagrant::Environments
+#
+# TODO: Find out if this makes sense to be on vagrant core itself
+require 'vagrant/machine'
+Vagrant::Machine.class_eval do
+  alias :old_action :action
+
+  define_method :action do |name, extra_env = nil|
+    extra_env = { ui: @env.ui }.merge(extra_env || {})
+    old_action name, extra_env
+  end
+end
+
 describe 'Sanity check' do
   context 'running a `vagrant up` from scratch' do
     before(:all) do
@@ -52,17 +89,32 @@ describe 'Sanity check' do
     opts = { cwd: 'spec' }
     env  = Vagrant::Environment.new(opts)
     env.cli('up', '--provider', 'lxc')
+    env.unload
   end
 
   def vagrant_halt
     opts = { cwd: 'spec' }
     env  = Vagrant::Environment.new(opts)
     env.cli('halt')
+    env.unload
   end
 
   def vagrant_destroy
     opts = { cwd: 'spec' }
     env  = Vagrant::Environment.new(opts)
     env.cli('destroy', '-f')
+    env.unload
+  end
+
+  def vagrant_ssh(cmd)
+    opts   = { cwd: 'spec', ui_class: TestUI }
+    env    = Vagrant::Environment.new(opts)
+    result = env.cli('ssh', '-c', cmd)
+    if result.to_i != 0
+      raise "SSH command failed: '#{cmd}'\n#{env.ui.messages.inspect}"
+    end
+    output = env.ui.messages[:info].join("\n").chomp
+    env.unload
+    output
   end
 end
