@@ -104,7 +104,13 @@ If  want to develop from your physical machine, just sing that same old song:
 git clone git://github.com/fgrehm/vagrant-lxc.git
 cd vagrant-lxc
 bundle install
-bundle exec rake # to run all specs
+bundle exec rake # to run unit specs
+```
+
+To run acceptance specs, you'll have to ssh into one of the [development boxes](development/Vagrantfile) and run:
+
+```
+bundle exec rake spec:acceptance
 ```
 
 To build the provided quantal64 box:
