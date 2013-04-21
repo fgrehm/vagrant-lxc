@@ -3,43 +3,54 @@ module AcceptanceExampleGroup
     base.metadata[:type] = :acceptance
   end
 
+  ID_FILE = "/vagrant/spec/.vagrant/machines/default/lxc/id"
+  def vagrant_container_name
+    File.read(ID_FILE).strip.chomp if File.exists?(ID_FILE)
+  end
+
   def destroy_container
-    `sudo lxc-shutdown -n \`cat /vagrant/spec/.vagrant/machines/default/lxc/id\` 2>/dev/null`
-    `sudo lxc-wait -n \`cat /vagrant/spec/.vagrant/machines/default/lxc/id\` --state STOPPED 2>/dev/null`
-    `sudo lxc-destroy -n \`cat /vagrant/spec/.vagrant/machines/default/lxc/id\` 2>/dev/null`
+    if name = vagrant_container_name
+      `sudo lxc-shutdown -n #{name} 2>/dev/null`
+      `sudo lxc-wait -n #{name} --state STOPPED 2>/dev/null`
+      `sudo lxc-destroy -n #{name} 2>/dev/null`
+    end
     `sudo killall -9 redir 2>/dev/null`
   end
 
-  def vagrant_up
-    opts = { cwd: 'spec' }
+  def with_vagrant_environment
+    opts = { cwd: 'spec', ui_class: TestUI }
     env  = Vagrant::Environment.new(opts)
-    env.cli('up', '--provider', 'lxc')
+    yield env
     env.unload
+  end
+
+  def vagrant_up
+    with_vagrant_environment do |env|
+      env.cli('up', '--provider', 'lxc')
+    end
   end
 
   def vagrant_halt
-    opts = { cwd: 'spec' }
-    env  = Vagrant::Environment.new(opts)
-    env.cli('halt')
-    env.unload
+    with_vagrant_environment do |env|
+      env.cli('halt')
+    end
   end
 
   def vagrant_destroy
-    opts = { cwd: 'spec' }
-    env  = Vagrant::Environment.new(opts)
-    env.cli('destroy', '-f')
-    env.unload
+    with_vagrant_environment do |env|
+      env.cli('destroy', '-f')
+    end
   end
 
   def vagrant_ssh(cmd)
-    opts   = { cwd: 'spec', ui_class: TestUI }
-    env    = Vagrant::Environment.new(opts)
-    result = env.cli('ssh', '-c', cmd)
-    if result.to_i != 0
-      raise "SSH command failed: '#{cmd}'\n#{env.ui.messages.inspect}"
+    output = nil
+    with_vagrant_environment do |env|
+      result = env.cli('ssh', '-c', cmd)
+      if result.to_i != 0
+        raise "SSH command failed: '#{cmd}'\n#{env.ui.messages.inspect}"
+      end
+      output = env.ui.messages[:info].join("\n").chomp
     end
-    output = env.ui.messages[:info].join("\n").chomp
-    env.unload
     output
   end
 end
