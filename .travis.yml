@@ -1,8 +1,10 @@
 language: ruby
+before_script:
+  - sudo apt-get install -y lxc redir
 rvm:
   - 1.9.3
   - 2.0.0
 matrix:
   allow_failures:
     - rvm: 2.0.0
-script: "bundle exec rake"
+script: "bundle exec rake ci"
