@@ -27,7 +27,7 @@ Vagrant.require_plugin 'vagrant-lxc'
 Vagrant.configure("2") do |config|
   config.vm.box = "quantal64"
 
-  config.vm.synced_folder "../", "/vagrant", id: 'vagrant-root'
+  config.vm.synced_folder "../", "/vagrant", id: 'vagrant-root', nfs: true
 
   cache_dir = local_apt_cache(config.vm.box)
   config.vm.synced_folder cache_dir, "/var/cache/apt/archives", id: "vagrant-apt-cache"
@@ -36,6 +36,7 @@ Vagrant.configure("2") do |config|
   config.vm.synced_folder cache_dir, "/home/vagrant/gems/cache", id: "vagrant-gem-cache"
 
   config.vm.define :vbox do |vb_config|
+    vb_config.vm.network :private_network, ip: "192.168.50.33"
     vb_config.vm.box_url  = "https://github.com/downloads/roderik/VagrantQuantal64Box/quantal64.box"
     vb_config.vm.hostname = 'vbox'
 
@@ -50,6 +51,7 @@ Vagrant.configure("2") do |config|
   end
 
   config.vm.define :precise do |precise|
+    precise.vm.network :private_network, ip: "192.168.50.32"
     precise.vm.box      = 'precise64'
     precise.vm.hostname = 'vbox'
     precise.vm.box_url  = 'http://files.vagrantup.com/precise64.box'
