@@ -6,7 +6,7 @@ begin
   task :spec => ['spec:unit', 'spec:acceptance']
 
   desc 'Default task which runs all specs with code coverage enabled'
-  task :default => ['spec:set_coverage', 'spec']
+  task :default => ['spec:set_coverage', 'spec:unit']
 
   Coveralls::RakeTask.new
   task :ci => ['spec:set_coverage', 'spec:unit', 'coveralls:push']
