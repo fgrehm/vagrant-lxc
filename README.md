@@ -41,7 +41,6 @@ and the [changelog](CHANGELOG.md) for most up to date information.*
 * Does not detect forwarded ports collision, right now you are responsible for taking care of that
 * A hell lot of `sudo`s (this will probably be like this until [user namespaces](http://s3hh.wordpress.com/2013/02/12/user-namespaces-lxc-meeting/) are supported)
 * Only a [single ubuntu box supported](boxes)
-* "[works on  my machine](https://github.com/fgrehm/vagrant-lxc/issues/20)" (TM)
 * [Does not tell you if dependencies are not met](https://github.com/fgrehm/vagrant-lxc/issues/11)
   (will probably just throw up some random error)
 * + bunch of other [core features](https://github.com/fgrehm/vagrant-lxc/issues?labels=core&milestone=&page=1&state=open)
