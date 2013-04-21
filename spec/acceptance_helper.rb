@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 unless ENV['USER'] == 'vagrant'
-  puts 'Acceptance specs are supposed to run from one of the vagrant dev machines'
+  puts 'Acceptance specs are supposed to run from one of the vagrant-lxc dev machines'
   exit 1
 end
 
@@ -14,8 +14,8 @@ require 'vagrant-lxc'
 
 Dir[File.dirname(__FILE__) + "/acceptance/support/**/*.rb"].each { |f| require f }
 
-# RSpec.configure do |config|
-#   config.include AcceptanceExampleGroup, :type => :unit, :example_group => {
-#     :file_path => /\bspec\/unit\//
-#   }
-# end
+RSpec.configure do |config|
+  config.include AcceptanceExampleGroup, :type => :acceptance, :example_group => {
+    :file_path => /\bspec\/acceptance\//
+  }
+end
