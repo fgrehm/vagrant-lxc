@@ -12,6 +12,8 @@ end
 require 'vagrant'
 require 'vagrant-lxc'
 
+Dir[File.dirname(__FILE__) + "/acceptance/support/**/*.rb"].each { |f| require f }
+
 # RSpec.configure do |config|
 #   config.include AcceptanceExampleGroup, :type => :unit, :example_group => {
 #     :file_path => /\bspec\/unit\//
