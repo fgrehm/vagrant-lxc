@@ -77,32 +77,42 @@ describe 'Sanity check' do
     end
   end
 
-  pending '`vagrant halt` on a running container' do
+  context '`vagrant halt` on a running container' do
     before(:all) do
       destroy_container
       vagrant_up
       vagrant_halt
     end
 
-    it 'shuts down container'
+    it 'shuts down container' do
+      status = `sudo lxc-info -n #{File.read('/vagrant/spec/.vagrant/machines/default/lxc/id').strip.chomp}`
+      expect(status).to include 'STOPPED'
+    end
 
-    it 'clears forwarded ports'
+    it 'clears forwarded ports' do
+      `curl -s localhost:8080 --connect-timeout 2`
+      expect($?.exitstatus).to_not eq 0
+    end
   end
 
-  pending '`vagrant destroy`' do
+  context '`vagrant destroy`' do
     before(:all) do
       destroy_container
       vagrant_up
+      @container_name = File.read('/vagrant/spec/.vagrant/machines/default/lxc/id').strip.chomp
       vagrant_destroy
     end
 
-    it 'destroys the underlying container'
+    it 'destroys the underlying container' do
+      containers = `sudo lxc-ls`.chomp.split(/\s+/).uniq
+      expect(containers).to_not include @container_name
+    end
   end
 
   def destroy_container
-    `sudo lxc-shutdown -n \`cat /vagrant/spec/.vagrant/machines/default/lxc/id\``
-    `sudo lxc-wait -n \`cat /vagrant/spec/.vagrant/machines/default/lxc/id\` --state STOPPED`
-    `sudo lxc-destroy -n \`cat /vagrant/spec/.vagrant/machines/default/lxc/id\``
+    `sudo lxc-shutdown -n \`cat /vagrant/spec/.vagrant/machines/default/lxc/id\` 2>/dev/null`
+    `sudo lxc-wait -n \`cat /vagrant/spec/.vagrant/machines/default/lxc/id\` --state STOPPED 2>/dev/null`
+    `sudo lxc-destroy -n \`cat /vagrant/spec/.vagrant/machines/default/lxc/id\` 2>/dev/null`
     `sudo killall -9 redir 2>/dev/null`
   end
 
