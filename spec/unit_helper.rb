@@ -1,5 +1,7 @@
 require 'spec_helper'
 
+Dir[File.dirname(__FILE__) + "/unit/support/**/*.rb"].each { |f| require f }
+
 if defined? SimpleCov
   SimpleCov.command_name 'unit'
 end
