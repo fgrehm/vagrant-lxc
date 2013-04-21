@@ -184,6 +184,12 @@ and try to `vagrant reload` the dev box. If it still doesn't work,
 please file a bug at the [issue tracker](https://github.com/fgrehm/vagrant-lxc/issues).
 
 
+## Similar projects
+
+* [vagabond](https://github.com/chrisroberts/vagabond) - "a tool integrated with Chef to build local nodes easily"
+* [vagueant](https://github.com/neerolyte/vagueant) - "vaguely like Vagrant for linux containers (lxc)"
+
+
 ## Contributing
 
 1. Fork it
