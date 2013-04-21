@@ -55,6 +55,15 @@ Vagrant.configure("2") do |config|
     precise.vm.box      = 'precise64'
     precise.vm.hostname = 'vbox'
     precise.vm.box_url  = 'http://files.vagrantup.com/precise64.box'
+
+    precise.vm.provider :virtualbox do |vb|
+      # Configure VM to use 1.5gb of ram and 2 cpus
+      vb.customize [
+        "modifyvm", :id,
+        "--memory", '1536',
+        "--cpus", '2'
+      ]
+    end
   end
 
   config.vm.define :lxc do |lxc_config|
