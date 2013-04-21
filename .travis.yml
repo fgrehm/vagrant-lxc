@@ -1,6 +1,4 @@
 language: ruby
-before_script:
-  - sudo apt-get install -y lxc redir
 rvm:
   - 1.9.3
   - 2.0.0

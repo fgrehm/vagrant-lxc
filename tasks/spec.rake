@@ -9,7 +9,7 @@ begin
   task :default => ['spec:set_coverage', 'spec']
 
   Coveralls::RakeTask.new
-  task :ci => [:default, 'coveralls:push']
+  task :ci => ['spec:set_coverage', 'spec:unit', 'coveralls:push']
 rescue LoadError; end
 
 namespace :spec do
