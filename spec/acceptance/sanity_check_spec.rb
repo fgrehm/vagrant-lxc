@@ -11,11 +11,11 @@ describe 'Sanity check' do
 
     it 'creates a container' do
       containers = `sudo lxc-ls`.chomp.split(/\s+/).uniq
-      expect(containers).to include File.read('/vagrant/spec/.vagrant/machines/default/lxc/id').strip.chomp
+      expect(containers).to include vagrant_container_name
     end
 
     it 'starts the newly created container' do
-      status = `sudo lxc-info -n #{File.read('/vagrant/spec/.vagrant/machines/default/lxc/id').strip.chomp}`
+      status = `sudo lxc-info -n #{vagrant_container_name}`
       expect(status).to include 'RUNNING'
     end
 
@@ -48,7 +48,7 @@ describe 'Sanity check' do
     end
 
     it 'shuts down container' do
-      status = `sudo lxc-info -n #{File.read('/vagrant/spec/.vagrant/machines/default/lxc/id').strip.chomp}`
+      status = `sudo lxc-info -n #{vagrant_container_name}`
       expect(status).to include 'STOPPED'
     end
 
@@ -62,7 +62,7 @@ describe 'Sanity check' do
     before(:all) do
       destroy_container
       vagrant_up
-      @container_name = File.read('/vagrant/spec/.vagrant/machines/default/lxc/id').strip.chomp
+      @container_name = vagrant_container_name
       vagrant_destroy
     end
 
