@@ -77,7 +77,7 @@ describe 'Sanity check' do
     end
   end
 
-  context '`vagrant halt` on a running container' do
+  pending '`vagrant halt` on a running container' do
     before(:all) do
       destroy_container
       vagrant_up
@@ -89,7 +89,7 @@ describe 'Sanity check' do
     it 'clears forwarded ports'
   end
 
-  context '`vagrant destroy`' do
+  pending '`vagrant destroy`' do
     before(:all) do
       destroy_container
       vagrant_up
