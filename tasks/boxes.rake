@@ -54,6 +54,7 @@ class BuildUbuntuBoxTask < ::Rake::TaskLib
   end
 
   def default_box_file
+    require 'time'
     "lxc-#{@release}-#{@arch}-#{Date.today}.box"
   end
 end
