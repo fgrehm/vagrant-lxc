@@ -1,9 +1,0 @@
-{
-  "provider": "lxc",
-  "version":  "2",
-
-  "template-opts": {
-    "--arch":    "amd64",
-    "--release": "quantal"
-  }
-}
