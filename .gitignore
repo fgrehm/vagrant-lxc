@@ -24,6 +24,7 @@ doc/
 /cache
 
 /boxes/**/*.tar.gz
-/boxes/quantal64/partial/
-/boxes/quantal64/rootfs/
+/boxes/**/partial/
+/boxes/**/rootfs/
+/boxes/temp/
 /boxes/output/

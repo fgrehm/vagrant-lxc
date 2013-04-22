@@ -1,0 +1,9 @@
+{
+  "provider": "lxc",
+  "version":  "2",
+
+  "template-opts": {
+    "--arch":    "ARCH",
+    "--release": "RELEASE"
+  }
+}

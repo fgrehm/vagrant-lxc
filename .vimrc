@@ -1,1 +1,1 @@
-set wildignore+=*/boxes/quantal64/rootfs/*,*/boxes/quantal64/partial/*
+set wildignore+=*/boxes/*/rootfs/*,*/boxes/*/partial/*

@@ -6,12 +6,12 @@ class BuildUbuntuBoxTask < ::Rake::TaskLib
   attr_reader :name
 
   def initialize(name, release, arch, opts = {})
-    @name    = name
-    @release = release
-    @arch    = arch
-    @chef    = opts[:chef]
-    @puppet  = opts[:puppet]
-    @file    = opts[:file] || "lxc-#{@release}-#{@arch}.box"
+    @name           = name
+    @release        = release.to_s
+    @arch           = arch.to_s
+    @install_chef   = opts.fetch(:chef, true)
+    @install_puppet = opts.fetch(:puppet, true)
+    @file           = opts[:file] || default_box_file
 
     desc "Build an Ubuntu #{release} #{arch} box" unless ::Rake.application.last_comment
     task name do
@@ -22,22 +22,39 @@ class BuildUbuntuBoxTask < ::Rake::TaskLib
   end
 
   def run_task
-    puts "./boxes/output/#{@file}"
     if File.exists?("./boxes/output/#{@file}")
       puts 'Box has been built already!'
+      exit 1
+    end
+
+    if Dir.exists?('boxes/temp')
+      puts "There is a partially built box under #{File.expand_path('./boxes/temp')}, please remove it before building a new box"
       exit 1
     end
 
     sh 'mkdir -p boxes/temp/'
     Dir.chdir 'boxes/temp' do
       sh "sudo ../ubuntu/download #{@arch} #{@release}"
-      sh "sudo ../ubuntu/install-puppet"
-      sh "sudo ../ubuntu/install-chef"
-      #sh 'rm -f rootfs.tar.gz'
-      #sh 'sudo tar --numeric-owner -czf rootfs.tar.gz ./rootfs/*'
-      #sh 'sudo rm -rf rootfs'
-      #sh "sudo chown #{ENV['USER']}:#{ENV['USER']} rootfs.tar.gz && tar -czf tmp-package.box ./*"
+      sh "sudo ../ubuntu/install-puppet" if @install_puppet
+      sh "sudo ../ubuntu/install-chef" if @install_chef
+      sh 'sudo rm -f rootfs.tar.gz'
+      sh 'sudo tar --numeric-owner -czf rootfs.tar.gz ./rootfs/*'
+      sh 'sudo rm -rf rootfs'
+      sh "sudo chown #{ENV['USER']}:#{ENV['USER']} rootfs.tar.gz"
+      sh "cp ../ubuntu/lxc-template ."
+      metadata = File.read('../ubuntu/metadata.json.template')
+      metadata.gsub!('ARCH', @arch)
+      metadata.gsub!('RELEASE', @release)
+      File.open('metadata.json', 'w') { |f| f.print metadata }
+      sh "tar -czf tmp-package.box ./*"
     end
+
+    sh "cp boxes/temp/tmp-package.box boxes/output/#{@file}"
+    sh "rm -rf boxes/temp"
+  end
+
+  def default_box_file
+    "lxc-#{@release}-#{@arch}-#{Date.today}.box"
   end
 end
 
@@ -47,8 +64,6 @@ namespace :boxes do
       desc 'Build an Ubuntu Quantal 64 bits box with puppet and chef installed'
       BuildUbuntuBoxTask.new(:quantal64, :quantal, 'amd64')
 
-      desc 'Build an Ubuntu Raring 64 bits box with puppet and chef installed'
-      BuildUbuntuBoxTask.new(:raring64, :raring, 'amd64')
     end
   end
 end
