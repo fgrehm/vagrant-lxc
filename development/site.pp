@@ -43,7 +43,7 @@ if $hostname == 'vbox' {
 
 # TMUX
 package {
-  'tmux':       ensure => 'installed';
+  'tmux': ensure => 'installed';
 }
 
 # Allow gems to be installed on vagrant user home avoiding "sudo"s
