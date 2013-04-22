@@ -84,11 +84,11 @@ can use the [same Vagrant VirtualBox machine I use for development](#using-virtu
 
 ### Available boxes
 
-| URL | DESCRIPTION |
+| LINK | DESCRIPTION |
 | --- | ---         |
-| http://dl.dropbox.com/u/13510779/lxc-raring-amd64-2013-04-21.box| Ubuntu 13.04 Raring x86_64 (Puppet X.Y.Z) |
-| http://dl.dropbox.com/u/13510779/lxc-quantal-amd64-2013-04-21.box | Ubuntu 12.10 Quantal x86_64 (Puppet X.Y.Z & Chef X.Y.Z) |
-| http://dl.dropbox.com/u/13510779/lxc-precise-amd64-2013-04-21.box | Ubuntu 12.04 Precise x86_64 (Puppet 3.1.1 & Chef 11.4.0) |
+| [lxc-raring-amd64-2013-04-21.box](http://dl.dropbox.com/u/13510779/lxc-raring-amd64-2013-04-21.box) | Ubuntu 13.04 Raring x86_64 (Puppet 3.1.1) |
+| [lxc-quantal-amd64-2013-04-21.box](http://dl.dropbox.com/u/13510779/lxc-quantal-amd64-2013-04-21.box) | Ubuntu 12.10 Quantal x86_64 (Puppet 3.1.1 & Chef 11.4.0) |
+| [lxc-precise-amd64-2013-04-21.box](http://dl.dropbox.com/u/13510779/lxc-precise-amd64-2013-04-21.box) | Ubuntu 12.04 Precise x86_64 (Puppet 3.1.1 & Chef 11.4.0) |
 
 *Please note that I'm currently using only the quantal x86_64 on a daily basis,
 and I've only done some basic testing with the others*
