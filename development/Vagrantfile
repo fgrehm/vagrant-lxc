@@ -66,6 +66,22 @@ Vagrant.configure("2") do |config|
     end
   end
 
+  config.vm.define :raring do |raring|
+    raring.vm.network :private_network, ip: "192.168.50.34"
+    raring.vm.box      = 'raring64'
+    raring.vm.hostname = 'vbox'
+    raring.vm.box_url  = 'http://cloud-images.ubuntu.com/vagrant/raring/current/raring-server-cloudimg-amd64-vagrant-disk1.box'
+
+    raring.vm.provider :virtualbox do |vb|
+      # Configure VM to use 1.5gb of ram and 2 cpus
+      vb.customize [
+        "modifyvm", :id,
+        "--memory", '1536',
+        "--cpus", '2'
+      ]
+    end
+  end
+
   config.vm.define :lxc do |lxc_config|
     lxc_config.vm.hostname = 'lxc-dev-box'
     lxc_config.vm.box_url  = 'http://dl.dropbox.com/u/13510779/lxc-quantal64-2013-04-21.box'
