@@ -1,0 +1,14 @@
+#!/bin/bash
+
+cache=`readlink -f .`
+rootfs="${cache}/rootfs"
+
+echo "installing chef"
+cat > $rootfs/tmp/install-chef.sh << EOF
+#!/bin/sh
+curl -L https://www.opscode.com/chef/install.sh -k | sudo bash
+EOF
+chmod +x $rootfs/tmp/install-chef.sh
+chroot $rootfs /tmp/install-chef.sh
+
+rm -rf $rootfs/tmp/*

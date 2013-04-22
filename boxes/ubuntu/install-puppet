@@ -1,0 +1,12 @@
+#!/bin/bash
+
+cache=`readlink -f .`
+rootfs="${cache}/rootfs"
+
+echo "installing puppet"
+wget http://apt.puppetlabs.com/puppetlabs-release-stable.deb -O "${rootfs}/tmp/puppetlabs-release-stable.deb"
+chroot $rootfs dpkg -i "/tmp/puppetlabs-release-stable.deb"
+chroot $rootfs apt-get update
+chroot $rootfs apt-get install puppet -y
+
+rm -rf $rootfs/tmp/*
