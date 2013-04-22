@@ -5,14 +5,7 @@
 Vagrant.require_plugin 'vagrant-lxc'
 
 Vagrant.configure("2") do |config|
-  config.vm.box      = "quantal64"
-  config.vm.box_url  = 'http://dl.dropbox.com/u/13510779/lxc-quantal64-2013-04-10.box'
-  # Uncomment if you want to try out a box built locally
-  # config.vm.box_url  = '../boxes/output/lxc-quantal64.box'
-  config.vm.hostname = 'lxc-quantal64-example'
-
   config.vm.synced_folder "/tmp", "/vagrant_data"
-
 
   config.vm.provider :lxc do |lxc|
     lxc.customize 'cgroup.memory.limit_in_bytes', '400M'
@@ -32,5 +25,16 @@ echo "Hi there I'm a shell script used for provisioning"
   config.vm.provision :chef_solo do |chef|
     chef.add_recipe "hello-world"
     chef.log_level = :debug
+  end
+
+  %w(precise quantal raring).each do |release|
+    config.vm.define(release) do |lxc_config|
+      lxc_config.vm.box      = "#{release}64"
+      lxc_config.vm.box_url  = "http://dl.dropbox.com/u/13510779/lxc-#{release}-amd64-2013-04-21.box"
+      # Uncomment if you want to try out a box built locally
+      # lxc_config.vm.box_url  = "../boxes/output/lxc-#{release}64.box"
+      lxc_config.vm.hostname = "lxc-#{release}64-example"
+      lxc_config.vm.network :forwarded_port, guest: 80, host: 8081
+    end
   end
 end
