@@ -25,18 +25,11 @@ end
 Vagrant.require_plugin 'vagrant-lxc'
 
 Vagrant.configure("2") do |config|
-  config.vm.box = "quantal64"
-
   config.vm.synced_folder "../", "/vagrant", id: 'vagrant-root', nfs: true
-
-  cache_dir = local_apt_cache(config.vm.box)
-  config.vm.synced_folder cache_dir, "/var/cache/apt/archives", id: "vagrant-apt-cache"
-
-  cache_dir = local_gem_cache(config.vm.box)
-  config.vm.synced_folder cache_dir, "/home/vagrant/gems/cache", id: "vagrant-gem-cache"
 
   config.vm.define :vbox do |vb_config|
     vb_config.vm.network :private_network, ip: "192.168.50.33"
+    vb_config.vm.box      = 'quantal64'
     vb_config.vm.box_url  = "https://github.com/downloads/roderik/VagrantQuantal64Box/quantal64.box"
     vb_config.vm.hostname = 'vbox'
 
@@ -48,6 +41,12 @@ Vagrant.configure("2") do |config|
         "--cpus", '2'
       ]
     end
+
+    cache_dir = local_apt_cache(vb_config.vm.box)
+    vb_config.vm.synced_folder cache_dir, "/var/cache/apt/archives", id: "vagrant-apt-cache"
+
+    cache_dir = local_gem_cache(vb_config.vm.box)
+    vb_config.vm.synced_folder cache_dir, "/home/vagrant/gems/cache", id: "vagrant-gem-cache"
   end
 
   config.vm.define :precise do |precise|
@@ -64,6 +63,12 @@ Vagrant.configure("2") do |config|
         "--cpus", '2'
       ]
     end
+
+    cache_dir = local_apt_cache(precise.vm.box)
+    precise.vm.synced_folder cache_dir, "/var/cache/apt/archives", id: "vagrant-apt-cache"
+
+    cache_dir = local_gem_cache(precise.vm.box)
+    precise.vm.synced_folder cache_dir, "/home/vagrant/gems/cache", id: "vagrant-gem-cache"
   end
 
   config.vm.define :raring do |raring|
@@ -80,9 +85,16 @@ Vagrant.configure("2") do |config|
         "--cpus", '2'
       ]
     end
+
+    cache_dir = local_apt_cache(raring.vm.box)
+    raring.vm.synced_folder cache_dir, "/var/cache/apt/archives", id: "vagrant-apt-cache"
+
+    cache_dir = local_gem_cache(raring.vm.box)
+    raring.vm.synced_folder cache_dir, "/home/vagrant/gems/cache", id: "vagrant-gem-cache"
   end
 
   config.vm.define :lxc do |lxc_config|
+    lxc_config.vm.box      = 'quantal64'
     lxc_config.vm.hostname = 'lxc-dev-box'
     lxc_config.vm.box_url  = 'http://dl.dropbox.com/u/13510779/lxc-quantal64-2013-04-21.box'
     # Uncomment to test boxes built locally:
