@@ -40,7 +40,6 @@ and the [changelog](CHANGELOG.md) for most up to date information.*
 
 * Does not detect forwarded ports collision, right now you are responsible for taking care of that
 * A hell lot of `sudo`s (this will probably be like this until [user namespaces](http://s3hh.wordpress.com/2013/02/12/user-namespaces-lxc-meeting/) are supported)
-* Only a [single ubuntu box supported](boxes)
 * [Does not tell you if dependencies are not met](https://github.com/fgrehm/vagrant-lxc/issues/11)
   (will probably just throw up some random error)
 * + bunch of other [core features](https://github.com/fgrehm/vagrant-lxc/issues?labels=core&milestone=&page=1&state=open)
@@ -55,16 +54,17 @@ vagrant plugin install vagrant-lxc
 
 ## Usage
 
-After installing, add the quantal64 base box using any name you want:
+After installing, add a [base box](#available-boxes) using any name you want, for example:
 
 ```
-vagrant box add lxc-quantal64 http://dl.dropbox.com/u/13510779/lxc-quantal64-2013-04-10.box
+vagrant box add lxc-quantal64 http://dl.dropbox.com/u/13510779/lxc-quantal-amd64-2013-04-21.box
 ```
 
 Make a Vagrantfile that looks like the following, filling in your information where necessary:
 
 ```ruby
 Vagrant.configure("2") do |config|
+  # Change it to the name of the box you have just added
   config.vm.box = "lxc-quantal64"
 
   # You can omit this block if you don't need to override any container setting
@@ -81,6 +81,24 @@ And finally run `vagrant up --provider=lxc`.
 
 If you are on a mac or window host and still want to try this plugin out, you
 can use the [same Vagrant VirtualBox machine I use for development](#using-virtualbox-for-development).
+
+### Available boxes
+
+| URL | DESCRIPTION |
+| --- | ---         |
+| http://dl.dropbox.com/u/13510779/lxc-raring-amd64-2013-04-21.box| Ubuntu 13.04 Raring x86_64 (Puppet X.Y.Z) |
+| http://dl.dropbox.com/u/13510779/lxc-quantal-amd64-2013-04-21.box | Ubuntu 12.10 Quantal x86_64 (Puppet X.Y.Z & Chef X.Y.Z) |
+| http://dl.dropbox.com/u/13510779/lxc-precise-amd64-2013-04-21.box | Ubuntu 12.04 Precise x86_64 (Puppet 3.1.1 & Chef 11.4.0) |
+
+*Please note that I'm currently using only the quantal x86_64 on a daily basis,
+and I've only done some basic testing with the others*
+
+You can also build a clean box by providing `CHEF=0` and `PUPPET=0` to the available
+[rake tasks](tasks/boxes.rake). For example:
+
+```
+CHEF=0 PUPPET=0 rake boxes:ubuntu:build:precise64
+```
 
 ### Storing container's rootfs on a separate partition
 
@@ -188,7 +206,6 @@ please file a bug at the [issue tracker](https://github.com/fgrehm/vagrant-lxc/i
 
 * [vagabond](https://github.com/chrisroberts/vagabond) - "a tool integrated with Chef to build local nodes easily"
 * [vagueant](https://github.com/neerolyte/vagueant) - "vaguely like Vagrant for linux containers (lxc)"
-
 
 ## Contributing
 
