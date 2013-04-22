@@ -61,6 +61,9 @@ end
 namespace :boxes do
   namespace :ubuntu do
     namespace :build do
+      desc 'Build an Ubuntu Precise 64 bits box with puppet and chef installed'
+      BuildUbuntuBoxTask.new(:precise64, :precise, 'amd64')
+
       desc 'Build an Ubuntu Quantal 64 bits box with puppet and chef installed'
       BuildUbuntuBoxTask.new(:quantal64, :quantal, 'amd64')
 
