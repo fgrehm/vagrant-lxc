@@ -1,3 +1,10 @@
+## [0.4.0](https://github.com/fgrehm/vagrant-lxc/compare/v0.3.2...master) (unreleased)
+
+IMPROVEMENTS:
+
+  - Initial acceptance test suite
+  - New rake tasks for building Ubuntu precise and raring base amd64 boxes
+
 ## [0.3.2](https://github.com/fgrehm/vagrant-lxc/compare/v0.3.1...v0.3.2) (April 18, 2013)
 
   - Do not display port forwarding message in case no forwarded ports were set
