@@ -61,14 +61,18 @@ end
 namespace :boxes do
   namespace :ubuntu do
     namespace :build do
-      desc 'Build an Ubuntu Precise 64 bits box with puppet and chef installed'
-      BuildUbuntuBoxTask.new(:precise64, :precise, 'amd64')
+      chef   = ENV['CHEF'] != '0'
+      puppet = ENV['PUPPET'] != '0'
 
-      desc 'Build an Ubuntu Quantal 64 bits box with puppet and chef installed'
-      BuildUbuntuBoxTask.new(:quantal64, :quantal, 'amd64')
+      desc 'Build an Ubuntu Precise 64 bits box'
+      BuildUbuntuBoxTask.new(:precise64, :precise, 'amd64', chef: chef, puppet: puppet)
 
-      desc 'Build an Ubuntu Raring 64 bits box with puppet installed'
-      BuildUbuntuBoxTask.new(:raring64, :raring, 'amd64', chef: false)
+      desc 'Build an Ubuntu Quantal 64 bits box'
+      BuildUbuntuBoxTask.new(:quantal64, :quantal, 'amd64', chef: chef, puppet: puppet)
+
+      # FIXME: Find out how to install chef on raring
+      desc 'Build an Ubuntu Raring 64 bits box'
+      BuildUbuntuBoxTask.new(:raring64, :raring, 'amd64', chef: false, puppet: puppet)
     end
   end
 end
