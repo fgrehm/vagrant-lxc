@@ -21,7 +21,7 @@ sudo dpkg -i /tmp/vagrant.deb
 ```
 
 
-## What is currently supported? (v0.3.0)
+## What is currently supported?
 
 Pretty much everything you need from Vagrant:
 
