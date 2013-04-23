@@ -56,6 +56,11 @@ describe 'Sanity check' do
       `curl -s localhost:8080 --connect-timeout 2`
       expect($?.exitstatus).to_not eq 0
     end
+
+    it 'kills redir processes' do
+      processes = `pgrep redir`
+      expect($?.exitstatus).to_not eq 0
+    end
   end
 
   context '`vagrant destroy`' do
