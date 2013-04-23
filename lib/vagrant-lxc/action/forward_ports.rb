@@ -68,7 +68,7 @@ module Vagrant
           redir_cmd = "sudo redir --laddr=127.0.0.1 --lport=#{host} --cport=#{guest} --caddr=#{@container_ip} 2>/dev/null"
 
           @logger.debug "Forwarding port with `#{redir_cmd}`"
-          fork { exec redir_cmd }
+          spawn redir_cmd
         end
 
         def store_redir_pid(host_port, redir_pid)

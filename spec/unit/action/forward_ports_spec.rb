@@ -22,14 +22,14 @@ describe Vagrant::LXC::Action::ForwardPorts do
     machine.stub(provider: provider, data_dir: data_dir)
 
     subject.stub(exec: true)
-    subject.stub(:fork) { |&block| block.call; pid }
+    subject.stub(spawn: pid)
     subject.call(env)
   end
 
   after { FileUtils.rm_rf data_dir.to_s }
 
   it 'forwards ports using redir' do
-    subject.should have_received(:exec).with(
+    subject.should have_received(:spawn).with(
       "sudo redir --laddr=127.0.0.1 --lport=#{host_port} --cport=#{guest_port} --caddr=#{container_ip} 2>/dev/null"
     )
   end
