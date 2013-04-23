@@ -3,6 +3,7 @@
 BUG FIXES:
 
   - Properly kill `redir` child processes [#59][]
+  - Use `uname -m` on base Ubuntu lxc-template [#53][]
 
 IMPROVEMENTS:
 
