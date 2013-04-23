@@ -1,4 +1,8 @@
-## [0.4.0](https://github.com/fgrehm/vagrant-lxc/compare/v0.3.2...master) (unreleased)
+## [0.3.3](https://github.com/fgrehm/vagrant-lxc/compare/v0.3.2...v0.3.3) (April 23, 2013)
+
+BUG FIXES:
+
+  - Properly kill `redir` child processes [#59][]
 
 IMPROVEMENTS:
 
