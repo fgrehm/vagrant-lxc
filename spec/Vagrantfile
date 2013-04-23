@@ -29,5 +29,5 @@ Vagrant.configure("2") do |config|
 
   config.vm.network :forwarded_port, guest: 80, host: 8080
   config.vm.provision :shell,
-    inline: 'sudo apt-get install apache2 -y'
+    inline: 'sudo apt-get install nginx -y && sudo service nginx start'
 end

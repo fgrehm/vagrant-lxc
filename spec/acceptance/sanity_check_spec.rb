@@ -36,7 +36,7 @@ describe 'Sanity check' do
 
     it 'forwards configured ports' do
       output = `curl -s localhost:8080`.strip.chomp
-      expect(output).to include 'It works!'
+      expect(output).to include 'Welcome to nginx!'
     end
   end
 
