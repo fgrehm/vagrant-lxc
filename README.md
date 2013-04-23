@@ -21,35 +21,12 @@ sudo dpkg -i /tmp/vagrant.deb
 ```
 
 
-## What is currently supported?
-
-Pretty much everything you need from Vagrant:
-
-* Vagrant's `up`, `halt`, `reload`, `destroy`, `ssh` and `package` commands (box packaging is kind of experimental)
-* Shared folders
-* Provisioning
-* Setting container's host name
-* Port forwarding
-
-*Please refer to the [closed issues](https://github.com/fgrehm/vagrant-lxc/issues?labels=&milestone=&page=1&state=closed)
-and the [changelog](CHANGELOG.md) for most up to date information.*
-
-
-## Current limitations
-
-* Does not detect forwarded ports collision, right now you are responsible for taking care of that
-* A hell lot of `sudo`s (this will probably be like this until [user namespaces](http://s3hh.wordpress.com/2013/02/12/user-namespaces-lxc-meeting/) are supported)
-* [Does not tell you if dependencies are not met](https://github.com/fgrehm/vagrant-lxc/issues/11)
-  (will probably just throw up some random error)
-* + bunch of other [core features](https://github.com/fgrehm/vagrant-lxc/issues?labels=core&milestone=&page=1&state=open)
-  and some known [bugs](https://github.com/fgrehm/vagrant-lxc/issues?labels=bug&page=1&state=open)
-
-
 ## Installation
 
 ```
 vagrant plugin install vagrant-lxc
 ```
+
 
 ## Usage
 
@@ -110,6 +87,30 @@ partition.
 
 NFS shared folders are not supported and will behave as a "normal" shared folder
 so we can share the same Vagrantfile with VBox environments.
+
+
+## What is currently supported?
+
+Pretty much everything you need from Vagrant:
+
+* Vagrant's `up`, `halt`, `reload`, `destroy`, `ssh` and `package` commands (box packaging is kind of experimental)
+* Shared folders
+* Provisioning
+* Setting container's host name
+* Port forwarding
+
+*Please refer to the [closed issues](https://github.com/fgrehm/vagrant-lxc/issues?labels=&milestone=&page=1&state=closed)
+and the [changelog](CHANGELOG.md) for most up to date information.*
+
+
+## Current limitations
+
+* Does not detect forwarded ports collision, right now you are responsible for taking care of that
+* A hell lot of `sudo`s (this will probably be like this until [user namespaces](http://s3hh.wordpress.com/2013/02/12/user-namespaces-lxc-meeting/) are supported)
+* [Does not tell you if dependencies are not met](https://github.com/fgrehm/vagrant-lxc/issues/11)
+  (will probably just throw up some random error)
+* + bunch of other [core features](https://github.com/fgrehm/vagrant-lxc/issues?labels=core&milestone=&page=1&state=open)
+  and some known [bugs](https://github.com/fgrehm/vagrant-lxc/issues?labels=bug&page=1&state=open)
 
 
 ## Development
