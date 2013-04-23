@@ -28,15 +28,15 @@ describe Vagrant::LXC::Action::ClearForwardedPorts do
 
   context 'with a valid redir pid' do
     it 'kills known processes' do
-      subject.should have_received(:system).with("sudo pkill -9 -P #{pid}")
+      subject.should have_received(:system).with("sudo pkill -TERM -P #{pid}")
     end
   end
 
   context 'with an invalid pid' do
-    let(:pid_cmd)   { 'sudo ls' }
+    let(:pid_cmd) { 'sudo ls' }
 
     it 'does not kill the process' do
-      subject.should_not have_received(:system).with("sudo pkill -9 -P #{pid}")
+      subject.should_not have_received(:system).with("sudo pkill -TERM -P #{pid}")
     end
   end
 end
