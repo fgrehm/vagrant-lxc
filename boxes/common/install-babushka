@@ -1,0 +1,15 @@
+#!/bin/bash
+
+cache=`readlink -f .`
+rootfs="${cache}/rootfs"
+
+echo "installing babushka"
+cat > $rootfs/tmp/install-babushka.sh << EOF
+#!/bin/sh
+curl -L https://babushka.me/up | sudo bash
+
+EOF
+chmod +x $rootfs/tmp/install-babushka.sh
+chroot $rootfs /tmp/install-babushka.sh
+
+rm -rf $rootfs/tmp/*

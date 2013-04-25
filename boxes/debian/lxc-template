@@ -1,0 +1,424 @@
+#!/bin/bash
+# -*- mode:shell-mode;tab-width:2;indent-tabs-mode:nil;coding:utf-8 -*-
+# vim: ft=shell syn=shell fileencoding=utf-8 sw=2 ts=2 ai eol et si
+
+# This is a modified version of /usr/share/lxc/templates/lxc-debian
+# that comes with Ubuntu 12.10 changed to suit vagrant-lxc needs
+
+set -e
+
+if [ -r /etc/default/lxc ]; then
+    . /etc/default/lxc
+fi
+
+SUITE=${SUITE:-wheezy}
+MIRROR=${MIRROR:-http://ftp.debian.org/debian}
+
+configure_debian()
+{
+    rootfs=$1
+    hostname=$2
+    release=$3
+
+    # configure the inittab
+    cat <<EOF > $rootfs/etc/inittab
+id:3:initdefault:
+si::sysinit:/etc/init.d/rcS
+l0:0:wait:/etc/init.d/rc 0
+l1:1:wait:/etc/init.d/rc 1
+l2:2:wait:/etc/init.d/rc 2
+l3:3:wait:/etc/init.d/rc 3
+l4:4:wait:/etc/init.d/rc 4
+l5:5:wait:/etc/init.d/rc 5
+l6:6:wait:/etc/init.d/rc 6
+# Normally not reached, but fallthrough in case of emergency.
+z6:6:respawn:/sbin/sulogin
+1:2345:respawn:/sbin/getty 38400 console
+#c1:12345:respawn:/sbin/getty 38400 tty1 linux
+c2:12345:respawn:/sbin/getty 38400 tty2 linux
+c3:12345:respawn:/sbin/getty 38400 tty3 linux
+c4:12345:respawn:/sbin/getty 38400 tty4 linux
+EOF
+    echo '/etc/inittab created'
+
+    # disable selinux in debian
+    mkdir -p $rootfs/selinux
+    echo 0 > $rootfs/selinux/enforce
+    echo 'selinux disabled'
+
+    # configure the network using the dhcp
+    cat <<EOF > $rootfs/etc/network/interfaces
+# This file describes the network interfaces available on your system
+# and how to activate them. For more information, see interfaces(5).
+
+# The loopback network interface
+auto lo
+iface lo inet loopback
+
+auto eth0
+iface eth0 inet dhcp
+EOF
+    echo 'network configured (dhcp on eth0)'
+
+
+    # set the hostname
+    cat <<EOF > $rootfs/etc/hostname
+$hostname
+EOF
+    echo "/etc/hostname created (${hostname})"
+
+    # set dhcp hostname
+    cat <<EOF >> $rootfs/etc/dhcp/dhclient.conf
+send host-name "$hostname";
+EOF
+    echo 'dhcp hostname set'
+
+    if [ -z "${LANG}" ]; then
+        # set default locale
+        cat <<EOF > $rootfs/etc/locale.gen
+${LANG} UTF-8
+EOF
+        echo "default locale set to ${LANG} UTF-8"
+        chroot $rootfs locale-gen ${LANG} > /dev/null 2>&1
+        chroot $rootfs update-locale LANG=${LANG}
+        echo 'update-locale done'
+    fi
+
+    # set proxy if any
+    if [ ! -z "${HTTP_PROXY}" ]; then
+        cat <<EOF > $rootfs/etc/apt/apt.conf.d/10proxy
+Acquire::http::Proxy "${HTTP_PROXY}";
+Acquire::ftp::Proxy "${HTTP_PROXY}";
+Acquire::ftp::Timeout "15";
+Acquire::ftp::Passive "true";
+Acquire::ftp::Proxy::Passive "true";
+EOF
+        echo "Apt default proxy set to ${HTTP_PROXY}"
+        cat <<EOF >> $rootfs/etc/environment
+HTTP_PROXY=${HTTP_PROXY}
+HTTPS_PROXY=${HTTP_PROXY}
+FTP_PROXY=${HTTP_PROXY}
+EOF
+        echo "proxy ${HTTP_PROXY} added to /etc/environment"
+    fi
+
+    # recommends are as of now still abused in many packages
+    cat <<EOF > $rootfs/etc/apt/apt.conf.d/90recommends
+APT::Install-Recommends "0";
+APT::Install-Suggests "0";
+EOF
+    echo '/etc/apt/apt.conf.d/90recommends created'
+
+    # set default release
+    cat <<EOF > $rootfs/etc/apt/apt.conf.d/30release
+DPkg::Default-Release "${release}";
+APT::Default-Release "${release}";
+EOF
+    echo '/etc/apt/apt.conf.d/30release created'
+
+
+    # set minimal hosts
+    cat <<EOF > $rootfs/etc/hosts
+127.0.0.1   localhost
+127.0.1.1   $hostname.vagrantup.com	$hostname
+
+# The following lines are desirable for IPv6 capable hosts
+::1     ip6-localhost ip6-loopback
+fe00::0 ip6-localnet
+ff00::0 ip6-mcastprefix
+ff02::1 ip6-allnodes
+ff02::2 ip6-allrouters
+EOF
+
+    # remove pointless services in a container
+    for service in checkroot \
+                   umountfs \
+                   hwclock.sh \
+                   hwclockfirst.sh \
+                   mountall.sh ; do
+        chroot $rootfs /usr/sbin/update-rc.d -f $service remove > /dev/null 2>&1
+        echo "service ${service} removed from init"
+    done
+    
+    # suppress log level output for udev
+    #sed -i "s/=\"err\"/=0/" $rootfs/etc/udev/udev.conf
+
+    echo "root:vagrant" | chroot $rootfs chpasswd
+
+    if ! (grep -q vagrant $rootfs/etc/passwd); then
+      chroot $rootfs useradd --create-home -s /bin/bash vagrant
+      echo "vagrant:vagrant" | chroot $rootfs chpasswd
+      chroot $rootfs adduser vagrant sudo >/dev/null 2>&1 || true
+      chroot $rootfs cp /etc/sudoers /etc/sudoers.orig >/dev/null 2>&1 || true
+      chroot $rootfs sed -i -e \
+          's/%sudo\s\+ALL=(ALL:ALL)\s\+ALL/%sudo ALL=NOPASSWD:ALL/g' \
+          /etc/sudoers >/dev/null 2>&1 || true
+    fi
+
+    return 0
+}
+
+cleanup()
+{
+    rm -rf ${cache}/partial-${SUITE}-${arch}
+    rm -rf ${cache}/rootfs-${SUITE}-${arch}
+}
+
+extract_rootfs()
+{
+    tarball=$1
+    arch=$2
+    rootfs=$3
+
+    echo "Extracting $tarball ..."
+    mkdir -p $(dirname $rootfs)
+    # Make sure the rootfs does not exist before extracting
+    rm -rf $rootfs
+    (cd `dirname $rootfs` && tar xfz $tarball)
+    return 0
+}
+
+install_debian()
+{
+    rootfs=$1
+    release=$2
+    tarball=$3
+    mkdir -p /var/lock/subsys/
+
+    (
+        flock -x 200
+        if [ $? -ne 0 ]; then
+            echo "Cache repository is busy."
+            return 1
+        fi
+
+        extract_rootfs $tarball $arch $rootfs
+        if [ $? -ne 0 ]; then
+            echo "Failed to copy rootfs"
+            return 1
+        fi
+
+        return 0
+
+    ) 200>/var/lock/subsys/lxc
+
+    return $?
+}
+
+copy_configuration()
+{
+    path=$1
+    rootfs=$2
+    name=$3
+    arch=$4
+    release=$5
+
+    cat <<EOF >> $path/fstab
+none $rootfs/dev/pts devpts defaults 0 0
+none $rootfs/proc    proc   defaults 0 0
+none $rootfs/sys     sysfs  defaults 0 0
+none $rootfs/dev/shm tmpfs  defaults 0 0
+EOF
+
+    cat <<EOF >> $path/config
+lxc.tty = 4
+lxc.pts = 1024
+lxc.rootfs = ${rootfs}
+lxc.cgroup.devices.deny = a
+# /dev/null and zero
+lxc.cgroup.devices.allow = c 1:3 rwm
+lxc.cgroup.devices.allow = c 1:5 rwm
+# consoles
+lxc.cgroup.devices.allow = c 5:1 rwm
+lxc.cgroup.devices.allow = c 5:0 rwm
+lxc.cgroup.devices.allow = c 4:0 rwm
+lxc.cgroup.devices.allow = c 4:1 rwm
+# /dev/{,u}random
+lxc.cgroup.devices.allow = c 1:9 rwm
+lxc.cgroup.devices.allow = c 1:8 rwm
+lxc.cgroup.devices.allow = c 136:* rwm
+lxc.cgroup.devices.allow = c 5:2 rwm
+# rtc
+lxc.cgroup.devices.allow = c 254:0 rwm
+
+# mounts point
+#lxc.mount.entry=proc $rootfs/proc proc nodev,noexec,nosuid 0 0
+#lxc.mount.entry=devpts $rootfs/dev/pts devpts defaults 0 0
+#lxc.mount.entry=sysfs $rootfs/sys sysfs defaults  0 0
+lxc.mount = ${path}/fstab
+
+lxc.utsname = ${name}
+
+# networking
+
+lxc.network.type = veth
+lxc.network.flags = up
+# Bridged network
+#lxc.network.link = br42
+lxc.network.name = eth0
+lxc.network.veth.pair = veth${name##vagrant-}
+# It is fine to be commented out
+#lxc.network.ipv4 = 10.1.1.1/24
+#lxc.network.hwaddr = 00:12:34:56:78:9A
+lxc.network.hwaddr = \
+00:16:3e:$(openssl rand -hex 3| sed 's/\(..\)/\1:/g; s/.$//')
+
+# Limits
+
+# Set max memory
+lxc.cgroup.memory.limit_in_bytes = 1024M
+
+# Scheduler, works like this: You assign to vm0 the value of 10 and to vm1
+# the value of 20. This means: in each CPU Second vm1 will get the double
+# amount of CPU cycles as vm0. Per default all values are set to 1024.
+#lxc.cgroup.cpu.shares = 512
+
+# CPUs
+# assign first CPU to this container:
+#lxc.cgroup.cpuset.cpus = 0 
+# assign the first, the second and the last CPU
+#lxc.cgroup.cpuset.cpus = 0-1,3
+# assign the first and the last CPU
+#lxc.cgroup.cpuset.cpus = 0,3
+
+EOF
+
+    if [ $? -ne 0 ]; then
+        echo 'failed to add configuration'
+        return 1
+    fi
+
+}
+
+
+add_ssh_key()
+{
+    user=$1
+
+    if [ -n "$auth_key" -a -f "$auth_key" ]; then
+        u_path="/home/${user}/.ssh"
+        root_u_path="$rootfs/$u_path"
+
+        mkdir -p $root_u_path
+        cp $auth_key "$root_u_path/authorized_keys"
+        chroot $rootfs chown -R ${user}: "$u_path"
+
+        echo "Inserted SSH public key from $auth_key into /home/${user}/.ssh/authorized_keys"
+    fi
+}
+
+usage()
+{
+    cat <<EOF
+$1 -h|--help [-a|--arch] [-d|--debug]
+  [-F | --flush-cache] [-r|--release <release>] [ -S | --auth-key <keyfile>]
+release: the debian release (e.g. wheezy): defaults to host release on debian, otherwise uses latest stable
+arch: the container architecture (e.g. amd64): defaults to host arch
+auth-key: SSH Public key file to inject into container
+EOF
+    return 0
+}
+
+options=$(getopt -o a:b:hp:r:xn:Fd:C -l arch:,help,path:,release:,name:,flush-cache,auth-key:,debug:,tarball: -- "$@")
+if [ $? -ne 0 ]; then
+    usage $(basename $0)
+    exit 1
+fi
+eval set -- "$options"
+
+release=wheezy  # Default to the last Debian stable release
+
+arch=$(uname -m)
+
+# Code taken from debootstrap
+if [ -x /usr/bin/dpkg ] && /usr/bin/dpkg --print-architecture >/dev/null 2>&1; then
+    arch=`/usr/bin/dpkg --print-architecture`
+elif type udpkg >/dev/null 2>&1 && udpkg --print-architecture >/dev/null 2>&1; then
+    arch=`/usr/bin/udpkg --print-architecture`
+else
+    arch=$(uname -m)
+    if [ "$arch" = "i686" ]; then
+        arch="i386"
+    elif [ "$arch" = "x86_64" ]; then
+        arch="amd64"
+    elif [ "$arch" = "armv7l" ]; then
+        arch="armel"
+    fi
+fi
+
+debug=0
+hostarch=$arch
+while true
+do
+    case "$1" in
+    -h|--help)      usage $0 && exit 0;;
+    -p|--path)      path=$2; shift 2;;
+    -n|--name)      name=$2; shift 2;;
+    -T|--tarball)   tarball=$2; shift 2;;
+    -r|--release)   release=$2; shift 2;;
+    -S|--auth-key)  auth_key=$2; shift 2;;
+    -a|--arch)      arch=$2; shift 2;;
+    -d|--debug)     debug=1; shift 1;;
+    --)             shift 1; break ;;
+        *)              break ;;
+    esac
+done
+
+if [ $debug -eq 1 ]; then
+    set -x
+fi
+
+
+if [ "$arch" == "i686" ]; then
+    arch=i386
+fi
+
+if [ $hostarch = "i386" -a $arch = "amd64" ]; then
+    echo "can't create amd64 container on i386"
+    exit 1
+fi
+
+if [ -z "$path" ]; then
+    echo "'path' parameter is required"
+    exit 1
+fi
+
+if [ "$(id -u)" != "0" ]; then
+    echo "This script should be run as 'root'"
+    exit 1
+fi
+
+# detect rootfs
+config="$path/config"
+if grep -q '^lxc.rootfs' $config 2>/dev/null ; then
+    rootfs=`grep 'lxc.rootfs =' $config | awk -F= '{ print $2 }'`
+else
+    rootfs=$path/rootfs
+fi
+
+install_debian $rootfs $release $tarball
+if [ $? -ne 0 ]; then
+    echo "failed to install debian $release"
+    exit 1
+fi
+
+configure_debian $rootfs "vagrant-debian-${release}" $release
+if [ $? -ne 0 ]; then
+    echo "failed to configure debian $release for a container"
+    exit 1
+fi
+
+copy_configuration $path $rootfs $name $arch $release
+if [ $? -ne 0 ]; then
+    echo "failed write configuration file"
+    exit 1
+fi
+
+add_ssh_key vagrant
+
+echo ""
+echo "##"
+echo "# The default user is 'vagrant' with password 'vagrant'!"
+echo "# Use the 'sudo' command to run tasks as root in the container."
+echo "##"
+echo ""
