@@ -55,7 +55,8 @@ Vagrant.configure("2") do |config|
 end
 ```
 
-And finally run `vagrant up --provider=lxc`.
+And finally run `vagrant up --provider=lxc`. If you are using Vagrant 1.2+ you can
+also set `VAGRANT_DEFAULT_PROVIDER` environmental variable to `lxc`.
 
 If you are on a mac or window host and still want to try this plugin out, you
 can use the [same Vagrant VirtualBox machine I use for development](#using-virtualbox-for-development).
