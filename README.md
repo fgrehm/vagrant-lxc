@@ -2,6 +2,8 @@
 
 Linux Containers support for Vagrant 1.1+
 
+Check out this [blog post](http://fabiorehm.com/blog/2013/04/28/lxc-provider-for-vagrant)
+to see the plugin in action and find out more about it.
 
 ## Dependencies
 
