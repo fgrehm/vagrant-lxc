@@ -41,7 +41,7 @@ class BuildGenericBoxTask < ::Rake::TaskLib
     Dir.chdir 'boxes/temp' do
       sh "sudo ../#{@distrib}/download #{@arch} #{@release}"
       [ :puppet, :chef, :babushka ].each do |cfg_engine|
-        break unless instance_variable_get :"@install_#{cfg_engine}"
+        next unless instance_variable_get :"@install_#{cfg_engine}"
         script_name = "install-#{cfg_engine}"
         install_path = File.join '..', @distrib, script_name
         unless File.readable? install_path
