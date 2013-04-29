@@ -89,7 +89,8 @@ man-db,\
 psmisc,\
 bind9-host,\
 telnet,\
-mtr-tiny
+mtr-tiny,\
+ping
   
   if [ ! -z "${ADDITIONAL_PACKAGES}" ]; then
       packages=${ADDITIONAL_PACKAGES},${packages}
