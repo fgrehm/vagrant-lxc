@@ -90,8 +90,9 @@ psmisc,\
 bind9-host,\
 telnet,\
 mtr-tiny,\
-iputils-ping
-  
+iputils-ping,\
+ca-certificates
+
   if [ ! -z "${ADDITIONAL_PACKAGES}" ]; then
       packages=${ADDITIONAL_PACKAGES},${packages}
   fi
