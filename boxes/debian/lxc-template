@@ -73,7 +73,7 @@ send host-name "$hostname";
 EOF
     echo 'dhcp hostname set'
 
-    if [ -z "${LANG}" ]; then
+    if [ ! -z "${LANG}" ]; then
         # set default locale
         cat <<EOF > $rootfs/etc/locale.gen
 ${LANG} UTF-8
