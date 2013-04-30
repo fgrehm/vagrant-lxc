@@ -69,7 +69,6 @@ download_debian()
 sudo,\
 ifupdown,\
 locales,\
-localepurge,\
 libui-dialog-perl,\
 dialog,\
 isc-dhcp-client,\
