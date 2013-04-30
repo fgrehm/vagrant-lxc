@@ -256,9 +256,9 @@ lxc.network.flags = up
 # Bridged network
 #lxc.network.link = br42
 lxc.network.name = eth0
-# Fix interface name 'vethXXXX' too long (>15)
-lxc.network.veth.pair = veth${name#*-}
 # It is fine to be commented out
+# Warn: interface name 'vethXXXX' too long (>15)
+#lxc.network.veth.pair = veth${name#*-}
 #lxc.network.ipv4 = 10.1.1.1/24
 #lxc.network.hwaddr = 00:12:34:56:78:9A
 lxc.network.hwaddr = \
