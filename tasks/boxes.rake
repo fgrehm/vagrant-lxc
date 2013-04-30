@@ -30,22 +30,23 @@ class BuildGenericBoxTask < ::Rake::TaskLib
       exit 1
     end
 
-    if Dir.exists?('boxes/temp')
+    if Dir.entries('boxes/temp').size > 2
       puts 'There is a partially built box under ' +
         File.expand_path('./boxes/temp') +
         ', please remove it before building a new box'
       exit 1
     end
 
+    pwd = Dir.pwd
     sh 'mkdir -p boxes/temp/'
     Dir.chdir 'boxes/temp' do
-      sh "sudo ../#{@distrib}/download #{@arch} #{@release}"
+      sh "sudo #{pwd}/boxes/#{@distrib}/download #{@arch} #{@release}"
       [ :puppet, :chef, :babushka ].each do |cfg_engine|
         next unless instance_variable_get :"@install_#{cfg_engine}"
         script_name = "install-#{cfg_engine}"
-        install_path = File.join '..', @distrib, script_name
+        install_path = File.join pwd, 'boxes', @distrib, script_name
         unless File.readable? install_path
-          install_path = File.join '..', 'common', script_name
+          install_path = File.join pwd, 'boxes', 'common', script_name
         end
         if File.readable? install_path
           sh "sudo #{install_path}"
@@ -57,8 +58,8 @@ class BuildGenericBoxTask < ::Rake::TaskLib
       sh 'sudo tar --numeric-owner -czf rootfs.tar.gz ./rootfs/*'
       sh 'sudo rm -rf rootfs'
       sh "sudo chown #{ENV['USER']}:#{ENV['USER']} rootfs.tar.gz"
-      sh "cp ../#{@distrib}/lxc-template ."
-      metadata = File.read("../#{@distrib}/metadata.json.template")
+      sh "cp #{pwd}/boxes/#{@distrib}/lxc-template ."
+      metadata = File.read("#{pwd}/boxes/#{@distrib}/metadata.json.template")
       metadata.gsub!('ARCH', @arch)
       metadata.gsub!('RELEASE', @release)
       File.open('metadata.json', 'w') { |f| f.print metadata }
