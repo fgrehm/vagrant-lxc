@@ -32,7 +32,7 @@ write_sourceslist()
   SECURITY_MIRROR=${SECURITY_MIRROR:-http://security.debian.org/debian-security}
 
 
-  if [ 'sid' == "${release}" ]; then
+  if [ 'sid' == "${release}" -o 'unstable' == "${release}" ]; then
     cat <<EOF > ${rootfs}/etc/apt/sources.list
 # ${release}
 #------------------------------------------------------------------------------
