@@ -1,0 +1,158 @@
+#!/bin/bash
+# -*- mode:shell-mode;tab-width:2;indent-tabs-mode:nil;coding:utf-8 -*-
+# vim: ft=shell syn=shell fileencoding=utf-8 sw=2 ts=2 ai eol et si
+#
+# This is the code extracted from /usr/share/lxc/templates/lxc-debian
+# that comes with Ubuntu 12.10 which is responsible for downloading the
+# rootfs files / packages
+
+set -e
+
+suggest_flush()
+{
+  echo <<EOF
+Container upgrade failed.  The container cache may be out of date,
+in which case flushing the case (see -F in the hep output) may help.
+EOF
+}
+
+cleanup()
+{
+  rm -rf $cache/partial
+  rm -rf $cache/rootfs
+}
+
+write_sourceslist()
+{
+  rootfs=$1
+  arch=$2
+  release=$3
+  
+  MIRROR=${MIRROR:-http://ftp.debian.org/debian}
+  SECURITY_MIRROR=${SECURITY_MIRROR:-http://security.debian.org/debian-security}
+
+
+  if [ 'sid' == "${release}" -o 'unstable' == "${release}" ]; then
+    cat <<EOF > ${rootfs}/etc/apt/sources.list
+# ${release}
+#------------------------------------------------------------------------------
+deb ${MIRROR} ${release} main contrib non-free
+EOF
+  else
+    cat <<EOF > ${rootfs}/etc/apt/sources.list
+# ${release}
+#------------------------------------------------------------------------------
+deb ${MIRROR} ${release} main contrib non-free
+
+# ${release} security
+#------------------------------------------------------------------------------
+deb ${SECURITY_MIRROR} ${release}/updates main contrib non-free
+
+# ${release} updates
+#------------------------------------------------------------------------------
+deb ${MIRROR} ${release}-updates main contrib non-free
+
+# ${release} proposed updates
+#------------------------------------------------------------------------------
+deb ${MIRROR} ${release}-proposed-updates main contrib non-free
+EOF
+  fi
+}
+
+download_debian()
+{
+  cache=$1
+  arch=$2
+  release=$3
+ 
+  packages=\
+sudo,\
+ifupdown,\
+locales,\
+libui-dialog-perl,\
+dialog,\
+isc-dhcp-client,\
+netbase,\
+net-tools,\
+iproute,\
+openssh-server,\
+vim,\
+jed,\
+jed-extra,\
+ssh,\
+curl,\
+wget,\
+bash-completion,\
+manpages,\
+man-db,\
+psmisc,\
+bind9-host,\
+telnet,\
+mtr-tiny,\
+iputils-ping,\
+ca-certificates
+
+  if [ ! -z "${ADDITIONAL_PACKAGES}" ]; then
+      packages=${ADDITIONAL_PACKAGES},${packages}
+  fi
+
+  echo "installing packages: ${packages}"
+  
+  trap cleanup EXIT SIGHUP SIGINT SIGTERM
+  # check the mini debian was not already downloaded
+  partial=${cache}/partial-${release}-${arch}
+  mkdir -p ${partial}
+  if [ $? -ne 0 ]; then
+      echo "Failed to create '${partial}' directory"
+      return 1
+  fi
+  
+  # download a mini debian into a cache
+  echo "Downloading debian ${release} minimal ..."
+  debootstrap \
+      --variant=minbase \
+      --verbose \
+      --components=main,contrib,non-free \
+      --arch=${arch} \
+      --include=${packages} ${release} ${partial} ${MIRROR}
+  
+  if [ $? -ne 0 ]; then
+      echo 'Failed to download the rootfs, aborting.'
+      return 1
+  fi
+
+  echo 'Installing updates'
+  write_sourceslist ${partial} ${arch} ${release}
+
+  chroot ${partial} apt-get update
+  if [ $? -ne 0 ]; then
+      echo 'Failed to update the apt cache'
+      return 1
+  fi
+
+  lxc-unshare -s MOUNT -- chroot ${partial} \
+      apt-get dist-upgrade -y || { suggest_flush; false; }
+
+  chroot ${partial} apt-get clean
+
+  mv ${partial} ${cache}/rootfs
+  trap EXIT
+  trap SIGINT
+  trap SIGTERM
+  trap SIGHUP
+  echo 'Download complete'
+  return 0
+}
+
+declare cache=`readlink -f .` \
+        arch=$1 \
+        release=$2
+
+if [ -d ${cache}/rootfs-${release}-${arch} ]; then
+    echo <<EOF
+The rootfs cache has been built already, please remove it if you want to update
+EOF
+    exit 1
+fi
+
+download_debian ${cache} ${arch} ${release}
