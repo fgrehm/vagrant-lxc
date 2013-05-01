@@ -1,6 +1,4 @@
 #!/bin/bash
-# -*- mode:shell-mode;tab-width:2;indent-tabs-mode:nil;coding:utf-8 -*-
-# vim: ft=shell syn=shell fileencoding=utf-8 sw=2 ts=2 ai eol et si
 
 # This is a modified version of /usr/share/lxc/templates/lxc-debian
 # that comes with Ubuntu 12.10 changed to suit vagrant-lxc needs
@@ -139,7 +137,7 @@ EOF
         chroot $rootfs /usr/sbin/update-rc.d -f $service remove > /dev/null 2>&1
         echo "service ${service} removed from init"
     done
-    
+
     # suppress log level output for udev
     #sed -i "s/=\"err\"/=0/" $rootfs/etc/udev/udev.conf
 
@@ -276,7 +274,7 @@ lxc.cgroup.memory.limit_in_bytes = 1024M
 
 # CPUs
 # assign first CPU to this container:
-#lxc.cgroup.cpuset.cpus = 0 
+#lxc.cgroup.cpuset.cpus = 0
 # assign the first, the second and the last CPU
 #lxc.cgroup.cpuset.cpus = 0-1,3
 # assign the first and the last CPU

@@ -1,7 +1,5 @@
 #!/bin/bash
-# -*- mode:shell-mode;tab-width:2;indent-tabs-mode:nil;coding:utf-8 -*-
-# vim: ft=shell syn=shell fileencoding=utf-8 sw=2 ts=2 ai eol et si
-#
+
 # This is the code extracted from /usr/share/lxc/templates/lxc-debian
 # that comes with Ubuntu 12.10 which is responsible for downloading the
 # rootfs files / packages
@@ -27,7 +25,7 @@ write_sourceslist()
   rootfs=$1
   arch=$2
   release=$3
-  
+
   MIRROR=${MIRROR:-http://ftp.debian.org/debian}
   SECURITY_MIRROR=${SECURITY_MIRROR:-http://security.debian.org/debian-security}
 
@@ -64,7 +62,7 @@ download_debian()
   cache=$1
   arch=$2
   release=$3
- 
+
   packages=\
 sudo,\
 ifupdown,\
@@ -97,7 +95,7 @@ ca-certificates
   fi
 
   echo "installing packages: ${packages}"
-  
+
   trap cleanup EXIT SIGHUP SIGINT SIGTERM
   # check the mini debian was not already downloaded
   partial=${cache}/partial-${release}-${arch}
@@ -106,7 +104,7 @@ ca-certificates
       echo "Failed to create '${partial}' directory"
       return 1
   fi
-  
+
   # download a mini debian into a cache
   echo "Downloading debian ${release} minimal ..."
   debootstrap \
@@ -115,7 +113,7 @@ ca-certificates
       --components=main,contrib,non-free \
       --arch=${arch} \
       --include=${packages} ${release} ${partial} ${MIRROR}
-  
+
   if [ $? -ne 0 ]; then
       echo 'Failed to download the rootfs, aborting.'
       return 1
