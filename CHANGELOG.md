@@ -1,3 +1,10 @@
+## [0.?.?](https://github.com/fgrehm/vagrant-lxc/compare/v0.3.3...master) (unreleased)
+
+FEATURES:
+
+  - Support for building Debian boxes (tks to @Val)
+  - Support for installing babushka on base boxes (tks to @Val)
+
 ## [0.3.3](https://github.com/fgrehm/vagrant-lxc/compare/v0.3.2...v0.3.3) (April 23, 2013)
 
 BUG FIXES:
