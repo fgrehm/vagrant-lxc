@@ -30,6 +30,7 @@ class BuildGenericBoxTask < ::Rake::TaskLib
       exit 1
     end
 
+    FileUtils.mkdir_p 'boxes/temp' unless File.exist? 'base/temp'
     if Dir.entries('boxes/temp').size > 2
       puts 'There is a partially built box under ' +
         File.expand_path('./boxes/temp') +
