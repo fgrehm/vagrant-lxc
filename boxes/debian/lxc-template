@@ -208,6 +208,13 @@ add_ssh_key()
     fi
 }
 
+disable_tmp_cleanup() {
+    rootfs=$1
+    chroot $rootfs /usr/sbin/update-rc.d -f checkroot-bootclean.sh remove
+    chroot $rootfs /usr/sbin/update-rc.d -f mountall-bootclean.sh remove
+    chroot $rootfs /usr/sbin/update-rc.d -f mountnfs-bootclean.sh remove
+}
+
 usage()
 {
     cat <<EOF
@@ -316,6 +323,12 @@ if [ $? -ne 0 ]; then
 fi
 
 add_ssh_key vagrant
+
+# vagrant and / or plugins might mount some shared folders under /tmp by default
+# (like puppet manifests) and we need to make sure no shared folder gets its
+# contents removed because of it. For more information, please check:
+#   https://github.com/fgrehm/vagrant-lxc/issues/68
+disable_tmp_cleanup $rootfs
 
 echo ""
 echo "##"
