@@ -89,9 +89,9 @@ class BuildUbuntuBoxTask < BuildGenericBoxTask
   end
 end
 
-chef     = ENV['CHEF']    != '0'
-puppet   = ENV['PUPPET']  != '0'
-babushka = ENV['BABUSKA'] != '0'
+chef     = ENV['CHEF']     == '1'
+puppet   = ENV['PUPPET']   == '1'
+babushka = ENV['BABUSHKA'] == '1'
 
 namespace :boxes do
   namespace :ubuntu do

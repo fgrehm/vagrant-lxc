@@ -72,12 +72,17 @@ can use the [same Vagrant VirtualBox machine I use for development](#using-virtu
 *Please note that I'm currently using only the quantal x86_64 on a daily basis,
 and I've only done some basic testing with the others*
 
-You can also build a clean box by providing `CHEF=0` and `PUPPET=0` to the available
-[rake tasks](tasks/boxes.rake). For example:
+There is a set of [rake tasks](tasks/boxes.rake) that you can use to build base
+boxes as needed. By default it won't include any provisioning tool and you can
+pick the one you want by providing some environment variables.
+
+For example:
 
 ```
-CHEF=0 PUPPET=0 rake boxes:ubuntu:build:precise64
+CHEF=1 rake boxes:ubuntu:build:precise64
 ```
+
+Will build a Ubuntu Precise x86_64 box with chef pre-installed.
 
 ### Storing container's rootfs on a separate partition
 
