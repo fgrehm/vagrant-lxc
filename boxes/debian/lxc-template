@@ -217,7 +217,6 @@ copy_configuration()
 none $rootfs/dev/pts devpts defaults 0 0
 none $rootfs/proc    proc   defaults 0 0
 none $rootfs/sys     sysfs  defaults 0 0
-none $rootfs/dev/shm tmpfs  defaults 0 0
 EOF
 
     cat <<EOF >> $path/config
