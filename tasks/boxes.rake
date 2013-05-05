@@ -167,7 +167,7 @@ namespace :boxes do
       desc 'Build an Debian Sid/unstable 64 bits box'
       BuildDebianBoxTask.
         new(:sid64,
-            :sid, 'amd64', chef: chef, puppet: puppet, babushka: babushka)
+            :sid, 'amd64', chef: false, puppet: puppet, babushka: babushka)
     end
   end
 end
