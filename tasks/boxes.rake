@@ -14,56 +14,48 @@ class BuildGenericBoxTask < ::Rake::TaskLib
     @install_puppet   = opts.fetch(:puppet, true)
     @install_babushka = opts.fetch(:babushka, true)
     @file             = opts[:file] || default_box_file
+    @scripts_path     = Pathname(Dir.pwd).join('boxes')
 
     desc "Build an #{distrib.upcase} #{release} #{arch} box" unless
       ::Rake.application.last_comment
     task name do
       RakeFileUtils.send(:verbose, true) do
-        run_task
+        build
       end
     end
   end
 
-  def run_task
-    if File.exists?("./boxes/output/#{@file}")
-      puts 'Box has been built already!'
-      exit 1
+  def default_box_file
+    require 'time'
+    "lxc-#{@release}-#{@arch}-#{Date.today}.box"
+  end
+
+  def run(script_name, *args)
+    unless (script = @scripts_path.join(@distrib, script_name)).readable?
+      script = @scripts_path.join('common', script_name)
     end
 
-    FileUtils.mkdir_p 'boxes/temp' unless File.exist? 'base/temp'
-    if Dir.entries('boxes/temp').size > 2
-      puts 'There is a partially built box under ' +
-        File.expand_path('./boxes/temp') +
-        ', please remove it before building a new box'
+    if script.readable?
+      sh "sudo #{script} #{args.join(' ')}"
+    else
+      STDERR.puts "cannot execute #{install_path} (not found?)"
       exit 1
     end
+  end
+
+  def build
+    check_if_box_has_been_built!
+
+    FileUtils.mkdir_p 'boxes/temp' unless File.exist? 'base/temp'
+    check_for_partially_built_box!
 
     pwd = Dir.pwd
     sh 'mkdir -p boxes/temp/'
     Dir.chdir 'boxes/temp' do
-      sh "sudo #{pwd}/boxes/#{@distrib}/download #{@arch} #{@release}"
-      [ :puppet, :chef, :babushka ].each do |cfg_engine|
-        next unless instance_variable_get :"@install_#{cfg_engine}"
-        script_name = "install-#{cfg_engine}"
-        install_path = File.join pwd, 'boxes', @distrib, script_name
-        unless File.readable? install_path
-          install_path = File.join pwd, 'boxes', 'common', script_name
-        end
-        if File.readable? install_path
-          sh "sudo #{install_path}"
-        else
-          STDERR.puts "cannot execute #{install_path} (not found?)"
-        end
-      end
-      sh 'sudo rm -f rootfs.tar.gz'
-      sh 'sudo tar --numeric-owner -czf rootfs.tar.gz ./rootfs/*'
-      sh 'sudo rm -rf rootfs'
-      sh "sudo chown #{ENV['USER']}:#{ENV['USER']} rootfs.tar.gz"
-      sh "cp #{pwd}/boxes/#{@distrib}/lxc-template ."
-      metadata = File.read("#{pwd}/boxes/#{@distrib}/metadata.json.template")
-      metadata.gsub!('ARCH', @arch)
-      metadata.gsub!('RELEASE', @release)
-      File.open('metadata.json', 'w') { |f| f.print metadata }
+      download
+      install_cfg_engines
+      prepare_package_contents pwd
+      cleanup
       sh "tar -czf tmp-package.box ./*"
     end
 
@@ -72,9 +64,52 @@ class BuildGenericBoxTask < ::Rake::TaskLib
     sh "rm -rf boxes/temp"
   end
 
-  def default_box_file
-    require 'time'
-    "lxc-#{@release}-#{@arch}-#{Date.today}.box"
+  def check_if_box_has_been_built!
+    return unless File.exists?("./boxes/output/#{@file}")
+
+    puts 'Box has been built already!'
+    exit 1
+  end
+
+  def check_for_partially_built_box!
+    return unless Dir.entries('boxes/temp').size > 2
+
+    puts 'There is a partially built box under ' +
+      File.expand_path('./boxes/temp') +
+      ', please remove it before building a new box'
+    exit 1
+  end
+
+  def download
+    run 'download', @arch, @release
+  end
+
+  def install_cfg_engines
+    [ :puppet, :chef, :babushka ].each do |cfg_engine|
+      next unless instance_variable_get :"@install_#{cfg_engine}"
+      script_name = "install-#{cfg_engine}"
+      run script_name
+    end
+  end
+
+  def prepare_package_contents(pwd)
+    sh 'sudo rm -f rootfs.tar.gz'
+    sh 'sudo tar --numeric-owner -czf rootfs.tar.gz ./rootfs/*'
+    sh "sudo chown #{ENV['USER']}:#{ENV['USER']} rootfs.tar.gz"
+    sh "cp #{pwd}/boxes/#{@distrib}/lxc-template ."
+    compile_metadata(pwd)
+  end
+
+  def compile_metadata(pwd)
+    metadata = File.read("#{pwd}/boxes/#{@distrib}/metadata.json.template")
+    metadata.gsub!('ARCH', @arch)
+    metadata.gsub!('RELEASE', @release)
+    File.open('metadata.json', 'w') { |f| f.print metadata }
+  end
+
+  def cleanup
+    run 'cleanup'
+    sh 'sudo rm -rf rootfs'
   end
 end
 
