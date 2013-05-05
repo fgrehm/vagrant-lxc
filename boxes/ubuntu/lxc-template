@@ -36,8 +36,8 @@ fi
 configure_ubuntu()
 {
     rootfs=$1
-    release=$3
-    hostname='quantal64'
+    release=$2
+    hostname=$2
 
    # configure the network using the dhcp
     cat <<EOF > $rootfs/etc/network/interfaces
