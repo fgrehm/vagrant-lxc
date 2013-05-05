@@ -151,13 +151,18 @@ namespace :boxes do
     end
   end
 
+  # FIXME: Find out how to install chef on debian boxes
   namespace :debian do
     namespace :build do
+      desc 'Build an Debian Squeeze 64 bits box'
+      BuildDebianBoxTask.
+        new(:squeeze64,
+            :squeeze, 'amd64', chef: false, puppet: puppet, babushka: babushka)
 
       desc 'Build an Debian Wheezy 64 bits box'
       BuildDebianBoxTask.
         new(:wheezy64,
-            :wheezy, 'amd64', chef: chef, puppet: puppet, babushka: babushka)
+            :wheezy, 'amd64', chef: false, puppet: puppet, babushka: babushka)
 
       desc 'Build an Debian Sid/unstable 64 bits box'
       BuildDebianBoxTask.
