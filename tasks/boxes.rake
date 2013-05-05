@@ -177,14 +177,6 @@ namespace :boxes do
     end
   end
 
-  task :enable_puppet do
-    ENV['PUPPET'] = '1'
-  end
-
-  task :enable_chef do
-    ENV['CHEF'] = '1'
-  end
-
   desc 'Build all base boxes for release'
-  task :build_all => %w( enable_puppet enable_chef ubuntu:build:all debian:build:all )
+  task :build_all => %w( ubuntu:build:all debian:build:all )
 end
