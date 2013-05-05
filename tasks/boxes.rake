@@ -148,6 +148,9 @@ namespace :boxes do
       BuildUbuntuBoxTask.
         new(:raring64,
             :raring, 'amd64', chef: false, puppet: puppet, babushka: babushka)
+
+      desc 'Build all Ubuntu boxes'
+      task :all => %w( precise64 quantal64 raring64 )
     end
   end
 
@@ -168,6 +171,20 @@ namespace :boxes do
       BuildDebianBoxTask.
         new(:sid64,
             :sid, 'amd64', chef: false, puppet: puppet, babushka: babushka)
+
+      desc 'Build all Debian boxes'
+      task :all => %w( squeeze64 wheezy64 sid64 )
     end
   end
+
+  task :enable_puppet do
+    ENV['PUPPET'] = '1'
+  end
+
+  task :enable_chef do
+    ENV['CHEF'] = '1'
+  end
+
+  desc 'Build all base boxes for release'
+  task :build_all => %w( enable_puppet enable_chef ubuntu:build:all debian:build:all )
 end
