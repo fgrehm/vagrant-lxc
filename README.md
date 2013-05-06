@@ -68,16 +68,24 @@ can use the [same Vagrant VirtualBox machine I use for development](#using-virtu
 | [lxc-raring-amd64-2013-04-21.box](http://dl.dropbox.com/u/13510779/lxc-raring-amd64-2013-04-21.box) | Ubuntu 13.04 Raring x86_64 (Puppet 3.1.1) |
 | [lxc-quantal-amd64-2013-04-21.box](http://dl.dropbox.com/u/13510779/lxc-quantal-amd64-2013-04-21.box) | Ubuntu 12.10 Quantal x86_64 (Puppet 3.1.1 & Chef 11.4.0) |
 | [lxc-precise-amd64-2013-04-21.box](http://dl.dropbox.com/u/13510779/lxc-precise-amd64-2013-04-21.box) | Ubuntu 12.04 Precise x86_64 (Puppet 3.1.1 & Chef 11.4.0) |
+| *[SOON](tasks/boxes.rake#167)* | Debian Sid (Puppet 3.1.1) |
+| *[SOON](tasks/boxes.rake#162)* | Debian Wheezy (Puppet 3.1.1) |
+| *[SOON](tasks/boxes.rake#157)* | Debian Squeeze (Puppet 3.1.1) |
 
 *Please note that I'm currently using only the quantal x86_64 on a daily basis,
 and I've only done some basic testing with the others*
 
-You can also build a clean box by providing `CHEF=0` and `PUPPET=0` to the available
-[rake tasks](tasks/boxes.rake). For example:
+There is a set of [rake tasks](tasks/boxes.rake) that you can use to build base
+boxes as needed. By default it won't include any provisioning tool and you can
+pick the one you want by providing some environment variables.
+
+For example:
 
 ```
-CHEF=0 PUPPET=0 rake boxes:ubuntu:build:precise64
+CHEF=1 rake boxes:ubuntu:build:precise64
 ```
+
+Will build a Ubuntu Precise x86_64 box with chef pre-installed.
 
 ### Storing container's rootfs on a separate partition
 
