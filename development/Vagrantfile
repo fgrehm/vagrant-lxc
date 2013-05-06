@@ -2,7 +2,7 @@
 # vi: set ft=ruby :
 
 def local_apt_cache(box_name)
-  cache_dir = File.join(File.expand_path(Vagrant::Environment::DEFAULT_HOME),
+  cache_dir = File.join(File.expand_path('~/.vagrant.d'),
                         'cache',
                         'apt',
                         box_name)
@@ -12,7 +12,7 @@ def local_apt_cache(box_name)
 end
 
 def local_gem_cache(box_name)
-  cache_dir = File.join(File.expand_path(Vagrant::Environment::DEFAULT_HOME),
+  cache_dir = File.join(File.expand_path('~/.vagrant.d'),
                         'cache',
                         'gems',
                         'source',
