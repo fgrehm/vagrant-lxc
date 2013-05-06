@@ -35,7 +35,7 @@ vagrant plugin install vagrant-lxc
 After installing, add a [base box](#available-boxes) using any name you want, for example:
 
 ```
-vagrant box add lxc-quantal64 http://dl.dropbox.com/u/13510779/lxc-quantal-amd64-2013-04-21.box
+vagrant box add lxc-quantal64 http://dl.dropbox.com/u/13510779/lxc-quantal-amd64-2013-05-06.box
 ```
 
 Make a Vagrantfile that looks like the following, filling in your information where necessary:
@@ -65,12 +65,12 @@ can use the [same Vagrant VirtualBox machine I use for development](#using-virtu
 
 | LINK | DESCRIPTION |
 | --- | ---         |
-| [lxc-raring-amd64-2013-04-21.box](http://dl.dropbox.com/u/13510779/lxc-raring-amd64-2013-04-21.box) | Ubuntu 13.04 Raring x86_64 (Puppet 3.1.1) |
-| [lxc-quantal-amd64-2013-04-21.box](http://dl.dropbox.com/u/13510779/lxc-quantal-amd64-2013-04-21.box) | Ubuntu 12.10 Quantal x86_64 (Puppet 3.1.1 & Chef 11.4.0) |
-| [lxc-precise-amd64-2013-04-21.box](http://dl.dropbox.com/u/13510779/lxc-precise-amd64-2013-04-21.box) | Ubuntu 12.04 Precise x86_64 (Puppet 3.1.1 & Chef 11.4.0) |
-| *[SOON](tasks/boxes.rake#L167)* | Debian Sid (Puppet 3.1.1) |
-| *[SOON](tasks/boxes.rake#L162)* | Debian Wheezy (Puppet 3.1.1) |
-| *[SOON](tasks/boxes.rake#L157)* | Debian Squeeze (Puppet 3.1.1) |
+| [lxc-raring-amd64-2013-05-06.box](http://dl.dropbox.com/u/13510779/lxc-raring-amd64-2013-05-06.box) | Ubuntu 13.04 Raring x86_64 (Puppet 3.1.1) |
+| [lxc-quantal-amd64-2013-05-06.box](http://dl.dropbox.com/u/13510779/lxc-quantal-amd64-2013-05-06.box) | Ubuntu 12.10 Quantal x86_64 (Puppet 3.1.1 & Chef 11.4.0) |
+| [lxc-precise-amd64-2013-05-06.box](http://dl.dropbox.com/u/13510779/lxc-precise-amd64-2013-05-06.box) | Ubuntu 12.04 Precise x86_64 (Puppet 3.1.1 & Chef 11.4.0) |
+| [lxc-sid-amd64-2013-05-06.box](http://dl.dropbox.com/u/13510779/lxc-sid-amd64-2013-05-06.box) | Debian Sid (Puppet 3.1.1) |
+| [lxc-wheezy-amd64-2013-05-06.box](http://dl.dropbox.com/u/13510779/lxc-wheezy-amd64-2013-05-06.box) | Debian Wheezy (Puppet 3.1.1) |
+| [lxc-squeeze-amd64-2013-05-06.box](http://dl.dropbox.com/u/13510779/lxc-squeeze-amd64-2013-05-06.box) | Debian Squeeze (Puppet 3.1.1) |
 
 *Please note that I'm currently using only the quantal x86_64 on a daily basis,
 and I've only done some basic testing with the others*
