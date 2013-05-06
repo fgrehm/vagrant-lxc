@@ -5,6 +5,9 @@ exec {
   'echo "alias be=\"bundle exec\"" >> /home/vagrant/.bashrc':
     unless => 'grep -q "bundle exec" /home/vagrant/.bashrc';
 
+  'echo "export VAGRANT_DEFAULT_PROVIDER=lxc" >> /home/vagrant/.bashrc':
+    unless => 'grep -q "VAGRANT_DEFAULT_PROVIDER" /home/vagrant/.bashrc';
+
   'echo "cd /vagrant" >> /home/vagrant/.bashrc':
     unless => 'grep -q "cd /vagrant" /home/vagrant/.bashrc';
 }
