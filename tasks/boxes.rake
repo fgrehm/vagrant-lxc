@@ -1,3 +1,4 @@
+require 'pathname'
 require 'rake/tasklib'
 
 class BuildGenericBoxTask < ::Rake::TaskLib
@@ -55,7 +56,7 @@ class BuildGenericBoxTask < ::Rake::TaskLib
       download
       install_cfg_engines
       prepare_package_contents pwd
-      cleanup
+      sh 'sudo rm -rf rootfs'
       sh "tar -czf tmp-package.box ./*"
     end
 
@@ -93,6 +94,7 @@ class BuildGenericBoxTask < ::Rake::TaskLib
   end
 
   def prepare_package_contents(pwd)
+    run 'cleanup'
     sh 'sudo rm -f rootfs.tar.gz'
     sh 'sudo tar --numeric-owner -czf rootfs.tar.gz ./rootfs/*'
     sh "sudo chown #{ENV['USER']}:#{ENV['USER']} rootfs.tar.gz"
@@ -105,11 +107,6 @@ class BuildGenericBoxTask < ::Rake::TaskLib
     metadata.gsub!('ARCH', @arch)
     metadata.gsub!('RELEASE', @release)
     File.open('metadata.json', 'w') { |f| f.print metadata }
-  end
-
-  def cleanup
-    run 'cleanup'
-    sh 'sudo rm -rf rootfs'
   end
 end
 
