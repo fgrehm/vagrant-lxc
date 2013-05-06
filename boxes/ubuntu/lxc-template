@@ -36,8 +36,8 @@ fi
 configure_ubuntu()
 {
     rootfs=$1
-    release=$3
-    hostname='quantal64'
+    release=$2
+    hostname=$2
 
    # configure the network using the dhcp
     cat <<EOF > $rootfs/etc/network/interfaces
@@ -202,7 +202,6 @@ copy_configuration()
     rootfs=$2
     name=$3
     arch=$4
-    release=$5
 
     if [ $arch = "i386" ]; then
         arch="i686"
@@ -551,7 +550,7 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
-copy_configuration $path $rootfs $name $arch $release
+copy_configuration $path $rootfs $name $arch
 if [ $? -ne 0 ]; then
     echo "failed write configuration file"
     exit 1
