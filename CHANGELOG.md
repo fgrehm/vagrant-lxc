@@ -8,6 +8,7 @@ FEATURES:
 IMPROVEMENTS:
 
   - Clean up base boxes files after they've been configured, resulting in smaller packages
+  - Bump development dependency to Vagrant 1.2+ series
 
 ## [0.3.3](https://github.com/fgrehm/vagrant-lxc/compare/v0.3.2...v0.3.3) (April 23, 2013)
 

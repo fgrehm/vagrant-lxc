@@ -3,10 +3,8 @@ source 'https://rubygems.org'
 gemspec
 
 group :development do
-  # We depend on Vagrant for development, but we don't add it as a
-  # gem dependency because we expect to be installed within the
-  # Vagrant environment itself using `vagrant plugin`.
-  gem 'vagrant', git: 'https://github.com/mitchellh/vagrant.git', tag: 'v1.1.5'
+  # TODO: Lock to 1.2.3 once it is out with this fix: https://github.com/mitchellh/vagrant/pull/1685
+  gem 'vagrant', git: 'https://github.com/mitchellh/vagrant.git'
   gem 'guard'
   gem 'guard-rspec'
   gem 'guard-bundler'
