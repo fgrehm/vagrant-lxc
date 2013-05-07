@@ -39,11 +39,6 @@ GEM
       lumberjack (>= 1.0.2)
       pry (>= 0.9.10)
       thor (>= 0.14.6)
-    guard-bundler (1.0.0)
-      bundler (~> 1.0)
-      guard (~> 1.1)
-    guard-ctags-bundler (0.1.6)
-      guard (>= 1.1)
     guard-rspec (2.6.0)
       guard (>= 1.8)
       rspec (~> 2.13)
@@ -91,6 +86,7 @@ GEM
     simplecov-html (0.7.1)
     slop (3.4.4)
     thor (0.18.1)
+    vagrant-cachier (0.0.2)
 
 PLATFORMS
   ruby
@@ -98,8 +94,6 @@ PLATFORMS
 DEPENDENCIES
   coveralls
   guard
-  guard-bundler
-  guard-ctags-bundler
   guard-rspec
   rake
   rb-inotify
@@ -107,4 +101,5 @@ DEPENDENCIES
   rspec-fire
   rspec-spies
   vagrant!
+  vagrant-cachier
   vagrant-lxc!

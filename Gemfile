@@ -5,10 +5,9 @@ gemspec
 group :development do
   # TODO: Lock to 1.2.3 once it is out with this fix: https://github.com/mitchellh/vagrant/pull/1685
   gem 'vagrant', git: 'https://github.com/mitchellh/vagrant.git'
+  gem 'vagrant-cachier'
   gem 'guard'
   gem 'guard-rspec'
-  gem 'guard-bundler'
-  gem 'guard-ctags-bundler'
   gem 'rb-inotify'
 end
 
