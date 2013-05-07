@@ -157,9 +157,11 @@ describe Vagrant::LXC::Driver::CLI do
     let(:name) { 'a-running-container' }
     subject    { described_class.new(name) }
 
-    before { subject.stub(:run) }
+    before do
+      subject.stub(run: true, sleep: true, state: :stopped)
+    end
 
-    it 'yields cli object' do
+    it 'yields a cli object' do
       subject.stub(:shutdown)
       subject.transition_to(:stopped) { |c| c.shutdown }
       subject.should have_received(:shutdown)
@@ -171,9 +173,6 @@ describe Vagrant::LXC::Driver::CLI do
       }.to raise_error(described_class::TransitionBlockNotProvided)
     end
 
-    it 'waits for the expected container state using lxc-wait' do
-      subject.transition_to(:running) { }
-      subject.should have_received(:run).with(:wait, '--name', name, '--state', 'RUNNING')
-    end
+    pending 'waits for the expected container state'
   end
 end

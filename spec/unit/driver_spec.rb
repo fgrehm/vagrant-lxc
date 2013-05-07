@@ -2,6 +2,7 @@ require 'unit_helper'
 
 require 'vagrant'
 require 'vagrant-lxc/driver'
+require 'vagrant-lxc/driver/cli'
 
 describe Vagrant::LXC::Driver do
   describe 'container name validation' do
@@ -101,12 +102,19 @@ describe Vagrant::LXC::Driver do
 
     it 'delegates to cli shutdown' do
       cli.should_receive(:shutdown)
-      subject.halt
+      subject.forced_halt
     end
 
     it 'expects a transition to running state to take place' do
       cli.should_receive(:transition_to).with(:stopped)
-      subject.halt
+      subject.forced_halt
+    end
+
+    it 'attempts to force the container to stop in case a shutdown doesnt work' do
+      cli.stub(:shutdown).and_raise(Vagrant::LXC::Driver::CLI::TargetStateNotReached.new :target, :source)
+      cli.should_receive(:transition_to).with(:stopped).twice
+      cli.should_receive(:stop)
+      subject.forced_halt
     end
   end
 

@@ -69,11 +69,11 @@ module Vagrant
         @cli.transition_to(:running) { |c| c.start(customizations, (extra || nil)) }
       end
 
-      def halt
+      def forced_halt
         @logger.info('Shutting down container...')
-
-        # TODO: issue an lxc-stop if a timeout gets reached
         @cli.transition_to(:stopped) { |c| c.shutdown }
+      rescue CLI::TargetStateNotReached
+        @cli.transition_to(:stopped) { |c| c.stop }
       end
 
       def destroy

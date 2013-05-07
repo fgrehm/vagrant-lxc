@@ -10,6 +10,12 @@ module Vagrant
         attr_accessor :name
 
         class TransitionBlockNotProvided < RuntimeError; end
+        class TargetStateNotReached < RuntimeError
+          def initialize(target_state, state)
+            msg = "Target state '#{target_state}' not reached, currently on '#{state}'"
+            super(msg)
+          end
+        end
 
         # Include this so we can use `Subprocess` more easily.
         include Vagrant::Util::Retryable
@@ -60,6 +66,10 @@ module Vagrant
           run :start, '-d', '--name', @name, *options
         end
 
+        def stop
+          run :stop, '--name', @name
+        end
+
         def shutdown
           run :shutdown, '--name', @name
         end
@@ -76,12 +86,20 @@ module Vagrant
           run :attach, '--name', @name, *((extra || []) + cmd)
         end
 
-        def transition_to(state, &block)
+        def transition_to(target_state, tries = 30, timeout = 1, &block)
           raise TransitionBlockNotProvided unless block_given?
 
           yield self
 
-          run :wait, '--name', @name, '--state', state.to_s.upcase
+          while (last_state = self.state) != target_state && tries > 0
+            @logger.debug "Target state '#{target_state}' not reached, currently on '#{last_state}'"
+            sleep timeout
+            tries -= 1
+          end
+
+          unless last_state == target_state
+            raise TargetStateNotReached.new target_state, last_state
+          end
         end
 
         private
