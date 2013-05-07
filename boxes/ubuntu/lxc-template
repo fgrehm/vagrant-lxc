@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # This is a modified version of /usr/share/lxc/templates/lxc-ubuntu
-# that comes with Ubuntu 12.10 changed to suit vagrant-lxc needs
+# that comes with Ubuntu 13.04 changed to suit vagrant-lxc needs
 
 #
 # template script for generating ubuntu container for LXC
@@ -83,6 +83,15 @@ EOF
       echo "vagrant:vagrant" | chroot $rootfs chpasswd
     fi
 
+    # make sure we have the current locale defined in the container
+    if [ -z "$LANG" ]; then
+        chroot $rootfs locale-gen en_US.UTF-8
+        chroot $rootfs update-locale LANG=en_US.UTF-8
+    else
+        chroot $rootfs locale-gen $LANG
+        chroot $rootfs update-locale LANG=$LANG
+    fi
+
     return 0
 }
 
@@ -108,8 +117,6 @@ finalize_user()
 
     chroot $rootfs cp /etc/sudoers /etc/sudoers.orig >/dev/null 2>&1 || true
     chroot $rootfs sed -i -e 's/%sudo\s\+ALL=(ALL:ALL)\s\+ALL/%sudo ALL=NOPASSWD:ALL/g' /etc/sudoers >/dev/null 2>&1 || true
-    chroot $rootfs locale-gen en_US en_US.UTF-8 hu_HU hu_HU.UTF-8 >/dev/null 2>&1 || true
-    chroot $rootfs dpkg-reconfigure locales >/dev/null 2>&1 || true
 
     if [ -n "$auth_key" -a -f "$auth_key" ]; then
         u_path="/home/${user}/.ssh"
@@ -216,24 +223,23 @@ copy_configuration()
     # associated hwaddr.
     nics=`grep -e '^lxc\.network\.type[ \t]*=[ \t]*veth' $path/config | wc -l`
     if [ $nics -eq 1 ]; then
-        grep -q "^lxc.network.hwaddr" $path/config || cat <<EOF >> $path/config
-lxc.network.hwaddr = 00:16:3e:$(openssl rand -hex 3| sed 's/\(..\)/\1:/g; s/.$//')
-EOF
+        grep -q "^lxc.network.hwaddr" $path/config || sed -i -e "/^lxc\.network\.type[ \t]*=[ \t]*veth/a lxc.network.hwaddr = 00:16:3e:$(openssl rand -hex 3| sed 's/\(..\)/\1:/g; s/.$//')" $path/config
     fi
 
     grep -q "^lxc.rootfs" $path/config 2>/dev/null || echo "lxc.rootfs = $rootfs" >> $path/config
     cat <<EOF >> $path/config
-lxc.utsname = $name
+lxc.mount = $path/fstab
+lxc.pivotdir = lxc_putold
 
 lxc.devttydir =$ttydir
 lxc.tty = 4
 lxc.pts = 1024
-lxc.mount  = $path/fstab
+
+lxc.utsname = $name
 lxc.arch = $arch
 lxc.cap.drop = sys_module mac_admin mac_override
-lxc.pivotdir = lxc_putold
 
-# uncomment the next line to run the container unconfined:
+# When using LXC with apparmor, uncomment the next line to run unconfined:
 #lxc.aa_profile = unconfined
 
 lxc.cgroup.devices.deny = a
@@ -348,15 +354,6 @@ EOF
     cat <<EOF > $rootfs/lib/init/fstab
 # /lib/init/fstab: cleared out for bare-bones lxc
 EOF
-
-    # reconfigure some services
-    if [ -z "$LANG" ]; then
-        chroot $rootfs locale-gen en_US.UTF-8
-        chroot $rootfs update-locale LANG=en_US.UTF-8
-    else
-        chroot $rootfs locale-gen $LANG
-        chroot $rootfs update-locale LANG=$LANG
-    fi
 
     # remove pointless services in a container
     chroot $rootfs /usr/sbin/update-rc.d -f ondemand remove
