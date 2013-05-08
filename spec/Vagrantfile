@@ -1,28 +1,14 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
-def local_apt_cache(box_name)
-  cache_dir = File.join(File.expand_path(Vagrant::Environment::DEFAULT_HOME),
-                        'cache',
-                        'apt',
-                        box_name)
-  partial_dir = File.join(cache_dir, 'partial')
-  FileUtils.mkdir_p(partial_dir) unless File.exists? partial_dir
-  cache_dir
-end
-
 Vagrant.require_plugin 'vagrant-lxc'
+Vagrant.require_plugin 'vagrant-cachier'
 
 Vagrant.configure("2") do |config|
   config.vm.box      = "quantal64"
   config.vm.hostname = 'lxc-test-box'
 
-  config.vm.box_url = 'http://dl.dropbox.com/u/13510779/lxc-quantal64-2013-04-10.box'
-  # Uncomment to test boxes built locally:
-  # config.vm.box_url = '../boxes/output/lxc-quantal64.box'
-
-  cache_dir = local_apt_cache(config.vm.box)
-  config.vm.synced_folder cache_dir, "/var/cache/apt/archives", id: "vagrant-apt-cache"
+  config.cache.enable :apt
 
   config.vm.provision :shell,
     inline: 'mkdir -p /vagrant/tmp && echo -n "Provisioned" > /vagrant/tmp/provisioning'
