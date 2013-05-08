@@ -3,7 +3,7 @@ class TestUI < Vagrant::UI::Interface
 
   METHODS = [:clear_line, :report_progress, :warn, :error, :info, :success]
 
-  def initialize(resource = nil)
+  def initialize
     super
     @messages = METHODS.each_with_object({}) { |m, h| h[m] = [] }
   end
