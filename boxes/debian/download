@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # This is the code extracted from /usr/share/lxc/templates/lxc-debian
-# that comes with Ubuntu 12.10 which is responsible for downloading the
+# that comes with Ubuntu 13.04 which is responsible for downloading the
 # rootfs files / packages
 
 set -e
@@ -98,7 +98,7 @@ ca-certificates
 
   trap cleanup EXIT SIGHUP SIGINT SIGTERM
   # check the mini debian was not already downloaded
-  partial=${cache}/partial-${release}-${arch}
+  partial=${cache}/partial
   mkdir -p ${partial}
   if [ $? -ne 0 ]; then
       echo "Failed to create '${partial}' directory"
@@ -146,7 +146,7 @@ declare cache=`readlink -f .` \
         arch=$1 \
         release=$2
 
-if [ -d ${cache}/rootfs-${release}-${arch} ]; then
+if [ -d ${cache}/rootfs ]; then
     echo <<EOF
 The rootfs cache has been built already, please remove it if you want to update
 EOF

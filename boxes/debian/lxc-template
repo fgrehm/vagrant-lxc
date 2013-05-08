@@ -101,8 +101,8 @@ EOF
 
 cleanup()
 {
-    rm -rf ${cache}/partial-${SUITE}-${arch}
-    rm -rf ${cache}/rootfs-${SUITE}-${arch}
+    rm -rf ${cache}/partial
+    rm -rf ${cache}/rootfs
 }
 
 extract_rootfs()
