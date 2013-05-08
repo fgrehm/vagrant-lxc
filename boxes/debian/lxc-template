@@ -89,7 +89,7 @@ EOF
       chroot $rootfs adduser vagrant sudo >/dev/null 2>&1 || true
       chroot $rootfs cp /etc/sudoers /etc/sudoers.orig >/dev/null 2>&1 || true
       chroot $rootfs sed -i -e \
-          's/%sudo\s\+ALL=(ALL:ALL)\s\+ALL/%sudo ALL=NOPASSWD:ALL/g' \
+          's/%sudo\s\+ALL=(ALL\(:ALL\)\?)\s\+ALL/%sudo ALL=NOPASSWD:ALL/g' \
           /etc/sudoers >/dev/null 2>&1 || true
     fi
 
