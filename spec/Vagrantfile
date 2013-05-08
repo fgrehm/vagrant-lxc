@@ -5,7 +5,7 @@ Vagrant.require_plugin 'vagrant-lxc'
 Vagrant.require_plugin 'vagrant-cachier'
 
 Vagrant.configure("2") do |config|
-  config.vm.box      = "quantal64"
+  config.vm.box      = ENV.fetch('BOX_NAME', 'quantal64')
   config.vm.hostname = 'lxc-test-box'
 
   config.cache.enable :apt
