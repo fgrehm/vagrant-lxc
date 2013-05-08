@@ -65,12 +65,12 @@ can use the [same Vagrant VirtualBox machine I use for development](#using-virtu
 
 | LINK | DESCRIPTION |
 | --- | ---         |
-| [lxc-raring-amd64-2013-05-06.box](http://dl.dropbox.com/u/13510779/lxc-raring-amd64-2013-05-06.box) | Ubuntu 13.04 Raring x86_64 (Puppet 3.1.1) |
-| [lxc-quantal-amd64-2013-05-06.box](http://dl.dropbox.com/u/13510779/lxc-quantal-amd64-2013-05-06.box) | Ubuntu 12.10 Quantal x86_64 (Puppet 3.1.1 & Chef 11.4.0) |
-| [lxc-precise-amd64-2013-05-06.box](http://dl.dropbox.com/u/13510779/lxc-precise-amd64-2013-05-06.box) | Ubuntu 12.04 Precise x86_64 (Puppet 3.1.1 & Chef 11.4.0) |
-| [lxc-sid-amd64-2013-05-06.box](http://dl.dropbox.com/u/13510779/lxc-sid-amd64-2013-05-06.box) | Debian Sid (Puppet 3.1.1) |
-| [lxc-wheezy-amd64-2013-05-06.box](http://dl.dropbox.com/u/13510779/lxc-wheezy-amd64-2013-05-06.box) | Debian Wheezy (Puppet 3.1.1) |
-| [lxc-squeeze-amd64-2013-05-06.box](http://dl.dropbox.com/u/13510779/lxc-squeeze-amd64-2013-05-06.box) | Debian Squeeze (Puppet 3.1.1) |
+| [lxc-raring-amd64-2013-05-08.box](http://dl.dropbox.com/u/13510779/lxc-raring-amd64-2013-05-08.box) | Ubuntu 13.04 Raring x86_64 (Puppet 3.1.1) |
+| [lxc-quantal-amd64-2013-05-08.box](http://dl.dropbox.com/u/13510779/lxc-quantal-amd64-2013-05-08.box) | Ubuntu 12.10 Quantal x86_64 (Puppet 3.1.1 & Chef 11.4.0) |
+| [lxc-precise-amd64-2013-05-08.box](http://dl.dropbox.com/u/13510779/lxc-precise-amd64-2013-05-08.box) | Ubuntu 12.04 Precise x86_64 (Puppet 3.1.1 & Chef 11.4.0) |
+| [lxc-sid-amd64-2013-05-08.box](http://dl.dropbox.com/u/13510779/lxc-sid-amd64-2013-05-08.box) | Debian Sid (Puppet 3.1.1) |
+| [lxc-wheezy-amd64-2013-05-08.box](http://dl.dropbox.com/u/13510779/lxc-wheezy-amd64-2013-05-08.box) | Debian Wheezy (Puppet 3.1.1) |
+| [lxc-squeeze-amd64-2013-05-08.box](http://dl.dropbox.com/u/13510779/lxc-squeeze-amd64-2013-05-08.box) | Debian Squeeze (Puppet 3.1.1) |
 
 *Please note that I'm currently using only the quantal x86_64 on a daily basis,
 and I've only done some basic testing with the others*
