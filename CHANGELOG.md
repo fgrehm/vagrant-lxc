@@ -7,6 +7,7 @@ FEATURES:
 
 IMPROVEMENTS:
 
+  - Remove `/tmp` files after the machine has been successfully shut down [#68][]
   - Clean up base boxes files after they've been configured, resulting in smaller packages
   - Bump development dependency to Vagrant 1.2+ series
 

@@ -44,6 +44,7 @@ describe 'Sanity check' do
     before(:all) do
       destroy_container
       vagrant_up
+      vagrant_ssh 'touch /tmp/{some,files}'
       vagrant_halt
     end
 
@@ -60,6 +61,11 @@ describe 'Sanity check' do
     it 'kills redir processes' do
       processes = `pgrep redir`
       expect($?.exitstatus).to_not eq 0
+    end
+
+    it 'removes files under `/tmp`' do
+      container_tmp = Pathname("/var/lib/lxc/#{vagrant_container_name}/rootfs/tmp")
+      expect(container_tmp.entries).to have(2).items # basically '.' and '..'
     end
   end
 

@@ -13,6 +13,7 @@ require 'vagrant-lxc/action/forward_ports'
 require 'vagrant-lxc/action/handle_box_metadata'
 require 'vagrant-lxc/action/is_running'
 require 'vagrant-lxc/action/message'
+require 'vagrant-lxc/action/remove_temporary_files'
 require 'vagrant-lxc/action/setup_package_files'
 require 'vagrant-lxc/action/share_folders'
 
@@ -117,9 +118,10 @@ module Vagrant
           # b.use CheckDependencies
           b.use Vagrant::Action::Builtin::Call, Created do |env, b2|
             if env[:result]
-              # TODO: If vagrant >=...
+              # TODO: Remove this on / after 0.4
               b2.use Disconnect
               b2.use ClearForwardedPorts
+              b2.use RemoveTemporaryFiles
               b2.use Vagrant::Action::Builtin::Call, Vagrant::Action::Builtin::GracefulHalt, :stopped, :running do |env2, b3|
                 if !env2[:result]
                   b3.use ForcedHalt
