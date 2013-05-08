@@ -28,6 +28,7 @@ BOXES = {
     vbox_url: 'http://cloud-images.ubuntu.com/vagrant/raring/current/raring-server-cloudimg-amd64-vagrant-disk1.box'
   },
   squeeze: {
+    lxc_url:  lxc_box_url('squeeze'),
     vbox_url: 'http://f.willianfernandes.com.br/vagrant-boxes/DebianSqueeze64.box'
   },
   wheezy:  {
