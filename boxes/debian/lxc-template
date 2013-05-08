@@ -66,17 +66,14 @@ EOF
 $hostname
 EOF
 
-    # reconfigure some services
-    if [ ! -z "${LANG}" ]; then
-        # set default locale
-        cat <<EOF > $rootfs/etc/locale.gen
-${LANG} UTF-8
+    # set default locale
+    cat <<EOF > $rootfs/etc/locale.gen
+en_US.UTF-8 UTF-8
 EOF
-        echo "default locale set to ${LANG} UTF-8"
-        chroot $rootfs locale-gen ${LANG} > /dev/null 2>&1
-        chroot $rootfs update-locale LANG=${LANG}
-        echo 'update-locale done'
-    fi
+    echo "default locale set to en_US.UTF-8 UTF-8"
+    chroot $rootfs locale-gen 'en_US.UTF-8' > /dev/null 2>&1
+    chroot $rootfs update-locale LANG='en_US.UTF-8'
+    echo 'update-locale done'
 
     # remove pointless services in a container
     chroot $rootfs /usr/sbin/update-rc.d -f checkroot.sh remove
