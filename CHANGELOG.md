@@ -1,4 +1,4 @@
-## [0.?.?](https://github.com/fgrehm/vagrant-lxc/compare/v0.3.3...master)
+## [0.3.4](https://github.com/fgrehm/vagrant-lxc/compare/v0.3.4...master)
 
 FEATURES:
 
@@ -7,9 +7,14 @@ FEATURES:
 
 IMPROVEMENTS:
 
+  - Replace `lxc-wait` usage with a "[retry mechanism](https://github.com/fgrehm/vagrant-lxc/commit/3cca16824879731315dac32bc2df1c643f30d461#L2R88)" [#22][]
   - Remove `/tmp` files after the machine has been successfully shut down [#68][]
   - Clean up base boxes files after they've been configured, resulting in smaller packages
   - Bump development dependency to Vagrant 1.2+ series
+
+BUG FIXES:
+
+  - Issue a `lxc-stop` in case the container cannot shutdown gracefully [#72][]
 
 ## [0.3.3](https://github.com/fgrehm/vagrant-lxc/compare/v0.3.2...v0.3.3) (April 23, 2013)
 
