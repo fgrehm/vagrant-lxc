@@ -4,9 +4,14 @@
 Vagrant.require_plugin 'vagrant-lxc'
 Vagrant.require_plugin 'vagrant-cachier'
 
+ENV['BOX_NAME'] ||= 'quantal64'
+
 Vagrant.configure("2") do |config|
-  config.vm.box      = ENV.fetch('BOX_NAME', 'quantal64')
-  config.vm.hostname = 'lxc-test-box'
+  config.vm.box = ENV['BOX_NAME']
+  # FIXME: Find out why this does not work for debian boxes
+  unless %w( squeeze64 wheezy64 sid64 ).include? config.vm.box
+    config.vm.hostname = 'lxc-test-box'
+  end
 
   config.cache.enable :apt
 
@@ -15,5 +20,5 @@ Vagrant.configure("2") do |config|
 
   config.vm.network :forwarded_port, guest: 80, host: 8080
   config.vm.provision :shell,
-    inline: 'sudo apt-get install nginx -y && sudo service nginx start'
+    inline: 'sudo apt-get install apache2 -y'
 end

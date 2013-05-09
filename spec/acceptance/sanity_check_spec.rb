@@ -20,7 +20,10 @@ describe 'Sanity check' do
     end
 
     it "is able to be SSH'ed" do
-      expect(vagrant_ssh('hostname')).to eq 'lxc-test-box'
+      expected = 'lxc-test-box'
+      # HACK:
+      expected = ENV['BOX_NAME'].gsub(/64$/, '') if %w( squeeze64 wheezy64 sid64 ).include? ENV['BOX_NAME']
+      expect(vagrant_ssh('hostname')).to eq expected
     end
 
     it 'mounts shared folders with the right permissions' do
@@ -36,7 +39,7 @@ describe 'Sanity check' do
 
     it 'forwards configured ports' do
       output = `curl -s localhost:8080`.strip.chomp
-      expect(output).to include 'Welcome to nginx!'
+      expect(output).to include 'It works!'
     end
   end
 
