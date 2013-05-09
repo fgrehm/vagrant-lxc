@@ -161,8 +161,8 @@ sudo apt-get install apparmor-utils
 sudo aa-complain /usr/bin/lxc-start
 bundle install
 cd development
-bundle exec vagrant up lxc --provider=lxc
-bundle exec vagrant ssh lxc
+bundle exec vagrant up quantal --provider=lxc
+bundle exec vagrant ssh quantal
 ```
 
 That should result in a container ready to be `bundle exec vagrant ssh`ed.
@@ -175,10 +175,11 @@ start nested containers there to try things out.
 
 ```
 cd development
-bundle exec vagrant up vbox
+# Pass in --provider=virtualbox in case you have VAGRANT_DEFAULT_PROVIDER set to something else
+bundle exec vagrant up quantal
 # A reload is needed to ensure the updated kernel gets loaded
-bundle exec vagrant reload vbox
-bundle exec vagrant ssh vbox
+bundle exec vagrant reload quantal
+bundle exec vagrant ssh quantal
 ```
 
 
