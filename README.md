@@ -35,7 +35,7 @@ vagrant plugin install vagrant-lxc
 After installing, add a [base box](#available-boxes) using any name you want, for example:
 
 ```
-vagrant box add lxc-quantal64 http://dl.dropbox.com/u/13510779/lxc-quantal-amd64-2013-05-06.box
+vagrant box add quantal64 http://dl.dropbox.com/u/13510779/lxc-quantal-amd64-2013-05-08.box
 ```
 
 Make a Vagrantfile that looks like the following, filling in your information where necessary:
@@ -64,7 +64,7 @@ can use the [same Vagrant VirtualBox machine I use for development](#using-virtu
 ### Available boxes
 
 | LINK | DESCRIPTION |
-| --- | ---         |
+| ---  | ---         |
 | [lxc-raring-amd64-2013-05-08.box](http://dl.dropbox.com/u/13510779/lxc-raring-amd64-2013-05-08.box) | Ubuntu 13.04 Raring x86_64 (Puppet 3.1.1) |
 | [lxc-quantal-amd64-2013-05-08.box](http://dl.dropbox.com/u/13510779/lxc-quantal-amd64-2013-05-08.box) | Ubuntu 12.10 Quantal x86_64 (Puppet 3.1.1 & Chef 11.4.0) |
 | [lxc-precise-amd64-2013-05-08.box](http://dl.dropbox.com/u/13510779/lxc-precise-amd64-2013-05-08.box) | Ubuntu 12.04 Precise x86_64 (Puppet 3.1.1 & Chef 11.4.0) |
