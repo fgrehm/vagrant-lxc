@@ -7,21 +7,21 @@ FEATURES:
 
 IMPROVEMENTS:
 
-  - Replace `lxc-wait` usage with a "[retry mechanism](https://github.com/fgrehm/vagrant-lxc/commit/3cca16824879731315dac32bc2df1c643f30d461#L2R88)" [#22][]
-  - Remove `/tmp` files after the machine has been successfully shut down [#68][]
+  - Replace `lxc-wait` usage with a "[retry mechanism](https://github.com/fgrehm/vagrant-lxc/commit/3cca16824879731315dac32bc2df1c643f30d461#L2R88)" [#22](https://github.com/fgrehm/vagrant-lxc/issues/22)
+  - Remove `/tmp` files after the machine has been successfully shut down [#68](https://github.com/fgrehm/vagrant-lxc/issues/68)
   - Clean up base boxes files after they've been configured, resulting in smaller packages
   - Bump development dependency to Vagrant 1.2+ series
 
 BUG FIXES:
 
-  - Issue a `lxc-stop` in case the container cannot shutdown gracefully [#72][]
+  - Issue a `lxc-stop` in case the container cannot shutdown gracefully [#72](https://github.com/fgrehm/vagrant-lxc/issues/72)
 
 ## [0.3.3](https://github.com/fgrehm/vagrant-lxc/compare/v0.3.2...v0.3.3) (April 23, 2013)
 
 BUG FIXES:
 
-  - Properly kill `redir` child processes [#59][]
-  - Use `uname -m` on base Ubuntu lxc-template [#53][]
+  - Properly kill `redir` child processes [#59](https://github.com/fgrehm/vagrant-lxc/issues/59)
+  - Use `uname -m` on base Ubuntu lxc-template [#53](https://github.com/fgrehm/vagrant-lxc/issues/53)
 
 IMPROVEMENTS:
 
@@ -50,14 +50,14 @@ IMPROVEMENTS:
 
   - lxc templates are removed from lxc template dir after container is created
   - Treat NFS shared folders as a normal shared folder instead of ignoring it so we can share the same Vagrantfile with VBox environments
-  - Support for lxc 0.7.5 (tested on Ubuntu 12.04) [#49][]
-  - Remove `/tmp` files when packaging quantal64 base box [#48][]
-  - Avoid picking the best mirror on quantal64 base box [#38][]
+  - Support for lxc 0.7.5 (tested on Ubuntu 12.04) [#49](https://github.com/fgrehm/vagrant-lxc/issues/49)
+  - Remove `/tmp` files when packaging quantal64 base box [#48](https://github.com/fgrehm/vagrant-lxc/issues/48)
+  - Avoid picking the best mirror on quantal64 base box [#38](https://github.com/fgrehm/vagrant-lxc/issues/38)
 
 BUG FIXES:
 
-  - Redirect `redir`'s stderr output to `/dev/null` [#51][]
-  - Switch from `ifconfig` to `ip` to grab container's IP to avoid localization issues [#50][]
+  - Redirect `redir`'s stderr output to `/dev/null` [#51](https://github.com/fgrehm/vagrant-lxc/issues/51)
+  - Switch from `ifconfig` to `ip` to grab container's IP to avoid localization issues [#50](https://github.com/fgrehm/vagrant-lxc/issues/50)
 
 ## [0.2.0](https://github.com/fgrehm/vagrant-lxc/compare/v0.1.1...v0.2.0) (March 30, 2013)
 
@@ -66,16 +66,16 @@ BUG FIXES:
 ## [0.1.1](https://github.com/fgrehm/vagrant-lxc/compare/v0.1.0...v0.1.1) (March 29, 2013)
 
   - Removed support for development under Vagrant < 1.1
-  - Removed rsync from base quantal64 box to speed up containers creation [#40][]
-  - Containers are now named after project's root dir [#14][]
+  - Removed rsync from base quantal64 box to speed up containers creation [#40](https://github.com/fgrehm/vagrant-lxc/issues/40)
+  - Containers are now named after project's root dir [#14](https://github.com/fgrehm/vagrant-lxc/issues/14)
   - Skip Vagrant's built in SSH redirect
-  - Allow setting rootfs from Vagrantfile [#30][]
+  - Allow setting rootfs from Vagrantfile [#30](https://github.com/fgrehm/vagrant-lxc/issues/30)
 
 ## [0.1.0](https://github.com/fgrehm/vagrant-lxc/compare/v0.0.3...v0.1.0) (March 27, 2013)
 
   - Support for chef added to base quantal64 box
   - Puppet upgraded to 3.1.1 on base quantal64 box
-  - Port forwarding support added [#6][]
+  - Port forwarding support added [#6](https://github.com/fgrehm/vagrant-lxc/issues/6)
 
 ## Previous
 
