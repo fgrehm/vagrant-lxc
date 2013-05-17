@@ -1,26 +1,31 @@
 # vagrant-lxc [![Build Status](https://travis-ci.org/fgrehm/vagrant-lxc.png?branch=master)](https://travis-ci.org/fgrehm/vagrant-lxc) [![Gem Version](https://badge.fury.io/rb/vagrant-lxc.png)](http://badge.fury.io/rb/vagrant-lxc) [![Code Climate](https://codeclimate.com/github/fgrehm/vagrant-lxc.png)](https://codeclimate.com/github/fgrehm/vagrant-lxc) [![Coverage Status](https://coveralls.io/repos/fgrehm/vagrant-lxc/badge.png?branch=master)](https://coveralls.io/r/fgrehm/vagrant-lxc)
 
-Linux Containers support for Vagrant 1.1+
+[LXC](http://lxc.sourceforge.net/) provider for [Vagrant](http://www.vagrantup.com/) 1.1+
 
 Check out this [blog post](http://fabiorehm.com/blog/2013/04/28/lxc-provider-for-vagrant)
 to see the plugin in action and find out more about it.
 
-## Dependencies
+## Features
 
-* Vagrant 1.1+ (1.1.3+ recommended)
-* lxc 0.7.5+ (0.8.0-rc1+ recommended)
+* Vagrant's `up`, `halt`, `reload`, `destroy`, `ssh`, `provision` and `package` commands (box packaging is kind of experimental)
+* Shared folders
+* Provisioning with any built-in Vagrant provisioner
+* Setting container's host name
+* Port forwarding
+
+*Please refer to the [closed issues](https://github.com/fgrehm/vagrant-lxc/issues?labels=&milestone=&page=1&state=closed)
+and the [changelog](CHANGELOG.md) for most up to date information.*
+
+
+## Requirements
+
+* [Vagrant 1.1+](http://downloads.vagrantup.com/)
+* lxc 0.7.5+
 * redir (if you are planning to use port forwarding)
-* A Kernel [higher than 3.5.0-17.28](#help-im-unable-to-restart-containers)
+* A [bug-free](#help-im-unable-to-restart-containers) kernel
 
-On a clean Ubuntu 12.10 machine it means something like:
-
-```
-sudo apt-get update && sudo apt-get dist-upgrade
-sudo apt-get install lxc redir
-# Downloads and install Vagrant 1.1.5
-wget "http://files.vagrantup.com/packages/64e360814c3ad960d810456add977fd4c7d47ce6/vagrant_`uname -m`.deb" -O /tmp/vagrant.deb
-sudo dpkg -i /tmp/vagrant.deb
-```
+On a clean Ubuntu 12.10 machine it basically means a `apt-get update && apt-get dist-upgrade`
+to upgrade the kernel and `apt-get install lxc redir`.
 
 
 ## Installation
@@ -38,28 +43,47 @@ After installing, add a [base box](#available-boxes) using any name you want, fo
 vagrant box add quantal64 http://dl.dropbox.com/u/13510779/lxc-quantal-amd64-2013-05-08.box
 ```
 
-Make a Vagrantfile that looks like the following, filling in your information where necessary:
+Then create a Vagrantfile that looks like the following, changing the box name
+to the one you've just added:
 
 ```ruby
 Vagrant.configure("2") do |config|
-  # Change it to the name of the box you have just added
-  config.vm.box = "lxc-quantal64"
+  config.vm.box = "quantal64"
+end
+```
 
-  # You can omit this block if you don't need to override any container setting
+And finally run `vagrant up --provider=lxc`.
+
+If you are using Vagrant 1.2+ you can also set `VAGRANT_DEFAULT_PROVIDER`
+environmental variable to `lxc` in order to avoid typing `--provider=lxc` all
+the time.
+
+If you are on a mac or windows host and still want to try this plugin out, you
+can use the [Ubuntu 12.10 VirtualBox machine I use for development](#using-virtualbox-for-development).
+
+
+### Advanced configuration
+
+If you want, you can modify container configurations from within your Vagrantfile
+using the [provider block](http://docs.vagrantup.com/v2/providers/configuration.html):
+
+```ruby
+Vagrant.configure("2") do |config|
+  config.vm.box = "quantal64"
   config.vm.provider :lxc do |lxc|
-    # OPTIONAL: Same effect as as 'customize ["modifyvm", :id, "--memory", "1024"]' for VirtualBox
+    # Same effect as as 'customize ["modifyvm", :id, "--memory", "1024"]' for VirtualBox
     lxc.customize 'cgroup.memory.limit_in_bytes', '1024M'
-    # OPTIONAL: Limits swap size
-    lxc.customize 'cgroup.memory.memsw.limit_in_bytes', '512M'
   end
 end
 ```
 
-And finally run `vagrant up --provider=lxc`. If you are using Vagrant 1.2+ you can
-also set `VAGRANT_DEFAULT_PROVIDER` environmental variable to `lxc`.
+This will make vagrant-lxc pass in `-s lxc.cgroup.memory.limit_in_bytes=1024M`
+to `lxc-start` when booting containers. This will override any previously value
+set from container's configuration file that is usually kept under
+`/var/lib/lxc/<container-name>/config`.
 
-If you are on a mac or window host and still want to try this plugin out, you
-can use the [same Vagrant VirtualBox machine I use for development](#using-virtualbox-for-development).
+For other configuration options, please check [lxc.conf manpages](http://manpages.ubuntu.com/manpages/quantal/man5/lxc.conf.5.html).
+
 
 ### Available boxes
 
@@ -77,7 +101,7 @@ and I've only done some basic testing with the others*
 
 There is a set of [rake tasks](tasks/boxes.rake) that you can use to build base
 boxes as needed. By default it won't include any provisioning tool and you can
-pick the one you want by providing some environment variables.
+pick the ones you want by providing some environment variables.
 
 For example:
 
@@ -85,39 +109,29 @@ For example:
 CHEF=1 rake boxes:ubuntu:build:precise64
 ```
 
-Will build a Ubuntu Precise x86_64 box with chef pre-installed.
+Will build a Ubuntu Precise x86_64 box with Chef pre-installed.
+
 
 ### Storing container's rootfs on a separate partition
 
 Before the 0.3.0 version of this plugin, there used to be a support for specifying
-the container's rootfs path from the `Vagrantfile`, on 0.3.0 this was removed as you
+the container's rootfs path from the Vagrantfile, on 0.3.0 this was removed as you
 can achieve the same effect by symlinking or mounting `/var/lib/lxc` on a separate
 partition.
 
-### NFS shared folders
 
-NFS shared folders are not supported and will behave as a "normal" shared folder
-so we can share the same Vagrantfile with VBox environments.
+### NFS synced folders
 
-
-## What is currently supported?
-
-Pretty much everything you need from Vagrant:
-
-* Vagrant's `up`, `halt`, `reload`, `destroy`, `ssh` and `package` commands (box packaging is kind of experimental)
-* Shared folders
-* Provisioning
-* Setting container's host name
-* Port forwarding
-
-*Please refer to the [closed issues](https://github.com/fgrehm/vagrant-lxc/issues?labels=&milestone=&page=1&state=closed)
-and the [changelog](CHANGELOG.md) for most up to date information.*
+NFS shared folders are not supported and will behave as a "normal" synced folder
+so we can use the same Vagrantfile with VBox environments.
 
 
 ## Current limitations
 
-* Does not detect forwarded ports collision, right now you are responsible for taking care of that
-* A hell lot of `sudo`s (this will probably be like this until [user namespaces](http://s3hh.wordpress.com/2013/02/12/user-namespaces-lxc-meeting/) are supported)
+* The plugin does not detect forwarded ports collision, right now you are
+  responsible for taking care of that.
+* There is a hell lot of `sudo`s involved and this will probably be around until
+  [user namespaces](https://wiki.ubuntu.com/LxcSecurity) are supported.
 * [Does not tell you if dependencies are not met](https://github.com/fgrehm/vagrant-lxc/issues/11)
   (will probably just throw up some random error)
 * + bunch of other [core features](https://github.com/fgrehm/vagrant-lxc/issues?labels=core&milestone=&page=1&state=open)
@@ -126,7 +140,7 @@ and the [changelog](CHANGELOG.md) for most up to date information.*
 
 ## Development
 
-If  want to develop from your physical machine, just sing that same old song:
+If want to develop from your physical machine, just sing that same old song:
 
 ```
 git clone git://github.com/fgrehm/vagrant-lxc.git
@@ -141,16 +155,9 @@ To run acceptance specs, you'll have to ssh into one of the [development boxes](
 bundle exec rake spec:acceptance
 ```
 
-To build the provided quantal64 box:
+### Using vagrant-lxc to develop itself
 
-```
-bundle exec rake boxes:quantal64:build
-vagrant box add quantal64 boxes/output/lxc-quantal64.box
-```
-
-### Using `vagrant-lxc` to develop itself
-
-Yes! The gem has been [bootstrapped](http://en.wikipedia.org/wiki/Bootstrapping_(compilers)
+Yes! The gem has been [bootstrapped](http://bit.ly/bootstrapping-compilers)
 and since you can boot a container from within another, after cloning the
 project you can run the commands below from the host machine to get a container
 ready for development:
@@ -165,15 +172,16 @@ bundle exec vagrant up quantal --provider=lxc
 bundle exec vagrant ssh quantal
 ```
 
-That should result in a container ready to be `bundle exec vagrant ssh`ed.
-Once you've SSH into the guest container, you'll be already on the project's root.
-Keep in mind that you'll probably need to run `sudo aa-complain /usr/bin/lxc-start`
-on the host whenever you want to hack on it, otherwise you won't be able to
-start nested containers there to try things out.
+That should result in a container ready to rock. Once you've SSH into the guest
+container, you'll be already on the project's root. Keep in mind that you'll
+probably need to run `sudo aa-complain /usr/bin/lxc-start` on the host whenever
+you want to hack on it, otherwise you won't be able to start nested containers
+there to try things out.
 
 ### Using VirtualBox for development
 
 ```
+bundle install
 cd development
 # Pass in --provider=virtualbox in case you have VAGRANT_DEFAULT_PROVIDER set to something else
 bundle exec vagrant up quantal
@@ -183,7 +191,7 @@ bundle exec vagrant ssh quantal
 ```
 
 
-## Protips
+### Protips
 
 If you want to find out more about what's going on under the hood on vagrant,
 prepend `VAGRANT_LOG=debug` to your `vagrant` commands. For `lxc-start`s
@@ -209,8 +217,8 @@ to a bug on linux kernel, so make sure you are using a bug-free kernel
 
 Sometimes the dev boxes I'm using are not able to `lxc-start` containers
 anymore. Most of the times it was an issue with the arguments I provided
-to it for customization (or a *buggy* kernel). If you run into that, rollback your changes
-and try to `vagrant reload` the dev box. If it still doesn't work,
+to it for customization or the *buggy kernel*. If you run into that, rollback your
+changes and try to `vagrant reload` the dev box. If it still doesn't work,
 please file a bug at the [issue tracker](https://github.com/fgrehm/vagrant-lxc/issues).
 
 
@@ -218,6 +226,7 @@ please file a bug at the [issue tracker](https://github.com/fgrehm/vagrant-lxc/i
 
 * [vagabond](https://github.com/chrisroberts/vagabond) - "a tool integrated with Chef to build local nodes easily"
 * [vagueant](https://github.com/neerolyte/vagueant) - "vaguely like Vagrant for linux containers (lxc)"
+
 
 ## Contributing
 
