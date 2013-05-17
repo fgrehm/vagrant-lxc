@@ -1,4 +1,4 @@
-## [0.3.4](https://github.com/fgrehm/vagrant-lxc/compare/v0.3.4...master)
+## [0.3.4](https://github.com/fgrehm/vagrant-lxc/compare/v0.3.3...v0.3.4) (May 08, 2013)
 
 FEATURES:
 
