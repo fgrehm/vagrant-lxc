@@ -45,6 +45,9 @@ Vagrant.require_plugin 'vagrant-cachier'
 Vagrant.configure("2") do |config|
   config.vm.synced_folder "../", "/vagrant", id: 'vagrant-root', nfs: true
 
+  config.cache.scope = :machine
+  config.cache.auto_detect = true
+
   ip_suffix = 30
   BOXES.each do |box_name, box_config|
     config.vm.define(box_name.to_sym) do |vm_config|
@@ -73,9 +76,6 @@ Vagrant.configure("2") do |config|
           lxc.customize 'aa_profile', 'unconfined' unless %w(squeeze wheezy sid).include? box_name.to_s
         end
       end
-
-      vm_config.cache.enable :apt
-      vm_config.cache.enable :gem
     end
   end
 
