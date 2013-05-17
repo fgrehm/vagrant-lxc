@@ -1,18 +1,7 @@
-guard 'bundler' do
-  watch('Gemfile')
-  watch(/^.+\.gemspec/)
-end
-
-guard 'ctags-bundler', :src_path => ["lib"] do
-  watch(/^(lib|spec\/support)\/.*\.rb$/)
-  watch('Gemfile.lock')
-end
-
-guard 'rspec' do
-  watch(%r{^spec/.+_spec\.rb$})
+guard 'rspec', :spec_paths => ["spec/unit"] do
+  watch(%r{^spec/unit/.+_spec\.rb$})
   watch(%r{^lib/vagrant-lxc/(.+)\.rb$}) { |m| "spec/unit/#{m[1]}_spec.rb" }
   watch('spec/unit_helper.rb')          { "spec/unit" }
-  watch('spec/acceptance_helper.rb')    { "spec/acceptance" }
-  watch('spec/spec_helper.rb')          { "spec/" }
-  watch(%r{^spec/support/(.+)\.rb$})    { "spec/" }
+  watch('spec/spec_helper.rb')          { "spec/unit" }
+  watch(%r{^spec/support/(.+)\.rb$})    { "spec/unit" }
 end
