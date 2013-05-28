@@ -131,6 +131,8 @@ module Vagrant
       TEMPLATES_PATH_LOOKUP = %w(
         /usr/share/lxc/templates
         /usr/lib/lxc/templates
+        /usr/lib64/lxc/templates
+        /usr/local/lib/lxc/templates
       )
       def templates_path
         return @templates_path if @templates_path
