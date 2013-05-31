@@ -97,7 +97,7 @@ class BuildGenericBoxTask < ::Rake::TaskLib
     run 'cleanup'
     sh 'sudo rm -f rootfs.tar.gz'
     sh 'sudo tar --numeric-owner -czf rootfs.tar.gz ./rootfs/*'
-    sh "sudo chown #{ENV['USER']}:#{ENV['USER']} rootfs.tar.gz"
+    sh "sudo chown #{ENV['USER']}:#{`id -gn`.strip} rootfs.tar.gz"
     sh "cp #{pwd}/boxes/#{@distrib}/lxc-template ."
     compile_metadata(pwd)
   end
