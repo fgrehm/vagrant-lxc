@@ -49,7 +49,7 @@ BACKWARDS INCOMPATIBILITIES:
   - `start_opts` config was renamed to `customize`, please check the README for the expected parameters
   - V1 boxes are no longer supported
   - `target_rootfs_path` is no longer supported, just symlink `/var/lib/lxc` to the desired folder in case you want to point it to another partition
-  - Removed support for configuring private networks. It will come back at some point in the future but if you need it you should be able to set using `customize 'network.ipv4', '1.2.3.4'`
+  - Removed support for configuring private networks. It will come back at some point in the future but if you need it you should be able to set using `customize 'network.ipv4', '1.2.3.4/24'`
 
 IMPROVEMENTS:
 
