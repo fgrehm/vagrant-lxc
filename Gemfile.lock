@@ -14,7 +14,7 @@ GIT
 PATH
   remote: .
   specs:
-    vagrant-lxc (0.3.4)
+    vagrant-lxc (0.3.5.dev)
 
 GEM
   remote: https://rubygems.org/
