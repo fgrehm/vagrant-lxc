@@ -29,7 +29,8 @@ BOXES = {
   },
   squeeze: {
     lxc_url:  lxc_box_url('squeeze'),
-    vbox_url: 'http://f.willianfernandes.com.br/vagrant-boxes/DebianSqueeze64.box'
+    # https://gist.github.com/henare/1964037
+    vbox_url: 'http://dl.dropbox.com/u/174733/debian-squeeze-64.box'
   },
   wheezy:  {
     lxc_url:  lxc_box_url('wheezy'),
