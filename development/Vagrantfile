@@ -34,6 +34,7 @@ BOXES = {
   },
   wheezy:  {
     lxc_url:  lxc_box_url('wheezy'),
+    vbox_url: 'http://puppet-vagrant-boxes.puppetlabs.com/debian-70rc1-x64-vbox4210.box'
   },
   sid: {
     lxc_url:  lxc_box_url('sid'),
