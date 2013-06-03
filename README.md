@@ -1,17 +1,22 @@
-# vagrant-lxc [![Build Status](https://travis-ci.org/fgrehm/vagrant-lxc.png?branch=master)](https://travis-ci.org/fgrehm/vagrant-lxc) [![Gem Version](https://badge.fury.io/rb/vagrant-lxc.png)](http://badge.fury.io/rb/vagrant-lxc) [![Code Climate](https://codeclimate.com/github/fgrehm/vagrant-lxc.png)](https://codeclimate.com/github/fgrehm/vagrant-lxc) [![Coverage Status](https://coveralls.io/repos/fgrehm/vagrant-lxc/badge.png?branch=master)](https://coveralls.io/r/fgrehm/vagrant-lxc)
+# vagrant-lxc
+
+[![Build Status](https://travis-ci.org/fgrehm/vagrant-lxc.png?branch=master)](https://travis-ci.org/fgrehm/vagrant-lxc) [![Gem Version](https://badge.fury.io/rb/vagrant-lxc.png)](http://badge.fury.io/rb/vagrant-lxc) [![Code Climate](https://codeclimate.com/github/fgrehm/vagrant-lxc.png)](https://codeclimate.com/github/fgrehm/vagrant-lxc) [![Coverage Status](https://coveralls.io/repos/fgrehm/vagrant-lxc/badge.png?branch=master)](https://coveralls.io/r/fgrehm/vagrant-lxc)
 
 [LXC](http://lxc.sourceforge.net/) provider for [Vagrant](http://www.vagrantup.com/) 1.1+
+
+This is a Vagrant plugin that allows it to control and provision Linux Containers
+as an alternative to the built in Vagrant VirtualBox provider for Linux hosts.
 
 Check out this [blog post](http://fabiorehm.com/blog/2013/04/28/lxc-provider-for-vagrant)
 to see the plugin in action and find out more about it.
 
 ## Features
 
-* Vagrant's `up`, `halt`, `reload`, `destroy`, `ssh`, `provision` and `package` commands (box packaging is kind of experimental)
+* Vagrant's `up`, `halt`, `reload`, `destroy`, `ssh`, `provision` and `package` commands
 * Shared folders
 * Provisioning with any built-in Vagrant provisioner
-* Setting container's host name
 * Port forwarding
+* Setting container's host name
 
 *Please refer to the [closed issues](https://github.com/fgrehm/vagrant-lxc/issues?labels=&milestone=&page=1&state=closed)
 and the [changelog](CHANGELOG.md) for most up to date information.*
@@ -24,8 +29,18 @@ and the [changelog](CHANGELOG.md) for most up to date information.*
 * redir (if you are planning to use port forwarding)
 * A [bug-free](#help-im-unable-to-restart-containers) kernel
 
-On a clean Ubuntu 12.10 machine it basically means a `apt-get update && apt-get dist-upgrade`
-to upgrade the kernel and `apt-get install lxc redir`.
+The plugin is known to work better and pretty much out of the box on Ubuntu 12.04+
+hosts and installing the dependencies on it basically means a `apt-get install lxc redir`
+and a `apt-get update && apt-get dist-upgrade` to upgrade the kernel.
+
+Some manual steps are required to set up a Linode machine prior to using this
+plugin, please check https://github.com/fgrehm/vagrant-lxc/wiki/Usage-on-Linode
+for more information. The same applies to Debian hosts and documentation will be
+provided soon.
+
+If you are on a Mac or Windows machine, you might want to have a look at this
+blog post for some ideas on how to set things up: http://the.taoofmac.com/space/HOWTO/Vagrant
+or use use the same [Ubuntu 12.10 VirtualBox machine I use for development](https://github.com/fgrehm/vagrant-lxc/wiki/Development#using-virtualbox-for-development).
 
 
 ## Installation
@@ -57,9 +72,6 @@ And finally run `vagrant up --provider=lxc`.
 If you are using Vagrant 1.2+ you can also set `VAGRANT_DEFAULT_PROVIDER`
 environmental variable to `lxc` in order to avoid typing `--provider=lxc` all
 the time.
-
-If you are on a mac or windows host and still want to try this plugin out, you
-can use the [Ubuntu 12.10 VirtualBox machine I use for development](#using-virtualbox-for-development).
 
 
 ### Advanced configuration
@@ -112,20 +124,6 @@ CHEF=1 rake boxes:ubuntu:build:precise64
 Will build a Ubuntu Precise x86_64 box with Chef pre-installed.
 
 
-### Storing container's rootfs on a separate partition
-
-Before the 0.3.0 version of this plugin, there used to be a support for specifying
-the container's rootfs path from the Vagrantfile, on 0.3.0 this was removed as you
-can achieve the same effect by symlinking or mounting `/var/lib/lxc` on a separate
-partition.
-
-
-### NFS synced folders
-
-NFS shared folders are not supported and will behave as a "normal" synced folder
-so we can use the same Vagrantfile with VBox environments.
-
-
 ## Current limitations
 
 * The plugin does not detect forwarded ports collision, right now you are
@@ -138,88 +136,18 @@ so we can use the same Vagrantfile with VBox environments.
   and some known [bugs](https://github.com/fgrehm/vagrant-lxc/issues?labels=bug&page=1&state=open)
 
 
-## Development
+## More information
 
-If want to develop from your physical machine, just sing that same old song:
-
-```
-git clone git://github.com/fgrehm/vagrant-lxc.git
-cd vagrant-lxc
-bundle install
-bundle exec rake # to run unit specs
-```
-
-To run acceptance specs, you'll have to ssh into one of the [development boxes](development/Vagrantfile) and run:
-
-```
-bundle exec rake spec:acceptance
-```
-
-### Using vagrant-lxc to develop itself
-
-Yes! The gem has been [bootstrapped](http://bit.ly/bootstrapping-compilers)
-and since you can boot a container from within another, after cloning the
-project you can run the commands below from the host machine to get a container
-ready for development:
-
-```sh
-# Required in order to allow nested containers to be started
-sudo apt-get install apparmor-utils
-sudo aa-complain /usr/bin/lxc-start
-bundle install
-cd development
-bundle exec vagrant up quantal --provider=lxc
-bundle exec vagrant ssh quantal
-```
-
-That should result in a container ready to rock. Once you've SSH into the guest
-container, you'll be already on the project's root. Keep in mind that you'll
-probably need to run `sudo aa-complain /usr/bin/lxc-start` on the host whenever
-you want to hack on it, otherwise you won't be able to start nested containers
-there to try things out.
-
-### Using VirtualBox for development
-
-```
-bundle install
-cd development
-# Pass in --provider=virtualbox in case you have VAGRANT_DEFAULT_PROVIDER set to something else
-bundle exec vagrant up quantal
-# A reload is needed to ensure the updated kernel gets loaded
-bundle exec vagrant reload quantal
-bundle exec vagrant ssh quantal
-```
+Please refer the [wiki](https://github.com/fgrehm/vagrant-lxc/wiki) for more
+information.
 
 
-### Protips
+## Problems / ideas?
 
-If you want to find out more about what's going on under the hood on vagrant,
-prepend `VAGRANT_LOG=debug` to your `vagrant` commands. For `lxc-start`s
-debugging set `LXC_START_LOG_FILE`:
-
-```
-LXC_START_LOG_FILE=/tmp/lxc-start.log VAGRANT_LOG=debug vagrant up
-```
-
-This will output A LOT of information on your terminal and some useful information
-about `lxc-start` to `/tmp/lxc-start.log`.
-
-
-## Help! I'm unable to restart containers!
-
-It happened to me quite a few times in the past and it seems that it is related
-to a bug on linux kernel, so make sure you are using a bug-free kernel
-(>= 3.5.0-17.28). More information can be found on:
-
-* https://bugzilla.kernel.org/show_bug.cgi?id=47181
-* https://bugs.launchpad.net/ubuntu/+source/linux/+bug/1021471
-* https://bugs.launchpad.net/ubuntu/+source/linux/+bug/1065434
-
-Sometimes the dev boxes I'm using are not able to `lxc-start` containers
-anymore. Most of the times it was an issue with the arguments I provided
-to it for customization or the *buggy kernel*. If you run into that, rollback your
-changes and try to `vagrant reload` the dev box. If it still doesn't work,
-please file a bug at the [issue tracker](https://github.com/fgrehm/vagrant-lxc/issues).
+Please review the [Troubleshooting](https://github.com/fgrehm/vagrant-lxc/wiki/Troubleshooting)
+wiki page + [known bugs](https://github.com/fgrehm/vagrant-lxc/issues?labels=bug&page=1&state=open)
+list if you have a problem and feel free to use the [issue tracker](https://github.com/fgrehm/vagrant-lxc/issues)
+to ask questions, propose new functionality and / or report bugs.
 
 
 ## Similar projects
