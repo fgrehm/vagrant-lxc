@@ -69,7 +69,7 @@ EOF
     # set the host in case it is not set so that sudo does not complain about the host
     if ! (grep -q $hostname $rootfs/etc/hosts); then
       chroot $rootfs sed -i -e \
-          "s/^127.0.0.1\(\s\+\)localhost$/127.0.0.1\1localhost\n127.0.0.1\1${hostname}/g" \
+          "s/^127.0.0.1\(\s\+\)localhost$/127.0.0.1\1localhost\n127.0.1.1\1${hostname}/g" \
           /etc/hosts >/dev/null 2>&1 || true
     fi
 
