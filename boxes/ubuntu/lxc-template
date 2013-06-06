@@ -165,8 +165,6 @@ extract_rootfs()
 
     echo "Extracting $tarball ..."
     mkdir -p $(dirname $rootfs)
-    # Make sure the rootfs does not exist before extracting
-    rm -rf $rootfs
     (cd `dirname $rootfs` && tar xfz $tarball)
     return 0
 }

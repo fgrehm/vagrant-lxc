@@ -1,5 +1,6 @@
 ## [0.?.?](https://github.com/fgrehm/vagrant-lxc/compare/v0.3.4...master) (unreleased)
 
+  - BTRFS-friendly base boxes [#81](https://github.com/fgrehm/vagrant-lxc/issues/81)
   - Extended templates path lookup [#77](https://github.com/fgrehm/vagrant-lxc/issues/77) (tks to @aries1980)
   - Fix default group on the rake task [#82](https://github.com/fgrehm/vagrant-lxc/issues/82) (tks to @cduez)
 
