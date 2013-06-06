@@ -22,11 +22,19 @@ module Vagrant
           @env[:lxc_template_opts] = template_opts
           @env[:lxc_template_src]  = template_src
 
+          if template_config_file.exist?
+            @env[:lxc_template_config] = template_config_file.to_s
+          end
+
           @app.call env
         end
 
         def template_src
           @template_src ||= @box.directory.join('lxc-template').to_s
+        end
+
+        def template_config_file
+          @template_config_file ||= @box.directory.join('lxc.conf')
         end
 
         def template_opts
