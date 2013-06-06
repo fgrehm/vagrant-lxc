@@ -49,7 +49,7 @@ module Vagrant
         end
 
         def validate_box
-          if @box.metadata.fetch('version').to_i != 2
+          if @box.metadata.fetch('version').to_i < 2
             raise Errors::InvalidBoxVersion.new name: @box.name
           end
 
