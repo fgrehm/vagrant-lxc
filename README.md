@@ -129,7 +129,7 @@ Will build a Ubuntu Precise x86_64 box with Chef pre-installed.
 * The plugin does not detect forwarded ports collision, right now you are
   responsible for taking care of that.
 * There is a hell lot of `sudo`s involved and this will probably be around until
-  [user namespaces](https://wiki.ubuntu.com/LxcSecurity) are supported.
+  [user namespaces](https://wiki.ubuntu.com/LxcSecurity) are supported or I'm able to handle [#90](https://github.com/fgrehm/vagrant-lxc/issues/90)
 * [Does not tell you if dependencies are not met](https://github.com/fgrehm/vagrant-lxc/issues/11)
   (will probably just throw up some random error)
 * + bunch of other [core features](https://github.com/fgrehm/vagrant-lxc/issues?labels=core&milestone=&page=1&state=open)
