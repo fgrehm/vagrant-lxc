@@ -1,5 +1,6 @@
 ## [0.?.?](https://github.com/fgrehm/vagrant-lxc/compare/v0.3.4...master) (unreleased)
 
+  - Enable Chef for Ubuntu Raring base box
   - New box format [#89](https://github.com/fgrehm/vagrant-lxc/issues/89)
   - BTRFS-friendly base boxes [#81](https://github.com/fgrehm/vagrant-lxc/issues/81)
   - Extended templates path lookup [#77](https://github.com/fgrehm/vagrant-lxc/issues/77) (tks to @aries1980)
