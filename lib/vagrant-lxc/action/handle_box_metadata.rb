@@ -3,6 +3,7 @@ module Vagrant
     module Action
       # Prepare arguments to be used for lxc-create
       class HandleBoxMetadata
+        SUPPORTED_VERSIONS = [2, 3]
         def initialize(app, env)
           @app    = app
           @logger = Log4r::Logger.new("vagrant::lxc::action::handle_box_metadata")
@@ -22,6 +23,10 @@ module Vagrant
           @env[:lxc_template_opts] = template_opts
           @env[:lxc_template_src]  = template_src
 
+          if template_config_file.exist?
+            @env[:lxc_template_config] = template_config_file.to_s
+          end
+
           @app.call env
         end
 
@@ -29,9 +34,15 @@ module Vagrant
           @template_src ||= @box.directory.join('lxc-template').to_s
         end
 
+        def template_config_file
+          @template_config_file ||= @box.directory.join('lxc.conf')
+        end
+
         def template_opts
           @template_opts ||= @box.metadata.fetch('template-opts', {}).dup.merge!(
             '--tarball'  => rootfs_tarball,
+            # TODO: Deprecate this, the rootfs should be ready for vagrant-lxc
+            #       SSH access at this point
             '--auth-key' => Vagrant.source_root.join('keys', 'vagrant.pub').expand_path.to_s
           )
         end
@@ -41,8 +52,10 @@ module Vagrant
         end
 
         def validate_box
-          if @box.metadata.fetch('version').to_i != 2
-            raise Errors::InvalidBoxVersion.new name: @box.name
+          unless SUPPORTED_VERSIONS.include? @box.metadata.fetch('version').to_i
+            raise Errors::IncompatibleBox.new name: @box.name,
+                                              found: @box.metadata.fetch('version').to_i,
+                                              supported: SUPPORTED_VERSIONS.join(' and ')
           end
 
           unless File.exists?(template_src)

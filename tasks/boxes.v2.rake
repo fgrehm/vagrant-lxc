@@ -1,7 +1,7 @@
 require 'pathname'
 require 'rake/tasklib'
 
-class BuildGenericBoxTask < ::Rake::TaskLib
+class BuildGenericBoxTaskV2 < ::Rake::TaskLib
   include ::Rake::DSL
 
   attr_reader :name
@@ -39,7 +39,7 @@ class BuildGenericBoxTask < ::Rake::TaskLib
     if script.readable?
       sh "sudo #{script} #{args.join(' ')}"
     else
-      STDERR.puts "cannot execute #{install_path} (not found?)"
+      STDERR.puts "cannot execute #{script_name} (not found?)"
       exit 1
     end
   end
@@ -110,13 +110,13 @@ class BuildGenericBoxTask < ::Rake::TaskLib
   end
 end
 
-class BuildDebianBoxTask < BuildGenericBoxTask
+class BuildDebianBoxTaskV2 < BuildGenericBoxTaskV2
   def initialize(name, release, arch, opts = {})
     super(name, 'debian', release, arch, opts)
   end
 end
 
-class BuildUbuntuBoxTask < BuildGenericBoxTask
+class BuildUbuntuBoxTaskV2 < BuildGenericBoxTaskV2
   def initialize(name, release, arch, opts = {})
     super(name, 'ubuntu', release, arch, opts)
   end
@@ -127,53 +127,55 @@ puppet   = ENV['PUPPET']   == '1'
 babushka = ENV['BABUSHKA'] == '1'
 
 namespace :boxes do
-  namespace :ubuntu do
-    namespace :build do
+  namespace :v2 do
+    namespace :ubuntu do
+      namespace :build do
 
-      desc 'Build an Ubuntu Precise 64 bits box'
-      BuildUbuntuBoxTask.
-        new(:precise64,
-            :precise, 'amd64', chef: chef, puppet: puppet, babushka: babushka)
+        desc 'Build an Ubuntu Precise 64 bits box'
+        BuildUbuntuBoxTaskV2.
+          new(:precise64,
+              :precise, 'amd64', chef: chef, puppet: puppet, babushka: babushka)
 
-      desc 'Build an Ubuntu Quantal 64 bits box'
-      BuildUbuntuBoxTask.
-        new(:quantal64,
-            :quantal, 'amd64', chef: chef, puppet: puppet, babushka: babushka)
+        desc 'Build an Ubuntu Quantal 64 bits box'
+        BuildUbuntuBoxTaskV2.
+          new(:quantal64,
+              :quantal, 'amd64', chef: chef, puppet: puppet, babushka: babushka)
 
-      # FIXME: Find out how to install chef on raring
-      desc 'Build an Ubuntu Raring 64 bits box'
-      BuildUbuntuBoxTask.
-        new(:raring64,
-            :raring, 'amd64', chef: false, puppet: puppet, babushka: babushka)
+        # FIXME: Find out how to install chef on raring
+        desc 'Build an Ubuntu Raring 64 bits box'
+        BuildUbuntuBoxTaskV2.
+          new(:raring64,
+              :raring, 'amd64', chef: chef, puppet: puppet, babushka: babushka)
 
-      desc 'Build all Ubuntu boxes'
-      task :all => %w( precise64 quantal64 raring64 )
+        desc 'Build all Ubuntu boxes'
+        task :all => %w( precise64 quantal64 raring64 )
+      end
     end
-  end
 
-  # FIXME: Find out how to install chef on debian boxes
-  namespace :debian do
-    namespace :build do
-      desc 'Build an Debian Squeeze 64 bits box'
-      BuildDebianBoxTask.
-        new(:squeeze64,
-            :squeeze, 'amd64', chef: false, puppet: puppet, babushka: babushka)
+    # FIXME: Find out how to install chef on debian boxes
+    namespace :debian do
+      namespace :build do
+        desc 'Build an Debian Squeeze 64 bits box'
+        BuildDebianBoxTaskV2.
+          new(:squeeze64,
+              :squeeze, 'amd64', chef: false, puppet: puppet, babushka: babushka)
 
-      desc 'Build an Debian Wheezy 64 bits box'
-      BuildDebianBoxTask.
-        new(:wheezy64,
-            :wheezy, 'amd64', chef: false, puppet: puppet, babushka: babushka)
+        desc 'Build an Debian Wheezy 64 bits box'
+        BuildDebianBoxTaskV2.
+          new(:wheezy64,
+              :wheezy, 'amd64', chef: false, puppet: puppet, babushka: babushka)
 
-      desc 'Build an Debian Sid/unstable 64 bits box'
-      BuildDebianBoxTask.
-        new(:sid64,
-            :sid, 'amd64', chef: false, puppet: puppet, babushka: babushka)
+        desc 'Build an Debian Sid/unstable 64 bits box'
+        BuildDebianBoxTaskV2.
+          new(:sid64,
+              :sid, 'amd64', chef: false, puppet: puppet, babushka: babushka)
 
-      desc 'Build all Debian boxes'
-      task :all => %w( squeeze64 wheezy64 sid64 )
+        desc 'Build all Debian boxes'
+        task :all => %w( squeeze64 wheezy64 sid64 )
+      end
     end
-  end
 
-  desc 'Build all base boxes for release'
-  task :build_all => %w( ubuntu:build:all debian:build:all )
+    desc 'Build all base boxes for release'
+    task :build_all => %w( ubuntu:build:all debian:build:all )
+  end
 end

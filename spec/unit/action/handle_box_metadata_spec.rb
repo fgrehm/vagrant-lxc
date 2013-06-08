@@ -50,7 +50,7 @@ describe Vagrant::LXC::Action::HandleBoxMetadata do
       metadata['version'] = '1'
       expect {
         subject.call(env)
-      }.to raise_error(Vagrant::LXC::Errors::InvalidBoxVersion)
+      }.to raise_error(Vagrant::LXC::Errors::IncompatibleBox)
     end
 
     it 'raises an error if the rootfs tarball cant be found' do

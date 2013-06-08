@@ -35,6 +35,7 @@ describe Vagrant::LXC::Driver do
     let(:template_name)  { 'auto-assigned-template-id' }
     let(:template_path)  { '/path/to/lxc-template-from-box' }
     let(:template_opts)  { {'--some' => 'random-option'} }
+    let(:config_file)    { '/path/to/lxc-config-from-box' }
     let(:rootfs_tarball) { '/path/to/cache/rootfs.tar.gz' }
     let(:cli)            { fire_double('Vagrant::LXC::Driver::CLI', :create => true, :name= => true) }
 
@@ -42,7 +43,7 @@ describe Vagrant::LXC::Driver do
 
     before do
       subject.stub(:import_template).and_yield(template_name)
-      subject.create name, template_path, template_opts
+      subject.create name, template_path, config_file, template_opts
     end
 
     it 'sets the cli object container name' do
@@ -52,6 +53,7 @@ describe Vagrant::LXC::Driver do
     it 'creates container with the right arguments' do
       cli.should have_received(:create).with(
         template_name,
+        config_file,
         template_opts
       )
     end
@@ -72,6 +74,7 @@ describe Vagrant::LXC::Driver do
   describe 'start' do
     let(:customizations)         { [['a', '1'], ['b', '2']] }
     let(:internal_customization) { ['internal', 'customization'] }
+    let(:rootfs)                 { ['rootfs', subject.rootfs_path.to_s] }
     let(:cli)                    { fire_double('Vagrant::LXC::Driver::CLI', start: true) }
 
     subject { described_class.new('name', cli) }
@@ -83,7 +86,7 @@ describe Vagrant::LXC::Driver do
     end
 
     it 'starts container with configured customizations' do
-      cli.should have_received(:start).with(customizations + [internal_customization], nil)
+      cli.should have_received(:start).with(customizations + [internal_customization, rootfs], nil)
     end
 
     it 'expects a transition to running state to take place' do
