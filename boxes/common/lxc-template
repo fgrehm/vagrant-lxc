@@ -77,11 +77,6 @@ copy_configuration()
     path=$1
     rootfs=$2
     name=$3
-    arch=$4
-
-    if [ $arch = "i386" ]; then
-        arch="i686"
-    fi
 
     # if there is exactly one veth network entry, make sure it has an
     # associated hwaddr.
