@@ -44,7 +44,7 @@ namespace :boxes do
         desc 'Build an Ubuntu Raring 64 bits box'
         BuildUbuntuBoxTaskV3.
           new(:raring64,
-              :raring, 'amd64', chef: false, puppet: puppet, babushka: babushka)
+              :raring, 'amd64', chef: chef, puppet: puppet, babushka: babushka)
 
         desc 'Build all Ubuntu boxes'
         task :all => %w( precise64 quantal64 raring64 )
