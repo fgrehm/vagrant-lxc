@@ -39,7 +39,7 @@ class BuildGenericBoxTaskV2 < ::Rake::TaskLib
     if script.readable?
       sh "sudo #{script} #{args.join(' ')}"
     else
-      STDERR.puts "cannot execute #{install_path} (not found?)"
+      STDERR.puts "cannot execute #{script_name} (not found?)"
       exit 1
     end
   end
