@@ -14,7 +14,8 @@ describe Vagrant::LXC::Action::SetupPackageFiles do
 
   before do
     box.directory.mkdir
-    [box.directory.join('lxc-template'), box.directory.join('metadata.json'), rootfs_path].each do |file|
+    files = %w( lxc-template metadata.json lxc.conf ).map { |f| box.directory.join(f) }
+    (files + [rootfs_path]).each do |file|
       file.open('w') { |f| f.puts file.to_s }
     end
 
@@ -32,6 +33,10 @@ describe Vagrant::LXC::Action::SetupPackageFiles do
 
   it 'copies metadata.json to package directory' do
     env['package.directory'].join('metadata.json').should be_file
+  end
+
+  it 'copies box lxc.conf to package directory' do
+    env['package.directory'].join('lxc-template').should be_file
   end
 
   it 'moves the compressed rootfs to package directory' do
