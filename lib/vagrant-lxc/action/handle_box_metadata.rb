@@ -3,6 +3,7 @@ module Vagrant
     module Action
       # Prepare arguments to be used for lxc-create
       class HandleBoxMetadata
+        SUPPORTED_VERSIONS = [2, 3]
         def initialize(app, env)
           @app    = app
           @logger = Log4r::Logger.new("vagrant::lxc::action::handle_box_metadata")
@@ -51,8 +52,10 @@ module Vagrant
         end
 
         def validate_box
-          if [2, 3].include? @box.metadata.fetch('version').to_i
-            raise Errors::InvalidBoxVersion.new name: @box.name
+          unless SUPPORTED_VERSIONS.include? @box.metadata.fetch('version').to_i
+            raise Errors::IncompatibleBox.new name: @box.name,
+                                              found: @box.metadata.fetch('version').to_i,
+                                              supported: SUPPORTED_VERSIONS.join(' and ')
           end
 
           unless File.exists?(template_src)

@@ -33,6 +33,10 @@ en:
         For more information on the failure, enable detailed logging by setting
         the environment variable VAGRANT_LOG to DEBUG.
 
+      lxc_incompatible_box: |-
+        The base box you are trying to use is not compatible with the installed
+        vagrant-lxc version. Supported box versions are %{supported} but %{found} was found.
+
       lxc_template_file_missing: |-
         The template file used for creating the container was not found for %{name}
         box.
