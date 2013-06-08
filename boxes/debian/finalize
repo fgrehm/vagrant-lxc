@@ -132,25 +132,6 @@ disable_tmp_cleanup() {
     chroot $rootfs /usr/sbin/update-rc.d -f mountnfs-bootclean.sh remove
 }
 
-usage()
-{
-    cat <<EOF
-$1 -h|--help [-a|--arch] [-d|--debug]
-  [-F | --flush-cache] [-r|--release <release>] [ -S | --auth-key <keyfile>]
-release: the debian release (e.g. wheezy): defaults to host release on debian, otherwise uses latest stable
-arch: the container architecture (e.g. amd64): defaults to host arch
-auth-key: SSH Public key file to inject into container
-EOF
-    return 0
-}
-
-options=$(getopt -o a:b:hp:r:xn:Fd:C -l arch:,help,path:,release:,name:,flush-cache,auth-key:,debug:,tarball: -- "$@")
-if [ $? -ne 0 ]; then
-    usage $(basename $0)
-    exit 1
-fi
-eval set -- "$options"
-
 release=wheezy  # Default to the last Debian stable release
 
 arch=$(uname -m)
