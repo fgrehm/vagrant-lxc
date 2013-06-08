@@ -20,27 +20,40 @@ describe Vagrant::LXC::Action::SetupPackageFiles do
     end
 
     subject.stub(recover: true) # Prevents files from being removed on specs
-    subject.call(env)
   end
 
   after do
     FileUtils.rm_rf(tmp_path.to_s)
   end
 
-  it 'copies box lxc-template to package directory' do
-    env['package.directory'].join('lxc-template').should be_file
+  context 'when all files exist' do
+    before { subject.call(env) }
+
+    it 'copies box lxc-template to package directory' do
+      env['package.directory'].join('lxc-template').should be_file
+    end
+
+    it 'copies metadata.json to package directory' do
+      env['package.directory'].join('metadata.json').should be_file
+    end
+
+    it 'copies box lxc.conf to package directory' do
+      env['package.directory'].join('lxc-template').should be_file
+    end
+
+    it 'moves the compressed rootfs to package directory' do
+      env['package.directory'].join(rootfs_path.basename).should be_file
+      env['package.rootfs'].should_not be_file
+    end
   end
 
-  it 'copies metadata.json to package directory' do
-    env['package.directory'].join('metadata.json').should be_file
-  end
+  context 'when lxc.conf file is not present' do
+    before do
+      box.directory.join('lxc.conf').delete
+    end
 
-  it 'copies box lxc.conf to package directory' do
-    env['package.directory'].join('lxc-template').should be_file
-  end
-
-  it 'moves the compressed rootfs to package directory' do
-    env['package.directory'].join(rootfs_path.basename).should be_file
-    env['package.rootfs'].should_not be_file
+    it 'does not blow up' do
+      expect { subject.call(env) }.to_not raise_error
+    end
   end
 end
