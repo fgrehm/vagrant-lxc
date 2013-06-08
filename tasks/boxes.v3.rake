@@ -4,8 +4,41 @@ load 'tasks/boxes.v2.rake'
 
 class BuildGenericBoxTaskV3 < BuildGenericBoxTaskV2
   def build
-    # TODO: Build the base box and lxc-create it somehow
-    super
+    check_if_box_has_been_built!
+
+    FileUtils.mkdir_p 'boxes/temp' unless File.exist? 'base/temp'
+    check_for_partially_built_box!
+
+    pwd = Dir.pwd
+    sh 'mkdir -p boxes/temp/'
+    Dir.chdir 'boxes/temp' do
+      download
+      install_cfg_engines
+      finalize
+      prepare_package_contents pwd
+      sh 'sudo rm -rf rootfs'
+      sh "tar -czf tmp-package.box ./*"
+    end
+
+    sh 'mkdir -p boxes/output'
+    sh "cp boxes/temp/tmp-package.box boxes/output/#{@file}"
+    sh "rm -rf boxes/temp"
+  end
+
+  def finalize
+    require 'vagrant'
+    auth_key = Vagrant.source_root.join('keys', 'vagrant.pub').expand_path.to_s
+    run 'finalize', @arch, @release, auth_key
+  end
+
+  def prepare_package_contents(pwd)
+    run 'cleanup'
+    sh 'sudo rm -f rootfs.tar.gz'
+    sh 'sudo tar --numeric-owner -czf rootfs.tar.gz ./rootfs/*'
+    sh "sudo chown #{ENV['USER']}:#{`id -gn`.strip} rootfs.tar.gz"
+    sh "cp #{pwd}/boxes/common/lxc-template ."
+    sh "cp #{pwd}/boxes/common/lxc.conf ."
+    sh "cp #{pwd}/boxes/common/metadata.json ."
   end
 end
 
