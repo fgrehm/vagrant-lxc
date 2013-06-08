@@ -40,6 +40,8 @@ module Vagrant
         def template_opts
           @template_opts ||= @box.metadata.fetch('template-opts', {}).dup.merge!(
             '--tarball'  => rootfs_tarball,
+            # TODO: Deprecate this, the rootfs should be ready for vagrant-lxc
+            #       SSH access at this point
             '--auth-key' => Vagrant.source_root.join('keys', 'vagrant.pub').expand_path.to_s
           )
         end
