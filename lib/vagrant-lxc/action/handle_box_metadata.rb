@@ -49,7 +49,7 @@ module Vagrant
         end
 
         def validate_box
-          if @box.metadata.fetch('version').to_i < 2
+          if [2, 3].include? @box.metadata.fetch('version').to_i
             raise Errors::InvalidBoxVersion.new name: @box.name
           end
 
