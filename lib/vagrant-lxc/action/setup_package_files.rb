@@ -45,6 +45,7 @@ module Vagrant
           box_dir = @env[:machine].box.directory
           FileUtils.cp box_dir.join('lxc-template').to_s, @env['package.directory'].to_s
           FileUtils.cp box_dir.join('metadata.json').to_s, @env['package.directory'].to_s
+          FileUtils.cp box_dir.join('lxc.conf').to_s, @env['package.directory'].to_s
         end
       end
     end
