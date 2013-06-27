@@ -38,13 +38,14 @@ describe Vagrant::LXC::Driver::CLI do
   describe 'create' do
     let(:template)      { 'quantal-64' }
     let(:name)          { 'quantal-container' }
+    let(:config_file)   { 'config' }
     let(:template_args) { { '--extra-param' => 'param', '--other' => 'value' } }
 
     subject { described_class.new(name) }
 
     before do
       subject.stub(:run) { |*args| @run_args = args }
-      subject.create(template, template_args)
+      subject.create(template, config_file, template_args)
     end
 
       it 'issues a lxc-create with provided template, container name and hash of arguments' do
@@ -52,6 +53,7 @@ describe Vagrant::LXC::Driver::CLI do
           :create,
           '--template', template,
           '--name',     name,
+          '-f',         config_file,
           '--',
           '--extra-param', 'param',
           '--other',       'value'

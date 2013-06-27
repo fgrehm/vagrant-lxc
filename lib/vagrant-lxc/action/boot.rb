@@ -11,6 +11,8 @@ module Vagrant
 
           config = env[:machine].provider_config
 
+          config.customize 'utsname', env[:machine].id
+
           env[:ui].info I18n.t("vagrant_lxc.messages.starting")
           env[:machine].provider.driver.start(config.customizations)
           raise Vagrant::Errors::VMFailedToBoot if !wait_for_boot

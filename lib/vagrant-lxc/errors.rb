@@ -14,8 +14,8 @@ module Vagrant
       class RootFSTarballMissing < Vagrant::Errors::VagrantError
         error_key(:lxc_invalid_box_version)
       end
-      class InvalidBoxVersion < Vagrant::Errors::VagrantError
-        error_key(:lxc_invalid_box_version)
+      class IncompatibleBox < Vagrant::Errors::VagrantError
+        error_key(:lxc_incompatible_box)
       end
     end
   end

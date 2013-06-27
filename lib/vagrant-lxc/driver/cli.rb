@@ -46,13 +46,18 @@ module Vagrant
           end
         end
 
-        def create(template, template_opts = {})
+        def create(template, config_file, template_opts = {})
+          if config_file
+            config_opts = ['-f', config_file]
+          end
+
           extra = template_opts.to_a.flatten
           extra.unshift '--' unless extra.empty?
 
           run :create,
               '--template', template,
               '--name',     @name,
+              *(config_opts),
               *extra
         end
 

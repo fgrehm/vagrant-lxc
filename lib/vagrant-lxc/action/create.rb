@@ -14,6 +14,7 @@ module Vagrant
           env[:machine].provider.driver.create(
             container_name,
             env[:lxc_template_src],
+            env[:lxc_template_config],
             env[:lxc_template_opts]
           )
 
