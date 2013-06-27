@@ -1,10 +1,15 @@
 ## [0.4.0](https://github.com/fgrehm/vagrant-lxc/compare/v0.3.4...master) (unreleased)
 
+FEATURES:
+
   - Enable Chef for Ubuntu Raring base box
   - New box format [#89](https://github.com/fgrehm/vagrant-lxc/issues/89)
+
+BUG FIXES:
+
   - BTRFS-friendly base boxes [#81](https://github.com/fgrehm/vagrant-lxc/issues/81)
   - Extended templates path lookup [#77](https://github.com/fgrehm/vagrant-lxc/issues/77) (tks to @aries1980)
-  - Fix default group on the rake task [#82](https://github.com/fgrehm/vagrant-lxc/issues/82) (tks to @cduez)
+  - Fix default group for packaged boxes tarballs on the rake task [#82](https://github.com/fgrehm/vagrant-lxc/issues/82) (tks to @cduez)
 
 ## [0.3.4](https://github.com/fgrehm/vagrant-lxc/compare/v0.3.3...v0.3.4) (May 08, 2013)
 
