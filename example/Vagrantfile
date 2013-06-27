@@ -28,7 +28,7 @@ echo "Hi there I'm a shell script used for provisioning"
   end
 
   port     = 8080
-  releases = %w(precise quantal raring)
+  releases = %w(precise quantal raring wheezy squeeze sid)
   releases.each do |release|
     config.vm.define(release) do |lxc_config|
       lxc_config.vm.box      = "#{release}64"
@@ -37,20 +37,6 @@ echo "Hi there I'm a shell script used for provisioning"
       # Uncomment if you want to try out a box built locally
       # lxc_config.vm.box_url  = "../boxes/output/lxc-#{release}64.box"
       lxc_config.vm.hostname = "lxc-#{release}64-example"
-    end
-  end
-
-  port     = 8090
-  releases = %w(wheezy squeeze sid)
-  releases.each do |release|
-    config.vm.define(release) do |lxc_config|
-      lxc_config.vm.box      = "#{release}64"
-      lxc_config.vm.box_url  = "http://dl.dropbox.com/u/13510779/lxc-#{release}-amd64-2013-05-08.box"
-      lxc_config.vm.network :forwarded_port, guest: 80, host: (port += 1)
-      # Uncomment if you want to try out a box built locally
-      # lxc_config.vm.box_url  = "../boxes/output/lxc-#{release}64.box"
-      # Does not work yet:
-      # lxc_config.vm.hostname = "lxc-#{release}64-example"
     end
   end
 end

@@ -72,7 +72,7 @@ Vagrant.configure("2") do |config|
       if box_config[:lxc_url]
         vm_config.vm.provider :lxc do |lxc, lxc_config|
           lxc_config.vm.box_url  = box_config[:lxc_url]
-          lxc_config.vm.hostname = 'lxc-dev-box' unless %w(squeeze wheezy sid).include? box_name.to_s
+          lxc_config.vm.hostname = 'lxc-dev-box'
 
           # Required to boot nested containers
           lxc.customize 'aa_profile', 'unconfined' unless %w(squeeze wheezy sid).include? box_name.to_s
