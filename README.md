@@ -52,7 +52,7 @@ vagrant plugin install vagrant-lxc
 
 ## Usage
 
-After installing, add a [base box](#available-boxes) using any name you want, for example:
+After installing, add a [base box](#base-boxes) using any name you want, for example:
 
 ```
 vagrant box add quantal64 http://dl.dropbox.com/u/13510779/lxc-quantal-amd64-2013-05-08.box
@@ -97,31 +97,11 @@ set from container's configuration file that is usually kept under
 For other configuration options, please check [lxc.conf manpages](http://manpages.ubuntu.com/manpages/quantal/man5/lxc.conf.5.html).
 
 
-### Available boxes
+### Base boxes
 
-| LINK | DESCRIPTION |
-| ---  | ---         |
-| [lxc-raring-amd64-2013-05-08.box](http://dl.dropbox.com/u/13510779/lxc-raring-amd64-2013-05-08.box) | Ubuntu 13.04 Raring x86_64 (Puppet 3.1.1) |
-| [lxc-quantal-amd64-2013-05-08.box](http://dl.dropbox.com/u/13510779/lxc-quantal-amd64-2013-05-08.box) | Ubuntu 12.10 Quantal x86_64 (Puppet 3.1.1 & Chef 11.4.0) |
-| [lxc-precise-amd64-2013-05-08.box](http://dl.dropbox.com/u/13510779/lxc-precise-amd64-2013-05-08.box) | Ubuntu 12.04 Precise x86_64 (Puppet 3.1.1 & Chef 11.4.0) |
-| [lxc-sid-amd64-2013-05-08.box](http://dl.dropbox.com/u/13510779/lxc-sid-amd64-2013-05-08.box) | Debian Sid (Puppet 3.1.1) |
-| [lxc-wheezy-amd64-2013-05-08.box](http://dl.dropbox.com/u/13510779/lxc-wheezy-amd64-2013-05-08.box) | Debian Wheezy (Puppet 3.1.1) |
-| [lxc-squeeze-amd64-2013-05-08.box](http://dl.dropbox.com/u/13510779/lxc-squeeze-amd64-2013-05-08.box) | Debian Squeeze (Puppet 3.1.1) |
 
-*Please note that I'm currently using only the quantal x86_64 on a daily basis,
-and I've only done some basic testing with the others*
-
-There is a set of [rake tasks](tasks/boxes.rake) that you can use to build base
-boxes as needed. By default it won't include any provisioning tool and you can
-pick the ones you want by providing some environment variables.
-
-For example:
-
-```
-CHEF=1 rake boxes:ubuntu:build:precise64
-```
-
-Will build a Ubuntu Precise x86_64 box with Chef pre-installed.
+Please check [the wiki](https://github.com/fgrehm/vagrant-lxc/wiki/Base-boxes#v2-boxes)
+for a list of pre built base boxes and information on [how to build your own](https://github.com/fgrehm/vagrant-lxc/wiki/Base-boxes#building-your-own).
 
 
 ## Current limitations
