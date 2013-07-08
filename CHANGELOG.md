@@ -6,6 +6,7 @@ FEATURES:
 
 BUG FIXES:
 
+  - Enable retries when fetching container state [#74](https://github.com/fgrehm/vagrant-lxc/issues/74)
   - Fix error when setting Debian boxes hostname from Vagrantfile [#91](https://github.com/fgrehm/vagrant-lxc/issues/91)
   - BTRFS-friendly base boxes [#81](https://github.com/fgrehm/vagrant-lxc/issues/81)
   - Extended templates path lookup [#77](https://github.com/fgrehm/vagrant-lxc/issues/77) (tks to @aries1980)
