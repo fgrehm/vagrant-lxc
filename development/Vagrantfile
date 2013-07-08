@@ -3,7 +3,7 @@
 
 require 'pathname'
 BASE_URL          = 'http://dl.dropbox.com/u/13510779'
-LAST_RELEASE_DATE = '2013-05-08'
+LAST_RELEASE_DATE = '2013-07-08'
 LOCAL_BOXES_PATH  = Pathname('../boxes/output').expand_path
 def lxc_box_url(release_name)
   file_name      = "lxc-#{release_name}-amd64-#{LAST_RELEASE_DATE}.box"

@@ -2,7 +2,6 @@
 
 FEATURES:
 
-  - Enable Chef for Ubuntu Raring base box
   - New box format [#89](https://github.com/fgrehm/vagrant-lxc/issues/89)
 
 BUG FIXES:

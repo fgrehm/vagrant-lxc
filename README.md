@@ -12,7 +12,7 @@ to see the plugin in action and find out more about it.
 
 ## Features
 
-* Vagrant's `up`, `halt`, `reload`, `destroy`, `ssh`, `provision` and `package` commands
+* Vagrant's `up`, `halt`, `reload`, `destroy`, `ssh`, `provision` and `package`
 * Shared folders
 * Provisioning with any built-in Vagrant provisioner
 * Port forwarding
@@ -55,7 +55,7 @@ vagrant plugin install vagrant-lxc
 After installing, add a [base box](#base-boxes) using any name you want, for example:
 
 ```
-vagrant box add quantal64 http://dl.dropbox.com/u/13510779/lxc-quantal-amd64-2013-05-08.box
+vagrant box add quantal64 http://dl.dropbox.com/u/13510779/lxc-quantal-amd64-2013-07-08.box
 ```
 
 Then create a Vagrantfile that looks like the following, changing the box name
@@ -100,8 +100,9 @@ For other configuration options, please check [lxc.conf manpages](http://manpage
 ### Base boxes
 
 
-Please check [the wiki](https://github.com/fgrehm/vagrant-lxc/wiki/Base-boxes#v2-boxes)
-for a list of pre built base boxes and information on [how to build your own](https://github.com/fgrehm/vagrant-lxc/wiki/Base-boxes#building-your-own).
+Please check [the wiki](https://github.com/fgrehm/vagrant-lxc/wiki/Base-boxes)
+for a list of [pre built](https://github.com/fgrehm/vagrant-lxc/wiki/Base-boxes#available-boxes)
+base boxes and information on [how to build your own](https://github.com/fgrehm/vagrant-lxc/wiki/Base-boxes#building-your-own).
 
 
 ## Current limitations
