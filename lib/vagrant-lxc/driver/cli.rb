@@ -39,7 +39,7 @@ module Vagrant
         end
 
         def state
-          if @name && run(:info, '--name', @name) =~ /^state:[^A-Z]+([A-Z]+)$/
+          if @name && run(:info, '--name', @name, retryable: true) =~ /^state:[^A-Z]+([A-Z]+)$/
             $1.downcase.to_sym
           elsif @name
             :unknown

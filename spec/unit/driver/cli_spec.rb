@@ -126,7 +126,7 @@ describe Vagrant::LXC::Driver::CLI do
 
     it 'calls lxc-info with the right arguments' do
       subject.state
-      subject.should have_received(:run).with(:info, '--name', name)
+      subject.should have_received(:run).with(:info, '--name', name, retryable: true)
     end
 
     it 'maps the output of lxc-info status out to a symbol' do
