@@ -58,53 +58,51 @@ puppet   = ENV['PUPPET']   == '1'
 babushka = ENV['BABUSHKA'] == '1'
 
 namespace :boxes do
-  namespace :v3 do
-    namespace :ubuntu do
-      namespace :build do
+  namespace :ubuntu do
+    namespace :build do
 
-        desc 'Build an Ubuntu Precise 64 bits box'
-        BuildUbuntuBoxTaskV3.
-          new(:precise64,
-              :precise, 'amd64', puppet: puppet, babushka: babushka)
+      desc 'Build an Ubuntu Precise 64 bits box'
+      BuildUbuntuBoxTaskV3.
+        new(:precise64,
+            :precise, 'amd64', puppet: puppet, babushka: babushka)
 
-        desc 'Build an Ubuntu Quantal 64 bits box'
-        BuildUbuntuBoxTaskV3.
-          new(:quantal64,
-              :quantal, 'amd64', puppet: puppet, babushka: babushka)
+      desc 'Build an Ubuntu Quantal 64 bits box'
+      BuildUbuntuBoxTaskV3.
+        new(:quantal64,
+            :quantal, 'amd64', puppet: puppet, babushka: babushka)
 
-        desc 'Build an Ubuntu Raring 64 bits box'
-        BuildUbuntuBoxTaskV3.
-          new(:raring64,
-              :raring, 'amd64', puppet: puppet, babushka: babushka)
+      desc 'Build an Ubuntu Raring 64 bits box'
+      BuildUbuntuBoxTaskV3.
+        new(:raring64,
+            :raring, 'amd64', puppet: puppet, babushka: babushka)
 
-        desc 'Build all Ubuntu boxes'
-        task :all => %w( precise64 quantal64 raring64 )
-      end
+      desc 'Build all Ubuntu boxes'
+      task :all => %w( precise64 quantal64 raring64 )
     end
-
-    namespace :debian do
-      namespace :build do
-        desc 'Build an Debian Squeeze 64 bits box'
-        BuildDebianBoxTaskV3.
-          new(:squeeze64,
-              :squeeze, 'amd64', puppet: puppet, babushka: babushka)
-
-        desc 'Build an Debian Wheezy 64 bits box'
-        BuildDebianBoxTaskV3.
-          new(:wheezy64,
-              :wheezy, 'amd64', puppet: puppet, babushka: babushka)
-
-        desc 'Build an Debian Sid/unstable 64 bits box'
-        BuildDebianBoxTaskV3.
-          new(:sid64,
-              :sid, 'amd64', puppet: puppet, babushka: babushka)
-
-        desc 'Build all Debian boxes'
-        task :all => %w( squeeze64 wheezy64 sid64 )
-      end
-    end
-
-    desc 'Build all base boxes for release'
-    task :build_all => %w( ubuntu:build:all debian:build:all )
   end
+
+  namespace :debian do
+    namespace :build do
+      desc 'Build an Debian Squeeze 64 bits box'
+      BuildDebianBoxTaskV3.
+        new(:squeeze64,
+            :squeeze, 'amd64', puppet: puppet, babushka: babushka)
+
+      desc 'Build an Debian Wheezy 64 bits box'
+      BuildDebianBoxTaskV3.
+        new(:wheezy64,
+            :wheezy, 'amd64', puppet: puppet, babushka: babushka)
+
+      desc 'Build an Debian Sid/unstable 64 bits box'
+      BuildDebianBoxTaskV3.
+        new(:sid64,
+            :sid, 'amd64', puppet: puppet, babushka: babushka)
+
+      desc 'Build all Debian boxes'
+      task :all => %w( squeeze64 wheezy64 sid64 )
+    end
+  end
+
+  desc 'Build all base boxes for release'
+  task :build_all => %w( ubuntu:build:all debian:build:all )
 end
