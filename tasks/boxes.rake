@@ -4,6 +4,8 @@ load 'tasks/boxes.v2.rake'
 
 class BuildGenericBoxTaskV3 < BuildGenericBoxTaskV2
   def build
+    require 'vagrant'
+
     check_if_box_has_been_built!
 
     FileUtils.mkdir_p 'boxes/temp' unless File.exist? 'base/temp'
@@ -26,7 +28,6 @@ class BuildGenericBoxTaskV3 < BuildGenericBoxTaskV2
   end
 
   def finalize
-    require 'vagrant'
     auth_key = Vagrant.source_root.join('keys', 'vagrant.pub').expand_path.to_s
     run 'finalize', @arch, @release, auth_key
   end
