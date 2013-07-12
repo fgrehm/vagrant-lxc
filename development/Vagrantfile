@@ -43,6 +43,7 @@ BOXES = {
 
 Vagrant.require_plugin 'vagrant-lxc'
 Vagrant.require_plugin 'vagrant-cachier'
+Vagrant.require_plugin 'vagrant-pristine'
 
 Vagrant.configure("2") do |config|
   config.vm.synced_folder "../", "/vagrant", id: 'vagrant-root', nfs: true
