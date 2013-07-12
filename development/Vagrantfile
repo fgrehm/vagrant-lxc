@@ -50,6 +50,7 @@ Vagrant.configure("2") do |config|
 
   config.cache.scope = :machine
   config.cache.auto_detect = true
+  config.cache.enable_nfs = true
 
   ip_suffix = 30
   BOXES.each do |box_name, box_config|
