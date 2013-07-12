@@ -6,6 +6,7 @@ group :development do
   gem 'vagrant',          github: 'mitchellh/vagrant'
   gem 'vagrant-cachier',  github: 'fgrehm/vagrant-cachier'
   gem 'vagrant-pristine', github: 'fgrehm/vagrant-pristine'
+  gem 'vagrant-omnibus'
   gem 'guard'
   gem 'guard-rspec'
   gem 'rb-inotify'
