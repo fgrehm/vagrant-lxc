@@ -32,9 +32,9 @@ echo "Hi there I'm a shell script used for provisioning"
   releases.each do |release|
     config.vm.define(release) do |lxc_config|
       lxc_config.vm.box      = "#{release}64"
-      lxc_config.vm.box_url  = "http://dl.dropbox.com/u/13510779/lxc-#{release}-amd64-2013-07-08.box"
+      lxc_config.vm.box_url  = "http://dl.dropbox.com/u/13510779/lxc-#{release}-amd64-2013-07-12.box"
       # Uncomment if you want to try out a box built locally
-      # lxc_config.vm.box_url  = "../boxes/output/lxc-#{release}-amd64-2013-07-08.box"
+      # lxc_config.vm.box_url  = "../boxes/output/lxc-#{release}-amd64-2013-07-12.box"
       lxc_config.vm.network :forwarded_port, guest: 80, host: (port += 1)
       lxc_config.vm.hostname = "lxc-#{release}64-example"
     end

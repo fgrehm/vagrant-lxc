@@ -55,7 +55,7 @@ vagrant plugin install vagrant-lxc
 After installing, add a [base box](#base-boxes) using any name you want, for example:
 
 ```
-vagrant box add quantal64 http://dl.dropbox.com/u/13510779/lxc-quantal-amd64-2013-07-08.box
+vagrant box add quantal64 http://dl.dropbox.com/u/13510779/lxc-quantal-amd64-2013-07-12.box
 ```
 
 Then create a Vagrantfile that looks like the following, changing the box name
@@ -98,7 +98,6 @@ For other configuration options, please check [lxc.conf manpages](http://manpage
 
 
 ### Base boxes
-
 
 Please check [the wiki](https://github.com/fgrehm/vagrant-lxc/wiki/Base-boxes)
 for a list of [pre built](https://github.com/fgrehm/vagrant-lxc/wiki/Base-boxes#available-boxes)
