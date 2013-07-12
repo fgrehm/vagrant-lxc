@@ -3,9 +3,9 @@ source 'https://rubygems.org'
 gemspec
 
 group :development do
-  # TODO: Lock to 1.2.3 once it is out with this fix: https://github.com/mitchellh/vagrant/pull/1685
-  gem 'vagrant', git: 'https://github.com/mitchellh/vagrant.git'
-  gem 'vagrant-cachier'
+  gem 'vagrant',          github: 'mitchellh/vagrant'
+  gem 'vagrant-cachier',  github: 'fgrehm/vagrant-cachier'
+  gem 'vagrant-pristine', github: 'fgrehm/vagrant-pristine'
   gem 'guard'
   gem 'guard-rspec'
   gem 'rb-inotify'
