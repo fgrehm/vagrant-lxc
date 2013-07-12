@@ -30,7 +30,7 @@ module Vagrant
       end
 
       def rootfs_path
-        Pathname.new(base_path.join('rootfs'))
+        Pathname.new(base_path.join('config').read.match(/^lxc\.rootfs\s+=\s+(.+)$/)[1])
       end
 
       def create(name, template_path, config_file, template_options = {})
@@ -65,7 +65,6 @@ module Vagrant
           extra = ['-o', ENV['LXC_START_LOG_FILE'], '-l', 'DEBUG']
         end
         customizations = customizations + @customizations
-        customizations += [['rootfs', rootfs_path.to_s]]
 
         @cli.transition_to(:running) { |c| c.start(customizations, (extra || nil)) }
       end
