@@ -3,8 +3,8 @@ require 'unit_helper'
 require 'vagrant-lxc/action/setup_package_files'
 
 describe Vagrant::LXC::Action::SetupPackageFiles do
-  let(:app)         { mock(:app, call: true) }
-  let(:env)         { {machine: machine, tmp_path: tmp_path, ui: stub(info: true), 'package.rootfs' => rootfs_path} }
+  let(:app)         { double(:app, call: true) }
+  let(:env)         { {machine: machine, tmp_path: tmp_path, ui: double(info: true), 'package.rootfs' => rootfs_path} }
   let(:machine)     { instance_double('Vagrant::Machine', box: box) }
   let!(:tmp_path)   { Pathname.new(Dir.mktmpdir) }
   let(:box)         { instance_double('Vagrant::Box', directory: tmp_path.join('box')) }

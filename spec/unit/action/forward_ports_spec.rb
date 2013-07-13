@@ -3,9 +3,9 @@ require 'unit_helper'
 require 'vagrant-lxc/action/forward_ports'
 
 describe Vagrant::LXC::Action::ForwardPorts do
-  let(:app)          { mock(:app, call: true) }
-  let(:env)          { {machine: machine, ui: stub(info: true)} }
-  let(:machine)      { mock(:machine) }
+  let(:app)          { double(:app, call: true) }
+  let(:env)          { {machine: machine, ui: double(info: true)} }
+  let(:machine)      { double(:machine) }
   let!(:data_dir)    { Pathname.new(Dir.mktmpdir) }
   let(:networks)     { [[:other_config, {}], [:forwarded_port, {guest: guest_port, host: host_port}]] }
   let(:host_port)    { 8080 }
