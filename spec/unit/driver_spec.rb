@@ -14,19 +14,19 @@ describe Vagrant::LXC::Driver do
     it 'raises a ContainerNotFound error if an unknown container name gets provided' do
       expect {
         unknown_container.validate!
-      }.to raise_error(Vagrant::LXC::Driver::ContainerNotFound)
+      }.to raise_error
     end
 
     it 'does not raise a ContainerNotFound error if a valid container name gets provided' do
       expect {
         valid_container.validate!
-      }.to_not raise_error(Vagrant::LXC::Driver::ContainerNotFound)
+      }.not_to raise_error
     end
 
     it 'does not raise a ContainerNotFound error if nil is provider as name' do
       expect {
         new_container.validate!
-      }.to_not raise_error(Vagrant::LXC::Driver::ContainerNotFound)
+      }.not_to raise_error
     end
   end
 
