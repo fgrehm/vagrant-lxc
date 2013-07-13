@@ -15,7 +15,7 @@ end
 
 group :development, :test do
   gem 'rake'
-  gem 'rspec'
+  gem 'rspec',       '~> 2.13.0'
   gem 'rspec-fire',  require: 'rspec/fire'
   gem 'rspec-spies', require: false
   gem 'coveralls',   require: false
