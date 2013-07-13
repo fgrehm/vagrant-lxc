@@ -5,9 +5,9 @@ require 'vagrant-lxc/action/compress_rootfs'
 describe Vagrant::LXC::Action::CompressRootFS do
   let(:app)                    { mock(:app, call: true) }
   let(:env)                    { {machine: machine, ui: stub(info: true)} }
-  let(:machine)                { fire_double('Vagrant::Machine', provider: provider) }
-  let(:provider)               { fire_double('Vagrant::LXC::Provider', driver: driver) }
-  let(:driver)                 { fire_double('Vagrant::LXC::Driver', compress_rootfs: compressed_rootfs_path) }
+  let(:machine)                { instance_double('Vagrant::Machine', provider: provider) }
+  let(:provider)               { instance_double('Vagrant::LXC::Provider', driver: driver) }
+  let(:driver)                 { instance_double('Vagrant::LXC::Driver', compress_rootfs: compressed_rootfs_path) }
   let(:compressed_rootfs_path) { '/path/to/rootfs.tar.gz' }
 
   subject { described_class.new(app, env) }
