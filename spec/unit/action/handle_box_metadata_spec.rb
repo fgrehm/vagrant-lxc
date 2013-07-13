@@ -5,10 +5,10 @@ require 'vagrant-lxc/errors'
 require 'vagrant-lxc/action/handle_box_metadata'
 
 describe Vagrant::LXC::Action::HandleBoxMetadata do
-  let(:app)           { mock(:app, call: true) }
-  let(:env)           { {machine: machine, ui: stub(info: true)} }
-  let(:machine)       { mock(:machine, box: box) }
-  let(:box)           { mock(:box, name: 'box-name', metadata: metadata, directory: box_directory) }
+  let(:app)           { double(:app, call: true) }
+  let(:env)           { {machine: machine, ui: double(info: true)} }
+  let(:machine)       { double(:machine, box: box) }
+  let(:box)           { double(:box, name: 'box-name', metadata: metadata, directory: box_directory) }
   let(:box_directory) { Pathname.new('/path/to/box') }
   let(:version)       { '2' }
   let(:metadata)      { {'template-opts' => {'--foo' => 'bar'}, 'version' => version} }

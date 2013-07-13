@@ -9,24 +9,24 @@ describe Vagrant::LXC::Driver do
     let(:unknown_container) { described_class.new('unknown', cli) }
     let(:valid_container)   { described_class.new('valid', cli) }
     let(:new_container)     { described_class.new(nil) }
-    let(:cli)               { fire_double('Vagrant::LXC::Driver::CLI', list: ['valid']) }
+    let(:cli)               { instance_double('Vagrant::LXC::Driver::CLI', list: ['valid']) }
 
     it 'raises a ContainerNotFound error if an unknown container name gets provided' do
       expect {
         unknown_container.validate!
-      }.to raise_error(Vagrant::LXC::Driver::ContainerNotFound)
+      }.to raise_error
     end
 
     it 'does not raise a ContainerNotFound error if a valid container name gets provided' do
       expect {
         valid_container.validate!
-      }.to_not raise_error(Vagrant::LXC::Driver::ContainerNotFound)
+      }.not_to raise_error
     end
 
     it 'does not raise a ContainerNotFound error if nil is provider as name' do
       expect {
         new_container.validate!
-      }.to_not raise_error(Vagrant::LXC::Driver::ContainerNotFound)
+      }.not_to raise_error
     end
   end
 
@@ -37,7 +37,7 @@ describe Vagrant::LXC::Driver do
     let(:template_opts)  { {'--some' => 'random-option'} }
     let(:config_file)    { '/path/to/lxc-config-from-box' }
     let(:rootfs_tarball) { '/path/to/cache/rootfs.tar.gz' }
-    let(:cli)            { fire_double('Vagrant::LXC::Driver::CLI', :create => true, :name= => true) }
+    let(:cli)            { instance_double('Vagrant::LXC::Driver::CLI', :create => true, :name= => true) }
 
     subject { described_class.new(nil, cli) }
 
@@ -60,7 +60,7 @@ describe Vagrant::LXC::Driver do
   end
 
   describe 'destruction' do
-    let(:cli) { fire_double('Vagrant::LXC::Driver::CLI', destroy: true) }
+    let(:cli) { instance_double('Vagrant::LXC::Driver::CLI', destroy: true) }
 
     subject { described_class.new('name', cli) }
 
@@ -74,8 +74,7 @@ describe Vagrant::LXC::Driver do
   describe 'start' do
     let(:customizations)         { [['a', '1'], ['b', '2']] }
     let(:internal_customization) { ['internal', 'customization'] }
-    let(:rootfs)                 { ['rootfs', subject.rootfs_path.to_s] }
-    let(:cli)                    { fire_double('Vagrant::LXC::Driver::CLI', start: true) }
+    let(:cli)                    { instance_double('Vagrant::LXC::Driver::CLI', start: true) }
 
     subject { described_class.new('name', cli) }
 
@@ -86,7 +85,7 @@ describe Vagrant::LXC::Driver do
     end
 
     it 'starts container with configured customizations' do
-      cli.should have_received(:start).with(customizations + [internal_customization, rootfs], nil)
+      cli.should have_received(:start).with(customizations + [internal_customization], nil)
     end
 
     it 'expects a transition to running state to take place' do
@@ -95,7 +94,7 @@ describe Vagrant::LXC::Driver do
   end
 
   describe 'halt' do
-    let(:cli) { fire_double('Vagrant::LXC::Driver::CLI', shutdown: true) }
+    let(:cli) { instance_double('Vagrant::LXC::Driver::CLI', shutdown: true) }
 
     subject { described_class.new('name', cli) }
 
@@ -123,7 +122,7 @@ describe Vagrant::LXC::Driver do
 
   describe 'state' do
     let(:cli_state) { :something }
-    let(:cli)       { fire_double('Vagrant::LXC::Driver::CLI', state: cli_state) }
+    let(:cli)       { instance_double('Vagrant::LXC::Driver::CLI', state: cli_state) }
 
     subject { described_class.new('name', cli) }
 
@@ -136,7 +135,7 @@ describe Vagrant::LXC::Driver do
     # This ip is set on the sample-ip-addr-output fixture
     let(:ip)              { "10.0.254.137" }
     let(:ifconfig_output) { File.read('spec/fixtures/sample-ip-addr-output') }
-    let(:cli)             { fire_double('Vagrant::LXC::Driver::CLI', :attach => ifconfig_output) }
+    let(:cli)             { instance_double('Vagrant::LXC::Driver::CLI', :attach => ifconfig_output) }
 
     subject { described_class.new('name', cli) }
 

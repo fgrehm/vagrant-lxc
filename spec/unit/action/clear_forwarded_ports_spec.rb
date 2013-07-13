@@ -1,11 +1,12 @@
 require 'unit_helper'
 
+require 'tmpdir'
 require 'vagrant-lxc/action/clear_forwarded_ports'
 
 describe Vagrant::LXC::Action::ClearForwardedPorts do
-  let(:app)       { mock(:app, call: true) }
-  let(:env)       { {machine: machine, ui: stub(info: true)} }
-  let(:machine)   { mock(:machine, data_dir: data_dir) }
+  let(:app)       { double(:app, call: true) }
+  let(:env)       { {machine: machine, ui: double(info: true)} }
+  let(:machine)   { double(:machine, data_dir: data_dir) }
   let!(:data_dir) { Pathname.new(Dir.mktmpdir) }
   let(:pids_dir)  { data_dir.join('pids') }
   let(:pid)       { 'a-pid' }

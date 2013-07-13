@@ -3,6 +3,7 @@
 
 # Not really needed, but useful while developing so that vagrant picks it up
 Vagrant.require_plugin 'vagrant-lxc'
+Vagrant.require_plugin 'vagrant-omnibus'
 
 Vagrant.configure("2") do |config|
   config.vm.synced_folder "/tmp", "/vagrant_data"
@@ -22,21 +23,25 @@ echo "Hi there I'm a shell script used for provisioning"
     puppet.manifest_file  = "site.pp"
   end
 
-  config.vm.provision :chef_solo do |chef|
-    chef.add_recipe "hello-world"
-    chef.log_level = :debug
-  end
-
   port     = 8080
   releases = %w(precise quantal raring wheezy squeeze sid)
   releases.each do |release|
     config.vm.define(release) do |lxc_config|
       lxc_config.vm.box      = "#{release}64"
-      lxc_config.vm.box_url  = "http://dl.dropbox.com/u/13510779/lxc-#{release}-amd64-2013-05-08.box"
-      lxc_config.vm.network :forwarded_port, guest: 80, host: (port += 1)
+      lxc_config.vm.box_url  = "http://dl.dropbox.com/u/13510779/lxc-#{release}-amd64-2013-07-12.box"
       # Uncomment if you want to try out a box built locally
-      # lxc_config.vm.box_url  = "../boxes/output/lxc-#{release}64.box"
+      # lxc_config.vm.box_url  = "../boxes/output/lxc-#{release}-amd64-2013-07-12.box"
+      lxc_config.vm.network :forwarded_port, guest: 80, host: (port += 1)
       lxc_config.vm.hostname = "lxc-#{release}64-example"
+
+      if %w(precise quantal raring squeeze).include? release
+        lxc_config.omnibus.chef_version = :latest
+
+        lxc_config.vm.provision :chef_solo do |chef|
+          chef.add_recipe "hello-world"
+          chef.log_level = :debug
+        end
+      end
     end
   end
 end

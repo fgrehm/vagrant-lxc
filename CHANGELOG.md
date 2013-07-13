@@ -2,11 +2,12 @@
 
 FEATURES:
 
-  - Enable Chef for Ubuntu Raring base box
   - New box format [#89](https://github.com/fgrehm/vagrant-lxc/issues/89)
 
 BUG FIXES:
 
+  - Add translation for stopped status [#97](https://github.com/fgrehm/vagrant-lxc/issues/97)
+  - Enable retries when fetching container state [#74](https://github.com/fgrehm/vagrant-lxc/issues/74)
   - Fix error when setting Debian boxes hostname from Vagrantfile [#91](https://github.com/fgrehm/vagrant-lxc/issues/91)
   - BTRFS-friendly base boxes [#81](https://github.com/fgrehm/vagrant-lxc/issues/81)
   - Extended templates path lookup [#77](https://github.com/fgrehm/vagrant-lxc/issues/77) (tks to @aries1980)

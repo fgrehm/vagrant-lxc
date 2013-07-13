@@ -11,7 +11,7 @@ class BuildGenericBoxTaskV2 < ::Rake::TaskLib
     @distrib          = distrib
     @release          = release.to_s
     @arch             = arch.to_s
-    @install_chef     = opts.fetch(:chef, true)
+    @install_chef     = opts.fetch(:chef, false)
     @install_puppet   = opts.fetch(:puppet, true)
     @install_babushka = opts.fetch(:babushka, true)
     @file             = opts[:file] || default_box_file

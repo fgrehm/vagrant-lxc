@@ -3,7 +3,7 @@
 
 require 'pathname'
 BASE_URL          = 'http://dl.dropbox.com/u/13510779'
-LAST_RELEASE_DATE = '2013-05-08'
+LAST_RELEASE_DATE = '2013-07-12'
 LOCAL_BOXES_PATH  = Pathname('../boxes/output').expand_path
 def lxc_box_url(release_name)
   file_name      = "lxc-#{release_name}-amd64-#{LAST_RELEASE_DATE}.box"
@@ -43,12 +43,14 @@ BOXES = {
 
 Vagrant.require_plugin 'vagrant-lxc'
 Vagrant.require_plugin 'vagrant-cachier'
+Vagrant.require_plugin 'vagrant-pristine'
 
 Vagrant.configure("2") do |config|
   config.vm.synced_folder "../", "/vagrant", id: 'vagrant-root', nfs: true
 
   config.cache.scope = :machine
   config.cache.auto_detect = true
+  config.cache.enable_nfs = true
 
   ip_suffix = 30
   BOXES.each do |box_name, box_config|
