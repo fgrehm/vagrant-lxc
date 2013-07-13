@@ -1,5 +1,6 @@
 require 'unit_helper'
 
+require 'tmpdir'
 require 'vagrant-lxc/action/clear_forwarded_ports'
 
 describe Vagrant::LXC::Action::ClearForwardedPorts do

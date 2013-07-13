@@ -74,7 +74,6 @@ describe Vagrant::LXC::Driver do
   describe 'start' do
     let(:customizations)         { [['a', '1'], ['b', '2']] }
     let(:internal_customization) { ['internal', 'customization'] }
-    let(:rootfs)                 { ['rootfs', subject.rootfs_path.to_s] }
     let(:cli)                    { instance_double('Vagrant::LXC::Driver::CLI', start: true) }
 
     subject { described_class.new('name', cli) }
@@ -86,7 +85,7 @@ describe Vagrant::LXC::Driver do
     end
 
     it 'starts container with configured customizations' do
-      cli.should have_received(:start).with(customizations + [internal_customization, rootfs], nil)
+      cli.should have_received(:start).with(customizations + [internal_customization], nil)
     end
 
     it 'expects a transition to running state to take place' do
