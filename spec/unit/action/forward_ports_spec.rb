@@ -23,6 +23,7 @@ describe Vagrant::LXC::Action::ForwardPorts do
 
     subject.stub(exec: true)
     subject.stub(spawn: pid)
+    subject.stub(system: true)
     subject.call(env)
   end
 
