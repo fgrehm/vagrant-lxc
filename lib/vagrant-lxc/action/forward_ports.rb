@@ -10,11 +10,12 @@ module Vagrant
         def call(env)
           @env = env
 
-          # Continue, we need the VM to be booted in order to grab its IP
-          @app.call env
-
           # Get the ports we're forwarding
           env[:forwarded_ports] = compile_forwarded_ports(env[:machine].config)
+
+          if @env[:forwarded_ports].any? and not redir_installed?
+            raise Errors::RedirNotInstalled
+          end
 
           # Warn if we're port forwarding to any privileged ports
           env[:forwarded_ports].each do |fp|
@@ -24,14 +25,12 @@ module Vagrant
             end
           end
 
+          # Continue, we need the VM to be booted in order to grab its IP
+          @app.call env
+
           if @env[:forwarded_ports].any?
             env[:ui].info I18n.t("vagrant.actions.vm.forward_ports.forwarding")
-
-            if redir_installed?
-              forward_ports
-            else
-              raise Errors::RedirNotInstalled
-            end
+            forward_ports
           end
         end
 
@@ -86,7 +85,7 @@ module Vagrant
         end
 
         def redir_installed?
-          system "sudo which redir"
+          system "sudo which redir > /dev/null"
         end
       end
     end
