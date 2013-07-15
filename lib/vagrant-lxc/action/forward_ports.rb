@@ -38,21 +38,21 @@ module Vagrant
         def forward_ports
           @container_ip = @env[:machine].provider.driver.assigned_ip
 
-            @env[:forwarded_ports].each do |fp|
-              message_attributes = {
-                # TODO: Add support for multiple adapters
-                :adapter    => 'eth0',
-                :guest_port => fp[:guest],
-                :host_port  => fp[:host]
-              }
+          @env[:forwarded_ports].each do |fp|
+            message_attributes = {
+              # TODO: Add support for multiple adapters
+              :adapter    => 'eth0',
+              :guest_port => fp[:guest],
+              :host_port  => fp[:host]
+            }
 
-              # TODO: Remove adapter from logging
-              @env[:ui].info(I18n.t("vagrant.actions.vm.forward_ports.forwarding_entry",
-                                    message_attributes))
+            # TODO: Remove adapter from logging
+            @env[:ui].info(I18n.t("vagrant.actions.vm.forward_ports.forwarding_entry",
+                                  message_attributes))
 
-              redir_pid = redirect_port(fp[:host], fp[:guest])
-              store_redir_pid(fp[:host], redir_pid)
-            end
+            redir_pid = redirect_port(fp[:host], fp[:guest])
+            store_redir_pid(fp[:host], redir_pid)
+          end
         end
 
         private
