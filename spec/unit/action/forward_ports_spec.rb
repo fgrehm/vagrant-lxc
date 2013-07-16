@@ -23,20 +23,27 @@ describe Vagrant::LXC::Action::ForwardPorts do
 
     subject.stub(exec: true)
     subject.stub(spawn: pid)
-    subject.stub(system: true)
-    subject.call(env)
   end
 
   after { FileUtils.rm_rf data_dir.to_s }
 
   it 'forwards ports using redir' do
+    subject.stub(system: true)
+    subject.call(env)
     subject.should have_received(:spawn).with(
       "sudo redir --laddr=127.0.0.1 --lport=#{host_port} --cport=#{guest_port} --caddr=#{container_ip} 2>/dev/null"
     )
   end
 
   it "stores redir pids on machine's data dir" do
+    subject.stub(system: true)
+    subject.call(env)
     pid_file = data_dir.join('pids', "redir_#{host_port}.pid").read
     pid_file.should == pid
+  end
+
+  it 'raises RedirNotInstalled error if `redir` is not installed' do
+    subject.stub(system: false)
+    lambda { subject.call(env) }.should raise_error(Vagrant::LXC::Errors::RedirNotInstalled)
   end
 end
