@@ -17,8 +17,12 @@ en:
       force_shutdown: |-
         Forcing shutdown of container...
 
-  # TODO: Review messages below
   vagrant:
+    commands:
+      status:
+        stopped: |-
+          The container is currently stopped. Run `vagrant up` to bring it up again.
+
     actions:
       lxc:
         compressing_rootfs: Compressing container's rootfs...
