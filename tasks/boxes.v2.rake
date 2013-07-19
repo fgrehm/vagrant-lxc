@@ -14,6 +14,7 @@ class BuildGenericBoxTaskV2 < ::Rake::TaskLib
     @install_chef     = opts.fetch(:chef, false)
     @install_puppet   = opts.fetch(:puppet, true)
     @install_babushka = opts.fetch(:babushka, true)
+    @install_salt     = opts.fetch(:salt, true)
     @file             = opts[:file] || default_box_file
     @scripts_path     = Pathname(Dir.pwd).join('boxes')
 
@@ -86,7 +87,7 @@ class BuildGenericBoxTaskV2 < ::Rake::TaskLib
   end
 
   def install_cfg_engines
-    [ :puppet, :chef, :babushka ].each do |cfg_engine|
+    [ :puppet, :chef, :babushka, :salt ].each do |cfg_engine|
       next unless instance_variable_get :"@install_#{cfg_engine}"
       script_name = "install-#{cfg_engine}"
       run script_name
@@ -125,6 +126,7 @@ end
 chef     = ENV['CHEF']     == '1'
 puppet   = ENV['PUPPET']   == '1'
 babushka = ENV['BABUSHKA'] == '1'
+salt     = ENV['SALT']     == '1'
 
 namespace :boxes do
   namespace :v2 do
@@ -134,21 +136,26 @@ namespace :boxes do
         desc 'Build an Ubuntu Precise 64 bits box'
         BuildUbuntuBoxTaskV2.
           new(:precise64,
-              :precise, 'amd64', chef: chef, puppet: puppet, babushka: babushka)
+              :precise, 'amd64', chef: chef, puppet: puppet, babushka: babushka, salt: salt)
 
         desc 'Build an Ubuntu Quantal 64 bits box'
         BuildUbuntuBoxTaskV2.
           new(:quantal64,
-              :quantal, 'amd64', chef: chef, puppet: puppet, babushka: babushka)
+              :quantal, 'amd64', chef: chef, puppet: puppet, babushka: babushka, salt: salt)
 
         # FIXME: Find out how to install chef on raring
         desc 'Build an Ubuntu Raring 64 bits box'
         BuildUbuntuBoxTaskV2.
           new(:raring64,
-              :raring, 'amd64', chef: chef, puppet: puppet, babushka: babushka)
+              :raring, 'amd64', chef: chef, puppet: puppet, babushka: babushka, salt: salt)
+
+        desc 'Build an Ubuntu Saucy 64 bits box'
+        BuildUbuntuBoxTaskV2.
+          new(:saucy64,
+              :saucy, 'amd64', chef: chef, puppet: puppet, babushka: babushka, salt: salt)
 
         desc 'Build all Ubuntu boxes'
-        task :all => %w( precise64 quantal64 raring64 )
+        task :all => %w( precise64 quantal64 raring64 saucy64 )
       end
     end
 
@@ -158,17 +165,17 @@ namespace :boxes do
         desc 'Build an Debian Squeeze 64 bits box'
         BuildDebianBoxTaskV2.
           new(:squeeze64,
-              :squeeze, 'amd64', chef: false, puppet: puppet, babushka: babushka)
+              :squeeze, 'amd64', chef: false, puppet: puppet, babushka: babushka, salt: false)
 
         desc 'Build an Debian Wheezy 64 bits box'
         BuildDebianBoxTaskV2.
           new(:wheezy64,
-              :wheezy, 'amd64', chef: false, puppet: puppet, babushka: babushka)
+              :wheezy, 'amd64', chef: false, puppet: puppet, babushka: babushka, salt: false)
 
         desc 'Build an Debian Sid/unstable 64 bits box'
         BuildDebianBoxTaskV2.
           new(:sid64,
-              :sid, 'amd64', chef: false, puppet: puppet, babushka: babushka)
+              :sid, 'amd64', chef: false, puppet: puppet, babushka: babushka, salt: false)
 
         desc 'Build all Debian boxes'
         task :all => %w( squeeze64 wheezy64 sid64 )

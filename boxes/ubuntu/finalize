@@ -248,7 +248,7 @@ post_process()
     release=$2
     trim_container=$3
 
-    if [ $trim_container -eq 1 ]; then
+    if [[ $trim_container -eq 1 ]]; then
         trim $rootfs $release
     elif [ ! -f $rootfs/etc/init/container-detect.conf ]; then
         # Make sure we have a working resolv.conf
