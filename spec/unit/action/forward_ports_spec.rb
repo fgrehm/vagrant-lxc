@@ -1,5 +1,7 @@
 require 'unit_helper'
 
+require 'tmpdir'
+require 'vagrant-lxc/errors'
 require 'vagrant-lxc/action/forward_ports'
 
 describe Vagrant::LXC::Action::ForwardPorts do
@@ -31,7 +33,7 @@ describe Vagrant::LXC::Action::ForwardPorts do
     subject.stub(system: true)
     subject.call(env)
     subject.should have_received(:spawn).with(
-      "sudo redir --laddr=127.0.0.1 --lport=#{host_port} --cport=#{guest_port} --caddr=#{container_ip} 2>/dev/null"
+      "sudo redir --laddr=127.0.0.1 --lport=#{host_port} --caddr=#{container_ip} --cport=#{guest_port} 2>/dev/null"
     )
   end
 

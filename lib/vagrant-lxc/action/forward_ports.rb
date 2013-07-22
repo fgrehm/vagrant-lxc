@@ -35,8 +35,6 @@ module Vagrant
         end
 
         def forward_ports
-          @container_ip = @env[:machine].provider.driver.assigned_ip
-
           @env[:forwarded_ports].each do |fp|
             message_attributes = {
               # TODO: Add support for multiple adapters
@@ -49,7 +47,12 @@ module Vagrant
             @env[:ui].info(I18n.t("vagrant.actions.vm.forward_ports.forwarding_entry",
                                   message_attributes))
 
-            redir_pid = redirect_port(fp[:host], fp[:guest])
+            redir_pid = redirect_port(
+              fp[:host_ip]  || "127.0.0.1",
+              fp[:host],
+              fp[:guest_ip] || @env[:machine].provider.driver.assigned_ip,
+              fp[:guest]
+            )
             store_redir_pid(fp[:host], redir_pid)
           end
         end
@@ -68,8 +71,9 @@ module Vagrant
           mappings.values
         end
 
-        def redirect_port(host, guest)
-          redir_cmd = "sudo redir --laddr=127.0.0.1 --lport=#{host} --cport=#{guest} --caddr=#{@container_ip} 2>/dev/null"
+        def redirect_port(host_ip, host_port, guest_ip, guest_port)
+          host_ip = "--laddr=#{host_ip}" unless host_ip.empty?
+          redir_cmd = "sudo redir #{host_ip} --lport=#{host_port} --caddr=#{guest_ip} --cport=#{guest_port} 2>/dev/null"
 
           @logger.debug "Forwarding port with `#{redir_cmd}`"
           spawn redir_cmd
