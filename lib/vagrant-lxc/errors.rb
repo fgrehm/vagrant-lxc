@@ -17,6 +17,9 @@ module Vagrant
       class IncompatibleBox < Vagrant::Errors::VagrantError
         error_key(:lxc_incompatible_box)
       end
+      class RedirNotInstalled < Vagrant::Errors::VagrantError
+        error_key(:lxc_redir_not_installed)
+      end
     end
   end
 end
