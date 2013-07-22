@@ -10,6 +10,7 @@ Gem::Specification.new do |gem|
   gem.email         = ["fgrehm@gmail.com"]
   gem.description   = %q{Linux Containers provider for Vagrant}
   gem.summary       = gem.description
+  gem.license       = 'MIT'
   gem.homepage      = "https://github.com/fgrehm/vagrant-lxc"
 
   gem.files         = `git ls-files`.split($/)
