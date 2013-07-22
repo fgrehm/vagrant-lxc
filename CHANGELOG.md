@@ -3,6 +3,8 @@
 IMPROVEMENTS:
 
   - Error out if `redir` is not installed but port forwarding was configured [#112](https://github.com/fgrehm/vagrant-lxc/issues/112)
+  - Support for specifying host interface/ip for binding `redir` [#76](https://github.com/fgrehm/vagrant-lxc/issues/76)
+  - Add Vagrantfile VM name to the container name [#115](https://github.com/fgrehm/vagrant-lxc/issues/115)
 
 ## [0.4.0](https://github.com/fgrehm/vagrant-lxc/compare/v0.3.4...v0.4.0) (Jul 18, 2013)
 
