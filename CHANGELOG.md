@@ -1,5 +1,9 @@
 ## [0.4.1](https://github.com/fgrehm/vagrant-lxc/compare/v0.4.0...master) (unreleased)
 
+FEATURES:
+
+  - Add support for salt-minion and add latest dev release for ubuntu codenamed saucy [#116](https://github.com/fgrehm/vagrant-lxc/pull/116)
+
 IMPROVEMENTS:
 
   - Error out if `redir` is not installed but port forwarding was configured [#112](https://github.com/fgrehm/vagrant-lxc/issues/112)
