@@ -48,7 +48,7 @@ module Vagrant
                                   message_attributes))
 
             redir_pid = redirect_port(
-              fp[:host_ip]  || "127.0.0.1",
+              fp[:host_ip],
               fp[:host],
               fp[:guest_ip] || @env[:machine].provider.driver.assigned_ip,
               fp[:guest]
@@ -72,8 +72,8 @@ module Vagrant
         end
 
         def redirect_port(host_ip, host_port, guest_ip, guest_port)
-          host_ip = "--laddr=#{host_ip}" unless host_ip.empty?
-          redir_cmd = "sudo redir #{host_ip} --lport=#{host_port} --caddr=#{guest_ip} --cport=#{guest_port} 2>/dev/null"
+          host_ip = "--laddr=#{host_ip} " if host_ip
+          redir_cmd = "redir #{host_ip}--lport=#{host_port} --caddr=#{guest_ip} --cport=#{guest_port} 2>/dev/null"
 
           @logger.debug "Forwarding port with `#{redir_cmd}`"
           spawn redir_cmd

@@ -1,4 +1,11 @@
-## [0.4.1](https://github.com/fgrehm/vagrant-lxc/compare/v0.4.0...master) (unreleased)
+## [0.5.0](https://github.com/fgrehm/vagrant-lxc/compare/v0.4.0...master) (unreleased)
+
+BACKWARDS INCOMPATIBILITIES:
+
+  - To align with Vagrant's core behaviour, forwarded ports are no longer attached
+    to 127.0.0.1 and `redir`'s `--laddr` parameter is skipped in case the `:host_ip`
+    config is not provided, that means `redir` will listen on connections coming
+    from any of the host's IPs.
 
 FEATURES:
 
