@@ -89,7 +89,7 @@ module Vagrant
         end
 
         def redir_installed?
-          system "sudo which redir > /dev/null"
+          system "which redir > /dev/null"
         end
       end
     end
