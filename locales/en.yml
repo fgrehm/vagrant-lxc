@@ -45,5 +45,8 @@ en:
         The template file used for creating the container was not found for %{name}
         box.
 
+      lxc_not_installed: |-
+        The `lxc` package does not seem to be installed or is not accessible on the PATH.
+
       lxc_redir_not_installed: |-
         `redir` is not installed or is not accessible on the PATH.

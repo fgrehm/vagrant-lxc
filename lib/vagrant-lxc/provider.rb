@@ -14,6 +14,7 @@ module Vagrant
         @logger    = Log4r::Logger.new("vagrant::provider::lxc")
         @machine   = machine
 
+        ensure_lxc_installed!
         machine_id_changed
       end
 
@@ -22,6 +23,12 @@ module Vagrant
           wrapper = @machine.provider_config.sudo_wrapper
           wrapper = Pathname(wrapper).expand_path(@machine.env.root_path).to_s if wrapper
           SudoWrapper.new(wrapper)
+        end
+      end
+
+      def ensure_lxc_installed!
+        unless system("which lxc-version > /dev/null")
+          raise Errors::LxcNotInstalled
         end
       end
 
