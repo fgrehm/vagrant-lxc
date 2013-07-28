@@ -97,6 +97,41 @@ set from container's configuration file that is usually kept under
 For other configuration options, please check [lxc.conf manpages](http://manpages.ubuntu.com/manpages/quantal/man5/lxc.conf.5.html).
 
 
+### Avoiding `sudo` passwords
+
+This plugin requires **a lot** of `sudo`ing since [user namespaces](https://wiki.ubuntu.com/LxcSecurity)
+are not supported on mainstream kernels. In order to work around that we can use
+a really dumb Ruby wrapper script like the one below and add a `NOPASSWD` entry
+to our `/etc/sudoers` file:
+
+```ruby
+#!/usr/bin/env ruby
+exec ARGV.join(' ')
+```
+
+For example, you can save the code above under your `/usr/bin/lxc-vagrant-wrapper`,
+turn it into an executable script by running `chmod +x /usr/bin/lxc-vagrant-wrapper`
+and add the line below to your `/etc/sudoers` file:
+
+```
+USERNAME ALL=NOPASSWD:/usr/bin/lxc-vagrant-wrapper
+```
+
+In order to tell vagrant-lxc to use that script when `sudo` is needed, you can
+pass in the path to the script as a configuration for the provider:
+
+```ruby
+Vagrant.configure("2") do |config|
+  config.vm.provider :lxc do |lxc|
+    lxc.sudo_wrapper = '/usr/bin/lxc-vagrant-wrapper'
+  end
+end
+```
+
+If you want to set the `sudo_wrapper` globally, just add the code above to your
+`~/.vagrant.d/Vagrantfile`.
+
+
 ### Base boxes
 
 Please check [the wiki](https://github.com/fgrehm/vagrant-lxc/wiki/Base-boxes)
@@ -108,8 +143,6 @@ base boxes and information on [how to build your own](https://github.com/fgrehm/
 
 * The plugin does not detect forwarded ports collision, right now you are
   responsible for taking care of that.
-* There is a hell lot of `sudo`s involved and this will probably be around until
-  [user namespaces](https://wiki.ubuntu.com/LxcSecurity) are supported or I'm able to handle [#90](https://github.com/fgrehm/vagrant-lxc/issues/90)
 * [Does not tell you if dependencies are not met](https://github.com/fgrehm/vagrant-lxc/issues/11)
   (will probably just throw up some random error)
 * + bunch of other [core features](https://github.com/fgrehm/vagrant-lxc/issues?labels=core&milestone=&page=1&state=open)

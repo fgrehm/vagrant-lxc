@@ -3,6 +3,10 @@ require 'unit_helper'
 require 'vagrant-lxc/driver/cli'
 
 describe Vagrant::LXC::Driver::CLI do
+  let(:sudo_wrapper) { instance_double('Vagrant::LXC::SudoWrapper', run: true) }
+
+  subject { described_class.new(sudo_wrapper) }
+
   describe 'list' do
     let(:lxc_ls_out) { "dup-container\na-container dup-container" }
     let(:result)     { @result }
@@ -41,7 +45,7 @@ describe Vagrant::LXC::Driver::CLI do
     let(:config_file)   { 'config' }
     let(:template_args) { { '--extra-param' => 'param', '--other' => 'value' } }
 
-    subject { described_class.new(name) }
+    subject { described_class.new(sudo_wrapper, name) }
 
     before do
       subject.stub(:run) { |*args| @run_args = args }
@@ -64,7 +68,7 @@ describe Vagrant::LXC::Driver::CLI do
   describe 'destroy' do
     let(:name) { 'a-container-for-destruction' }
 
-    subject { described_class.new(name) }
+    subject { described_class.new(sudo_wrapper, name) }
 
     before do
       subject.stub(:run)
@@ -78,7 +82,7 @@ describe Vagrant::LXC::Driver::CLI do
 
   describe 'start' do
     let(:name) { 'a-container' }
-    subject    { described_class.new(name) }
+    subject    { described_class.new(sudo_wrapper, name) }
 
     before do
       subject.stub(:run)
@@ -96,15 +100,15 @@ describe Vagrant::LXC::Driver::CLI do
     it 'uses provided array to override container configs' do
       subject.start([['config', 'value'], ['other', 'value']])
       subject.should have_received(:run).with(:start, '-d', '--name', name,
-        '-s', 'lxc.config=value',
-        '-s', 'lxc.other=value'
+        '-s', "lxc.config='value'",
+        '-s', "lxc.other='value'"
       )
     end
   end
 
   describe 'shutdown' do
     let(:name) { 'a-running-container' }
-    subject    { described_class.new(name) }
+    subject    { described_class.new(sudo_wrapper, name) }
 
     before do
       subject.stub(:run)
@@ -118,7 +122,7 @@ describe Vagrant::LXC::Driver::CLI do
 
   describe 'state' do
     let(:name) { 'a-container' }
-    subject    { described_class.new(name) }
+    subject    { described_class.new(sudo_wrapper, name) }
 
     before do
       subject.stub(:run).and_return("state: STOPPED\npid: 2")
@@ -138,7 +142,7 @@ describe Vagrant::LXC::Driver::CLI do
     let(:name)           { 'a-running-container' }
     let(:command)        { ['ls', 'cat /tmp/file'] }
     let(:command_output) { 'folders list' }
-    subject              { described_class.new(name) }
+    subject              { described_class.new(sudo_wrapper, name) }
 
     before do
       subject.stub(run: command_output)

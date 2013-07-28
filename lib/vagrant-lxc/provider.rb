@@ -3,6 +3,7 @@ require "log4r"
 require "vagrant-lxc/action"
 require "vagrant-lxc/driver"
 require "vagrant-lxc/driver/builder"
+require "vagrant-lxc/sudo_wrapper"
 
 module Vagrant
   module LXC
@@ -16,6 +17,14 @@ module Vagrant
         machine_id_changed
       end
 
+      def sudo_wrapper
+        @shell ||= begin
+          wrapper = @machine.provider_config.sudo_wrapper
+          wrapper = Pathname(wrapper).expand_path(@machine.env.root_path).to_s if wrapper
+          SudoWrapper.new(wrapper)
+        end
+      end
+
       # If the machine ID changed, then we need to rebuild our underlying
       # container.
       def machine_id_changed
@@ -23,7 +32,7 @@ module Vagrant
 
         begin
           @logger.debug("Instantiating the container for: #{id.inspect}")
-          @driver = Driver::Builder.build(id)
+          @driver = Driver::Builder.build(id, self.sudo_wrapper)
           @driver.validate!
         rescue Driver::ContainerNotFound
           # The container doesn't exist, so we probably have a stale

@@ -14,9 +14,10 @@ module Vagrant
       attr_reader :container_name,
                   :customizations
 
-      def initialize(container_name, cli = CLI.new(container_name))
+      def initialize(container_name, sudo_wrapper, cli = nil)
         @container_name = container_name
-        @cli            = cli
+        @sudo_wrapper   = sudo_wrapper
+        @cli            = cli || CLI.new(sudo_wrapper, container_name)
         @logger         = Log4r::Logger.new("vagrant::provider::lxc::driver")
         @customizations = []
       end
@@ -48,7 +49,7 @@ module Vagrant
           unless guestpath.directory?
             begin
               @logger.debug("Guest path doesn't exist, creating: #{guestpath}")
-              system "sudo mkdir -p #{guestpath.to_s}"
+              @sudo_wrapper.run('mkdir', '-p', guestpath.to_s)
             rescue Errno::EACCES
               raise Vagrant::Errors::SharedFolderCreateFailed, :path => guestpath.to_s
             end
@@ -89,10 +90,11 @@ module Vagrant
 
         Dir.chdir base_path do
           @logger.info "Compressing '#{rootfs_path}' rootfs to #{target_path}"
-          system "sudo rm -f rootfs.tar.gz && sudo tar --numeric-owner -czf #{target_path} #{basename}/*"
+          @sudo_wrapper.run('rm', '-f', 'rootfs.tar.gz')
+          @sudo_wrapper.run('tar', '--numeric-owner', '-czf', target_path, "#{basename}/*")
 
           @logger.info "Changing rootfs tarbal owner"
-          system "sudo chown #{ENV['USER']}:#{ENV['USER']} #{target_path}"
+          @sudo_wrapper.run('chown', "#{ENV['USER']}:#{ENV['USER']}", target_path)
         end
 
         target_path
@@ -121,11 +123,11 @@ module Vagrant
         tmp_template_path = templates_path.join("lxc-#{template_name}").to_s
 
         @logger.debug 'Copying LXC template into place'
-        system(%Q[sudo su root -c "cp #{path} #{tmp_template_path}"])
+        @sudo_wrapper.run('cp', path, tmp_template_path)
 
         yield template_name
       ensure
-        system(%Q[sudo su root -c "rm #{tmp_template_path}"])
+        @sudo_wrapper.run('rm', tmp_template_path)
       end
 
       TEMPLATES_PATH_LOOKUP = %w(
