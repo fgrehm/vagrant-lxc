@@ -141,8 +141,6 @@ base boxes and information on [how to build your own](https://github.com/fgrehm/
 
 ## Current limitations
 
-* The plugin does not detect forwarded ports collision, right now you are
-  responsible for taking care of that.
 * [Does not tell you if dependencies are not met](https://github.com/fgrehm/vagrant-lxc/issues/11)
   (will probably just throw up some random error)
 * + bunch of other [core features](https://github.com/fgrehm/vagrant-lxc/issues?labels=core&milestone=&page=1&state=open)
