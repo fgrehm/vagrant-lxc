@@ -5,18 +5,16 @@
 [LXC](http://lxc.sourceforge.net/) provider for [Vagrant](http://www.vagrantup.com/) 1.1+
 
 This is a Vagrant plugin that allows it to control and provision Linux Containers
-as an alternative to the built in Vagrant VirtualBox provider for Linux hosts.
+as an alternative to the built in VirtualBox provider for Linux hosts.
 
 Check out this [blog post](http://fabiorehm.com/blog/2013/04/28/lxc-provider-for-vagrant)
 to see the plugin in action and find out more about it.
 
-## Features
+## Features / Limitations
 
-* Vagrant's `up`, `halt`, `reload`, `destroy`, `ssh`, `provision` and `package`
-* Shared folders
-* Provisioning with any built-in Vagrant provisioner
-* Port forwarding
-* Setting container's host name
+* Provides the same workflow as the Vagrant VirtualBox provider
+* Port forwarding via [`redir`](http://linux.die.net/man/1/redir)
+* Does not support private networks
 
 *Please refer to the [closed issues](https://github.com/fgrehm/vagrant-lxc/issues?labels=&milestone=&page=1&state=closed)
 and the [changelog](CHANGELOG.md) for most up to date information.*
@@ -27,7 +25,7 @@ and the [changelog](CHANGELOG.md) for most up to date information.*
 * [Vagrant 1.1+](http://downloads.vagrantup.com/)
 * lxc 0.7.5+
 * redir (if you are planning to use port forwarding)
-* A [bug-free](#help-im-unable-to-restart-containers) kernel
+* A [bug-free](https://github.com/fgrehm/vagrant-lxc/wiki/Troubleshooting#im-unable-to-restart-containers) kernel
 
 The plugin is known to work better and pretty much out of the box on Ubuntu 12.04+
 hosts and installing the dependencies on it basically means a `apt-get install lxc redir`
@@ -35,8 +33,8 @@ and a `apt-get update && apt-get dist-upgrade` to upgrade the kernel.
 
 Some manual steps are required to set up a Linode machine prior to using this
 plugin, please check https://github.com/fgrehm/vagrant-lxc/wiki/Usage-on-Linode
-for more information. The same applies to Debian hosts and documentation will be
-provided soon.
+for more information. Documentation on how to set things up for other distros
+[are welcome](https://github.com/fgrehm/vagrant-lxc/wiki) :)
 
 If you are on a Mac or Windows machine, you might want to have a look at this
 blog post for some ideas on how to set things up: http://the.taoofmac.com/space/HOWTO/Vagrant
@@ -89,17 +87,17 @@ Vagrant.configure("2") do |config|
 end
 ```
 
-This will make vagrant-lxc pass in `-s lxc.cgroup.memory.limit_in_bytes=1024M`
+This will make vagrant-lxc pass in `-s lxc.cgroup.memory.limit_in_bytes='1024M'`
 to `lxc-start` when booting containers. This will override any previously value
 set from container's configuration file that is usually kept under
 `/var/lib/lxc/<container-name>/config`.
 
-For other configuration options, please check [lxc.conf manpages](http://manpages.ubuntu.com/manpages/quantal/man5/lxc.conf.5.html).
+For other configuration options, please check the [lxc.conf manpages](http://manpages.ubuntu.com/manpages/quantal/man5/lxc.conf.5.html).
 
 
 ### Avoiding `sudo` passwords
 
-This plugin requires **a lot** of `sudo`ing since [user namespaces](https://wiki.ubuntu.com/LxcSecurity)
+This plugin requires **a lot** of `sudo`ing since [user namespaces](https://wiki.ubuntu.com/UserNamespace)
 are not supported on mainstream kernels. In order to work around that we can use
 a really dumb Ruby wrapper script like the one below and add a `NOPASSWD` entry
 to our `/etc/sudoers` file:
