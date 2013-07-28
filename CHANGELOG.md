@@ -11,6 +11,7 @@ FEATURES:
 
   - Add support for salt-minion and add latest dev release for ubuntu codenamed saucy [#116](https://github.com/fgrehm/vagrant-lxc/pull/116)
   - Add support for using a sudo wrapper script [#90](https://github.com/fgrehm/vagrant-lxc/issues/90)
+  - `redir` will log to `/var/log/syslog` if `REDIR_LOG` env var is provided
 
 IMPROVEMENTS:
 
