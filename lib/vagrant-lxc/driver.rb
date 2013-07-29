@@ -93,7 +93,7 @@ module Vagrant
       end
 
       def version
-        @cli.version
+        @version ||= @cli.version
       end
 
       # TODO: This needs to be reviewed and specs needs to be written
