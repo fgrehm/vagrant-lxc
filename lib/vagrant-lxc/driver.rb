@@ -11,6 +11,9 @@ module Vagrant
       # a name.
       class ContainerNotFound < StandardError; end
 
+      # Root folder where container configs are stored
+      CONTAINERS_PATH = '/var/lib/lxc'
+
       attr_reader :container_name,
                   :customizations
 
@@ -120,12 +123,6 @@ module Vagrant
 
       protected
 
-      # Root folder where container configs are stored
-      CONTAINERS_PATH = '/var/lib/lxc'
-
-      def base_path
-        Pathname.new("#{CONTAINERS_PATH}/#{@container_name}")
-      end
 
       def import_template(path)
         template_name     = "vagrant-tmp-#{@container_name}"
