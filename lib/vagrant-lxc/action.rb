@@ -8,6 +8,8 @@ require 'vagrant-lxc/action/destroy'
 require 'vagrant-lxc/action/destroy_confirm'
 require 'vagrant-lxc/action/disconnect'
 require 'vagrant-lxc/action/compress_rootfs'
+require 'vagrant-lxc/action/fetch_ip_with_lxc_attach'
+require 'vagrant-lxc/action/fetch_ip_from_dnsmasq_leases'
 require 'vagrant-lxc/action/forced_halt'
 require 'vagrant-lxc/action/forward_ports'
 require 'vagrant-lxc/action/handle_box_metadata'
@@ -166,6 +168,16 @@ module Vagrant
             b2.use SetupPackageFiles
             b2.use Vagrant::Action::General::Package
           end
+        end
+      end
+
+      # This action is called to read the IP of the container. The IP found
+      # is expected to be put into the `:machine_ip` key.
+      def self.action_fetch_ip
+        Vagrant::Action::Builder.new.tap do |b|
+          b.use Vagrant::Action::Builtin::ConfigValidate
+          b.use FetchIpWithLxcAttach
+          b.use FetchIpFromDnsmasqLeases
         end
       end
 

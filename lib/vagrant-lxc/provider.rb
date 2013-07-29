@@ -2,7 +2,6 @@ require "log4r"
 
 require "vagrant-lxc/action"
 require "vagrant-lxc/driver"
-require "vagrant-lxc/driver/builder"
 require "vagrant-lxc/sudo_wrapper"
 
 module Vagrant
@@ -39,7 +38,7 @@ module Vagrant
 
         begin
           @logger.debug("Instantiating the container for: #{id.inspect}")
-          @driver = Driver::Builder.build(id, self.sudo_wrapper)
+          @driver = Driver.new(id, self.sudo_wrapper)
           @driver.validate!
         rescue Driver::ContainerNotFound
           # The container doesn't exist, so we probably have a stale
@@ -66,8 +65,16 @@ module Vagrant
         # we return nil.
         return nil if state == :not_created
 
+        # Run a custom action called "fetch_ip" which does what it says and puts
+        # the IP found into the `:machine_ip` key in the environment.
+        env = @machine.action("fetch_ip")
+
+        # If we were not able to identify the container's IP, we return nil
+        # here and we let Vagrant core deal with it ;)
+        return nil unless env[:machine_ip]
+
         {
-          :host => @driver.assigned_ip,
+          :host => env[:machine_ip],
           :port => @machine.config.ssh.guest_port
         }
       end

@@ -34,6 +34,10 @@ module Vagrant
         Pathname.new(base_path.join('config').read.match(/^lxc\.rootfs\s+=\s+(.+)$/)[1])
       end
 
+      def mac_address
+        @mac_address ||= base_path.join('config').read.match(/^lxc\.network\.hwaddr\s+=\s+(.+)$/)[1]
+      end
+
       def create(name, template_path, config_file, template_options = {})
         @cli.name = @container_name = name
 
@@ -81,6 +85,14 @@ module Vagrant
         @cli.destroy
       end
 
+      def attach(*command)
+        @cli.attach(*command)
+      end
+
+      def version
+        @cli.version
+      end
+
       # TODO: This needs to be reviewed and specs needs to be written
       def compress_rootfs
         rootfs_dirname = File.dirname rootfs_path
@@ -104,9 +116,6 @@ module Vagrant
         if @container_name
           @cli.state
         end
-      end
-
-      def assigned_ip
       end
 
       protected

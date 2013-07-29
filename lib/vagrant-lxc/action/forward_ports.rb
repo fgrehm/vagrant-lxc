@@ -50,7 +50,7 @@ module Vagrant
             redir_pid = redirect_port(
               fp[:host_ip],
               fp[:host],
-              fp[:guest_ip] || @env[:machine].provider.driver.assigned_ip,
+              fp[:guest_ip] || @env[:machine].provider.ssh_info[:host],
               fp[:guest]
             )
             store_redir_pid(fp[:host], redir_pid)

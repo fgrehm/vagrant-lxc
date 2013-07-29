@@ -1,11 +1,21 @@
 module Vagrant
   module LXC
-    class Driver
-      module FetchIpFromDsnmasq
-        def assigned_ip
+    module Action
+      class FetchIpFromDnsmasqLeases
+        def initialize(app, env)
+          @app    = app
+          @logger = Log4r::Logger.new("vagrant::lxc::action::fetch_ip_from_dnsmasq_leases")
+        end
+
+        def call(env)
+          env[:machine_ip] ||= assigned_ip(env)
+          @app.call(env)
+        end
+
+        def assigned_ip(env)
           @logger.debug 'Loading ip from dnsmasq leases'
+          mac_address = env[:machine].provider.driver.mac_address
           ip = nil
-          # TODO: Use Vagrant::Util::Retryable
           10.times do
             if dnsmasq_leases =~ /#{Regexp.escape mac_address}\s+([0-9.]+)\s+/
               ip = $1.to_s
@@ -15,13 +25,7 @@ module Vagrant
               sleep 2
             end
           end
-          # TODO: Raise an user friendly error
-          raise 'Unable to identify container IP!' unless ip
           ip
-        end
-
-        def mac_address
-          @mac_address ||= base_path.join('config').read.match(/^lxc\.network\.hwaddr\s+=\s+(.+)$/)[1]
         end
 
         LEASES_PATHS = %w(
