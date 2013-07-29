@@ -64,7 +64,7 @@ module Vagrant
         end
 
         def start(overrides = [], extra_opts = [])
-          options = overrides.map { |key, value| ["-s", "lxc.#{key}='#{value}'"] }.flatten
+          options = []
           options += extra_opts if extra_opts
           run :start, '-d', '--name', @name, *options
         end

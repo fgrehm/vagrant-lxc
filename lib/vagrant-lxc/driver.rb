@@ -72,9 +72,11 @@ module Vagrant
         if ENV['LXC_START_LOG_FILE']
           extra = ['-o', ENV['LXC_START_LOG_FILE'], '-l', 'DEBUG']
         end
-        customizations = customizations + @customizations
 
-        @cli.transition_to(:running) { |c| c.start(customizations, (extra || nil)) }
+        prune_customizations
+        write_customizations(customizations + @customizations)
+
+        @cli.transition_to(:running) { |c| c.start([], (extra || nil)) }
       end
 
       def forced_halt
@@ -121,8 +123,27 @@ module Vagrant
         end
       end
 
+      def prune_customizations
+        # Use sed to just strip out the block of code which was inserted
+        # by Vagrant
+        @logger.debug 'Prunning vagrant-lxc customizations'
+        @sudo_wrapper.su_c("sed -e '/^# VAGRANT-BEGIN/,/^# VAGRANT-END/ d' -ibak #{base_path.join('config')}")
+      end
+
       protected
 
+      def write_customizations(customizations)
+        customizations = customizations.map do |key, value|
+          "lxc.#{key}=#{value}"
+        end
+        customizations.unshift '# VAGRANT-BEGIN'
+        customizations      << '# VAGRANT-END'
+
+        config_file = base_path.join('config').to_s
+        customizations.each do |line|
+          @sudo_wrapper.su_c("echo '#{line}' >> #{config_file}")
+        end
+      end
 
       def import_template(path)
         template_name     = "vagrant-tmp-#{@container_name}"
