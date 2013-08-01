@@ -99,8 +99,8 @@ For other configuration options, please check the [lxc.conf manpages](http://man
 
 This plugin requires **a lot** of `sudo`ing since [user namespaces](https://wiki.ubuntu.com/UserNamespace)
 are not supported on mainstream kernels. In order to work around that we can use
-a really dumb Ruby wrapper script like the one below and add a `NOPASSWD` entry
-to our `/etc/sudoers` file:
+a really dumb (**AND INSECURE**) Ruby wrapper script like the one below and add
+a `NOPASSWD` entry to our `/etc/sudoers` file:
 
 ```ruby
 #!/usr/bin/env ruby
@@ -114,6 +114,10 @@ and add the line below to your `/etc/sudoers` file:
 ```
 USERNAME ALL=NOPASSWD:/usr/bin/lxc-vagrant-wrapper
 ```
+
+*__WARNING__: the `/usr/bin/lxc-vagrant-wrapper` + `/etc/sudoers` combination
+above allows `USERNAME` to run any privileged command without a password. You
+might want to think twice before using that on a machine with sensitive data.*
 
 In order to tell vagrant-lxc to use that script when `sudo` is needed, you can
 pass in the path to the script as a configuration for the provider:
