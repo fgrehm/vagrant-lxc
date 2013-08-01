@@ -19,6 +19,9 @@ IMPROVEMENTS:
   - Support for specifying host interface/ip for binding `redir` [#76](https://github.com/fgrehm/vagrant-lxc/issues/76)
   - Add Vagrantfile VM name to the container name [#115](https://github.com/fgrehm/vagrant-lxc/issues/115)
   - Properly handle forwarded port collisions [#5](https://github.com/fgrehm/vagrant-lxc/issues/5)
+  - Container's customizations are now written to the config file (usually
+    kept under `/var/lib/lxc/CONTAINER/config`) instead of passed in as a `-s`
+    parameter to `lxc-start`
 
 ## [0.4.0](https://github.com/fgrehm/vagrant-lxc/compare/v0.3.4...v0.4.0) (Jul 18, 2013)
 
