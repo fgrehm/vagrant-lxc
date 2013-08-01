@@ -98,7 +98,7 @@ For other configuration options, please check the [lxc.conf manpages](http://man
 
 This plugin requires **a lot** of `sudo`ing since [user namespaces](https://wiki.ubuntu.com/UserNamespace)
 are not supported on mainstream kernels. In order to work around that we can use
-a really dumb (**AND INSECURE**) Ruby wrapper script like the one below and add
+a really dumb **AND INSECURE** Ruby wrapper script like the one below and add
 a `NOPASSWD` entry to our `/etc/sudoers` file:
 
 ```ruby
