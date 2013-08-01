@@ -31,6 +31,7 @@ module Vagrant
         end
 
         LEASES_PATHS = %w(
+          /var/lib/misc/dnsmasq.*.leases
           /var/lib/misc/dnsmasq.leases
           /var/lib/dnsmasq/dnsmasq.leases
           /var/db/dnsmasq.leases
