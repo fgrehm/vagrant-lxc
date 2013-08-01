@@ -6,9 +6,9 @@ require 'vagrant-lxc/driver/cli'
 
 describe Vagrant::LXC::Driver do
   describe 'container name validation' do
-    let(:unknown_container) { described_class.new('unknown', cli) }
-    let(:valid_container)   { described_class.new('valid', cli) }
-    let(:new_container)     { described_class.new(nil) }
+    let(:unknown_container) { described_class.new('unknown', nil, cli) }
+    let(:valid_container)   { described_class.new('valid', nil, cli) }
+    let(:new_container)     { described_class.new(nil, nil) }
     let(:cli)               { instance_double('Vagrant::LXC::Driver::CLI', list: ['valid']) }
 
     it 'raises a ContainerNotFound error if an unknown container name gets provided' do
@@ -39,7 +39,7 @@ describe Vagrant::LXC::Driver do
     let(:rootfs_tarball) { '/path/to/cache/rootfs.tar.gz' }
     let(:cli)            { instance_double('Vagrant::LXC::Driver::CLI', :create => true, :name= => true) }
 
-    subject { described_class.new(nil, cli) }
+    subject { described_class.new(nil, nil, cli) }
 
     before do
       subject.stub(:import_template).and_yield(template_name)
@@ -62,7 +62,7 @@ describe Vagrant::LXC::Driver do
   describe 'destruction' do
     let(:cli) { instance_double('Vagrant::LXC::Driver::CLI', destroy: true) }
 
-    subject { described_class.new('name', cli) }
+    subject { described_class.new('name', nil, cli) }
 
     before { subject.destroy }
 
@@ -75,8 +75,9 @@ describe Vagrant::LXC::Driver do
     let(:customizations)         { [['a', '1'], ['b', '2']] }
     let(:internal_customization) { ['internal', 'customization'] }
     let(:cli)                    { instance_double('Vagrant::LXC::Driver::CLI', start: true) }
+    let(:sudo)                   { instance_double('Vagrant::LXC::SudoWrapper', su_c: true) }
 
-    subject { described_class.new('name', cli) }
+    subject { described_class.new('name', sudo, cli) }
 
     before do
       cli.stub(:transition_to).and_yield(cli)
@@ -84,8 +85,12 @@ describe Vagrant::LXC::Driver do
       subject.start(customizations)
     end
 
+    it 'prunes previous customizations before writing'
+
+    it 'writes configurations to config file'
+
     it 'starts container with configured customizations' do
-      cli.should have_received(:start).with(customizations + [internal_customization], nil)
+      cli.should have_received(:start)
     end
 
     it 'expects a transition to running state to take place' do
@@ -96,7 +101,7 @@ describe Vagrant::LXC::Driver do
   describe 'halt' do
     let(:cli) { instance_double('Vagrant::LXC::Driver::CLI', shutdown: true) }
 
-    subject { described_class.new('name', cli) }
+    subject { described_class.new('name', nil, cli) }
 
     before do
       cli.stub(:transition_to).and_yield(cli)
@@ -124,35 +129,10 @@ describe Vagrant::LXC::Driver do
     let(:cli_state) { :something }
     let(:cli)       { instance_double('Vagrant::LXC::Driver::CLI', state: cli_state) }
 
-    subject { described_class.new('name', cli) }
+    subject { described_class.new('name', nil, cli) }
 
     it 'delegates to cli' do
       subject.state.should == cli_state
-    end
-  end
-
-  pending 'assigned ip' do
-    # This ip is set on the sample-ip-addr-output fixture
-    let(:ip)              { "10.0.254.137" }
-    let(:ifconfig_output) { File.read('spec/fixtures/sample-ip-addr-output') }
-    let(:cli)             { instance_double('Vagrant::LXC::Driver::CLI', :attach => ifconfig_output) }
-
-    subject { described_class.new('name', cli) }
-
-    context 'when ip for eth0 gets returned from lxc-attach call' do
-      it 'gets parsed from `ip addr` output' do
-        subject.assigned_ip.should == ip
-        cli.should have_received(:attach).with(
-          '/sbin/ip',
-          '-4',
-          'addr',
-          'show',
-          'scope',
-          'global',
-          'eth0',
-          namespaces: 'network'
-        )
-      end
     end
   end
 
@@ -161,8 +141,9 @@ describe Vagrant::LXC::Driver do
     let(:folders)             { [shared_folder] }
     let(:rootfs_path)         { Pathname('/path/to/rootfs') }
     let(:expected_guest_path) { "#{rootfs_path}/vagrant" }
+    let(:sudo_wrapper)        { instance_double('Vagrant::LXC::SudoWrapper', run: true) }
 
-    subject { described_class.new('name') }
+    subject { described_class.new('name', sudo_wrapper) }
 
     before do
       subject.stub(rootfs_path: rootfs_path, system: true)
@@ -170,7 +151,7 @@ describe Vagrant::LXC::Driver do
     end
 
     it "creates guest folder under container's rootfs" do
-      subject.should have_received(:system).with("sudo mkdir -p #{expected_guest_path}")
+      sudo_wrapper.should have_received(:run).with("mkdir", "-p", expected_guest_path)
     end
 
     it 'adds a mount.entry to its local customizations' do

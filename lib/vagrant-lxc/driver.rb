@@ -11,12 +11,16 @@ module Vagrant
       # a name.
       class ContainerNotFound < StandardError; end
 
+      # Root folder where container configs are stored
+      CONTAINERS_PATH = '/var/lib/lxc'
+
       attr_reader :container_name,
                   :customizations
 
-      def initialize(container_name, cli = CLI.new(container_name))
+      def initialize(container_name, sudo_wrapper, cli = nil)
         @container_name = container_name
-        @cli            = cli
+        @sudo_wrapper   = sudo_wrapper
+        @cli            = cli || CLI.new(sudo_wrapper, container_name)
         @logger         = Log4r::Logger.new("vagrant::provider::lxc::driver")
         @customizations = []
       end
@@ -31,6 +35,10 @@ module Vagrant
 
       def rootfs_path
         Pathname.new(base_path.join('config').read.match(/^lxc\.rootfs\s+=\s+(.+)$/)[1])
+      end
+
+      def mac_address
+        @mac_address ||= base_path.join('config').read.match(/^lxc\.network\.hwaddr\s+=\s+(.+)$/)[1]
       end
 
       def create(name, template_path, config_file, template_options = {})
@@ -48,7 +56,7 @@ module Vagrant
           unless guestpath.directory?
             begin
               @logger.debug("Guest path doesn't exist, creating: #{guestpath}")
-              system "sudo mkdir -p #{guestpath.to_s}"
+              @sudo_wrapper.run('mkdir', '-p', guestpath.to_s)
             rescue Errno::EACCES
               raise Vagrant::Errors::SharedFolderCreateFailed, :path => guestpath.to_s
             end
@@ -64,9 +72,11 @@ module Vagrant
         if ENV['LXC_START_LOG_FILE']
           extra = ['-o', ENV['LXC_START_LOG_FILE'], '-l', 'DEBUG']
         end
-        customizations = customizations + @customizations
 
-        @cli.transition_to(:running) { |c| c.start(customizations, (extra || nil)) }
+        prune_customizations
+        write_customizations(customizations + @customizations)
+
+        @cli.transition_to(:running) { |c| c.start(extra) }
       end
 
       def forced_halt
@@ -80,6 +90,14 @@ module Vagrant
         @cli.destroy
       end
 
+      def attach(*command)
+        @cli.attach(*command)
+      end
+
+      def version
+        @version ||= @cli.version
+      end
+
       # TODO: This needs to be reviewed and specs needs to be written
       def compress_rootfs
         rootfs_dirname = File.dirname rootfs_path
@@ -89,10 +107,11 @@ module Vagrant
 
         Dir.chdir base_path do
           @logger.info "Compressing '#{rootfs_path}' rootfs to #{target_path}"
-          system "sudo rm -f rootfs.tar.gz && sudo tar --numeric-owner -czf #{target_path} #{basename}/*"
+          @sudo_wrapper.run('rm', '-f', 'rootfs.tar.gz')
+          @sudo_wrapper.run('tar', '--numeric-owner', '-czf', target_path, "#{basename}/*")
 
           @logger.info "Changing rootfs tarbal owner"
-          system "sudo chown #{ENV['USER']}:#{ENV['USER']} #{target_path}"
+          @sudo_wrapper.run('chown', "#{ENV['USER']}:#{ENV['USER']}", target_path)
         end
 
         target_path
@@ -104,16 +123,25 @@ module Vagrant
         end
       end
 
-      def assigned_ip
+      def prune_customizations
+        # Use sed to just strip out the block of code which was inserted by Vagrant
+        @logger.debug 'Prunning vagrant-lxc customizations'
+        @sudo_wrapper.su_c("sed -e '/^# VAGRANT-BEGIN/,/^# VAGRANT-END/ d' -ibak #{base_path.join('config')}")
       end
 
       protected
 
-      # Root folder where container configs are stored
-      CONTAINERS_PATH = '/var/lib/lxc'
+      def write_customizations(customizations)
+        customizations = customizations.map do |key, value|
+          "lxc.#{key}=#{value}"
+        end
+        customizations.unshift '# VAGRANT-BEGIN'
+        customizations      << '# VAGRANT-END'
 
-      def base_path
-        Pathname.new("#{CONTAINERS_PATH}/#{@container_name}")
+        config_file = base_path.join('config').to_s
+        customizations.each do |line|
+          @sudo_wrapper.su_c("echo '#{line}' >> #{config_file}")
+        end
       end
 
       def import_template(path)
@@ -121,11 +149,11 @@ module Vagrant
         tmp_template_path = templates_path.join("lxc-#{template_name}").to_s
 
         @logger.debug 'Copying LXC template into place'
-        system(%Q[sudo su root -c "cp #{path} #{tmp_template_path}"])
+        @sudo_wrapper.run('cp', path, tmp_template_path)
 
         yield template_name
       ensure
-        system(%Q[sudo su root -c "rm #{tmp_template_path}"])
+        @sudo_wrapper.run('rm', tmp_template_path)
       end
 
       TEMPLATES_PATH_LOOKUP = %w(

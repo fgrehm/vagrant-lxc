@@ -1,14 +1,27 @@
-## [0.4.1](https://github.com/fgrehm/vagrant-lxc/compare/v0.4.0...master) (unreleased)
+## [0.5.0](https://github.com/fgrehm/vagrant-lxc/compare/v0.4.0...v0.5.0) (Aug 1, 2013)
+
+BACKWARDS INCOMPATIBILITIES:
+
+  - To align with Vagrant's core behaviour, forwarded ports are no longer attached
+    to 127.0.0.1 and `redir`'s `--laddr` parameter is skipped in case the `:host_ip`
+    config is not provided, that means `redir` will listen on connections coming
+    from any of the host's IPs.
 
 FEATURES:
 
   - Add support for salt-minion and add latest dev release for ubuntu codenamed saucy [#116](https://github.com/fgrehm/vagrant-lxc/pull/116)
+  - Add support for using a sudo wrapper script [#90](https://github.com/fgrehm/vagrant-lxc/issues/90)
+  - `redir` will log to `/var/log/syslog` if `REDIR_LOG` env var is provided
 
 IMPROVEMENTS:
 
-  - Error out if `redir` is not installed but port forwarding was configured [#112](https://github.com/fgrehm/vagrant-lxc/issues/112)
+  - Error out if dependencies are not installed [#11](https://github.com/fgrehm/vagrant-lxc/issues/11) / [#112](https://github.com/fgrehm/vagrant-lxc/issues/112)
   - Support for specifying host interface/ip for binding `redir` [#76](https://github.com/fgrehm/vagrant-lxc/issues/76)
   - Add Vagrantfile VM name to the container name [#115](https://github.com/fgrehm/vagrant-lxc/issues/115)
+  - Properly handle forwarded port collisions [#5](https://github.com/fgrehm/vagrant-lxc/issues/5)
+  - Container's customizations are now written to the config file (usually
+    kept under `/var/lib/lxc/CONTAINER/config`) instead of passed in as a `-s`
+    parameter to `lxc-start`
 
 ## [0.4.0](https://github.com/fgrehm/vagrant-lxc/compare/v0.3.4...v0.4.0) (Jul 18, 2013)
 

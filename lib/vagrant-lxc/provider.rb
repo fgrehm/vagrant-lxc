@@ -2,7 +2,7 @@ require "log4r"
 
 require "vagrant-lxc/action"
 require "vagrant-lxc/driver"
-require "vagrant-lxc/driver/builder"
+require "vagrant-lxc/sudo_wrapper"
 
 module Vagrant
   module LXC
@@ -13,7 +13,22 @@ module Vagrant
         @logger    = Log4r::Logger.new("vagrant::provider::lxc")
         @machine   = machine
 
+        ensure_lxc_installed!
         machine_id_changed
+      end
+
+      def sudo_wrapper
+        @shell ||= begin
+          wrapper = @machine.provider_config.sudo_wrapper
+          wrapper = Pathname(wrapper).expand_path(@machine.env.root_path).to_s if wrapper
+          SudoWrapper.new(wrapper)
+        end
+      end
+
+      def ensure_lxc_installed!
+        unless system("which lxc-version > /dev/null")
+          raise Errors::LxcNotInstalled
+        end
       end
 
       # If the machine ID changed, then we need to rebuild our underlying
@@ -23,7 +38,7 @@ module Vagrant
 
         begin
           @logger.debug("Instantiating the container for: #{id.inspect}")
-          @driver = Driver::Builder.build(id)
+          @driver = Driver.new(id, self.sudo_wrapper)
           @driver.validate!
         rescue Driver::ContainerNotFound
           # The container doesn't exist, so we probably have a stale
@@ -50,8 +65,16 @@ module Vagrant
         # we return nil.
         return nil if state == :not_created
 
+        # Run a custom action called "fetch_ip" which does what it says and puts
+        # the IP found into the `:machine_ip` key in the environment.
+        env = @machine.action("fetch_ip")
+
+        # If we were not able to identify the container's IP, we return nil
+        # here and we let Vagrant core deal with it ;)
+        return nil unless env[:machine_ip]
+
         {
-          :host => @driver.assigned_ip,
+          :host => env[:machine_ip],
           :port => @machine.config.ssh.guest_port
         }
       end

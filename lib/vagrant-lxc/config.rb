@@ -6,8 +6,15 @@ module Vagrant
       # @return [Array]
       attr_reader :customizations
 
+      # A String that points to a file that acts as a wrapper for sudo commands.
+      #
+      # This allows us to have a single entry when whitelisting NOPASSWD commands
+      # on /etc/sudoers
+      attr_accessor :sudo_wrapper
+
       def initialize
         @customizations = []
+        @sudo_wrapper   = UNSET_VALUE
       end
 
       # Customize the container by calling `lxc-start` with the given
@@ -25,7 +32,24 @@ module Vagrant
         @customizations << [key, value]
       end
 
-      # TODO: At some point in the future it would be nice to validate these options
+      def finalize!
+        @sudo_wrapper = nil if @sudo_wrapper == UNSET_VALUE
+      end
+
+      def validate(machine)
+        errors = []
+
+        if @sudo_wrapper
+          hostpath = Pathname.new(@sudo_wrapper).expand_path(machine.env.root_path)
+          if ! hostpath.file?
+            errors << I18n.t('vagrant_lxc.sudo_wrapper_not_found', path: hostpath.to_s)
+          elsif ! hostpath.executable?
+            errors << I18n.t('vagrant_lxc.sudo_wrapper_not_executable', path: hostpath.to_s)
+          end
+        end
+
+        { "lxc provider" => errors }
+      end
     end
   end
 end

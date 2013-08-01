@@ -1,20 +1,20 @@
 GIT
   remote: git://github.com/fgrehm/vagrant-cachier.git
-  revision: ae6cb5bcfbdbb2157867d77ded8f2b6f430c0f6c
+  revision: f5d9ce507239535326a0a0395c890cc7a27d73f1
   specs:
-    vagrant-cachier (0.2.0)
+    vagrant-cachier (0.3.0.dev)
 
 GIT
   remote: git://github.com/fgrehm/vagrant-pristine.git
-  revision: 45a8d75f048bd611e337583496eb2b48b6998bbd
+  revision: 5c400d7850fc5f98d9601b59f4c3bd74818650de
   specs:
-    vagrant-pristine (0.1.0)
+    vagrant-pristine (0.2.0)
 
 GIT
   remote: git://github.com/mitchellh/vagrant.git
-  revision: 6d26c86c4c3f65e2e59f4dda6bca9cd9235de704
+  revision: 2282a88f3dfde65b881758b4643480cba4468c4a
   specs:
-    vagrant (1.2.4.dev)
+    vagrant (1.2.7.dev)
       childprocess (~> 0.3.7)
       erubis (~> 2.7.0)
       i18n (~> 0.6.0)
@@ -25,7 +25,7 @@ GIT
 PATH
   remote: .
   specs:
-    vagrant-lxc (0.4.1.dev)
+    vagrant-lxc (0.5.0)
 
 GEM
   remote: https://rubygems.org/
@@ -60,7 +60,7 @@ GEM
       rb-kqueue (>= 0.2)
     log4r (1.1.10)
     lumberjack (1.0.4)
-    method_source (0.8.1)
+    method_source (0.8.2)
     mime-types (1.23)
     multi_json (1.7.7)
     net-scp (1.1.2)
@@ -94,7 +94,7 @@ GEM
       multi_json (~> 1.0)
       simplecov-html (~> 0.7.1)
     simplecov-html (0.7.1)
-    slop (3.4.5)
+    slop (3.4.6)
     thor (0.18.1)
     vagrant-omnibus (1.1.0)
 

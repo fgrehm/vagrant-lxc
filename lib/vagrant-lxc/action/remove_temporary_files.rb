@@ -14,7 +14,7 @@ module Vagrant
           if env[:machine].state.id == :stopped
             @logger.debug 'Removing temporary files'
             tmp_path = env[:machine].provider.driver.rootfs_path.join('tmp')
-            system "sudo rm -rf #{tmp_path}/*"
+            env[:machine].provider.sudo_wrapper.run('rm', '-rf', "#{tmp_path}/*")
           end
         end
       end

@@ -7,6 +7,10 @@ module Vagrant
         error_key(:lxc_execute_error)
       end
 
+      class LxcNotInstalled < Vagrant::Errors::VagrantError
+        error_key(:lxc_not_installed)
+      end
+
       # Box related errors
       class TemplateFileMissing < Vagrant::Errors::VagrantError
         error_key(:lxc_template_file_missing)

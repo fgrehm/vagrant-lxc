@@ -9,13 +9,14 @@ describe Vagrant::LXC::Action::ForwardPorts do
   let(:env)          { {machine: machine, ui: double(info: true)} }
   let(:machine)      { double(:machine) }
   let!(:data_dir)    { Pathname.new(Dir.mktmpdir) }
-  let(:networks)     { [[:other_config, {}], [:forwarded_port, {guest: guest_port, host: host_port}]] }
+  let(:provider)     { instance_double('Vagrant::LXC::Provider', ssh_info: {host: container_ip}) }
+  let(:host_ip)      { '127.0.0.1' }
   let(:host_port)    { 8080 }
   let(:guest_port)   { 80 }
-  let(:provider)     { instance_double('Vagrant::LXC::Provider', driver: driver) }
-  let(:driver)       { instance_double('Vagrant::LXC::Driver', assigned_ip: container_ip) }
   let(:container_ip) { '10.0.1.234' }
   let(:pid)          { 'a-pid' }
+  let(:forward_conf) { {guest: guest_port, host: host_port, host_ip: host_ip} }
+  let(:networks)     { [[:other_config, {}], [:forwarded_port, forward_conf]] }
 
   subject { described_class.new(app, env) }
 
@@ -33,7 +34,16 @@ describe Vagrant::LXC::Action::ForwardPorts do
     subject.stub(system: true)
     subject.call(env)
     subject.should have_received(:spawn).with(
-      "sudo redir --laddr=127.0.0.1 --lport=#{host_port} --caddr=#{container_ip} --cport=#{guest_port} 2>/dev/null"
+      "redir --laddr=#{host_ip} --lport=#{host_port} --caddr=#{container_ip} --cport=#{guest_port} 2>/dev/null"
+    )
+  end
+
+  it 'skips --laddr parameter if host_ip is nil' do
+    forward_conf.delete(:host_ip)
+    subject.stub(system: true)
+    subject.call(env)
+    subject.should have_received(:spawn).with(
+      "redir --lport=#{host_port} --caddr=#{container_ip} --cport=#{guest_port} 2>/dev/null"
     )
   end
 
