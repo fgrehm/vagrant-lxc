@@ -1,4 +1,4 @@
-## [0.5.0](https://github.com/fgrehm/vagrant-lxc/compare/v0.4.0...master) (unreleased)
+## [0.5.0](https://github.com/fgrehm/vagrant-lxc/compare/v0.4.0...v0.5.0) (Aug 1, 2013)
 
 BACKWARDS INCOMPATIBILITIES:
 
