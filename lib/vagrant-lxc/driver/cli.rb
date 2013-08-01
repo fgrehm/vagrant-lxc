@@ -63,10 +63,8 @@ module Vagrant
           run :destroy, '--name', @name
         end
 
-        def start(overrides = [], extra_opts = [])
-          options = []
-          options += extra_opts if extra_opts
-          run :start, '-d', '--name', @name, *options
+        def start(options = [])
+          run :start, '-d', '--name', @name, *Array(options)
         end
 
         def stop

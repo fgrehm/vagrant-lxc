@@ -76,7 +76,7 @@ module Vagrant
         prune_customizations
         write_customizations(customizations + @customizations)
 
-        @cli.transition_to(:running) { |c| c.start([], (extra || nil)) }
+        @cli.transition_to(:running) { |c| c.start(extra) }
       end
 
       def forced_halt
@@ -124,8 +124,7 @@ module Vagrant
       end
 
       def prune_customizations
-        # Use sed to just strip out the block of code which was inserted
-        # by Vagrant
+        # Use sed to just strip out the block of code which was inserted by Vagrant
         @logger.debug 'Prunning vagrant-lxc customizations'
         @sudo_wrapper.su_c("sed -e '/^# VAGRANT-BEGIN/,/^# VAGRANT-END/ d' -ibak #{base_path.join('config')}")
       end

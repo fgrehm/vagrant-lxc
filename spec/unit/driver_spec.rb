@@ -75,8 +75,9 @@ describe Vagrant::LXC::Driver do
     let(:customizations)         { [['a', '1'], ['b', '2']] }
     let(:internal_customization) { ['internal', 'customization'] }
     let(:cli)                    { instance_double('Vagrant::LXC::Driver::CLI', start: true) }
+    let(:sudo)                   { instance_double('Vagrant::LXC::SudoWrapper', su_c: true) }
 
-    subject { described_class.new('name', nil, cli) }
+    subject { described_class.new('name', sudo, cli) }
 
     before do
       cli.stub(:transition_to).and_yield(cli)
@@ -84,8 +85,12 @@ describe Vagrant::LXC::Driver do
       subject.start(customizations)
     end
 
+    it 'prunes previous customizations before writing'
+
+    it 'writes configurations to config file'
+
     it 'starts container with configured customizations' do
-      cli.should have_received(:start).with(customizations + [internal_customization], nil)
+      cli.should have_received(:start)
     end
 
     it 'expects a transition to running state to take place' do

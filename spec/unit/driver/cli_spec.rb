@@ -96,14 +96,6 @@ describe Vagrant::LXC::Driver::CLI do
         '--name',  name
       )
     end
-
-    it 'uses provided array to override container configs' do
-      subject.start([['config', 'value'], ['other', 'value']])
-      subject.should have_received(:run).with(:start, '-d', '--name', name,
-        '-s', "lxc.config='value'",
-        '-s', "lxc.other='value'"
-      )
-    end
   end
 
   describe 'shutdown' do
