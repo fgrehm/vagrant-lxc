@@ -131,31 +131,6 @@ describe Vagrant::LXC::Driver do
     end
   end
 
-  pending 'assigned ip' do
-    # This ip is set on the sample-ip-addr-output fixture
-    let(:ip)              { "10.0.254.137" }
-    let(:ifconfig_output) { File.read('spec/fixtures/sample-ip-addr-output') }
-    let(:cli)             { instance_double('Vagrant::LXC::Driver::CLI', :attach => ifconfig_output) }
-
-    subject { described_class.new('name', cli) }
-
-    context 'when ip for eth0 gets returned from lxc-attach call' do
-      it 'gets parsed from `ip addr` output' do
-        subject.assigned_ip.should == ip
-        cli.should have_received(:attach).with(
-          '/sbin/ip',
-          '-4',
-          'addr',
-          'show',
-          'scope',
-          'global',
-          'eth0',
-          namespaces: 'network'
-        )
-      end
-    end
-  end
-
   describe 'folder sharing' do
     let(:shared_folder)       { {guestpath: '/vagrant', hostpath: '/path/to/host/dir'} }
     let(:folders)             { [shared_folder] }
