@@ -37,8 +37,8 @@ module Vagrant
         )
 
         def read_dnsmasq_leases
-          LEASES_PATHS.map do |path|
-            File.read(path) if File.exists?(path)
+          Dir["{#{LEASES_PATHS.join(',')}}"].map do |file|
+            File.read(file)
           end.join("\n")
         end
       end
