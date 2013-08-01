@@ -87,10 +87,9 @@ Vagrant.configure("2") do |config|
 end
 ```
 
-This will make vagrant-lxc pass in `-s lxc.cgroup.memory.limit_in_bytes='1024M'`
-to `lxc-start` when booting containers. This will override any previously value
-set from container's configuration file that is usually kept under
-`/var/lib/lxc/<container-name>/config`.
+vagrant-lxc will then write out `lxc.cgroup.memory.limit_in_bytes='1024M'` to the
+container config file (usually kept under `/var/lib/lxc/<container-name>/config`)
+prior to starting it.
 
 For other configuration options, please check the [lxc.conf manpages](http://manpages.ubuntu.com/manpages/quantal/man5/lxc.conf.5.html).
 
