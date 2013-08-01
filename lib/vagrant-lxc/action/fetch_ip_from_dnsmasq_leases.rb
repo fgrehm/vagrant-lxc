@@ -13,10 +13,12 @@ module Vagrant
         end
 
         def assigned_ip(env)
-          @logger.debug 'Loading ip from dnsmasq leases'
           mac_address = env[:machine].provider.driver.mac_address
           ip = nil
           10.times do
+            dnsmasq_leases = read_dnsmasq_leases
+            @logger.debug 'Attempting to load ip from dnsmasq leases'
+            @logger.debug dnsmasq_leases
             if dnsmasq_leases =~ /#{Regexp.escape mac_address}\s+([0-9.]+)\s+/
               ip = $1.to_s
               break
@@ -34,7 +36,7 @@ module Vagrant
           /var/db/dnsmasq.leases
         )
 
-        def dnsmasq_leases
+        def read_dnsmasq_leases
           LEASES_PATHS.map do |path|
             File.read(path) if File.exists?(path)
           end.join("\n")
