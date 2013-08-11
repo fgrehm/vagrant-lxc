@@ -100,16 +100,14 @@ module Vagrant
 
       # TODO: This needs to be reviewed and specs needs to be written
       def compress_rootfs
-        rootfs_dirname = File.dirname rootfs_path
-        basename       = rootfs_path.to_s.gsub(/^#{Regexp.escape rootfs_dirname}\//, '')
         # TODO: Pass in tmpdir so we can clean up from outside
         target_path    = "#{Dir.mktmpdir}/rootfs.tar.gz"
 
         Dir.chdir base_path do
           @logger.info "Compressing '#{rootfs_path}' rootfs to #{target_path}"
           @sudo_wrapper.run('rm', '-f', 'rootfs.tar.gz')
-          @sudo_wrapper.run('tar', '--numeric-owner', '-czf', target_path, "#{basename}/*")
-
+          @sudo_wrapper.run('tar', '--numeric-owner', '-czf', target_path, '-C', rootfs_path.to_s, '.')
+          
           @logger.info "Changing rootfs tarbal owner"
           @sudo_wrapper.run('chown', "#{ENV['USER']}:#{ENV['USER']}", target_path)
         end
