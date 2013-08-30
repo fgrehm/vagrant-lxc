@@ -1,87 +1,158 @@
+require 'time'
 require 'pathname'
 require 'rake/tasklib'
-load 'tasks/boxes.v2.rake'
 
-class BuildGenericBoxTaskV3 < BuildGenericBoxTaskV2
+class BuildGenericBoxTask < ::Rake::TaskLib
+  include ::Rake::DSL
+
+  attr_reader :name
+
+  def initialize(name, distrib, release, arch, cfg_engines)
+    @name         = name
+    @distrib      = distrib
+    @release      = release.to_s
+    @arch         = arch.to_s
+    @cfg_engines  = cfg_engines
+    @file         = "lxc-#{@release}-#{@arch}-#{Date.today}.box"
+    @scripts_path = Pathname(Dir.pwd).join('boxes')
+
+    task name do
+      RakeFileUtils.send(:verbose, true) do
+        build
+      end
+    end
+  end
+
+  def run(script_name, *args)
+    script = @scripts_path.join('common', script_name)
+    if script.readable?
+      sh "sudo #{script} #{args.join(' ')}"
+    else
+      STDERR.puts "cannot execute #{script_name} (not found?)"
+      exit 1
+    end
+  end
+
   def build
-    require 'vagrant'
-
     check_if_box_has_been_built!
 
     FileUtils.mkdir_p 'boxes/temp' unless File.exist? 'base/temp'
     check_for_partially_built_box!
 
-    pwd = Dir.pwd
-    sh 'mkdir -p boxes/temp/'
-    Dir.chdir 'boxes/temp' do
-      download
-      install_cfg_engines
-      finalize
-      prepare_package_contents pwd
-      sh 'sudo rm -rf rootfs'
-      sh "tar -czf tmp-package.box ./*"
+    import_template do |template|
+      create_base_container(template) do |rootfs|
+        configure_vagrant_user(rootfs)
+        install_cfg_engines(rootfs)
+        prepare_package_contents(rootfs)
+        compress_box(rootfs)
+        cleanup(rootfs)
+      end
     end
-
-    sh 'mkdir -p boxes/output'
-    sh "cp boxes/temp/tmp-package.box boxes/output/#{@file}"
-    sh "rm -rf boxes/temp"
   end
 
-  def finalize
-    auth_key = Vagrant.source_root.join('keys', 'vagrant.pub').expand_path.to_s
-    run 'finalize', @arch, @release, auth_key
+  def check_if_box_has_been_built!
+    return unless File.exists?("./boxes/output/#{@file}")
+
+    puts 'Box has been built already!'
+    exit 1
   end
 
-  def prepare_package_contents(pwd)
-    run 'cleanup'
-    sh 'sudo rm -f rootfs.tar.gz'
-    sh 'sudo tar --numeric-owner -czf rootfs.tar.gz ./rootfs/*'
-    sh "sudo chown #{ENV['USER']}:#{`id -gn`.strip} rootfs.tar.gz"
-    sh "cp #{pwd}/boxes/common/lxc-template ."
-    sh "cp #{pwd}/boxes/common/lxc.conf ."
-    sh "cp #{pwd}/boxes/common/metadata.json ."
+  def check_for_partially_built_box!
+    return unless Dir.entries('boxes/temp').size > 2
+
+    puts 'There is a partially built box under ' +
+      File.expand_path('./boxes/temp') +
+      ', please remove it before building a new box'
+    exit 1
+  end
+
+  def create_base_container(template)
+    puts "TODO: Create base container with #{template}"
+    yield "/var/lib/lxc/vagrant-base-box-tmp/rootfs"
+  end
+
+  def configure_vagrant_user(rootfs)
+    puts "TODO: Configure vagrant user under #{rootfs}"
+  end
+
+  def install_cfg_engines(rootfs)
+    puts "TODO: Install cfg engines under #{rootfs}"
+  end
+
+  def prepare_package_contents(rootfs)
+    puts "TODO: Prepare pkg contents under #{rootfs}"
+  end
+
+  def compress_box(rootfs)
+    puts "TODO: Compress base box under #{rootfs}"
+  end
+
+  def cleanup(rootfs)
+    puts "TODO: Cleanup under #{rootfs}"
+  end
+
+  def import_template
+    template_name     = "vagrant-base-box-tmp"
+    tmp_template_path = templates_path.join("lxc-#{template_name}")
+    src               = "./boxes/templates/#{@distrib}"
+
+    sh "sudo cp #{src} #{tmp_template_path}"
+
+    yield template_name
+  ensure
+    sh "sudo rm #{tmp_template_path}" if tmp_template_path.file?
+  end
+
+  TEMPLATES_PATH_LOOKUP = %w(
+    /usr/share/lxc/templates
+    /usr/lib/lxc/templates
+    /usr/lib64/lxc/templates
+    /usr/local/lib/lxc/templates
+  )
+  def templates_path
+    return @templates_path if @templates_path
+
+    path = TEMPLATES_PATH_LOOKUP.find { |candidate| File.directory?(candidate) }
+    raise 'Unable to identify lxc templates path!' unless path
+
+    @templates_path = Pathname(path)
   end
 end
 
-class BuildDebianBoxTaskV3 < BuildGenericBoxTaskV3
+class BuildDebianBoxTask < BuildGenericBoxTask
   def initialize(name, release, arch, opts = {})
     super(name, 'debian', release, arch, opts)
   end
 end
 
-class BuildUbuntuBoxTaskV3 < BuildGenericBoxTaskV3
+class BuildUbuntuBoxTask < BuildGenericBoxTask
   def initialize(name, release, arch, opts = {})
     super(name, 'ubuntu', release, arch, opts)
   end
 end
 
-puppet   = ENV['PUPPET']   == '1'
-babushka = ENV['BABUSHKA'] == '1'
-salt     = ENV['SALT']     == '1'
+cfg_engines = {
+  puppet:   ENV['PUPPET']   == '1',
+  babushka: ENV['BABUSHKA'] == '1',
+  salt:     ENV['SALT']     == '1',
+  chef:     ENV['CHEF']     == '1'
+}
 
 namespace :boxes do
   namespace :ubuntu do
     namespace :build do
 
       desc 'Build an Ubuntu Precise 64 bits box'
-      BuildUbuntuBoxTaskV3.
-        new(:precise64,
-            :precise, 'amd64', puppet: puppet, babushka: babushka, salt: salt)
+      BuildUbuntuBoxTask.new(:precise64, :precise, 'amd64', cfg_engines)
 
       desc 'Build an Ubuntu Quantal 64 bits box'
-      BuildUbuntuBoxTaskV3.
-        new(:quantal64,
-            :quantal, 'amd64', puppet: puppet, babushka: babushka, salt: salt)
+      BuildUbuntuBoxTask.new(:quantal64, :quantal, 'amd64', cfg_engines)
 
       desc 'Build an Ubuntu Raring 64 bits box'
-      BuildUbuntuBoxTaskV3.
-        new(:raring64,
-            :raring, 'amd64', puppet: puppet, babushka: babushka, salt: salt)
+      BuildUbuntuBoxTask.new(:raring64, :raring, 'amd64', cfg_engines)
 
       desc 'Build an Ubuntu Saucy 64 bits box'
-      BuildUbuntuBoxTaskV3.
-        new(:saucy64,
-            :saucy, 'amd64', puppet: puppet, babushka: babushka, salt: salt)
+      BuildUbuntuBoxTask.new(:saucy64, :saucy, 'amd64', cfg_engines)
 
       desc 'Build all Ubuntu boxes'
       task :all => %w( precise64 quantal64 raring64 saucy64 )
@@ -89,21 +160,16 @@ namespace :boxes do
   end
 
   namespace :debian do
+    %w( chef salt).each { |cfg| cfg_engines.delete(cfg.to_sym) }
     namespace :build do
       desc 'Build an Debian Squeeze 64 bits box'
-      BuildDebianBoxTaskV3.
-        new(:squeeze64,
-            :squeeze, 'amd64', puppet: puppet, babushka: babushka, salt: false)
+      BuildDebianBoxTask.new(:squeeze64, :squeeze, 'amd64', cfg_engines)
 
       desc 'Build an Debian Wheezy 64 bits box'
-      BuildDebianBoxTaskV3.
-        new(:wheezy64,
-            :wheezy, 'amd64', puppet: puppet, babushka: babushka, salt: false)
+      BuildDebianBoxTask.new(:wheezy64, :wheezy, 'amd64', cfg_engines)
 
       desc 'Build an Debian Sid/unstable 64 bits box'
-      BuildDebianBoxTaskV3.
-        new(:sid64,
-            :sid, 'amd64', puppet: puppet, babushka: babushka, salt: false)
+      BuildDebianBoxTask.new(:sid64, :sid, 'amd64', cfg_engines)
 
       desc 'Build all Debian boxes'
       task :all => %w( squeeze64 wheezy64 sid64 )
