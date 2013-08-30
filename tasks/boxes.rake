@@ -43,9 +43,9 @@ class BuildGenericBoxTask < ::Rake::TaskLib
       create_base_container(template) do |rootfs|
         configure_vagrant_user(rootfs)
         install_cfg_engines(rootfs)
+        cleanup(rootfs)
         prepare_package_contents(rootfs)
         compress_box(rootfs)
-        cleanup(rootfs)
       end
     end
   end
@@ -67,8 +67,11 @@ class BuildGenericBoxTask < ::Rake::TaskLib
   end
 
   def create_base_container(template)
-    puts "TODO: Create base container with #{template}"
-    yield "/var/lib/lxc/vagrant-base-box-tmp/rootfs"
+    container_name = 'vagrant-base-box-tmp'
+    sh "sudo lxc-create -n #{container_name} -t vagrant-base-box-template -- --arch #{@arch} --release #{@release}"
+    yield "/var/lib/lxc/#{container_name}/rootfs"
+  ensure
+    sh "sudo lxc-destroy -n #{container_name}"
   end
 
   def configure_vagrant_user(rootfs)
@@ -92,7 +95,7 @@ class BuildGenericBoxTask < ::Rake::TaskLib
   end
 
   def import_template
-    template_name     = "vagrant-base-box-tmp"
+    template_name     = "vagrant-base-box-template"
     tmp_template_path = templates_path.join("lxc-#{template_name}")
     src               = "./boxes/templates/#{@distrib}"
 
