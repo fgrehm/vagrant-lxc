@@ -3,7 +3,8 @@ source 'https://rubygems.org'
 gemspec
 
 group :development do
-  gem 'vagrant',          github: 'mitchellh/vagrant'
+  # FIXME: There are breaking changes on 1.3+
+  gem 'vagrant',          github: 'mitchellh/vagrant', tag: 'v1.2.7'
   gem 'vagrant-cachier',  github: 'fgrehm/vagrant-cachier'
   gem 'vagrant-pristine', github: 'fgrehm/vagrant-pristine'
   gem 'vagrant-omnibus'
