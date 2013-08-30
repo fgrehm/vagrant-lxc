@@ -2,7 +2,8 @@
 
 BUG FIXES:
 
-  - Fix error while compressing container's rootfs under Debian hosts [#131](https://github.com/fgrehm/vagrant-lxc/issues/131)
+  - Fix error while compressing container's rootfs under Debian hosts [#131](https://github.com/fgrehm/vagrant-lxc/issues/131) /
+    [#133](https://github.com/fgrehm/vagrant-lxc/issues/133)
 
 ## [0.5.0](https://github.com/fgrehm/vagrant-lxc/compare/v0.4.0...v0.5.0) (Aug 1, 2013)
 
