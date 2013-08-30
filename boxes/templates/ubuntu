@@ -117,6 +117,8 @@ finalize_user()
 {
     user=$1
 
+    chroot $rootfs getent passwd $user || chroot $rootfs adduser --disabled-password --gecos "" $user
+
     sudo_version=$(chroot $rootfs dpkg-query -W -f='${Version}' sudo)
 
     if chroot $rootfs dpkg --compare-versions $sudo_version gt "1.8.3p1-1"; then
@@ -513,6 +515,9 @@ EOF
 
     # remove pointless services in a container
     chroot $rootfs /usr/sbin/update-rc.d -f ondemand remove
+    chroot $rootfs /usr/sbin/update-rc.d -f checkroot-bootclean.sh remove
+    chroot $rootfs /usr/sbin/update-rc.d -f mountall-bootclean.sh remove
+    chroot $rootfs /usr/sbin/update-rc.d -f mountnfs-bootclean.sh remove
 
     chroot $rootfs /bin/bash -c 'cd /etc/init; for f in $(ls u*.conf); do mv $f $f.orig; done'
     chroot $rootfs /bin/bash -c 'cd /etc/init; for f in $(ls tty[2-9].conf); do mv $f $f.orig; done'
@@ -786,6 +791,13 @@ if [ -n "$bindhome" ]; then
 else
     finalize_user ubuntu
 fi
+
+vagrant_key_file="/tmp/vagrant.pub"
+echo "ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA6NF8iallvQVp22WDkTkyrtvp9eWW6A8YVr+kz4TjGYe7gHzIw+niNltGEFHzD8+v1I2YJ6oXevct1YeS0o9HZyN1Q9qgCgzUFtdOKLv6IedplqoPkcmF0aYet2PkEDo3MlTBckFXPITAMzF8dJSIFo9D8HfdOV0IAdx4O7PtixWKn5y2hMNG0zQPyUecp4pzC6kivAIhyfHilFR61RGL+GPXQ2MWZWFYbAGjyiYJnAmCP3NOTd0jMZEnDkbUvxhMmBYSdETk1rRgm+R4LOzFUGaHqHDLKLX+FIPKcF96hrucXzcWyLbIbEgE98OHlnVYCzRdK8jlqm8tehUc9c9WhQ== vagrant insecure public key" > /tmp/vagrant.pub
+orig_auth_key="$auth_key"
+auth_key="/tmp/vagrant.pub"
+finalize_user vagrant
+auth_key="$orig_auth_key"
 
 echo ""
 echo "##"

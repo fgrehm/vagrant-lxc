@@ -41,7 +41,6 @@ class BuildGenericBoxTask < ::Rake::TaskLib
 
     import_template do |template|
       create_base_container(template) do |rootfs|
-        configure_vagrant_user(rootfs)
         install_cfg_engines(rootfs)
         cleanup(rootfs)
         prepare_package_contents(rootfs)
@@ -72,10 +71,6 @@ class BuildGenericBoxTask < ::Rake::TaskLib
     yield "/var/lib/lxc/#{container_name}/rootfs"
   ensure
     sh "sudo lxc-destroy -n #{container_name}"
-  end
-
-  def configure_vagrant_user(rootfs)
-    puts "TODO: Configure vagrant user under #{rootfs}"
   end
 
   def install_cfg_engines(rootfs)
