@@ -28,7 +28,7 @@ and the [changelog](CHANGELOG.md) for most up to date information.*
 * A [bug-free](https://github.com/fgrehm/vagrant-lxc/wiki/Troubleshooting#im-unable-to-restart-containers) kernel
 
 The plugin is known to work better and pretty much out of the box on Ubuntu 12.04+
-hosts and installing the dependencies on it basically means a `apt-get install lxc redir`
+hosts and installing the dependencies on it basically means a `apt-get install lxc lxc-templates cgroup-lite redir`
 and a `apt-get update && apt-get dist-upgrade` to upgrade the kernel.
 
 Some manual steps are required to set up a Linode machine prior to using this
