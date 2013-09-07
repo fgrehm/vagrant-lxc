@@ -99,10 +99,10 @@ For other configuration options, please check the [lxc.conf manpages](http://man
 This plugin requires **a lot** of `sudo`ing since [user namespaces](https://wiki.ubuntu.com/UserNamespace)
 are not supported on mainstream kernels.
 
-If you are using Ubuntu 12.04 (or any other OS that with sudo < 1.8.4) you
-might be affected by a [bug in sudo](http://www.sudo.ws/repos/sudo/file/c158df7cd9d2/NEWS#l523)
-that will prevent your sudo password to be cached. You can work around the
-issue by disabling tty_tickets: execute `sudo visudo` and add the following line:
+If you are using Ubuntu 12.04 (or any other OS with sudo < 1.8.4) you
+might be affected by a [bug](http://www.sudo.ws/repos/sudo/file/c158df7cd9d2/NEWS#l523)
+preventing your sudo password to be cached. You can work around the issue by
+disabling tty_tickets: execute `sudo visudo` and add the following line:
 
 ```
      Defaults   !tty_tickets
