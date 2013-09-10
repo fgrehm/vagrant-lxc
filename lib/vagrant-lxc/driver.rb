@@ -4,6 +4,8 @@ require "vagrant/util/subprocess"
 require "vagrant-lxc/errors"
 require "vagrant-lxc/driver/cli"
 
+require "etc"
+
 module Vagrant
   module LXC
     class Driver
@@ -108,8 +110,11 @@ module Vagrant
           @sudo_wrapper.run('rm', '-f', 'rootfs.tar.gz')
           @sudo_wrapper.run('tar', '--numeric-owner', '-czf', target_path, 'rootfs')
           
-          @logger.info "Changing rootfs tarbal owner"
-          @sudo_wrapper.run('chown', "#{ENV['USER']}:#{ENV['USER']}", target_path)
+          @logger.info "Changing rootfs tarball owner"
+
+          user_details=Etc.getpwnam(Etc.getlogin)
+
+          @sudo_wrapper.run('chown', "#{user_details.uid}:#{user_details.gid}", target_path)
         end
 
         target_path
