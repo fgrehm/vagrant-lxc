@@ -19,6 +19,9 @@ to see the plugin in action and find out more about it.
 *Please refer to the [closed issues](https://github.com/fgrehm/vagrant-lxc/issues?labels=&milestone=&page=1&state=closed)
 and the [changelog](CHANGELOG.md) for most up to date information.*
 
+**NOTE: The plugin is currently incompatible with Vagrant 1.3+, please have a look at [#136](https://github.com/fgrehm/vagrant-lxc/issues/136)
+for a workaround and updates about it**
+
 
 ## Requirements
 
