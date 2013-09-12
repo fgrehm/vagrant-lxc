@@ -19,6 +19,11 @@ require 'vagrant-lxc/action/remove_temporary_files'
 require 'vagrant-lxc/action/setup_package_files'
 require 'vagrant-lxc/action/share_folders'
 
+unless Vagrant::LXC.vagrant_1_3_or_later
+  require 'vagrant-lxc/action/wait_for_communicator'
+  Vagrant::Action::Builtin.const_set :WaitForCommunicator, Vagrant::LXC::Action::WaitForCommunicator
+end
+
 module Vagrant
   module LXC
     module Action
@@ -51,6 +56,7 @@ module Vagrant
           b.use Vagrant::Action::Builtin::SetHostname
           b.use ForwardPorts
           b.use Boot
+          b.use Vagrant::Action::Builtin::WaitForCommunicator, [:starting, :running]
         end
       end
 
