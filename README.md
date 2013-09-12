@@ -19,9 +19,6 @@ to see the plugin in action and find out more about it.
 *Please refer to the [closed issues](https://github.com/fgrehm/vagrant-lxc/issues?labels=&milestone=&page=1&state=closed)
 and the [changelog](CHANGELOG.md) for most up to date information.*
 
-**NOTE: The plugin is currently incompatible with Vagrant 1.3+, please have a look at [#136](https://github.com/fgrehm/vagrant-lxc/issues/136)
-for a workaround and updates about it**
-
 
 ## Requirements
 
@@ -100,41 +97,9 @@ For other configuration options, please check the [lxc.conf manpages](http://man
 ### Avoiding `sudo` passwords
 
 This plugin requires **a lot** of `sudo`ing since [user namespaces](https://wiki.ubuntu.com/UserNamespace)
-are not supported on mainstream kernels. In order to work around that we can use
-a really dumb **AND INSECURE** Ruby wrapper script like the one below and add
-a `NOPASSWD` entry to our `/etc/sudoers` file:
-
-```ruby
-#!/usr/bin/env ruby
-exec ARGV.join(' ')
-```
-
-For example, you can save the code above under your `/usr/bin/lxc-vagrant-wrapper`,
-turn it into an executable script by running `chmod +x /usr/bin/lxc-vagrant-wrapper`
-and add the line below to your `/etc/sudoers` file:
-
-```
-USERNAME ALL=NOPASSWD:/usr/bin/lxc-vagrant-wrapper
-```
-
-*__WARNING__: the `/usr/bin/lxc-vagrant-wrapper` + `/etc/sudoers` combination
-above allows `USERNAME` to run any privileged command without a password. You
-might want to think twice before using that on a machine with sensitive data.*
-
-In order to tell vagrant-lxc to use that script when `sudo` is needed, you can
-pass in the path to the script as a configuration for the provider:
-
-```ruby
-Vagrant.configure("2") do |config|
-  config.vm.provider :lxc do |lxc|
-    lxc.sudo_wrapper = '/usr/bin/lxc-vagrant-wrapper'
-  end
-end
-```
-
-If you want to set the `sudo_wrapper` globally, just add the code above to your
-`~/.vagrant.d/Vagrantfile`.
-
+are not supported on mainstream kernels. Have a look at the [Wiki](https://github.com/fgrehm/vagrant-lxc/wiki/Avoiding-'sudo'-passwords)
+to find out how to work around that specially if you are running an OS with sudo
+< 1.8.4 (like Ubuntu 12.04) as you might be affected by a bug.
 
 ### Base boxes
 
