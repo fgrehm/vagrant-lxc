@@ -78,7 +78,7 @@ module Vagrant
         prune_customizations
         write_customizations(customizations + @customizations)
 
-        @cli.transition_to(:running) { |c| c.start(extra) }
+        @cli.start(extra)
       end
 
       def forced_halt
@@ -109,7 +109,7 @@ module Vagrant
           @logger.info "Compressing '#{rootfs_path}' rootfs to #{target_path}"
           @sudo_wrapper.run('rm', '-f', 'rootfs.tar.gz')
           @sudo_wrapper.run('tar', '--numeric-owner', '-czf', target_path, 'rootfs')
-          
+
           @logger.info "Changing rootfs tarball owner"
 
           user_details=Etc.getpwnam(Etc.getlogin)
