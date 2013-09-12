@@ -80,7 +80,6 @@ describe Vagrant::LXC::Driver do
     subject { described_class.new('name', sudo, cli) }
 
     before do
-      cli.stub(:transition_to).and_yield(cli)
       subject.customizations << internal_customization
       subject.start(customizations)
     end
@@ -91,10 +90,6 @@ describe Vagrant::LXC::Driver do
 
     it 'starts container with configured customizations' do
       cli.should have_received(:start)
-    end
-
-    it 'expects a transition to running state to take place' do
-      cli.should have_received(:transition_to).with(:running)
     end
   end
 

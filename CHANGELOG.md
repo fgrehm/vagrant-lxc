@@ -2,6 +2,7 @@
 
 IMPROVEMENTS:
 
+  - Compatibility with Vagrant 1.3+ [#136](https://github.com/fgrehm/vagrant-lxc/pull/136)
   - Set plugin name to `vagrant-lxc` so that it is easier to check if the plugin is
     installed with the newly added `Vagrant.has_plugin?`
 

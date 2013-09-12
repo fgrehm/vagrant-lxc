@@ -23,5 +23,9 @@ module Vagrant
         Config
       end
     end
+
+    def self.vagrant_1_3_or_later
+      Gem::Version.new(Vagrant::VERSION) >= Gem::Version.new('1.3.0')
+    end
   end
 end
