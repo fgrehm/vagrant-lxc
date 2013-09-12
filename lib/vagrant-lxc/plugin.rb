@@ -3,7 +3,7 @@ require "vagrant"
 module Vagrant
   module LXC
     class Plugin < Vagrant.plugin("2")
-      name "Linux Containers (LXC) provider"
+      name "vagrant-lxc"
       description <<-EOF
       The LXC provider allows Vagrant to manage and control
       LXC-based virtual machines.

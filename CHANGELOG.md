@@ -1,10 +1,15 @@
 ## [0.5.1](https://github.com/fgrehm/vagrant-lxc/compare/v0.5.0...master) (unreleased)
 
+IMPROVEMENTS:
+
+  - Set plugin name to `vagrant-lxc` so that it is easier to check if the plugin is
+    installed with the newly added `Vagrant.has_plugin?`
+
 BUG FIXES:
 
+  - Fix box package ownership on `vagrant package` [#140](https://github.com/fgrehm/vagrant-lxc/pull/140)
   - Fix error while compressing container's rootfs under Debian hosts [#131](https://github.com/fgrehm/vagrant-lxc/issues/131) /
     [#133](https://github.com/fgrehm/vagrant-lxc/issues/133)
-  - Fix box package ownership on `vagrant package` [#140](https://github.com/fgrehm/vagrant-lxc/pull/140)
 
 ## [0.5.0](https://github.com/fgrehm/vagrant-lxc/compare/v0.4.0...v0.5.0) (Aug 1, 2013)
 
