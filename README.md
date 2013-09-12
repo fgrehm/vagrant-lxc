@@ -29,7 +29,8 @@ and the [changelog](CHANGELOG.md) for most up to date information.*
 
 The plugin is known to work better and pretty much out of the box on Ubuntu 12.04+
 hosts and installing the dependencies on it basically means a `apt-get install lxc lxc-templates cgroup-lite redir`
-and a `apt-get update && apt-get dist-upgrade` to upgrade the kernel.
+and a `apt-get update && apt-get dist-upgrade` to upgrade the kernel. For Debian
+hosts you'll need to follow the instructions described on the [Wiki](https://github.com/fgrehm/vagrant-lxc/wiki/Usage-on-debian-hosts).
 
 Some manual steps are required to set up a Linode machine prior to using this
 plugin, please check https://github.com/fgrehm/vagrant-lxc/wiki/Usage-on-Linode
