@@ -40,7 +40,6 @@ module Vagrant
         end
       end
 
-
       # This action boots the VM, assuming the VM is in a state that requires
       # a bootup (i.e. not saved).
       def self.action_boot
@@ -146,6 +145,9 @@ module Vagrant
                 b3.use Vagrant::Action::Builtin::EnvSet, :force_halt => true
                 b3.use action_halt
                 b3.use Destroy
+                if Vagrant::LXC.vagrant_1_3_or_later
+                  b3.use Vagrant::Action::Builtin::ProvisionerCleanup
+                end
               else
                 b3.use Message, :will_not_destroy
               end
