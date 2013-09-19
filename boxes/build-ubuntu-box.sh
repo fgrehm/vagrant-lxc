@@ -8,11 +8,12 @@ set -e
 # USAGE:
 #   $ cd boxes && sudo ./build-ubuntu-box.sh UBUNTU_RELEASE BOX_ARCH
 #
-#   To enable Chef or any other configuration management tool pass '1' to it:
-#      $ CHEF=1 sudo -E ./build-ubuntu-box.sh UBUNTU_RELEASE BOX_ARCH
-#      $ PUPPET=1 sudo -E ./build-ubuntu-box.sh UBUNTU_RELEASE BOX_ARCH
-#      $ SALT=1 sudo -E ./build-ubuntu-box.sh UBUNTU_RELEASE BOX_ARCH
-#      $ BABUSHKA=1 sudo -E ./build-ubuntu-box.sh UBUNTU_RELEASE BOX_ARCH
+# To enable Chef or any other configuration management tool pass '1' to the
+# corresponding env var:
+#   $ CHEF=1 sudo -E ./build-ubuntu-box.sh UBUNTU_RELEASE BOX_ARCH
+#   $ PUPPET=1 sudo -E ./build-ubuntu-box.sh UBUNTU_RELEASE BOX_ARCH
+#   $ SALT=1 sudo -E ./build-ubuntu-box.sh UBUNTU_RELEASE BOX_ARCH
+#   $ BABUSHKA=1 sudo -E ./build-ubuntu-box.sh UBUNTU_RELEASE BOX_ARCH
 
 # TODO: * Add support for flushing cache and specifying a custom base Ubuntu lxc
 #         template instead of system's built in
@@ -21,6 +22,8 @@ set -e
 #       * Ensure it is in sync with master
 #       * Stuff from locales (rcarmo and discourse stuff)
 #       * Clean up when finished
+#       * Add vagrant-lxc version to base box manifest and create an wiki page
+#         for describing it
 
 ##################################################################################
 # 0 - Initial setup and sanity checks
@@ -82,10 +85,11 @@ sed -i -e \
 
 
 ##################################################################################
-# 4 - Add some goodies
+# 4 - Add some goodies and update packages
 
 PACKAGES=(vim curl wget man-db bash-completion)
 chroot ${ROOTFS} apt-get install ${PACKAGES[*]} -y --force-yes
+chroot ${ROOTFS} apt-get upgrade -y --force-yes
 
 
 ##################################################################################
