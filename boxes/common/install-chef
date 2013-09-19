@@ -1,7 +1,6 @@
 #!/bin/bash
 
-cache=`readlink -f .`
-rootfs="${cache}/rootfs"
+rootfs=$1
 
 echo "installing chef"
 cat > $rootfs/tmp/install-chef.sh << EOF
