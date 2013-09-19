@@ -15,14 +15,6 @@ set -e
 #   $ SALT=1 sudo -E ./build-ubuntu-box.sh UBUNTU_RELEASE BOX_ARCH
 #   $ BABUSHKA=1 sudo -E ./build-ubuntu-box.sh UBUNTU_RELEASE BOX_ARCH
 
-# TODO: * Add support for flushing cache and specifying a custom base Ubuntu lxc
-#         template instead of system's built in
-#       * Embed vagrant public key
-#       * Stuff from locales (rcarmo and discourse stuff)
-#       * Clean up when finished
-#       * Add vagrant-lxc version to base box manifest and create an wiki page
-#         for describing it
-
 ##################################################################################
 # 0 - Initial setup and sanity checks
 
@@ -32,6 +24,7 @@ RELEASE=${1:-"raring"}
 ARCH=${2:-"amd64"}
 PKG=vagrant-lxc-${RELEASE}-${ARCH}-${TODAY}.box
 WORKING_DIR=/tmp/vagrant-lxc-${RELEASE}
+VAGRANT_KEY="ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA6NF8iallvQVp22WDkTkyrtvp9eWW6A8YVr+kz4TjGYe7gHzIw+niNltGEFHzD8+v1I2YJ6oXevct1YeS0o9HZyN1Q9qgCgzUFtdOKLv6IedplqoPkcmF0aYet2PkEDo3MlTBckFXPITAMzF8dJSIFo9D8HfdOV0IAdx4O7PtixWKn5y2hMNG0zQPyUecp4pzC6kivAIhyfHilFR61RGL+GPXQ2MWZWFYbAGjyiYJnAmCP3NOTd0jMZEnDkbUvxhMmBYSdETk1rRgm+R4LOzFUGaHqHDLKLX+FIPKcF96hrucXzcWyLbIbEgE98OHlnVYCzRdK8jlqm8tehUc9c9WhQ== vagrant insecure public key"
 
 # Providing '1' will enable these tools
 CHEF=${CHEF:-0}
@@ -80,7 +73,7 @@ echo -n 'vagrant:vagrant' | chroot ${ROOTFS} chpasswd
 
 # Configure SSH access
 mkdir -p ${ROOTFS}/home/vagrant/.ssh
-wget https://raw.github.com/mitchellh/vagrant/master/keys/vagrant.pub -O ${ROOTFS}/home/vagrant/.ssh/authorized_keys
+echo $VAGRANT_KEY > ${ROOTFS}/home/vagrant/.ssh/authorized_keys
 chroot ${ROOTFS} chown -R vagrant: /home/vagrant/.ssh
 
 # Enable passwordless sudo for users under the "sudo" group
