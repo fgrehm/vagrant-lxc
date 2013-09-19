@@ -7,6 +7,8 @@
 # TODO: * Add support for flushing cache and specifying a custom base Ubuntu lxc
 #         template instead of system's built in
 #       * Embed vagrant public key
+#       * Add date to metadata.json
+#       * Ensure it is in sync with master
 
 ##################################################################################
 # 1 - Create the base container
