@@ -1,0 +1,229 @@
+#!/bin/bash
+
+# This is a modified version of /usr/share/lxc/templates/lxc-ubuntu
+# that comes with Ubuntu 13.04 changed to suit vagrant-lxc needs
+
+#
+# template script for generating ubuntu container for LXC
+#
+# This script consolidates and extends the existing lxc ubuntu scripts
+#
+
+# Copyright © 2011 Serge Hallyn <serge.hallyn@canonical.com>
+# Copyright © 2010 Wilhelm Meier
+# Author: Wilhelm Meier <wilhelm.meier@fh-kl.de>
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License version 2, as
+# published by the Free Software Foundation.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License along
+# with this program; if not, write to the Free Software Foundation, Inc.,
+# 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+#
+
+set -e
+
+if [ -r /etc/default/lxc ]; then
+    . /etc/default/lxc
+fi
+
+extract_rootfs()
+{
+    tarball=$1
+    arch=$2
+    rootfs=$3
+
+    echo "Extracting $tarball ..."
+    mkdir -p $(dirname $rootfs)
+    (cd `dirname $rootfs` && tar xfz $tarball)
+    return 0
+}
+
+install_ubuntu()
+{
+    rootfs=$1
+    release=$2
+    tarball=$3
+    mkdir -p /var/lock/subsys/
+
+    (
+        flock -x 200
+        if [ $? -ne 0 ]; then
+            echo "Cache repository is busy."
+            return 1
+        fi
+
+        extract_rootfs $tarball $arch $rootfs
+        if [ $? -ne 0 ]; then
+            echo "Failed to copy rootfs"
+            return 1
+        fi
+
+        return 0
+
+    ) 200>/var/lock/subsys/lxc
+
+    return $?
+}
+
+copy_configuration()
+{
+    path=$1
+    rootfs=$2
+    name=$3
+
+    grep -q "^lxc.rootfs" $path/config 2>/dev/null || echo "lxc.rootfs = $rootfs" >> $path/config
+
+    # if there is exactly one veth network entry, make sure it has an
+    # associated hwaddr.
+    nics=`grep -e '^lxc\.network\.type[ \t]*=[ \t]*veth' $path/config | wc -l`
+    if [ $nics -eq 1 ]; then
+        grep -q "^lxc.network.hwaddr" $path/config || sed -i -e "/^lxc\.network\.type[ \t]*=[ \t]*veth/a lxc.network.hwaddr = 00:16:3e:$(openssl rand -hex 3| sed 's/\(..\)/\1:/g; s/.$//')" $path/config
+    fi
+
+    if [ $? -ne 0 ]; then
+        echo "Failed to add configuration"
+        return 1
+    fi
+
+    return 0
+}
+
+post_process()
+{
+    rootfs=$1
+
+    # rmdir /dev/shm for containers that have /run/shm
+    # I'm afraid of doing rm -rf $rootfs/dev/shm, in case it did
+    # get bind mounted to the host's /run/shm.  So try to rmdir
+    # it, and in case that fails move it out of the way.
+    if [ ! -L $rootfs/dev/shm ] && [ -d $rootfs/run/shm ] && [ -e $rootfs/dev/shm ]; then
+        mv $rootfs/dev/shm $rootfs/dev/shm.bak
+        ln -s /run/shm $rootfs/dev/shm
+    fi
+}
+
+usage()
+{
+    cat <<EOF
+$1 -h|--help [-a|--arch] [--trim] [-d|--debug]
+   [-F | --flush-cache] [-r|--release <release>] [ -S | --auth-key <keyfile>]
+release: the ubuntu release (e.g. precise): defaults to host release on ubuntu, otherwise uses latest LTS
+trim: make a minimal (faster, but not upgrade-safe) container
+arch: the container architecture (e.g. amd64): defaults to host arch
+auth-key: SSH Public key file to inject into container
+EOF
+    return 0
+}
+
+options=$(getopt -o a:b:hp:r:xn:FS:d:C -l arch:,help,path:,release:,trim,name:,flush-cache,auth-key:,debug:,tarball: -- "$@")
+if [ $? -ne 0 ]; then
+    usage $(basename $0)
+    exit 1
+fi
+eval set -- "$options"
+
+release=precise # Default to the last Ubuntu LTS release for non-Ubuntu systems
+if [ -f /etc/lsb-release ]; then
+    . /etc/lsb-release
+    if [ "$DISTRIB_ID" = "Ubuntu" ]; then
+        release=$DISTRIB_CODENAME
+    fi
+fi
+
+arch=$(uname -m)
+
+# Code taken from debootstrap
+if [ -x /usr/bin/dpkg ] && /usr/bin/dpkg --print-architecture >/dev/null 2>&1; then
+    arch=`/usr/bin/dpkg --print-architecture`
+elif type udpkg >/dev/null 2>&1 && udpkg --print-architecture >/dev/null 2>&1; then
+    arch=`/usr/bin/udpkg --print-architecture`
+else
+    arch=$(uname -m)
+    if [ "$arch" = "i686" ]; then
+        arch="i386"
+    elif [ "$arch" = "x86_64" ]; then
+        arch="amd64"
+    elif [ "$arch" = "armv7l" ]; then
+        arch="armel"
+    fi
+fi
+
+debug=0
+trim_container=0
+hostarch=$arch
+while true
+do
+    case "$1" in
+    -h|--help)      usage $0 && exit 0;;
+    -p|--path)      path=$2; shift 2;;
+    -n|--name)      name=$2; shift 2;;
+    -T|--tarball)   tarball=$2; shift 2;;
+    -r|--release)   release=$2; shift 2;;
+    -a|--arch)      arch=$2; shift 2;;
+    -x|--trim)      trim_container=1; shift 1;;
+    -S|--auth-key)  auth_key=$2; shift 2;;
+    -d|--debug)     debug=1; shift 1;;
+    --)             shift 1; break ;;
+        *)              break ;;
+    esac
+done
+
+if [ $debug -eq 1 ]; then
+    set -x
+fi
+
+
+if [ "$arch" == "i686" ]; then
+    arch=i386
+fi
+
+if [ $hostarch = "i386" -a $arch = "amd64" ]; then
+    echo "can't create amd64 container on i386"
+    exit 1
+fi
+
+if [ -z "$path" ]; then
+    echo "'path' parameter is required"
+    exit 1
+fi
+
+if [ "$(id -u)" != "0" ]; then
+    echo "This script should be run as 'root'"
+    exit 1
+fi
+
+# detect rootfs
+config="$path/config"
+if grep -q '^lxc.rootfs' $config 2>/dev/null ; then
+    rootfs=`grep 'lxc.rootfs =' $config | awk -F= '{ print $2 }'`
+else
+    rootfs=$path/rootfs
+fi
+
+install_ubuntu $rootfs $release $tarball
+if [ $? -ne 0 ]; then
+    echo "failed to install ubuntu $release"
+    exit 1
+fi
+
+copy_configuration $path $rootfs $name $arch
+if [ $? -ne 0 ]; then
+    echo "failed write configuration file"
+    exit 1
+fi
+
+post_process $rootfs $release $trim_container
+
+echo ""
+echo "##"
+echo "# The default user is 'vagrant' with password 'vagrant'!"
+echo "# Use the 'sudo' command to run tasks as root in the container."
+echo "##"
+echo ""
