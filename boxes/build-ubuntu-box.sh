@@ -18,8 +18,6 @@ set -e
 # TODO: * Add support for flushing cache and specifying a custom base Ubuntu lxc
 #         template instead of system's built in
 #       * Embed vagrant public key
-#       * Add date to metadata.json
-#       * Ensure it is in sync with master
 #       * Stuff from locales (rcarmo and discourse stuff)
 #       * Clean up when finished
 #       * Add vagrant-lxc version to base box manifest and create an wiki page
@@ -28,9 +26,11 @@ set -e
 ##################################################################################
 # 0 - Initial setup and sanity checks
 
+TODAY=$(date -u +"%Y-%m-%d")
+NOW="${TODAY} $(date -u +'%H:%M:%S') UTC"
 RELEASE=${1:-"raring"}
 ARCH=${2:-"amd64"}
-PKG=vagrant-lxc-${RELEASE}-${ARCH}.box
+PKG=vagrant-lxc-${RELEASE}-${ARCH}-${TODAY}.box
 WORKING_DIR=/tmp/vagrant-lxc-${RELEASE}
 
 # Providing '1' will enable these tools
@@ -38,6 +38,12 @@ CHEF=${CHEF:-0}
 PUPPET=${PUPPET:-0}
 SALT=${SALT:-0}
 BABUSHKA=${BABUSHKA:-0}
+
+# Path to files bundled with the box
+CWD=`readlink -f .`
+LXC_TEMPLATE=${CWD}/common/lxc-template
+LXC_CONF=${CWD}/common/lxc.conf
+METATADA_JSON=${CWD}/common/metadata.json
 
 # Set up a working dir
 mkdir -p $WORKING_DIR
@@ -128,10 +134,11 @@ tar --numeric-owner -czf /tmp/vagrant-lxc-${RELEASE}/rootfs.tar.gz ./rootfs/*
 
 # Prepare package contents
 cd $WORKING_DIR
-wget https://raw.github.com/fgrehm/vagrant-lxc/master/boxes/common/lxc-template
-wget https://raw.github.com/fgrehm/vagrant-lxc/master/boxes/common/lxc.conf
-wget https://raw.github.com/fgrehm/vagrant-lxc/master/boxes/common/metadata.json
+cp $LXC_TEMPLATE .
+cp $LXC_CONF .
+cp $METATADA_JSON .
 chmod +x lxc-template
+sed -i "s/<TODAY>/${NOW}/" metadata.json
 
 # Vagrant box!
 tar -czf $PKG ./*
