@@ -99,6 +99,7 @@ module Vagrant
           end
 
           unless last_state == target_state
+            # TODO: Raise an user friendly message
             raise TargetStateNotReached.new target_state, last_state
           end
         end

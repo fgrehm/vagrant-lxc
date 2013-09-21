@@ -18,7 +18,10 @@ module Vagrant
               system "pkill -TERM -P #{pid}"
             end
 
+            @logger.info "Removing redir pids files"
             remove_redir_pids
+          else
+            @logger.info "No redir pids found"
           end
 
           @app.call env
@@ -33,6 +36,7 @@ module Vagrant
         end
 
         def is_redir_pid?(pid)
+          @logger.debug "Checking if #{pid} is a redir process with `ps -o cmd= #{pid}`"
           `ps -o cmd= #{pid}`.strip.chomp =~ /redir/
         end
 

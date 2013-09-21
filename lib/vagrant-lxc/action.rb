@@ -119,7 +119,7 @@ module Vagrant
         Vagrant::Action::Builder.new.tap do |b|
           b.use Vagrant::Action::Builtin::Call, Created do |env, b2|
             if env[:result]
-              # TODO: Remove this on / after 0.4
+              # TODO: Check vagrant version and use only if lower than 1.X
               b2.use Disconnect
               b2.use ClearForwardedPorts
               b2.use RemoveTemporaryFiles
@@ -145,6 +145,7 @@ module Vagrant
               next
             end
 
+            # TODO: Use Vagrant's built in action
             b2.use Vagrant::Action::Builtin::Call, DestroyConfirm do |env2, b3|
               if env2[:result]
                 b3.use Vagrant::Action::Builtin::ConfigValidate

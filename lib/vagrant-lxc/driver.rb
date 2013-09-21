@@ -151,12 +151,13 @@ module Vagrant
         template_name     = "vagrant-tmp-#{@container_name}"
         tmp_template_path = templates_path.join("lxc-#{template_name}").to_s
 
-        @logger.debug 'Copying LXC template into place'
+        @logger.info 'Copying LXC template into place'
         @sudo_wrapper.run('cp', path, tmp_template_path)
         @sudo_wrapper.run('chmod', '+x', tmp_template_path)
 
         yield template_name
       ensure
+        @logger.info 'Removing LXC template'
         @sudo_wrapper.run('rm', tmp_template_path)
       end
 
