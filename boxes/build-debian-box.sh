@@ -157,4 +157,11 @@ sed -i "s/<TODAY>/${NOW}/" metadata.json
 # Vagrant box!
 tar -czf $PKG ./*
 
-echo "The base box was built successfully to ${WORKING_DIR}/${PKG}"
+chmod +rw ${WORKING_DIR}/${PKG}
+mkdir -p ${CWD}/output
+mv ${WORKING_DIR}/${PKG} ${CWD}/output
+
+# Clean up after ourselves
+rm -rf ${WORKING_DIR}
+
+echo "The base box was built successfully to ${CWD}/output/${PKG}"

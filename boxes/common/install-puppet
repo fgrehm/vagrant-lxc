@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 rootfs=$1
 
 echo "installing puppet"
