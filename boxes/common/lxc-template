@@ -112,12 +112,8 @@ post_process()
 usage()
 {
     cat <<EOF
-$1 -h|--help [-a|--arch] [--trim] [-d|--debug]
-   [-F | --flush-cache] [-r|--release <release>] [ -S | --auth-key <keyfile>]
-release: the ubuntu release (e.g. precise): defaults to host release on ubuntu, otherwise uses latest LTS
-trim: make a minimal (faster, but not upgrade-safe) container
+$1 -h|--help [-a|--arch] [--trim] [-d|--debug] [--rootfs <rootfs>] [-T|--tarball <rootfs-tarball>
 arch: the container architecture (e.g. amd64): defaults to host arch
-auth-key: SSH Public key file to inject into container
 EOF
     return 0
 }
@@ -162,12 +158,11 @@ while true
 do
     case "$1" in
     -h|--help)      usage $0 && exit 0;;
+    --rootfs)       rootfs=$2; shift 2;;
     -p|--path)      path=$2; shift 2;;
     -n|--name)      name=$2; shift 2;;
     -T|--tarball)   tarball=$2; shift 2;;
-    -r|--release)   release=$2; shift 2;;
     -a|--arch)      arch=$2; shift 2;;
-    -x|--trim)      trim_container=1; shift 1;;
     -S|--auth-key)  auth_key=$2; shift 2;;
     -d|--debug)     debug=1; shift 1;;
     --)             shift 1; break ;;
@@ -178,7 +173,6 @@ done
 if [ $debug -eq 1 ]; then
     set -x
 fi
-
 
 if [ "$arch" == "i686" ]; then
     arch=i386
@@ -201,10 +195,13 @@ fi
 
 # detect rootfs
 config="$path/config"
-if grep -q '^lxc.rootfs' $config 2>/dev/null ; then
-    rootfs=`grep 'lxc.rootfs =' $config | awk -F= '{ print $2 }'`
-else
-    rootfs=$path/rootfs
+# if $rootfs exists here, it was passed in with --rootfs
+if [ -z "$rootfs" ]; then
+    if grep -q '^lxc.rootfs' $config 2>/dev/null ; then
+        rootfs=`grep 'lxc.rootfs =' $config | awk -F= '{ print $2 }'`
+    else
+        rootfs=$path/rootfs
+    fi
 fi
 
 install_ubuntu $rootfs $release $tarball

@@ -1,7 +1,8 @@
 #!/bin/bash
 
-cache=`readlink -f .`
-rootfs="${cache}/rootfs"
+set -e
+
+rootfs=$1
 
 echo "installing salt"
 chroot $rootfs apt-add-repository -y ppa:saltstack/salt
