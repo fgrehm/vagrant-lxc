@@ -1,7 +1,8 @@
 #!/bin/bash
 
-cache=`readlink -f .`
-rootfs="${cache}/rootfs"
+set -e
+
+rootfs=$1
 
 echo "installing puppet"
 wget http://apt.puppetlabs.com/puppetlabs-release-stable.deb -O "${rootfs}/tmp/puppetlabs-release-stable.deb"
