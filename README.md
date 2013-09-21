@@ -106,13 +106,13 @@ to find out how to work around that specially if you are running an OS with sudo
 
 Please check [the wiki](https://github.com/fgrehm/vagrant-lxc/wiki/Base-boxes)
 for a list of [pre built](https://github.com/fgrehm/vagrant-lxc/wiki/Base-boxes#available-boxes)
-base boxes and information on [how to build your own](https://github.com/fgrehm/vagrant-lxc/wiki/Base-boxes#building-your-own).
+base boxes and have a look at [`BOXES.md`](https://github.com/fgrehm/vagrant-lxc/tree/master/BOXES.md)
+for more information on building your own.
 
 
 ## More information
 
-Please refer the [wiki](https://github.com/fgrehm/vagrant-lxc/wiki) for more
-information.
+Please refer the [wiki](https://github.com/fgrehm/vagrant-lxc/wiki).
 
 
 ## Problems / ideas?
@@ -127,6 +127,14 @@ to ask questions, propose new functionality and / or report bugs.
 
 * [vagabond](https://github.com/chrisroberts/vagabond) - "a tool integrated with Chef to build local nodes easily"
 * [vagueant](https://github.com/neerolyte/vagueant) - "vaguely like Vagrant for linux containers (lxc)"
+
+
+## Donating
+
+Support this project and [others by fgrehm](https://github.com/fgrehm)
+via [gittip](https://www.gittip.com/fgrehm/).
+
+[![Support via Gittip](https://rawgithub.com/twolfson/gittip-badge/0.1.0/dist/gittip.png)](https://www.gittip.com/fgrehm/)
 
 
 ## Contributing
