@@ -27,6 +27,9 @@ BOXES = {
     lxc_url:  lxc_box_url('raring'),
     vbox_url: 'http://goo.gl/Y4aRr'
   },
+  saucy: {
+    vbox_url: 'http://cloud-images.ubuntu.com/vagrant/saucy/current/saucy-server-cloudimg-amd64-vagrant-disk1.box'
+  },
   squeeze: {
     lxc_url:  lxc_box_url('squeeze'),
     # https://gist.github.com/henare/1964037
