@@ -57,6 +57,10 @@ else
   lxc-create -n ${RELEASE}-base -t ubuntu -- --release ${RELEASE} --arch ${ARCH}
 fi
 
+# Fixes some networking issues
+# See https://github.com/fgrehm/vagrant-lxc/issues/91 for more info
+echo 'ff02::3 ip6-allhosts' >> ${ROOTFS}/etc/hosts
+
 
 ##################################################################################
 # 2 - Prepare vagrant user
