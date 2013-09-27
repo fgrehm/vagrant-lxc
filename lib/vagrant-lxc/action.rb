@@ -56,7 +56,7 @@ module Vagrant
           b.use Vagrant::Action::Builtin::SetHostname
           b.use ForwardPorts
           b.use Boot
-          b.use Vagrant::Action::Builtin::WaitForCommunicator, [:starting, :running]
+          b.use Vagrant::Action::Builtin::WaitForCommunicator
         end
       end
 
