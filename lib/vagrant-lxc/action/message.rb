@@ -1,6 +1,7 @@
 module Vagrant
   module LXC
     module Action
+      # XXX: Is this really needed? Should we contribute this back to Vagrant's core?
       class Message
         def initialize(app, env, msg_key, type = :info)
           @app     = app

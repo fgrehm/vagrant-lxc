@@ -94,7 +94,6 @@ module Vagrant
           b.use Builtin::Call, IsRunning do |env, b2|
             # If the VM is running, then our work here is done, exit
             next if env[:result]
-            # TODO: Check if has been saved / frozen and resume
             b2.use action_boot
           end
         end
@@ -123,7 +122,7 @@ module Vagrant
         Builder.new.tap do |b|
           b.use Builtin::Call, Created do |env, b2|
             if env[:result]
-              # TODO: Check vagrant version and use only if lower than 1.X
+              # TODO: Remove once we drop support for vagrant 1.1
               b2.use Disconnect
               b2.use ClearForwardedPorts
               b2.use RemoveTemporaryFiles
@@ -149,7 +148,7 @@ module Vagrant
               next
             end
 
-            # TODO: Use Vagrant's built in action
+            # TODO: Use Vagrant's built in action once we drop support for vagrant 1.2
             b2.use Builtin::Call, DestroyConfirm do |env2, b3|
               if env2[:result]
                 b3.use Builtin::ConfigValidate
