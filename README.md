@@ -115,7 +115,7 @@ Please refer the [wiki](https://github.com/fgrehm/vagrant-lxc/wiki).
 Please review the [Troubleshooting](https://github.com/fgrehm/vagrant-lxc/wiki/Troubleshooting)
 wiki page + [known bugs](https://github.com/fgrehm/vagrant-lxc/issues?labels=bug&page=1&state=open)
 list if you have a problem and feel free to use the [issue tracker](https://github.com/fgrehm/vagrant-lxc/issues)
-to ask questions, propose new functionality and / or report bugs.
+propose new functionality and / or report bugs.
 
 
 ## Donating
