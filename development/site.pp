@@ -51,6 +51,12 @@ package {
   ;
 }
 
+# Upgrade kernel if needed
+package {
+  [ 'linux-image-generic', 'linux-headers-generic' ]:
+    ensure => 'latest'
+}
+
 # Make sure we can create and boot nested containers
 if $hostname == 'vbox' {
   package { 'apparmor-utils': }
@@ -81,7 +87,7 @@ gem: --no-ri --no-rdoc
 gemhome: /home/vagrant/gems
 gempath:
 - /home/vagrant/gems
-- /usr/local/lib/ruby/gems/1.8
+- /var/lib/gems/1.9.1
 '
 }
 exec {
