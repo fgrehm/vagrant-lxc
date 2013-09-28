@@ -7,17 +7,13 @@
 This is a Vagrant plugin that allows it to control and provision Linux Containers
 as an alternative to the built in VirtualBox provider for Linux hosts.
 
-Check out this [blog post](http://fabiorehm.com/blog/2013/04/28/lxc-provider-for-vagrant)
-to see the plugin in action and find out more about it.
 
 ## Features / Limitations
 
 * Provides the same workflow as the Vagrant VirtualBox provider
 * Port forwarding via [`redir`](http://linux.die.net/man/1/redir)
-* Does not support private networks
-
-*Please refer to the [closed issues](https://github.com/fgrehm/vagrant-lxc/issues?labels=&milestone=&page=1&state=closed)
-and the [changelog](CHANGELOG.md) for most up to date information.*
+* Does not support public / private networks
+* Assumes you have a `lxcbr0` bridge configured on your host similar to [Ubuntu's built-in](https://help.ubuntu.com/lts/serverguide/lxc.html#lxcbr0)
 
 
 ## Requirements
@@ -33,13 +29,13 @@ and a `apt-get update && apt-get dist-upgrade` to upgrade the kernel. For Debian
 hosts you'll need to follow the instructions described on the [Wiki](https://github.com/fgrehm/vagrant-lxc/wiki/Usage-on-debian-hosts).
 
 Some manual steps are required to set up a Linode machine prior to using this
-plugin, please check https://github.com/fgrehm/vagrant-lxc/wiki/Usage-on-Linode
+plugin, please check [the wiki](https://github.com/fgrehm/vagrant-lxc/wiki/Usage-on-Linode)
 for more information. Documentation on how to set things up for other distros
 [are welcome](https://github.com/fgrehm/vagrant-lxc/wiki) :)
 
-If you are on a Mac or Windows machine, you might want to have a look at this
-blog post for some ideas on how to set things up: http://the.taoofmac.com/space/HOWTO/Vagrant
-or use use the same [Ubuntu 12.10 VirtualBox machine I use for development](https://github.com/fgrehm/vagrant-lxc/wiki/Development#using-virtualbox-for-development).
+If you are on a Mac or Windows machine, you might want to have a look at [this](http://the.taoofmac.com/space/HOWTO/Vagrant)
+blog post for some ideas on how to set things up or check out [this other repo](https://github.com/fgrehm/vagrant-lxc-vbox-hosts)
+for a set of Vagrant VirtualBox machines ready for vagrant-lxc usage.
 
 
 ## Installation
@@ -89,11 +85,10 @@ end
 ```
 
 vagrant-lxc will then write out `lxc.cgroup.memory.limit_in_bytes='1024M'` to the
-container config file (usually kept under `/var/lib/lxc/<container-name>/config`)
+container config file (usually kept under `/var/lib/lxc/<container>/config`)
 prior to starting it.
 
 For other configuration options, please check the [lxc.conf manpages](http://manpages.ubuntu.com/manpages/quantal/man5/lxc.conf.5.html).
-
 
 ### Avoiding `sudo` passwords
 
@@ -121,12 +116,6 @@ Please review the [Troubleshooting](https://github.com/fgrehm/vagrant-lxc/wiki/T
 wiki page + [known bugs](https://github.com/fgrehm/vagrant-lxc/issues?labels=bug&page=1&state=open)
 list if you have a problem and feel free to use the [issue tracker](https://github.com/fgrehm/vagrant-lxc/issues)
 to ask questions, propose new functionality and / or report bugs.
-
-
-## Similar projects
-
-* [vagabond](https://github.com/chrisroberts/vagabond) - "a tool integrated with Chef to build local nodes easily"
-* [vagueant](https://github.com/neerolyte/vagueant) - "vaguely like Vagrant for linux containers (lxc)"
 
 
 ## Donating
