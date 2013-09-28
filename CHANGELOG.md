@@ -2,7 +2,13 @@
 
   IMPROVEMENTS:
 
+    - New base boxes with support for lxc 1.0+
     - Make sure lxc templates are executable prior to `lxc-create` [#128](https://github.com/fgrehm/vagrant-lxc/issues/128)
+
+BUG FIXES:
+
+  - Fix various issues related to detecting whether the container is running
+    and is "SSHable" [#142](https://github.com/fgrehm/vagrant-lxc/issues/142)
 
 ## [0.6.0](https://github.com/fgrehm/vagrant-lxc/compare/v0.5.0...v0.6.0) (Sep 12, 2013)
 
