@@ -111,9 +111,7 @@ module Vagrant
           @sudo_wrapper.run('tar', '--numeric-owner', '-czf', target_path, 'rootfs')
 
           @logger.info "Changing rootfs tarball owner"
-
-          user_details=Etc.getpwnam(Etc.getlogin)
-
+          user_details = Etc.getpwnam(Etc.getlogin)
           @sudo_wrapper.run('chown', "#{user_details.uid}:#{user_details.gid}", target_path)
         end
 
