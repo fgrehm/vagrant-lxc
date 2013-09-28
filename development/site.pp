@@ -134,3 +134,14 @@ file {
     mode    => '0600',
     require => Exec['download-private-key']
 }
+
+# Passwordless sudo wrapper script
+file {
+  '/usr/bin/lxc-vagrant-wrapper':
+    ensure  => 'present',
+    mode    => '0755',
+    content => "
+#!/usr/bin/env ruby
+exec ARGV.join(' ')
+    "
+}
