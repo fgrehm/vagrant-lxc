@@ -15,6 +15,9 @@ module Vagrant
       class TemplateFileMissing < Vagrant::Errors::VagrantError
         error_key(:lxc_template_file_missing)
       end
+      class TemplatesDirMissing < Vagrant::Errors::VagrantError
+        error_key(:lxc_templates_dir_missing)
+      end
       class RootFSTarballMissing < Vagrant::Errors::VagrantError
         error_key(:lxc_invalid_box_version)
       end

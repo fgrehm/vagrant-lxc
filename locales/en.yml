@@ -46,6 +46,11 @@ en:
         The template file used for creating the container was not found for %{name}
         box.
 
+      lxc_templates_dir_missing: |-
+        Unable to identify lxc templates path.
+
+        Looked up under: %{paths}
+
       lxc_not_installed: |-
         The `lxc` package does not seem to be installed or is not accessible on the PATH.
 

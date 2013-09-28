@@ -9,6 +9,7 @@ BUG FIXES:
 
   - Fix various issues related to detecting whether the container is running
     and is "SSHable" [#142](https://github.com/fgrehm/vagrant-lxc/issues/142)
+  - Nicely handle missing templates path [#139](https://github.com/fgrehm/vagrant-lxc/issues/139)
 
 ## [0.6.0](https://github.com/fgrehm/vagrant-lxc/compare/v0.5.0...v0.6.0) (Sep 12, 2013)
 

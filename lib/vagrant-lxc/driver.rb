@@ -156,7 +156,9 @@ module Vagrant
         yield template_name
       ensure
         @logger.info 'Removing LXC template'
-        @sudo_wrapper.run('rm', tmp_template_path)
+        if tmp_template_path
+          @sudo_wrapper.run('rm', tmp_template_path)
+        end
       end
 
       TEMPLATES_PATH_LOOKUP = %w(
@@ -169,8 +171,9 @@ module Vagrant
         return @templates_path if @templates_path
 
         path = TEMPLATES_PATH_LOOKUP.find { |candidate| File.directory?(candidate) }
-        # TODO: Raise an user friendly error
-        raise 'Unable to identify lxc templates path!' unless path
+        if !path
+          raise Errors::TemplatesDirMissing.new paths: TEMPLATES_PATH_LOOKUP.inspect
+        end
 
         @templates_path = Pathname(path)
       end
