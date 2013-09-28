@@ -1,9 +1,10 @@
 ## [0.6.1](https://github.com/fgrehm/vagrant-lxc/compare/v0.6.0...master) (unreleased)
 
-  IMPROVEMENTS:
+IMPROVEMENTS:
 
-    - New base boxes with support for lxc 1.0+
-    - Make sure lxc templates are executable prior to `lxc-create` [#128](https://github.com/fgrehm/vagrant-lxc/issues/128)
+  - Fall back to `dnsmasq` leases file if not able to fetch IP with `lxc-attach` [#118](https://github.com/fgrehm/vagrant-lxc/issues/118)
+  - Make sure lxc templates are executable prior to `lxc-create` [#128](https://github.com/fgrehm/vagrant-lxc/issues/128)
+  - New base boxes with support for lxc 1.0+
 
 BUG FIXES:
 

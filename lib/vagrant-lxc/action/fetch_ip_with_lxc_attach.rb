@@ -12,6 +12,9 @@ module Vagrant
 
           def call(env)
             env[:machine_ip] ||= assigned_ip(env)
+          rescue LXC::Errors::ExecuteError
+            @logger.info 'Unable to fetch IP with `lxc-attach`!'
+          ensure
             @app.call(env)
           end
 
