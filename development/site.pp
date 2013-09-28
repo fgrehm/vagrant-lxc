@@ -1,5 +1,18 @@
 Exec { path => [ '/bin/', '/sbin/' , '/usr/bin/', '/usr/sbin/', '/usr/local/bin'] }
 
+stage { 'preinstall':
+  before => Stage['main']
+}
+
+class apt_get_update {
+  exec { 'apt-get -y update':
+    unless => "test -f /etc/default/lxc"
+  }
+}
+class { 'apt_get_update':
+  stage => preinstall
+}
+
 # Because I'm lazy ;)
 exec {
   'echo "alias be=\"bundle exec\"" >> /home/vagrant/.bashrc':
