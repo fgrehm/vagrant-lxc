@@ -6,6 +6,8 @@ module Vagrant
       class ExecuteError < Vagrant::Errors::VagrantError
         error_key(:lxc_execute_error)
       end
+      class NamespacesNotSupported < Vagrant::Errors::VagrantError
+      end
 
       class LxcNotInstalled < Vagrant::Errors::VagrantError
         error_key(:lxc_not_installed)

@@ -12,20 +12,14 @@ module Vagrant
 
           def call(env)
             env[:machine_ip] ||= assigned_ip(env)
-          rescue LXC::Errors::ExecuteError
-            @logger.info 'Unable to fetch IP with `lxc-attach`!'
+          rescue LXC::Errors::NamespacesNotSupported
+            @logger.info 'The `lxc-attach` command available does not support the --namespaces parameter, falling back to dnsmasq leases to fetch container ip'
           ensure
             @app.call(env)
           end
 
           def assigned_ip(env)
-            driver  = env[:machine].provider.driver
-            version = driver.version.match(/^(\d+\.\d+)\./)[1].to_f
-            unless version >= 0.8
-              @logger.debug "lxc version does not support the --namespaces argument to lxc-attach"
-              return nil
-            end
-
+            driver = env[:machine].provider.driver
             ip = ''
             retryable(:on => LXC::Errors::ExecuteError, :tries => 10, :sleep => 3) do
               unless ip = get_container_ip_from_ip_addr(driver)

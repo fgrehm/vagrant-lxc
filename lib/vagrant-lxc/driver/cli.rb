@@ -81,7 +81,12 @@ module Vagrant
           if cmd.last.is_a?(Hash)
             opts       = cmd.pop
             namespaces = Array(opts[:namespaces]).map(&:upcase).join('|')
-            extra      = ['--namespaces', namespaces] if namespaces
+
+            if run(:attach, '-h').include?('--namespaces')
+              extra = ['--namespaces', namespaces] if namespaces
+            else
+              raise LXC::Errors::NamespacesNotSupported
+            end
           end
 
           run :attach, '--name', @name, *((extra || []) + cmd)
