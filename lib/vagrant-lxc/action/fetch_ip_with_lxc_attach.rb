@@ -20,8 +20,9 @@ module Vagrant
 
           def assigned_ip(env)
             driver  = env[:machine].provider.driver
+            is_debian = system("cat /etc/issue | grep 'Debian'")
             version = driver.version.match(/^(\d+\.\d+)\./)[1].to_f
-            unless version >= 0.8
+            if version < 0.8 || (is_debian && version <= 0.8)
               @logger.debug "lxc version does not support the --namespaces argument to lxc-attach"
               return nil
             end
