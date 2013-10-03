@@ -1,5 +1,13 @@
-## [0.6.2](https://github.com/fgrehm/vagrant-lxc/compare/v0.6.1...master) (unreleased)
+## [0.6.2](https://github.com/fgrehm/vagrant-lxc/compare/v0.6.1...v0.6.2) (Oct 03, 2013)
 
+IMPROVEMENTS:
+
+  - Cache the result of `lxc-attach --namespaces` parameter support checking to
+    avoid excessive logging.
+
+BUG FIXES:
+
+  - Fix detection of `lxc-attach --namespaces` parameter support checking.
 
 ## [0.6.1](https://github.com/fgrehm/vagrant-lxc/compare/v0.6.0...v0.6.1) (Oct 03, 2013)
 
