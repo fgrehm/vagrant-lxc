@@ -84,7 +84,7 @@ module Vagrant
 
             if namespaces
               if supports_attach_with_namespaces?
-                extra = ['--namespaces', namespaces] if namespaces
+                extra = ['--namespaces', namespaces]
               else
                 raise LXC::Errors::NamespacesNotSupported
               end
