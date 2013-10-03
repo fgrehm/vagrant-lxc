@@ -12,9 +12,9 @@
 
 * When reporting a bug, please include **all** information that you can get
   about your environment. Things like vagrant / vagrant-lxc / kernel / lxc /
-  distro versions, a [gist](https://gist.github.com/) with the output of running
-  `VAGRANT_LOG=debug vagrant COMMAND`, the `Vagrantfile` you are using and / or
-  base box URL are really useful when tracking down what's going on on your side
-  of the globe and will get bonus points :)
+  distro versions, the list of plugins you have installed, a [gist](https://gist.github.com/)
+  with the output of running `VAGRANT_LOG=debug vagrant COMMAND`, the `Vagrantfile`
+  you are using and / or base box URL are really useful when tracking down what's
+  going on on your side of the globe and will get bonus points :)
 
 Thanks!
