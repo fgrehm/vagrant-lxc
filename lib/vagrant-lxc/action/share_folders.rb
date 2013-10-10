@@ -18,6 +18,8 @@ module Vagrant
         def shared_folders
           {}.tap do |result|
             @env[:machine].config.vm.synced_folders.each do |id, data|
+              #Ignore disabled shared folders
+              next if data[:disabled]
               # This to prevent overwriting the actual shared folders data
               result[id] = data.dup
             end
