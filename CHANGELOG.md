@@ -1,5 +1,8 @@
 ## [0.6.3](https://github.com/fgrehm/vagrant-lxc/compare/v0.6.2...master) (unreleased)
 
+IMPROVEMENTS:
+
+  - Respect Vagrantfile option to disable synced folders [#147](https://github.com/fgrehm/vagrant-lxc/issues/147)
 
 ## [0.6.2](https://github.com/fgrehm/vagrant-lxc/compare/v0.6.1...v0.6.2) (Oct 03, 2013)
 
