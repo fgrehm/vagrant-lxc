@@ -119,7 +119,7 @@ module Vagrant
 
         def supports_attach_with_namespaces?
           unless defined?(@supports_attach_with_namespaces)
-            @supports_attach_with_namespaces = run(:attach, '-h', '2>&1').include?('--namespaces')
+            @supports_attach_with_namespaces = run(:attach, '-h', :show_stderr => true).values.join.include?('--namespaces')
           end
 
           return @supports_attach_with_namespaces

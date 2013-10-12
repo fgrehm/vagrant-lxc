@@ -58,7 +58,12 @@ module Vagrant
 
         # Return the output, making sure to replace any Windows-style
         # newlines with Unix-style.
-        r.stdout.gsub("\r\n", "\n")
+        stdout = r.stdout.gsub("\r\n", "\n")
+        if opts[:show_stderr]
+          { :stdout => stdout, :stderr => r.stderr.gsub("\r\n", "\n") }
+        else
+          stdout
+        end
       end
 
       def raw(*command, &block)

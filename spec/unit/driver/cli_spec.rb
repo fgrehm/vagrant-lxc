@@ -146,13 +146,13 @@ describe Vagrant::LXC::Driver::CLI do
     end
 
     it 'supports a "namespaces" parameter' do
-      subject.stub(:run).with(:attach, '-h', '2>&1').and_return('--namespaces')
+      subject.stub(:run).with(:attach, '-h', :show_stderr => true).and_return({:stdout => '', :stderr => '--namespaces'})
       subject.attach *(command + [{namespaces: ['network', 'mount']}])
       subject.should have_received(:run).with(:attach, '--name', name, '--namespaces', 'NETWORK|MOUNT', '--', *command)
     end
 
     it 'raises a NamespacesNotSupported error if not supported' do
-      subject.stub(:run).with(:attach, '-h', '2>&1').and_return('not supported')
+      subject.stub(:run).with(:attach, '-h', :show_stderr => true).and_return({:stdout => '', :stderr => 'not supported'})
       expect {
         subject.attach *(command + [{namespaces: ['network', 'mount']}])
       }.to raise_error(Vagrant::LXC::Errors::NamespacesNotSupported)
