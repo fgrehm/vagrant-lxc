@@ -1,0 +1,28 @@
+#!/bin/bash
+
+set -e
+
+rootfs=$1
+
+echo "installing salt"
+
+if [ $SUITE == "squeeze" ]; then
+    SALT_SOURCE="deb http://debian.saltstack.com/debian squeeze-saltstack main\ndeb http://backports.debian.org/debian-backports squeeze-backports main contrib non-free"
+elif [ $SUITE == "sid" ]; then
+    SALT_SOURCE="deb http://debian.saltstack.com/debian unstable main"
+else
+    SALT_SOURCE="deb http://debian.saltstack.com/debian wheezy-saltstack main"
+fi
+
+cat > $rootfs/tmp/install-salt << EOF
+#!/bin/sh
+echo "$SALT_SOURCE" > /etc/apt/sources.list.d/saltstack.list
+wget -q -O- "http://debian.saltstack.com/debian-salt-team-joehealy.gpg.key" | apt-key add -
+apt-get update
+apt-get install -y salt-minion
+apt-get clean
+EOF
+
+chroot $rootfs sh /tmp/install-salt
+
+rm -rf $rootfs/tmp/*
