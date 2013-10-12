@@ -124,7 +124,7 @@ if [ $PUPPET = 1 ]; then
 fi
 
 if [ $SALT = 1 ]; then
-  ./common/install-salt $ROOTFS
+  ./common/install-salt-debian $ROOTFS
 fi
 
 if [ $BABUSHKA = 1 ]; then
