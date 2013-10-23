@@ -40,8 +40,8 @@ extract_rootfs()
     rootfs=$3
 
     echo "Extracting $tarball ..."
-    mkdir -p $(dirname $rootfs)
-    (cd `dirname $rootfs` && tar xfz $tarball)
+    mkdir -p $rootfs
+    (cd $rootfs && tar xfz $tarball --strip-components=2)
     return 0
 }
 

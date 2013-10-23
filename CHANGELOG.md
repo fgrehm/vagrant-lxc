@@ -1,5 +1,8 @@
 ## [0.6.4](https://github.com/fgrehm/vagrant-lxc/compare/v0.6.3...master) (unreleased)
 
+IMPROVEMENTS:
+
+  - Make `lxc-template` compatible with Ubuntu 13.10 [#150](https://github.com/fgrehm/vagrant-lxc/issues/150)
 
 ## [0.6.3](https://github.com/fgrehm/vagrant-lxc/compare/v0.6.2...v0.6.3) (Oct 12, 2013)
 
