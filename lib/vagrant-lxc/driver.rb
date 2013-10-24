@@ -84,7 +84,8 @@ module Vagrant
       def forced_halt
         @logger.info('Shutting down container...')
         @cli.transition_to(:stopped) { |c| c.shutdown }
-      rescue CLI::TargetStateNotReached
+      # REFACTOR: Do not use exception to control the flow
+      rescue CLI::TargetStateNotReached, CLI::ShutdownNotSupported
         @cli.transition_to(:stopped) { |c| c.stop }
       end
 
