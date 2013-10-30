@@ -109,7 +109,7 @@ module Vagrant
         Dir.chdir base_path do
           @logger.info "Compressing '#{rootfs_path}' rootfs to #{target_path}"
           @sudo_wrapper.run('rm', '-f', 'rootfs.tar.gz')
-          @sudo_wrapper.run('tar', '--numeric-owner', '-czf', target_path, 'rootfs')
+          @sudo_wrapper.run('tar', '--numeric-owner', '-czf', target_path, './rootfs')
 
           @logger.info "Changing rootfs tarball owner"
           user_details = Etc.getpwnam(Etc.getlogin)
