@@ -37,6 +37,9 @@ If you are on a Mac or Windows machine, you might want to have a look at [this](
 blog post for some ideas on how to set things up or check out [this other repo](https://github.com/fgrehm/vagrant-lxc-vbox-hosts)
 for a set of Vagrant VirtualBox machines ready for vagrant-lxc usage.
 
+**NOTE: Some users have been experiencing networking issues and right now you might need to
+disable checksum offloading as described on [this comment](https://github.com/fgrehm/vagrant-lxc/issues/153#issuecomment-26441273)**
+
 
 ## Installation
 
