@@ -109,7 +109,11 @@ module Vagrant
         Dir.chdir base_path do
           @logger.info "Compressing '#{rootfs_path}' rootfs to #{target_path}"
           @sudo_wrapper.run('rm', '-f', 'rootfs.tar.gz')
-          @sudo_wrapper.run('tar', '--numeric-owner', '-czf', target_path, 'rootfs')
+          # "vagrant package" will copy the existing lxc-template in the new box file
+          # To keep this function backwards compatible with existing boxes, the path
+          # included in the tarball needs to have the same amount of path components (2)
+          # that will be stripped before extraction, hence the './.'
+          @sudo_wrapper.run('tar', '--numeric-owner', '-czf', target_path, '-C', "#{rootfs_path}", './.')
 
           @logger.info "Changing rootfs tarball owner"
           user_details = Etc.getpwnam(Etc.getlogin)
