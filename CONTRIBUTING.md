@@ -4,7 +4,8 @@
   but I'll most likely close the issue right away and will continue the discussion
   with the issue closed. If you have any questions about the plugin, make sure
   you go through the [Wiki](https://github.com/fgrehm/vagrant-lxc/wiki) pages
-  first and if you still need answers please ask a question on [Stack Overflow](http://stackoverflow.com/questions/tagged/vagrant-lxc)
+  first (specially the [Troubleshooting Section](https://github.com/fgrehm/vagrant-lxc/wiki/Troubleshooting))
+  and if you still need answers please ask a question on [Stack Overflow](http://stackoverflow.com/questions/tagged/vagrant-lxc)
   using the `vagrant-lxc` tag on it so that I get notified :)
 
 * Please do a small search on the issues tracker before submitting your issue to
