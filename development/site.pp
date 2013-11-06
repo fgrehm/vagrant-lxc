@@ -37,7 +37,7 @@ exec {
 # Install dependencies
 package {
   [ 'libffi-dev', 'bsdtar', 'exuberant-ctags', 'ruby1.9.1-dev', 'htop', 'git',
-    'build-essential', 'redir', 'curl', 'vim', 'btrfs-tools' ]:
+    'build-essential', 'redir', 'curl', 'vim', 'btrfs-tools', 'psmisc' ]:
     ensure   => 'installed'
   ;
 
