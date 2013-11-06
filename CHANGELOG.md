@@ -1,5 +1,9 @@
 ## [0.6.5](https://github.com/fgrehm/vagrant-lxc/compare/v0.6.4...master) (unreleased)
 
+IMPROVEMENTS:
+
+  - Warn users about unsupported private / public networking configs [#154](https://github.com/fgrehm/vagrant-lxc/issues/154)
+
 BUG FIXES:
 
   - Error out in case an invalid IPs are provided for forwarded ports [#170](https://github.com/fgrehm/vagrant-lxc/issues/170)

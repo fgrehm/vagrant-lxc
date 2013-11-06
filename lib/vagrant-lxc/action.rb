@@ -18,6 +18,7 @@ require 'vagrant-lxc/action/message'
 require 'vagrant-lxc/action/remove_temporary_files'
 require 'vagrant-lxc/action/setup_package_files'
 require 'vagrant-lxc/action/share_folders'
+require 'vagrant-lxc/action/warn_networks'
 
 unless Vagrant::LXC.vagrant_1_3_or_later
   require 'vagrant-lxc/action/wait_for_communicator'
@@ -58,6 +59,7 @@ module Vagrant
           b.use Builtin::HandleForwardedPortCollisions
           b.use ShareFolders
           b.use Builtin::SetHostname
+          b.use WarnNetworks
           b.use ForwardPorts
           b.use Boot
           b.use Builtin::WaitForCommunicator

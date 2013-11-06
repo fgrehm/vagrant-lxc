@@ -17,6 +17,10 @@ en:
         Waiting for container to start. This should not take long.
       container_ready: |-
         Container started and ready for use!
+      warn_networks: |-
+        Warning! The LXC provider doesn't support any of the Vagrant public / private
+        network configurations (`config.vm.network :private_network, ip: "some-ip"`).
+        They will be silently ignored.
 
   vagrant:
     commands:
