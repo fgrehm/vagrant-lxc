@@ -25,7 +25,7 @@ BOXES = {
   },
   raring:  {
     lxc_url:  lxc_box_url('raring'),
-    vbox_url: 'http://goo.gl/Y4aRr'
+    vbox_url: 'http://cloud-images.ubuntu.com/vagrant/raring/current/raring-server-cloudimg-amd64-vagrant-disk1.box'
   },
   saucy: {
     vbox_url: 'http://cloud-images.ubuntu.com/vagrant/saucy/current/saucy-server-cloudimg-amd64-vagrant-disk1.box'
