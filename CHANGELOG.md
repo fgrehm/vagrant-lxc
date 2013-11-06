@@ -3,6 +3,7 @@
 IMPROVEMENTS:
 
   - Warn users about unsupported private / public networking configs [#154](https://github.com/fgrehm/vagrant-lxc/issues/154)
+  - Respect Vagrantfile options to disable forwarded port [#149](https://github.com/fgrehm/vagrant-lxc/issues/149)
 
 BUG FIXES:
 

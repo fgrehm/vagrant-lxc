@@ -63,6 +63,9 @@ module Vagrant
           mappings = {}
 
           config.vm.networks.each do |type, options|
+            next if options[:disabled]
+
+            # TODO: Deprecate this behavior of "automagically" skipping ssh forwarded ports
             if type == :forwarded_port && options[:id] != 'ssh'
               options.delete(:host_ip) if options.fetch(:host_ip, '').to_s.strip.empty?
               mappings[options[:host]] = options

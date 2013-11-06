@@ -63,6 +63,13 @@ describe Vagrant::LXC::Action::ForwardPorts do
     pid_file.should == pid
   end
 
+  it 'allows disabling a previously forwarded port' do
+    forward_conf[:disabled] = true
+    subject.stub(system: true)
+    subject.call(env)
+    subject.should_not have_received(:spawn)
+  end
+
   it 'raises RedirNotInstalled error if `redir` is not installed' do
     subject.stub(system: false)
     lambda { subject.call(env) }.should raise_error(Vagrant::LXC::Errors::RedirNotInstalled)
