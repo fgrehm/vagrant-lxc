@@ -15,8 +15,8 @@ class TestUI < Vagrant::UI::Interface
   end
 
   METHODS.each do |method|
-    define_method(method) do |message, *opts|
-      @messages[method].push message
+    define_method(method) do |*args|#message, *opts|
+      @messages[method].push args[0]
     end
   end
 end

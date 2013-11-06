@@ -13,12 +13,13 @@ module AcceptanceExampleGroup
       `sudo lxc-shutdown -n #{name} 2>/dev/null`
       `sudo lxc-wait -n #{name} --state STOPPED 2>/dev/null`
       `sudo lxc-destroy -n #{name} 2>/dev/null`
+      `rm -rf /vagrant/spec/.vagrant/`
     end
     `sudo killall -9 redir 2>/dev/null`
   end
 
   def with_vagrant_environment
-    opts = { cwd: 'spec', ui_class: TestUI }
+    opts = { cwd: '/vagrant/spec', ui_class: TestUI }
     env  = Vagrant::Environment.new(opts)
     yield env
     env.unload
@@ -52,5 +53,24 @@ module AcceptanceExampleGroup
       output = env.ui.messages[:info].join("\n").chomp
     end
     output
+  end
+
+  def vagrant_package
+    with_vagrant_environment do |env|
+      pkg = '/vagrant/spec/tmp/package.box'
+      `rm -f #{pkg}`
+      env.cli('package', '--output', pkg)
+    end
+  end
+
+  def vagrant_box_remove(name)
+    with_vagrant_environment do |env|
+      env.cli('box', 'list')
+      output = env.ui.messages[:info].join("\n").chomp
+
+      if output.include?(name)
+        env.cli('box', 'remove', name)
+      end
+    end
   end
 end

@@ -5,22 +5,26 @@ Vagrant.require_plugin 'vagrant-lxc'
 Vagrant.require_plugin 'vagrant-cachier'
 
 ENV['BOX_NAME'] ||= 'quantal64'
-puts "Running specs using #{ENV['BOX_NAME']} box"
+puts "Running vagrant commands using #{ENV['BOX_NAME']} box"
 
 Vagrant.configure("2") do |config|
   config.vm.box = ENV['BOX_NAME']
   config.vm.hostname = 'lxc-test-box'
+  config.vm.box_url = ENV['BOX_URL']
   config.vm.network :forwarded_port, guest: 80, host: 8080
 
   config.cache.auto_detect = true
 
   config.vm.provider :lxc do |lxc|
-    lxc.sudo_wrapper = '/usr/bin/lxc-vagrant-wrapper'
+    # lxc.sudo_wrapper = '/usr/bin/lxc-vagrant-wrapper'
   end
 
   config.vm.provision :shell,
     inline: 'mkdir -p /vagrant/tmp && echo -n "Provisioned" > /vagrant/tmp/provisioning'
 
   config.vm.provision :shell,
-    inline: 'sudo apt-get install apache2 -y'
+    inline: 'apt-get install apache2 -y'
+
+  config.vm.provision :shell, privileged: false,
+    inline: "if ! [ -f $HOME/original-box ]; then echo '#{ENV['BOX_NAME']}' > $HOME/original-box; fi"
 end

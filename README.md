@@ -121,7 +121,7 @@ list if you have a problem and feel free to use the [issue tracker](https://gith
 propose new functionality and / or report bugs.
 
 
-## Donating
+## Support
 
 Support this project and [others by fgrehm](https://github.com/fgrehm)
 via [gittip](https://www.gittip.com/fgrehm/).
