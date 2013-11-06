@@ -1,5 +1,9 @@
 ## [0.6.5](https://github.com/fgrehm/vagrant-lxc/compare/v0.6.4...master) (unreleased)
 
+BUG FIXES:
+
+  - Fix `vagrant package` [#172](https://github.com/fgrehm/vagrant-lxc/issues/172)
+
 
 ## [0.6.4](https://github.com/fgrehm/vagrant-lxc/compare/v0.6.3...v0.6.4) (Oct 27, 2013)
 
