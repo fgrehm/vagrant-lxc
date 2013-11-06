@@ -2,6 +2,8 @@
 
 BUG FIXES:
 
+  - Fix "Permission denied" when starting/destroying containers after lxc
+    security update in Ubuntu [#180](https://github.com/fgrehm/vagrant-lxc/issues/180)
   - Fix `vagrant package` [#172](https://github.com/fgrehm/vagrant-lxc/issues/172)
 
 
