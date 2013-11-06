@@ -2,6 +2,7 @@
 
 BUG FIXES:
 
+  - Error out in case an invalid IPs are provided for forwarded ports [#170](https://github.com/fgrehm/vagrant-lxc/issues/170)
   - Fix "Permission denied" when starting/destroying containers after lxc
     security update in Ubuntu [#180](https://github.com/fgrehm/vagrant-lxc/issues/180)
   - Fix `vagrant package` [#172](https://github.com/fgrehm/vagrant-lxc/issues/172)

@@ -47,6 +47,15 @@ describe Vagrant::LXC::Action::ForwardPorts do
     )
   end
 
+  it 'skips --laddr parameter if host_ip is a blank string' do
+    forward_conf[:host_ip] = ' '
+    subject.stub(system: true)
+    subject.call(env)
+    subject.should have_received(:spawn).with(
+      "redir --lport=#{host_port} --caddr=#{container_ip} --cport=#{guest_port} 2>/dev/null"
+    )
+  end
+
   it "stores redir pids on machine's data dir" do
     subject.stub(system: true)
     subject.call(env)

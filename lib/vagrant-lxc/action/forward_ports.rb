@@ -64,6 +64,7 @@ module Vagrant
 
           config.vm.networks.each do |type, options|
             if type == :forwarded_port && options[:id] != 'ssh'
+              options.delete(:host_ip) if options.fetch(:host_ip, '').to_s.strip.empty?
               mappings[options[:host]] = options
             end
           end
