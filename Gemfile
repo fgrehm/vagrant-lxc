@@ -3,7 +3,7 @@ source 'https://rubygems.org'
 gemspec
 
 group :development do
-  gem 'vagrant',          github: 'mitchellh/vagrant', tag: 'v1.3.3'
+  gem 'vagrant',          github: 'mitchellh/vagrant'
   gem 'vagrant-cachier',  github: 'fgrehm/vagrant-cachier'
   gem 'vagrant-pristine', github: 'fgrehm/vagrant-pristine'
   gem 'vagrant-omnibus'
