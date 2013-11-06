@@ -9,7 +9,7 @@ module Vagrant
       LXC-based virtual machines.
       EOF
 
-      provider(:lxc) do
+      provider(:lxc, parallel: true) do
         require File.expand_path("../provider", __FILE__)
 
         I18n.load_path << File.expand_path(File.dirname(__FILE__) + '/../../locales/en.yml')
