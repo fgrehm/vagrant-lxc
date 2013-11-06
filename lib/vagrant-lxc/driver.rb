@@ -36,11 +36,15 @@ module Vagrant
       end
 
       def rootfs_path
-        Pathname.new(base_path.join('config').read.match(/^lxc\.rootfs\s+=\s+(.+)$/)[1])
+        Pathname.new(config_string.match(/^lxc\.rootfs\s+=\s+(.+)$/)[1])
       end
 
       def mac_address
-        @mac_address ||= base_path.join('config').read.match(/^lxc\.network\.hwaddr\s+=\s+(.+)$/)[1]
+        @mac_address ||= config_string.match(/^lxc\.network\.hwaddr\s+=\s+(.+)$/)[1]
+      end
+
+      def config_string
+        @sudo_wrapper.run('cat', base_path.join('config').to_s)
       end
 
       def create(name, template_path, config_file, template_options = {})
@@ -106,19 +110,17 @@ module Vagrant
         # TODO: Pass in tmpdir so we can clean up from outside
         target_path    = "#{Dir.mktmpdir}/rootfs.tar.gz"
 
-        Dir.chdir base_path do
-          @logger.info "Compressing '#{rootfs_path}' rootfs to #{target_path}"
-          @sudo_wrapper.run('rm', '-f', 'rootfs.tar.gz')
-          # "vagrant package" will copy the existing lxc-template in the new box file
-          # To keep this function backwards compatible with existing boxes, the path
-          # included in the tarball needs to have the same amount of path components (2)
-          # that will be stripped before extraction, hence the './.'
-          @sudo_wrapper.run('tar', '--numeric-owner', '-czf', target_path, '-C', "#{rootfs_path}", './.')
+        @logger.info "Compressing '#{rootfs_path}' rootfs to #{target_path}"
+        cmds = [
+          "cd #{base_path}",
+          "rm -f rootfs.tar.gz",
+          "tar --numeric-owner -czf #{target_path} -C #{rootfs_path} './.'"
+        ]
+        @sudo_wrapper.su_c(cmds.join(' && '))
 
-          @logger.info "Changing rootfs tarball owner"
-          user_details = Etc.getpwnam(Etc.getlogin)
-          @sudo_wrapper.run('chown', "#{user_details.uid}:#{user_details.gid}", target_path)
-        end
+        @logger.info "Changing rootfs tarball owner"
+        user_details = Etc.getpwnam(Etc.getlogin)
+        @sudo_wrapper.run('chown', "#{user_details.uid}:#{user_details.gid}", target_path)
 
         target_path
       end
