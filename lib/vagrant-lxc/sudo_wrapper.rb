@@ -6,7 +6,7 @@ module Vagrant
 
       def initialize(wrapper_path = nil)
         @wrapper_path = wrapper_path
-        @logger       = Log4r::Logger.new("vagrant::lxc::shell")
+        @logger       = Log4r::Logger.new("vagrant::lxc::sudo_wrapper")
       end
 
       def run(*command)
