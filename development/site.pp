@@ -146,8 +146,6 @@ file {
   '/usr/bin/lxc-vagrant-wrapper':
     ensure  => 'present',
     mode    => '0755',
-    content => "
-#!/usr/bin/env ruby
-exec ARGV.join(' ')
-    "
+    content => "#!/usr/bin/env ruby
+exec ARGV.join(' ')"
 }
