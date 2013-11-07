@@ -5,7 +5,9 @@
 [LXC](http://lxc.sourceforge.net/) provider for [Vagrant](http://www.vagrantup.com/) 1.1+
 
 This is a Vagrant plugin that allows it to control and provision Linux Containers
-as an alternative to the built in VirtualBox provider for Linux hosts.
+as an alternative to the built in VirtualBox provider for Linux hosts. Check out
+[this blog post](http://fabiorehm.com/blog/2013/04/28/lxc-provider-for-vagrant/)
+to see it in action.
 
 
 ## Features / Limitations
@@ -81,7 +83,7 @@ using the [provider block](http://docs.vagrantup.com/v2/providers/configuration.
 Vagrant.configure("2") do |config|
   config.vm.box = "quantal64"
   config.vm.provider :lxc do |lxc|
-    # Same effect as as 'customize ["modifyvm", :id, "--memory", "1024"]' for VirtualBox
+    # Same effect as 'customize ["modifyvm", :id, "--memory", "1024"]' for VirtualBox
     lxc.customize 'cgroup.memory.limit_in_bytes', '1024M'
   end
 end
