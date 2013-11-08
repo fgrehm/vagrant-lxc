@@ -1,4 +1,7 @@
-## [0.7.0](https://github.com/fgrehm/vagrant-lxc/compare/v0.6.4...v0.7.0) (unreleased)
+## [0.7.1](https://github.com/fgrehm/vagrant-lxc/compare/v0.7.0...master) (unreleased)
+
+
+## [0.7.0](https://github.com/fgrehm/vagrant-lxc/compare/v0.6.4...v0.7.0) (Nov 8, 2013)
 
 IMPROVEMENTS:
 
