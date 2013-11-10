@@ -14,6 +14,7 @@ set -e
 #   $ PUPPET=1 sudo -E ./build-ubuntu-box.sh UBUNTU_RELEASE BOX_ARCH
 #   $ SALT=1 sudo -E ./build-ubuntu-box.sh UBUNTU_RELEASE BOX_ARCH
 #   $ BABUSHKA=1 sudo -E ./build-ubuntu-box.sh UBUNTU_RELEASE BOX_ARCH
+#   $ ANSIBLE=1 sudo -E ./build-ubuntu-box.sh UBUNTU_RELEASE BOX_ARCH
 
 ##################################################################################
 # 0 - Initial setup and sanity checks
@@ -32,6 +33,7 @@ CHEF=${CHEF:-0}
 PUPPET=${PUPPET:-0}
 SALT=${SALT:-0}
 BABUSHKA=${BABUSHKA:-0}
+ANSIBLE=${ANSIBLE:-0}
 
 # Path to files bundled with the box
 CWD=`readlink -f .`
@@ -114,6 +116,9 @@ if [ $BABUSHKA = 1 ]; then
   ./common/install-babushka $ROOTFS
 fi
 
+if [ $ANSIBLE = 1 ]; then
+  ./common/install-ansible $ROOTFS
+fi
 
 ##################################################################################
 # 6 - Free up some disk space

@@ -15,6 +15,7 @@ set -e
 #   $ PUPPET=1 sudo -E ./build-debian-box.sh DEBIAN_RELEASE
 #   $ SALT=1 sudo -E ./build-debian-box.sh DEBIAN_RELEASE
 #   $ BABUSHKA=1 sudo -E ./build-debian-box.sh DEBIAN_RELEASE
+#   $ ANSIBLE=1 sudo -E ./build-debian-box.sh DEBIAN_RELEASE
 
 ##################################################################################
 # 0 - Initial setup and sanity checks
@@ -33,6 +34,7 @@ CHEF=${CHEF:-0}
 PUPPET=${PUPPET:-0}
 SALT=${SALT:-0}
 BABUSHKA=${BABUSHKA:-0}
+ANSIBLE=${ANSIBLE:-0}
 
 # Path to files bundled with the box
 CWD=`readlink -f .`
@@ -129,6 +131,10 @@ fi
 
 if [ $BABUSHKA = 1 ]; then
   ./common/install-babushka $ROOTFS
+fi
+
+if [ $ANSIBLE = 1 ]; then
+  ./common/install-ansible $ROOTFS
 fi
 
 

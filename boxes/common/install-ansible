@@ -1,0 +1,11 @@
+#!/bin/bash
+
+set -e
+
+rootfs=$1
+
+echo "installing ansible"
+chroot $rootfs apt-get update
+chroot $rootfs apt-get install python-apt -y --force-yes
+
+rm -rf $rootfs/tmp/*
