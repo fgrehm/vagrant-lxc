@@ -115,6 +115,7 @@ module Vagrant
         # To keep this function backwards compatible with existing boxes, the path
         # included in the tarball needs to have the same amount of path components (2)
         # that will be stripped before extraction, hence the './.'
+        # TODO: This should be reviewed before 1.0
         cmds = [
           "cd #{base_path}",
           "rm -f rootfs.tar.gz",
