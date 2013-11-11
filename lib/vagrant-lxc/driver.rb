@@ -111,6 +111,10 @@ module Vagrant
         target_path    = "#{Dir.mktmpdir}/rootfs.tar.gz"
 
         @logger.info "Compressing '#{rootfs_path}' rootfs to #{target_path}"
+        # "vagrant package" will copy the existing lxc-template in the new box file
+        # To keep this function backwards compatible with existing boxes, the path
+        # included in the tarball needs to have the same amount of path components (2)
+        # that will be stripped before extraction, hence the './.'
         cmds = [
           "cd #{base_path}",
           "rm -f rootfs.tar.gz",
