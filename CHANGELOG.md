@@ -11,13 +11,17 @@ IMPROVEMENTS:
 
 BUG FIXES:
 
-  - Error out in case an invalid IPs are provided for forwarded ports [#170](https://github.com/fgrehm/vagrant-lxc/issues/170)
+  - Nicely handle blank strings provided to `:host_ip` when specifying forwarded ports [#170](https://github.com/fgrehm/vagrant-lxc/issues/170)
   - Fix "Permission denied" when starting/destroying containers after lxc
     security update in Ubuntu [#180](https://github.com/fgrehm/vagrant-lxc/issues/180)
   - Fix `vagrant package` [#172](https://github.com/fgrehm/vagrant-lxc/issues/172)
 
 
 ## [0.6.4](https://github.com/fgrehm/vagrant-lxc/compare/v0.6.3...v0.6.4) (Oct 27, 2013)
+
+FEATURES:
+
+  - New script for building OpenMandriva base boxes [#167](https://github.com/fgrehm/vagrant-lxc/issues/167)
 
 IMPROVEMENTS:
 
