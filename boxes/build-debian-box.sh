@@ -98,10 +98,8 @@ chroot ${ROOTFS} apt-get install sudo -y --force-yes
 chroot ${ROOTFS} adduser vagrant sudo
 
 # Enable passwordless sudo for users under the "sudo" group
-cp ${ROOTFS}/etc/sudoers{,.orig}
-sed -i -e \
-      's/%sudo\s\+ALL=(ALL\(:ALL\)\?)\s\+ALL/%sudo ALL=NOPASSWD:ALL/g' \
-      ${ROOTFS}/etc/sudoers
+echo "vagrant ALL=NOPASSWD:ALL" > ${ROOTFS}/etc/sudoers.d/vagrant
+chmod 0440 ${ROOTFS}/etc/sudoers.d/vagrant
 
 
 ##################################################################################
