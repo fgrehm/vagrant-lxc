@@ -69,6 +69,7 @@ module Vagrant
         end
 
         def stop
+          attach '/sbin/halt'
           run :stop, '--name', @name
         end
 
