@@ -55,7 +55,7 @@ vagrant plugin install vagrant-lxc
 After installing, add a [base box](#base-boxes) using any name you want, for example:
 
 ```
-vagrant box add quantal64 http://bit.ly/vagrant-lxc-quantal64-2013-07-12
+vagrant box add quantal64 http://bit.ly/vagrant-lxc-quantal64-2013-10-23
 ```
 
 Then create a Vagrantfile that looks like the following, changing the box name
