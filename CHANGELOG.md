@@ -1,5 +1,9 @@
 ## [0.7.1](https://github.com/fgrehm/vagrant-lxc/compare/v0.7.0...master) (unreleased)
 
+BUG FIXES:
+
+  - Properly detect if lxc is installed on hosts that do not have `lxc-version` on their paths [#186](https://github.com/fgrehm/vagrant-lxc/issues/186)
+
 
 ## [0.7.0](https://github.com/fgrehm/vagrant-lxc/compare/v0.6.4...v0.7.0) (Nov 8, 2013)
 
