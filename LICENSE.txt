@@ -1,4 +1,4 @@
-Copyright (c) 2013 Fábio Rehm
+Copyright (c) 2013-2014 Fábio Rehm
 
 MIT License
 
