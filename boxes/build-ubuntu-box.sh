@@ -61,6 +61,10 @@ fi
 # See https://github.com/fgrehm/vagrant-lxc/issues/91 for more info
 echo 'ff02::3 ip6-allhosts' >> ${ROOTFS}/etc/hosts
 
+# Ensure locales are properly set, based on http://askubuntu.com/a/238063
+chroot ${ROOTFS} locale-gen en_US.UTF-8
+chroot ${ROOTFS} dpkg-reconfigure locales
+
 
 ##################################################################################
 # 2 - Prepare vagrant user
