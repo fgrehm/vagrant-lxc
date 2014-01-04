@@ -89,6 +89,7 @@ chmod 0440 ${ROOTFS}/etc/sudoers.d/vagrant
 # 4 - Add some goodies and update packages
 
 PACKAGES=(vim curl wget man-db bash-completion python-software-properties software-properties-common)
+chroot ${ROOTFS} apt-get update
 chroot ${ROOTFS} apt-get install ${PACKAGES[*]} -y --force-yes
 chroot ${ROOTFS} apt-get upgrade -y --force-yes
 
