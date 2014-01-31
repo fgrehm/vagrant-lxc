@@ -7,9 +7,13 @@ module Vagrant
         end
 
         def call(env)
-          container_name = "#{env[:root_path].basename}_#{env[:machine].name}"
-          container_name.gsub!(/[^-a-z0-9_]/i, "")
-          container_name << "-#{Time.now.to_i}"
+          if env[:machine].provider_config.static_name
+            container_name = env[:machine].name.to_s
+          else
+            container_name = "#{env[:root_path].basename}_#{env[:machine].name}"
+            container_name.gsub!(/[^-a-z0-9_]/i, "")
+            container_name << "-#{Time.now.to_i}"
+          end
 
           env[:machine].provider.driver.create(
             container_name,

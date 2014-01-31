@@ -12,9 +12,13 @@ module Vagrant
       # on /etc/sudoers
       attr_accessor :sudo_wrapper
 
+      # A String that sets a static name
+      attr_accessor :static_name
+
       def initialize
         @customizations = []
         @sudo_wrapper   = UNSET_VALUE
+        @static_name = UNSET_VALUE
       end
 
       # Customize the container by calling `lxc-start` with the given
@@ -34,6 +38,7 @@ module Vagrant
 
       def finalize!
         @sudo_wrapper = nil if @sudo_wrapper == UNSET_VALUE
+        @static_name = nil if @static_name == UNSET_VALUE
       end
 
       def validate(machine)
