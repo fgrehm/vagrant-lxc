@@ -89,6 +89,37 @@ Vagrant.configure("2") do |config|
 end
 ```
 
+You also have some control over the container name. By default,
+vagrant-lxc will attempt to generate a unique container name for you.
+However, you may use the `container_name` attribute to explicitly set
+the container name to a value of your choosing, or you can use
+`use_machine_name` to ensure that the container name is the same as the
+vagrant machine name:
+
+```ruby
+Vagrant.configure("2") do |config|
+  config.vm.box = "quantal64"
+  config.vm.provider :lxc do |lxc|
+    # Same effect as 'customize ["modifyvm", :id, "--memory", "1024"]' for VirtualBox
+    lxc.customize 'cgroup.memory.limit_in_bytes', '1024M'
+    lxc.container_name = "my-container" # Set the container name explicitly
+  end
+end
+```
+
+```ruby
+Vagrant.configure("2") do |config|
+  config.vm.box = "quantal64"
+  config.vm.define "foo" do |inst|
+    inst.vm.provider :lxc do |lxc|
+      # Same effect as 'customize ["modifyvm", :id, "--memory", "1024"]' for VirtualBox
+      lxc.customize 'cgroup.memory.limit_in_bytes', '1024M'
+      lxc.use_machine_name = true  # Set container name to "foo"
+    end
+  end
+end
+```
+
 vagrant-lxc will then write out `lxc.cgroup.memory.limit_in_bytes='1024M'` to the
 container config file (usually kept under `/var/lib/lxc/<container>/config`)
 prior to starting it.
