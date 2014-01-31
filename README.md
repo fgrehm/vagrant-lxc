@@ -89,6 +89,12 @@ Vagrant.configure("2") do |config|
 end
 ```
 
+vagrant-lxc will then write out `lxc.cgroup.memory.limit_in_bytes='1024M'` to the
+container config file (usually kept under `/var/lib/lxc/<container>/config`)
+prior to starting it.
+
+For other configuration options, please check the [lxc.conf manpages](http://manpages.ubuntu.com/manpages/quantal/man5/lxc.conf.5.html).
+
 You also have some control over the container name. By default,
 vagrant-lxc will attempt to generate a unique container name for you.
 However, you may use the `container_name` attribute to explicitly set
@@ -119,12 +125,6 @@ Vagrant.configure("2") do |config|
   end
 end
 ```
-
-vagrant-lxc will then write out `lxc.cgroup.memory.limit_in_bytes='1024M'` to the
-container config file (usually kept under `/var/lib/lxc/<container>/config`)
-prior to starting it.
-
-For other configuration options, please check the [lxc.conf manpages](http://manpages.ubuntu.com/manpages/quantal/man5/lxc.conf.5.html).
 
 ### Avoiding `sudo` passwords
 
