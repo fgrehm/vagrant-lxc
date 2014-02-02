@@ -95,32 +95,20 @@ prior to starting it.
 
 For other configuration options, please check the [lxc.conf manpages](http://manpages.ubuntu.com/manpages/quantal/man5/lxc.conf.5.html).
 
-You also have some control over the container name. By default,
-vagrant-lxc will attempt to generate a unique container name for you.
-However, you may use the `container_name` attribute to explicitly set
-the container name to a value of your choosing, or you can use
-`use_machine_name` to ensure that the container name is the same as the
-vagrant machine name:
+### Container naming
+
+By default vagrant-lxc will attempt to generate a unique container name
+for you. However, if the container name is important to you, you may use the
+`container_name` attribute to set it explicitly from the `provider` block:
 
 ```ruby
 Vagrant.configure("2") do |config|
   config.vm.box = "quantal64"
-  config.vm.provider :lxc do |lxc|
-    # Same effect as 'customize ["modifyvm", :id, "--memory", "1024"]' for VirtualBox
-    lxc.customize 'cgroup.memory.limit_in_bytes', '1024M'
-    lxc.container_name = "my-container" # Set the container name explicitly
-  end
-end
-```
 
-```ruby
-Vagrant.configure("2") do |config|
-  config.vm.box = "quantal64"
-  config.vm.define "foo" do |inst|
-    inst.vm.provider :lxc do |lxc|
-      # Same effect as 'customize ["modifyvm", :id, "--memory", "1024"]' for VirtualBox
-      lxc.customize 'cgroup.memory.limit_in_bytes', '1024M'
-      lxc.use_machine_name = true  # Set container name to "foo"
+  config.vm.define "db" do |node|
+    node.vm.provider :lxc do |lxc|
+      lxc.container_name = :machine # Sets the container name to 'db'
+      lxc.container_name = 'mysql'  # Sets the container name to 'mysql'
     end
   end
 end
@@ -130,7 +118,7 @@ end
 
 This plugin requires **a lot** of `sudo`ing since [user namespaces](https://wiki.ubuntu.com/UserNamespace)
 are not supported on mainstream kernels. Have a look at the [Wiki](https://github.com/fgrehm/vagrant-lxc/wiki/Avoiding-'sudo'-passwords)
-to find out how to work around that specially if you are running an OS with sudo
+to find out how to work around that specially if you are running an OS with `sudo`
 < 1.8.4 (like Ubuntu 12.04) as you might be affected by a bug.
 
 ### Base boxes

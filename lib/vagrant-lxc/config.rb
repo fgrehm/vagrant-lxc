@@ -12,10 +12,8 @@ module Vagrant
       # on /etc/sudoers
       attr_accessor :sudo_wrapper
 
-      # A boolean that sets the container name to the machine name
-      attr_accessor :use_machine_name
-        
-      # A string to explicitly set the container name
+      # A string to explicitly set the container name (use :machine) to set it
+      # to the corresponding machine name.
       attr_accessor :container_name
 
       def initialize
