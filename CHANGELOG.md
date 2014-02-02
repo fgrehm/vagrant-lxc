@@ -1,5 +1,9 @@
 ## [0.8.0](https://github.com/fgrehm/vagrant-lxc/compare/v0.7.0...master) (unreleased)
 
+FEATURES:
+
+  - Support for naming containers from Vagrantfiles [#132](https://github.com/fgrehm/vagrant-lxc/issues/132)
+
 BUG FIXES:
 
   - Properly detect if lxc is installed on hosts that do not have `lxc-version` on their paths [#186](https://github.com/fgrehm/vagrant-lxc/issues/186)
