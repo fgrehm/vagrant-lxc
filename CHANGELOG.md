@@ -7,6 +7,7 @@ FEATURES:
 IMPROVEMENTS:
 
   - Use a safer random name for containers [#152](https://github.com/fgrehm/vagrant-lxc/issues/152)
+  - Improve Ubuntu 13.10 compatibility [#190](https://github.com/fgrehm/vagrant-lxc/pull/190) / [#197](https://github.com/fgrehm/vagrant-lxc/pull/197)
 
 BUG FIXES:
 
