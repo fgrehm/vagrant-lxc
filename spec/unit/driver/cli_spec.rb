@@ -49,20 +49,27 @@ describe Vagrant::LXC::Driver::CLI do
 
     before do
       subject.stub(:run) { |*args| @run_args = args }
-      subject.create(template, config_file, template_args)
     end
 
-      it 'issues a lxc-create with provided template, container name and hash of arguments' do
-        subject.should have_received(:run).with(
-          :create,
-          '--template', template,
-          '--name',     name,
-          '-f',         config_file,
-          '--',
-          '--extra-param', 'param',
-          '--other',       'value'
-        )
-      end
+    it 'issues a lxc-create with provided template, container name and hash of arguments' do
+      subject.create(template, config_file, template_args)
+      subject.should have_received(:run).with(
+        :create,
+        '--template', template,
+        '--name',     name,
+        '-f',         config_file,
+        '--',
+        '--extra-param', 'param',
+        '--other',       'value'
+      )
+    end
+
+    it 'wraps a low level error into something more meaningful in case the container already exists' do
+      subject.stub(:run) { raise Vagrant::LXC::Errors::ExecuteError, stderr: 'alreAdy Exists' }
+      expect {
+        subject.create(template, config_file, template_args)
+      }.to raise_error(Vagrant::LXC::Errors::ContainerAlreadyExists)
+    end
   end
 
   describe 'destroy' do

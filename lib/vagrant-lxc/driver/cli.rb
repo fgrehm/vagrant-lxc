@@ -58,6 +58,12 @@ module Vagrant
               '--name',     @name,
               *(config_opts),
               *extra
+        rescue Errors::ExecuteError => e
+          if e.stderr =~ /already exists/i
+            raise Errors::ContainerAlreadyExists, name: @name
+          else
+            raise
+          end
         end
 
         def destroy

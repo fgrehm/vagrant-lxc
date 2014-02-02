@@ -5,12 +5,25 @@ module Vagrant
     module Errors
       class ExecuteError < Vagrant::Errors::VagrantError
         error_key(:lxc_execute_error)
+        attr_reader :stderr, :stdout
+        def initialize(message, *args)
+          super
+          if message.is_a?(Hash)
+            @stderr = message[:stderr]
+            @stdout = message[:stdout]
+          end
+        end
       end
+
       class NamespacesNotSupported < Vagrant::Errors::VagrantError
       end
 
       class LxcNotInstalled < Vagrant::Errors::VagrantError
         error_key(:lxc_not_installed)
+      end
+
+      class ContainerAlreadyExists < Vagrant::Errors::VagrantError
+        error_key(:lxc_container_already_exists)
       end
 
       # Box related errors
