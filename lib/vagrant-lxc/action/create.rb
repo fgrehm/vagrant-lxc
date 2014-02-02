@@ -17,7 +17,9 @@ module Vagrant
             else
               container_name = "#{env[:root_path].basename}_#{env[:machine].name}"
               container_name.gsub!(/[^-a-z0-9_]/i, "")
-              container_name << "-#{Time.now.to_i}"
+              # milliseconds + random number suffix to allow for simultaneous
+              # `vagrant up` of the same box in different dirs
+              container_name << "_#{(Time.now.to_f * 1000.0).to_i}_#{rand(100000)}"
           end
 
           env[:machine].provider.driver.create(

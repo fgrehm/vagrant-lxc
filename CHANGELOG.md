@@ -4,6 +4,10 @@ FEATURES:
 
   - Support for naming containers from Vagrantfiles [#132](https://github.com/fgrehm/vagrant-lxc/issues/132)
 
+IMPROVEMENTS:
+
+  - Use a safer random name for containers [#152](https://github.com/fgrehm/vagrant-lxc/issues/152)
+
 BUG FIXES:
 
   - Properly detect if lxc is installed on hosts that do not have `lxc-version` on their paths [#186](https://github.com/fgrehm/vagrant-lxc/issues/186)
