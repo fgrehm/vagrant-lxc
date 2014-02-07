@@ -23,7 +23,7 @@ to see it in action.
 * [Vagrant 1.1+](http://downloads.vagrantup.com/)
 * lxc 0.7.5+
 * redir (if you are planning to use port forwarding)
-* A [kernel >= >= 3.5.0-17.28](https://github.com/fgrehm/vagrant-lxc/wiki/Troubleshooting#wiki-im-unable-to-restart-containers)
+* A [kernel != 3.5.0-17.28](https://github.com/fgrehm/vagrant-lxc/wiki/Troubleshooting#wiki-im-unable-to-restart-containers)
 
 The plugin is known to work better and pretty much out of the box on Ubuntu 12.04+
 hosts and installing the dependencies on it basically means a `apt-get install lxc lxc-templates cgroup-lite redir`
