@@ -136,6 +136,24 @@ describe Vagrant::LXC::Driver::CLI do
     end
   end
 
+  describe 'state-new' do
+    let(:name) { 'a-container' }
+    subject    { described_class.new(sudo_wrapper, name) }
+
+    before do
+      subject.stub(:run).and_return("State:          RUNNING\nPID:            2")
+    end
+
+    it 'calls lxc-info with the right arguments' do
+      subject.state
+      subject.should have_received(:run).with(:info, '--name', name, retryable: true)
+    end
+
+    it 'maps the output of lxc-info status out to a symbol' do
+      subject.state.should == :running
+    end
+  end
+
   describe 'attach' do
     let(:name)           { 'a-running-container' }
     let(:command)        { ['ls', 'cat /tmp/file'] }
