@@ -141,6 +141,11 @@ describe Vagrant::LXC::Driver::CLI do
     it 'maps the output of lxc-info status out to a symbol' do
       subject.state.should == :stopped
     end
+
+    it 'is not case sensitive' do
+      subject.stub(:run).and_return("StatE: STarTED\npid: 2")
+      subject.state.should == :started
+    end
   end
 
   describe 'attach' do
