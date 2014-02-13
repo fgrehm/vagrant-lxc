@@ -74,9 +74,10 @@ chroot $ROOTFS /usr/sbin/update-rc.d -f mountall-bootclean.sh remove
 chroot $ROOTFS /usr/sbin/update-rc.d -f mountnfs-bootclean.sh remove
 
 # Ensure locales are properly set, based on http://linux.livejournal.com/1880366.html
-sed -i "s/^# en_US/en_US/" ${ROOTFS}/etc/locale.gen
+LANG=${LANG:-en_US.UTF-8}
+sed -i "s/^# ${LANG}/${LANG}/" ${ROOTFS}/etc/locale.gen
 chroot $ROOTFS /usr/sbin/locale-gen
-chroot $ROOTFS update-locale LANG=en_US.UTF-8
+chroot $ROOTFS update-locale LANG=${LANG}
 
 
 ##################################################################################
