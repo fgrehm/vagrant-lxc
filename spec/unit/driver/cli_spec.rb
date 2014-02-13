@@ -134,6 +134,11 @@ describe Vagrant::LXC::Driver::CLI do
     it 'maps the output of lxc-info status out to a symbol' do
       subject.state.should == :stopped
     end
+
+    it "maps the output of lxc-info v1.0.0" do
+      subject.stub(:run).and_return("State:     RUNNING\nPID:   2")
+      subject.state.should == :running
+    end
   end
 
   describe 'attach' do
