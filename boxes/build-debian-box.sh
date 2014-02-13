@@ -97,7 +97,7 @@ chroot ${ROOTFS} chown -R vagrant: /home/vagrant/.ssh
 chroot ${ROOTFS} apt-get install sudo -y --force-yes
 chroot ${ROOTFS} adduser vagrant sudo
 
-# Enable passwordless sudo for users under the "sudo" group
+# Enable passwordless sudo for the vagrant user
 echo "vagrant ALL=(ALL) NOPASSWD:ALL" > ${ROOTFS}/etc/sudoers.d/vagrant
 chmod 0440 ${ROOTFS}/etc/sudoers.d/vagrant
 
