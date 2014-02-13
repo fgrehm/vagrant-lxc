@@ -80,7 +80,7 @@ mkdir -p ${ROOTFS}/home/vagrant/.ssh
 echo $VAGRANT_KEY > ${ROOTFS}/home/vagrant/.ssh/authorized_keys
 chroot ${ROOTFS} chown -R vagrant: /home/vagrant/.ssh
 
-# Enable passwordless sudo for users under the "sudo" group
+# Enable passwordless sudo for the vagrant user
 echo "vagrant ALL=(ALL) NOPASSWD:ALL" > ${ROOTFS}/etc/sudoers.d/vagrant
 chmod 0440 ${ROOTFS}/etc/sudoers.d/vagrant
 
