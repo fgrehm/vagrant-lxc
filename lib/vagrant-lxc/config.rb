@@ -22,7 +22,15 @@ module Vagrant
       # to the corresponding machine name.
       attr_accessor :container_name
 
+      attr_accessor :existing_container_name
+
+       # A String that names the container to clone from
+      def clone_container_from(name)
+        @existing_container_name = name
+      end
+
       def initialize
+        @existing_container_name = UNSET_VALUE
         @customizations = []
         @backingstore = UNSET_VALUE
         @backingstore_options = []
