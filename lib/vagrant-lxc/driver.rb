@@ -40,7 +40,7 @@ module Vagrant
       end
 
       def mac_address
-        @mac_address ||= config_string.match(/^lxc\.network\.hwaddr\s+=\s+(.+)$/)[1]
+        @mac_address ||= config_string.match(/^lxc\.network\.hwaddr\s*+=\s*+(.+)$/)[1]
       end
 
       def config_string
