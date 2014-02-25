@@ -38,7 +38,7 @@ module Vagrant
         end
 
         def state
-          if @name && run(:info, '--name', @name, retryable: true) =~ /^state:[^A-Z]+([A-Z]+)$/
+          if @name && run(:info, '--name', @name, retryable: true) =~ /^state:[^A-Z]+([A-Z]+)$/i
             $1.downcase.to_sym
           elsif @name
             :unknown
@@ -73,8 +73,8 @@ module Vagrant
         end
 
         def shutdown
-          if system('which lxc-shutdown > /dev/null')
-            run :shutdown, '--name', @name
+          if system('which lxc-stop > /dev/null')
+            run :stop, '--name', @name
           else
             # REFACTOR: Do not use exception to control the flow
             raise ShutdownNotSupported

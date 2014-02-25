@@ -10,7 +10,7 @@ module AcceptanceExampleGroup
 
   def destroy_container
     if name = vagrant_container_name
-      `sudo lxc-shutdown -n #{name} 2>/dev/null`
+      `sudo lxc-stop -n #{name} 2>/dev/null`
       `sudo lxc-wait -n #{name} --state STOPPED 2>/dev/null`
       `sudo lxc-destroy -n #{name} 2>/dev/null`
       `rm -rf /vagrant/spec/.vagrant/`
