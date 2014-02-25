@@ -107,13 +107,13 @@ describe Vagrant::LXC::Driver::CLI do
       subject.stub(:run)
     end
 
-    it 'issues a lxc-shutdown with provided container name' do
+    it 'issues a lxc-stop with provided container name' do
       subject.shutdown
-      subject.should have_received(:run).with(:shutdown, '--name', name)
+      subject.should have_received(:run).with(:stop, '--name', name)
     end
 
     it 'raises a ShutdownNotSupported in case it is not supported' do
-      subject.stub(:system).with('which lxc-shutdown > /dev/null').and_return(false)
+      subject.stub(:system).with('which lxc-stop > /dev/null').and_return(false)
       expect { subject.shutdown }.to raise_error(described_class::ShutdownNotSupported)
     end
   end

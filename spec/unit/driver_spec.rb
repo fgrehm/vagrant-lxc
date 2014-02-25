@@ -119,7 +119,7 @@ describe Vagrant::LXC::Driver do
       subject.forced_halt
     end
 
-    it 'attempts to force the container to stop in case lxc-shutdown is not supported' do
+    it 'attempts to force the container to stop in case lxc-stop is not supported' do
       cli.stub(:shutdown).and_raise(Vagrant::LXC::Driver::CLI::ShutdownNotSupported)
       cli.should_receive(:transition_to).with(:stopped).twice
       cli.should_receive(:stop)
