@@ -12,9 +12,14 @@ module Vagrant
       # on /etc/sudoers
       attr_accessor :sudo_wrapper
 
+      # A string to explicitly set the container name. To use the vagrant
+      # machine name, set this to :machine
+      attr_accessor :container_name
+
       def initialize
         @customizations = []
         @sudo_wrapper   = UNSET_VALUE
+        @container_name = UNSET_VALUE
       end
 
       # Customize the container by calling `lxc-start` with the given
@@ -34,6 +39,7 @@ module Vagrant
 
       def finalize!
         @sudo_wrapper = nil if @sudo_wrapper == UNSET_VALUE
+        @container_name = nil if @container_name == UNSET_VALUE
       end
 
       def validate(machine)

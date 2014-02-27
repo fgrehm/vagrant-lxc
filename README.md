@@ -1,6 +1,6 @@
 # vagrant-lxc
 
-[![Build Status](https://travis-ci.org/fgrehm/vagrant-lxc.png?branch=master)](https://travis-ci.org/fgrehm/vagrant-lxc) [![Gem Version](https://badge.fury.io/rb/vagrant-lxc.png)](http://badge.fury.io/rb/vagrant-lxc) [![Code Climate](https://codeclimate.com/github/fgrehm/vagrant-lxc.png)](https://codeclimate.com/github/fgrehm/vagrant-lxc) [![Coverage Status](https://coveralls.io/repos/fgrehm/vagrant-lxc/badge.png?branch=master)](https://coveralls.io/r/fgrehm/vagrant-lxc)
+[![Build Status](https://travis-ci.org/fgrehm/vagrant-lxc.png?branch=master)](https://travis-ci.org/fgrehm/vagrant-lxc) [![Gem Version](https://badge.fury.io/rb/vagrant-lxc.png)](http://badge.fury.io/rb/vagrant-lxc) [![Code Climate](https://codeclimate.com/github/fgrehm/vagrant-lxc.png)](https://codeclimate.com/github/fgrehm/vagrant-lxc) [![Coverage Status](https://coveralls.io/repos/fgrehm/vagrant-lxc/badge.png?branch=master)](https://coveralls.io/r/fgrehm/vagrant-lxc) [![Gittip](http://img.shields.io/gittip/fgrehm.svg)](https://www.gittip.com/fgrehm/)
 
 [LXC](http://lxc.sourceforge.net/) provider for [Vagrant](http://www.vagrantup.com/) 1.1+
 
@@ -95,11 +95,30 @@ prior to starting it.
 
 For other configuration options, please check the [lxc.conf manpages](http://manpages.ubuntu.com/manpages/quantal/man5/lxc.conf.5.html).
 
+### Container naming
+
+By default vagrant-lxc will attempt to generate a unique container name
+for you. However, if the container name is important to you, you may use the
+`container_name` attribute to set it explicitly from the `provider` block:
+
+```ruby
+Vagrant.configure("2") do |config|
+  config.vm.box = "quantal64"
+
+  config.vm.define "db" do |node|
+    node.vm.provider :lxc do |lxc|
+      lxc.container_name = :machine # Sets the container name to 'db'
+      lxc.container_name = 'mysql'  # Sets the container name to 'mysql'
+    end
+  end
+end
+```
+
 ### Avoiding `sudo` passwords
 
 This plugin requires **a lot** of `sudo`ing since [user namespaces](https://wiki.ubuntu.com/UserNamespace)
 are not supported on mainstream kernels. Have a look at the [Wiki](https://github.com/fgrehm/vagrant-lxc/wiki/Avoiding-'sudo'-passwords)
-to find out how to work around that specially if you are running an OS with sudo
+to find out how to work around that specially if you are running an OS with `sudo`
 < 1.8.4 (like Ubuntu 12.04) as you might be affected by a bug.
 
 ### Base boxes
@@ -123,14 +142,6 @@ list if you have a problem and feel free to use the [issue tracker](https://gith
 propose new functionality and / or report bugs.
 
 
-## Support
-
-Support this project and [others by fgrehm](https://github.com/fgrehm)
-via [gittip](https://www.gittip.com/fgrehm/).
-
-[![Support via Gittip](https://rawgithub.com/twolfson/gittip-badge/0.1.0/dist/gittip.png)](https://www.gittip.com/fgrehm/)
-
-
 ## Contributing
 
 1. Fork it
@@ -138,5 +149,3 @@ via [gittip](https://www.gittip.com/fgrehm/).
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
 5. Create new Pull Request
-
-[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/fgrehm/vagrant-lxc/trend.png)](https://bitdeli.com/free "Bitdeli Badge")

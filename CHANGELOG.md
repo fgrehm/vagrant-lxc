@@ -1,4 +1,14 @@
-## [0.7.1](https://github.com/fgrehm/vagrant-lxc/compare/v0.7.0...master) (unreleased)
+## [0.8.0](https://github.com/fgrehm/vagrant-lxc/compare/v0.7.0...v0.8.0) (Feb 26, 2014)
+
+FEATURES:
+
+  - Support for naming containers from Vagrantfiles [#132](https://github.com/fgrehm/vagrant-lxc/issues/132)
+
+IMPROVEMENTS:
+
+  - Use a safer random name for containers [#152](https://github.com/fgrehm/vagrant-lxc/issues/152)
+  - Improve Ubuntu 13.10 compatibility [#190](https://github.com/fgrehm/vagrant-lxc/pull/190) / [#197](https://github.com/fgrehm/vagrant-lxc/pull/197)
+  - Improved mac address detection from lxc configs [#226](https://github.com/fgrehm/vagrant-lxc/pull/226)
 
 BUG FIXES:
 

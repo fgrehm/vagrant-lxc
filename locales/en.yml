@@ -60,3 +60,8 @@ en:
 
       lxc_redir_not_installed: |-
         `redir` is not installed or is not accessible on the PATH.
+
+      lxc_container_already_exists: |-
+        There is container on your system with the same name you've specified
+        on your Vagrantfile (%{name}), please choose a different one or
+        run `lxc-destroy --name %{name}` and try again.
