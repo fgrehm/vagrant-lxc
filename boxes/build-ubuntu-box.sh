@@ -83,7 +83,7 @@ chroot ${ROOTFS} chown -R vagrant: /home/vagrant/.ssh
 # Enable passwordless sudo for users under the "sudo" group
 cp ${ROOTFS}/etc/sudoers{,.orig}
 sed -i -e \
-      's/%sudo\s\+ALL=(ALL\(:ALL\)\?)\s\+ALL/%sudo ALL=NOPASSWD:ALL/g' \
+      's/%sudo\s\+ALL=(ALL\(:ALL\)\?)\s\+ALL/%sudo ALL=(ALL) NOPASSWD:ALL/g' \
       ${ROOTFS}/etc/sudoers
 
 
