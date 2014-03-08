@@ -111,6 +111,10 @@ PACKAGES=(vim curl wget man-db bash-completion ca-certificates)
 chroot ${ROOTFS} apt-get install ${PACKAGES[*]} -y --force-yes
 chroot ${ROOTFS} apt-get upgrade -y --force-yes
 
+# Enable bash-completion
+sed -e '/^#if ! shopt -oq posix; then/,/^#fi/ s/^#\(.*\)/\1/g' \
+  -i ${ROOTFS}/etc/bash.bashrc
+
 
 ##################################################################################
 # 6 - Configuration management tools
