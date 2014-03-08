@@ -1,6 +1,8 @@
 #!/bin/bash
 set -e
 
+source common/ui.sh
+
 if [ "$(id -u)" != "0" ]; then
   echo "You should run this script as root (sudo)."
   exit 1
@@ -16,14 +18,15 @@ export RELEASE=$1
 export ARCH=$2
 export CONTAINER=$3
 export PACKAGE=$4
+export ROOTFS="/var/lib/lxc/${CONTAINER}/rootfs"
 
 if [ -f ${PACKAGE} ]; then
-  echo -e "${WARN_COLOR}==> The box '${PACKAGE}' already exists, skipping...${NO_COLOR}"
+  warn "The box '${PACKAGE}' already exists, skipping..."
   echo
   exit
 fi
 
-echo -e "${OK_COLOR}==> Building '${RELEASE} (${ARCH})' to '${PACKAGE}'...${NO_COLOR}"
+info "Building box to '${PACKAGE}'..."
 
 ./common/download.sh ubuntu ${RELEASE} ${ARCH} ${CONTAINER}
 ./common/prepare-vagrant-user.sh ${CONTAINER}
@@ -32,5 +35,5 @@ echo -e "${OK_COLOR}==> Building '${RELEASE} (${ARCH})' to '${PACKAGE}'...${NO_C
 ./common/package.sh ${CONTAINER} ${PACKAGE}
 touch $PACKAGE
 
-echo -e "${OK_COLOR}==> Finished building '${RELEASE} (${ARCH})' to '${PACKAGE}'...${NO_COLOR}"
+info "Finished building '${PACKAGE}'!"
 echo

@@ -3,17 +3,16 @@ set -e
 
 source common/ui.sh
 
-container_exists=$(lxc-ls | grep -q ${CONTAINER})
 # If container exists, check if want to continue
-if $container_exists; then
-  if ! $(confirm "The '${CONTAINER}' container already exists, do you want to continue building the box?" 'n'); then
+if $(lxc-ls | grep -q ${CONTAINER}); then
+  if ! $(confirm "The '${CONTAINER}' container already exists, do you want to continue building the box?" 'y'); then
     log 'Aborting...'
     exit 1
   fi
 fi
 
 # If container exists and wants to continue building the box
-if $container_exists; then
+if $(lxc-ls | grep -q ${CONTAINER}); then
   if $(confirm "Do you want to rebuild the '${CONTAINER}' container?" 'n'); then
     log "Destroying container ${CONTAINER}..."
     lxc-stop -n ${CONTAINER} &>/dev/null || true
@@ -30,3 +29,4 @@ lxc-create -n ${CONTAINER} -t download -- \
            --dist ${DISTRIBUTION} \
            --release ${RELEASE} \
            --arch ${ARCH}
+log "Container created!"

@@ -1,11 +1,15 @@
 #!/bin/bash
 
 log() {
-  echo "    ${1}" >&2
+  echo "    [${RELEASE}] ${1}" >&2
 }
 
-debug() {
-  [ ! $DEBUG ] || echo "    [DEBUG] ${1}" >&2
+warn() {
+  echo -e "${WARN_COLOR}==> [${RELEASE}] ${1}${NO_COLOR}"
+}
+
+info() {
+  echo -e "${OK_COLOR}==> [${RELEASE}] ${1}${NO_COLOR}"
 }
 
 confirm() {
@@ -21,7 +25,7 @@ confirm() {
     default='Yes'
   fi
 
-  echo -n "    ${question} [${default_prompt}] " >&2
+  echo -e -n "${WARN_COLOR}==> [${RELEASE}] ${question} [${default_prompt}] ${NO_COLOR}" >&2
   read answer
 
   if [ -z $answer ]; then
@@ -34,4 +38,8 @@ confirm() {
   else
     return 1
   fi
+}
+
+debug() {
+  [ ! $DEBUG ] || echo "    [${RELEASE}] [DEBUG] ${1}" >&2
 }
