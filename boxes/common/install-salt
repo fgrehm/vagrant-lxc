@@ -5,6 +5,7 @@ set -e
 rootfs=$1
 
 echo "installing salt"
+
 chroot $rootfs apt-add-repository -y ppa:saltstack/salt
 chroot $rootfs apt-get update
 chroot $rootfs apt-get install salt-minion -y --force-yes
