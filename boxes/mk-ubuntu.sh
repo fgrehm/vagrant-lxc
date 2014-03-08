@@ -19,12 +19,16 @@ export ARCH=$2
 export CONTAINER=$3
 export PACKAGE=$4
 export ROOTFS="/var/lib/lxc/${CONTAINER}/rootfs"
+export WORKING_DIR="/tmp/${CONTAINER}"
 
 if [ -f ${PACKAGE} ]; then
   warn "The box '${PACKAGE}' already exists, skipping..."
   echo
   exit
 fi
+
+debug "Creating ${WORKING_DIR}"
+mkdir -p ${WORKING_DIR}
 
 info "Building box to '${PACKAGE}'..."
 
@@ -33,7 +37,6 @@ info "Building box to '${PACKAGE}'..."
 ./debian/install-extras.sh ${CONTAINER}
 ./debian/clean.sh ${CONTAINER}
 ./common/package.sh ${CONTAINER} ${PACKAGE}
-touch $PACKAGE
 
 info "Finished building '${PACKAGE}'!"
 echo
