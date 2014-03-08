@@ -1,6 +1,6 @@
 #!/bin/bash
 set -e
 
-container_name=$1
+source common/ui.sh
 
-echo "    Will cleanup '${container_name}'"
+info "Cleaning up '${CONTAINER}'..."
