@@ -39,6 +39,8 @@ fi
 if [ $PUPPET = 1 ]; then
   if $(lxc-attach -n ${CONTAINER} -- which puppet &>/dev/null); then
     log "Puppet has been installed on container, skipping"
+  elif [ ${RELEASE} = 'trusty' ]; then
+    warn "Puppet can't be installed on Ubuntu Trusty 14.04, skipping"
   else
     log "Installing Puppet"
     wget http://apt.puppetlabs.com/puppetlabs-release-stable.deb -O "${ROOTFS}/tmp/puppetlabs-release-stable.deb"
