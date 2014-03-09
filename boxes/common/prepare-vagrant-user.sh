@@ -34,6 +34,6 @@ if [ -f ${ROOTFS}/etc/sudoers.d/vagrant ]; then
 else
   debug 'Sudoers file was not found'
   echo "vagrant ALL=(ALL) NOPASSWD:ALL" > ${ROOTFS}/etc/sudoers.d/vagrant
-  chmod 0441 ${ROOTFS}/etc/sudoers.d/vagrant
+  chmod 0440 ${ROOTFS}/etc/sudoers.d/vagrant
   log 'Sudoers file created.'
 fi
