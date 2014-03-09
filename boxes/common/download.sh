@@ -29,4 +29,7 @@ lxc-create -n ${CONTAINER} -t download -- \
            --dist ${DISTRIBUTION} \
            --release ${RELEASE} \
            --arch ${ARCH}
+
+# TODO: Nicely handle boxes that don't have an image associated
+
 log "Container created!"

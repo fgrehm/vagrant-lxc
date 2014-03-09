@@ -12,6 +12,7 @@ info() {
   echo -e "${OK_COLOR}==> [${RELEASE}] ${1}${NO_COLOR}"
 }
 
+# TODO: Add a file lock so we can build in parallel
 confirm() {
   question=${1}
   default=${2}
