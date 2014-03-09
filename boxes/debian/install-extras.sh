@@ -58,21 +58,31 @@ else
 fi
 
 if [ $SALT = 1 ]; then
-  lxc-attach -n ${CONTAINER} -- apt-add-repository -y ppa:saltstack/salt
-  lxc-attach -n ${CONTAINER} -- apt-get update
-  lxc-attach -n ${CONTAINER} -- apt-get install salt-minion -y --force-yes
+  if $(lxc-attach -n ${CONTAINER} -- which salt-minion &>/dev/null); then
+    log "Salt has been installed on container, skipping"
+  elif [ ${RELEASE} = 'raring' ]; then
+    warn "Salt can't be installed on Ubuntu Raring 13.04, skipping"
+  else
+    lxc-attach -n ${CONTAINER} -- apt-add-repository -y ppa:saltstack/salt
+    lxc-attach -n ${CONTAINER} -- apt-get update
+    chroot ${ROOTFS} apt-get install salt-minion -y --force-yes
+  fi
 else
   log "Skipping Salt installation"
 fi
 
 if [ $BABUSHKA = 1 ]; then
-  log "Installing Babushka"
-  cat > $ROOTFS/tmp/install-babushka.sh << EOF
+  if $(lxc-attach -n ${CONTAINER} -- which babushka &>/dev/null); then
+    log "Babushka has been installed on container, skipping"
+  else
+    log "Installing Babushka"
+    cat > $ROOTFS/tmp/install-babushka.sh << EOF
 #!/bin/sh
 curl https://babushka.me/up | sudo bash
 EOF
-  chmod +x $ROOTFS/tmp/install-babushka.sh
-  lxc-attach -n ${CONTAINER} -- /tmp/install-babushka.sh
+    chmod +x $ROOTFS/tmp/install-babushka.sh
+    lxc-attach -n ${CONTAINER} -- /tmp/install-babushka.sh
+  fi
 else
   log "Skipping Babushka installation"
 fi
