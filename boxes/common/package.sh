@@ -11,7 +11,7 @@ debug 'Stopping container'
 lxc-stop -n ${CONTAINER} &>/dev/null || true
 
 if [ -f ${WORKING_DIR}/rootfs.tar.gz ]; then
-  log "Removing previous rootfs tarbal"
+  log "Removing previous rootfs tarball"
   rm -f ${WORKING_DIR}/rootfs.tar.gz
 fi
 
@@ -22,27 +22,13 @@ pushd  $(dirname ${ROOTFS}) &>/dev/null
 popd &>/dev/null
 
 # Prepare package contents
-pushd  ${WORKING_DIR} &>/dev/null
-  warn "TODO: Package on `pwd`"
-  warn "TODO: Add creation date"
-  warn "TODO: Fix hostname (its too big!)"
-popd &>/dev/null
+log 'Preparing box package contents'
+cp common/lxc-template ${WORKING_DIR}
+cp conf/ubuntu ${WORKING_DIR}/lxc-config
+cp conf/metadata.json ${WORKING_DIR}
+sed -i "s/<TODAY>/${NOW}/" ${WORKING_DIR}/metadata.json
 
-# cp $LXC_TEMPLATE .
-# cp $LXC_CONF .
-# cp $METATADA_JSON .
-# chmod +x lxc-template
-# sed -i "s/<TODAY>/${NOW}/" metadata.json
-#
-# # Vagrant box!
-# tar -czf $PKG ./*
-#
-# chmod +rw ${WORKING_DIR}/${PKG}
-# mkdir -p ${CWD}/output
-# mv ${WORKING_DIR}/${PKG} ${CWD}/output
-#
-# # Clean up after ourselves
-# rm -rf ${WORKING_DIR}
-# lxc-destroy -n ${RELEASE}-base
-#
-# echo "The base box was built successfully to ${CWD}/output/${PKG}"
+# Vagrant box!
+log 'Packaging box'
+TARBALL=$(readlink -f ${PACKAGE})
+(cd ${WORKING_DIR} && tar -czf $TARBALL ./*)

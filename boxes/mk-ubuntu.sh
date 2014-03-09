@@ -20,6 +20,7 @@ export CONTAINER=$3
 export PACKAGE=$4
 export ROOTFS="/var/lib/lxc/${CONTAINER}/rootfs"
 export WORKING_DIR="/tmp/${CONTAINER}"
+export NOW=$(date -u)
 
 if [ -f ${PACKAGE} ]; then
   warn "The box '${PACKAGE}' already exists, skipping..."
@@ -39,4 +40,5 @@ info "Building box to '${PACKAGE}'..."
 ./common/package.sh ${CONTAINER} ${PACKAGE}
 
 info "Finished building '${PACKAGE}'!"
+log "Run \`sudo lxc-destroy -n ${CONTAINER}\` to remove the container that was created along the way"
 echo
