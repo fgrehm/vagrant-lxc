@@ -52,7 +52,7 @@ if [ $PUPPET = 1 ]; then
     warn "Puppet can't be installed on Ubuntu Trusty 14.04, skipping"
   else
     log "Installing Puppet"
-    wget http://apt.puppetlabs.com/puppetlabs-release-stable.deb -O "${ROOTFS}/tmp/puppetlabs-release-stable.deb"
+    wget http://apt.puppetlabs.com/puppetlabs-release-stable.deb -O "${ROOTFS}/tmp/puppetlabs-release-stable.deb" &>${LOG}
     utils.lxc.attach dpkg -i "/tmp/puppetlabs-release-stable.deb"
     utils.lxc.attach apt-get update
     utils.lxc.attach apt-get install puppet -y --force-yes
