@@ -2,14 +2,15 @@
 set -e
 
 source common/ui.sh
+source common/utils.sh
 
 debug 'Bringing container up'
-lxc-start -d -n ${CONTAINER} &>/dev/null || true
+utils.lxc.start
 
 info "Cleaning up '${CONTAINER}'..."
 
 log 'Removing temporary files...'
-lxc-attach -n ${CONTAINER} -- rm -rf /tmp/*
+rm -rf ${ROOTFS}/tmp/*
 
 log 'Removing downloaded packages...'
-lxc-attach -n ${CONTAINER} -- apt-get clean
+utils.lxc.attach apt-get clean

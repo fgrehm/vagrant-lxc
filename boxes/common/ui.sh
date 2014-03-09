@@ -6,14 +6,17 @@ export ERROR_COLOR='\033[31;01m'
 export WARN_COLOR='\033[33;01m'
 
 log() {
+  echo "    [${RELEASE}] ${1}" >${LOG}
   echo "    [${RELEASE}] ${1}" >&2
 }
 
 warn() {
+  echo "==> [${RELEASE}] [WARN] ${1}" >${LOG}
   echo -e "${WARN_COLOR}==> [${RELEASE}] ${1}${NO_COLOR}"
 }
 
 info() {
+  echo "==> [${RELEASE}] [INFO] ${1}" >${LOG}
   echo -e "${OK_COLOR}==> [${RELEASE}] ${1}${NO_COLOR}"
 }
 

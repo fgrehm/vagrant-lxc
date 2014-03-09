@@ -2,6 +2,7 @@
 set -e
 
 source common/ui.sh
+source common/utils.sh
 
 # If container exists, check if want to continue
 if $(lxc-ls | grep -q ${CONTAINER}); then
@@ -15,8 +16,8 @@ fi
 if $(lxc-ls | grep -q ${CONTAINER}); then
   if $(confirm "Do you want to rebuild the '${CONTAINER}' container?" 'n'); then
     log "Destroying container ${CONTAINER}..."
-    lxc-stop -n ${CONTAINER} &>/dev/null || true
-    lxc-destroy -n ${CONTAINER}
+    utils.lxc.stop
+    utils.lxc.destroy
   else
     log "Reusing existing container..."
     exit 0
@@ -26,14 +27,14 @@ fi
 # If we got to this point, we need to create the container
 log "Creating container..."
 if [ $RELEASE = 'raring' ]; then
-  lxc-create -n ${CONTAINER} -t ubuntu -- \
-             --release ${RELEASE} \
-             --arch ${ARCH}
+  utils.lxc.create -t ubuntu -- \
+                   --release ${RELEASE} \
+                   --arch ${ARCH}
 else
-  lxc-create -n ${CONTAINER} -t download -- \
-             --dist ${DISTRIBUTION} \
-             --release ${RELEASE} \
-             --arch ${ARCH}
+  utils.lxc.create -t download -- \
+                   --dist ${DISTRIBUTION} \
+                   --release ${RELEASE} \
+                   --arch ${ARCH}
 fi
 log "Container created!"
 

@@ -16,6 +16,7 @@ export PACKAGE=$4
 export ROOTFS="/var/lib/lxc/${CONTAINER}/rootfs"
 export WORKING_DIR="/tmp/${CONTAINER}"
 export NOW=$(date -u)
+export LOG=$(readlink -f .)/log/${CONTAINER}.log
 
 if [ -f ${PACKAGE} ]; then
   warn "The box '${PACKAGE}' already exists, skipping..."
