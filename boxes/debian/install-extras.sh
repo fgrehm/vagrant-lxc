@@ -21,24 +21,31 @@ SALT=${SALT:-0}
 BABUSHKA=${BABUSHKA:-0}
 
 if [ $CHEF = 1 ]; then
-  # TODO: Check if Chef has been installed
-  log "Installing Chef"
-  cat > ${ROOTFS}/tmp/install-chef.sh << EOF
+  if $(lxc-attach -n ${CONTAINER} -- which chef-solo &>/dev/null); then
+    log "Chef has been installed on container, skipping"
+  else
+    log "Installing Chef"
+    cat > ${ROOTFS}/tmp/install-chef.sh << EOF
 #!/bin/sh
 curl -L https://www.opscode.com/chef/install.sh -k | sudo bash
 EOF
-  chmod +x ${ROOTFS}/tmp/install-chef.sh
-  lxc-attach -n ${CONTAINER} -- /tmp/install-chef.sh
+    chmod +x ${ROOTFS}/tmp/install-chef.sh
+    lxc-attach -n ${CONTAINER} -- /tmp/install-chef.sh
+  fi
 else
   log "Skipping Chef installation"
 fi
 
 if [ $PUPPET = 1 ]; then
-  log "Installing Puppet"
-  wget http://apt.puppetlabs.com/puppetlabs-release-stable.deb -O "${ROOTFS}/tmp/puppetlabs-release-stable.deb"
-  lxc-attach -n ${CONTAINER} -- dpkg -i "/tmp/puppetlabs-release-stable.deb"
-  lxc-attach -n ${CONTAINER} -- apt-get update
-  lxc-attach -n ${CONTAINER} -- apt-get install puppet -y --force-yes
+  if $(lxc-attach -n ${CONTAINER} -- which puppet &>/dev/null); then
+    log "Puppet has been installed on container, skipping"
+  else
+    log "Installing Puppet"
+    wget http://apt.puppetlabs.com/puppetlabs-release-stable.deb -O "${ROOTFS}/tmp/puppetlabs-release-stable.deb"
+    lxc-attach -n ${CONTAINER} -- dpkg -i "/tmp/puppetlabs-release-stable.deb"
+    lxc-attach -n ${CONTAINER} -- apt-get update
+    lxc-attach -n ${CONTAINER} -- apt-get install puppet -y --force-yes
+  fi
 else
   log "Skipping Puppet installation"
 fi
