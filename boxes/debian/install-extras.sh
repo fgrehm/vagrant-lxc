@@ -8,6 +8,9 @@ info 'Installing extra packages and upgrading'
 debug 'Bringing container up'
 lxc-start -d -n ${CONTAINER} &>/dev/null || true
 
+# Sleep for a bit so that the container can get an IP
+sleep 5
+
 # TODO: Support for setting this from outside
 UBUNTU_PACKAGES=(vim curl wget man-db bash-completion python-software-properties software-properties-common)
 
