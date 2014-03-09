@@ -5,9 +5,10 @@ default:
 
 all: $(UBUNTU_BOXES)
 
-$(UBUNTU_BOXES): CONTAINER = "vagrant-lxc-base-${@}-amd64-${TODAY}"
-$(UBUNTU_BOXES): PACKAGE = "output/vagrant-lxc-${@}-amd64-${TODAY}.box"
+$(UBUNTU_BOXES): CONTAINER = "vagrant-lxc-base-${@}-amd64"
+$(UBUNTU_BOXES): PACKAGE = "output/${TODAY}/vagrant-lxc-${@}-amd64.box"
 $(UBUNTU_BOXES):
+	@mkdir -p $$(dirname $(PACKAGE))
 	@sudo -E ./mk-ubuntu.sh $(@) amd64 $(CONTAINER) $(PACKAGE)
 	@sudo chmod +rw $(PACKAGE)
 	@sudo chown ${USER}: $(PACKAGE)
@@ -15,6 +16,6 @@ $(UBUNTU_BOXES):
 clean:
 	@for r in $(UBUNTU_BOXES); do \
 		sudo -E ./clean.sh $${r}\
-		                   vagrant-lxc-base-$${r}-amd64-${TODAY} \
-				               output/vagrant-lxc-$${r}-amd64-${TODAY}.box; \
+		                   vagrant-lxc-base-$${r}-amd64 \
+				               output/${TODAY}/vagrant-lxc-$${r}-amd64-${TODAY}.box; \
 		done
