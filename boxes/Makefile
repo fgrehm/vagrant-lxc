@@ -10,6 +10,7 @@ $(UBUNTU_BOXES): PACKAGE = "output/vagrant-lxc-${@}-amd64-${TODAY}.box"
 $(UBUNTU_BOXES):
 	@sudo -E ./mk-ubuntu.sh $(@) amd64 $(CONTAINER) $(PACKAGE)
 	@sudo chmod +rw $(PACKAGE)
+	@sudo chown ${USER}: $(PACKAGE)
 
 clean:
 	@for r in $(UBUNTU_BOXES); do \
