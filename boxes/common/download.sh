@@ -25,13 +25,16 @@ fi
 
 # If we got to this point, we need to create the container
 log "Creating container..."
-lxc-create -n ${CONTAINER} -t download -- \
-           --dist ${DISTRIBUTION} \
-           --release ${RELEASE} \
-           --arch ${ARCH}
-
-# TODO: Nicely handle boxes that don't have an image associated
-
+if [ $RELEASE = 'raring' ]; then
+  lxc-create -n ${CONTAINER} -t ubuntu -- \
+             --release ${RELEASE} \
+             --arch ${ARCH}
+else
+  lxc-create -n ${CONTAINER} -t download -- \
+             --dist ${DISTRIBUTION} \
+             --release ${RELEASE} \
+             --arch ${ARCH}
+fi
 log "Container created!"
 
 
