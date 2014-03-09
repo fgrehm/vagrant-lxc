@@ -64,6 +64,8 @@ fi
 if [ $SALT = 1 ]; then
   if $(lxc-attach -n ${CONTAINER} -- which salt-minion &>/dev/null); then
     log "Salt has been installed on container, skipping"
+  elif [ ${RELEASE} = 'raring' ]; then
+    warn "Puppet can't be installed on Ubuntu Raring 13.04, skipping"
   else
     utils.lxc.attach apt-add-repository -y ppa:saltstack/salt
     utils.lxc.attach apt-get update
