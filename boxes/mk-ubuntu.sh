@@ -36,5 +36,5 @@ info "Building box to '${PACKAGE}'..."
 ./common/package.sh ${CONTAINER} ${PACKAGE}
 
 info "Finished building '${PACKAGE}'!"
-log "Run \`sudo lxc-destroy -n ${CONTAINER}\` to remove the container that was created along the way"
+log "Run \`sudo lxc-destroy -n ${CONTAINER}\` or \`make clean\` to remove the container that was created along the way"
 echo

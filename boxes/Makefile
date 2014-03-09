@@ -12,5 +12,8 @@ $(UBUNTU_BOXES):
 	@sudo chmod +rw $(PACKAGE)
 
 clean:
-	@echo "Implement clean"
-	@exit 1
+	@for r in $(UBUNTU_BOXES); do \
+		sudo -E ./clean.sh $${r}\
+		                   vagrant-lxc-base-$${r}-amd64-${TODAY} \
+				               output/vagrant-lxc-$${r}-amd64-${TODAY}.box; \
+		done
