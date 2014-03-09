@@ -1,7 +1,0 @@
-#!/bin/bash
-
-cache=`readlink -f .`
-rootfs="${cache}/rootfs"
-
-rm -rf $rootfs/tmp/*
-chroot $rootfs apt-get clean
