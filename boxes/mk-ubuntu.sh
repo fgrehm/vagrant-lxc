@@ -18,6 +18,12 @@ export WORKING_DIR="/tmp/${CONTAINER}"
 export NOW=$(date -u)
 export LOG=$(readlink -f .)/log/${CONTAINER}.log
 
+mkdir -p $(dirname $LOG)
+echo '############################################' > ${LOG}
+echo "# Beginning build at $(date)" >> ${LOG}
+touch ${LOG}
+chmod +rw ${LOG}
+
 if [ -f ${PACKAGE} ]; then
   warn "The box '${PACKAGE}' already exists, skipping..."
   echo

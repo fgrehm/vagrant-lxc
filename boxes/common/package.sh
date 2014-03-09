@@ -16,10 +16,10 @@ if [ -f ${WORKING_DIR}/rootfs.tar.gz ]; then
 fi
 
 log "Compressing container's rootfs"
-pushd  $(dirname ${ROOTFS}) &>${LOG}
+pushd  $(dirname ${ROOTFS}) &>>${LOG}
   tar --numeric-owner --anchored --exclude=./rootfs/dev/log -czf \
       ${WORKING_DIR}/rootfs.tar.gz ./rootfs/*
-popd &>${LOG}
+popd &>>${LOG}
 
 # Prepare package contents
 log 'Preparing box package contents'
