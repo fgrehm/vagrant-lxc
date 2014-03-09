@@ -15,6 +15,11 @@ lxc-attach -n ${CONTAINER} -- apt-get update
 lxc-attach -n ${CONTAINER} -- apt-get install ${UBUNTU_PACKAGES[*]} -y --force-yes
 lxc-attach -n ${CONTAINER} -- apt-get upgrade -y --force-yes
 
+# TODO: SEPARATE FILE!
+# Ensure locales are properly set, based on http://askubuntu.com/a/238063
+lxc-attach -n ${CONTAINER} -- locale-gen en_US.UTF-8
+lxc-attach -n ${CONTAINER} -- dpkg-reconfigure locales
+
 CHEF=${CHEF:-0}
 PUPPET=${PUPPET:-0}
 SALT=${SALT:-0}
