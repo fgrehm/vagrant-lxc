@@ -8,11 +8,6 @@ if [ "$(id -u)" != "0" ]; then
   exit 1
 fi
 
-export NO_COLOR='\033[0m'
-export OK_COLOR='\033[32;01m'
-export ERROR_COLOR='\033[31;01m'
-export WARN_COLOR='\033[33;01m'
-
 export DISTRIBUTION="ubuntu"
 export RELEASE=$1
 export ARCH=$2

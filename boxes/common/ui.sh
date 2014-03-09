@@ -1,5 +1,10 @@
 #!/bin/bash
 
+export NO_COLOR='\033[0m'
+export OK_COLOR='\033[32;01m'
+export ERROR_COLOR='\033[31;01m'
+export WARN_COLOR='\033[33;01m'
+
 log() {
   echo "    [${RELEASE}] ${1}" >&2
 }
@@ -12,7 +17,6 @@ info() {
   echo -e "${OK_COLOR}==> [${RELEASE}] ${1}${NO_COLOR}"
 }
 
-# TODO: Add a file lock so we can build in parallel
 confirm() {
   question=${1}
   default=${2}
