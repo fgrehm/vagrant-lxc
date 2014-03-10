@@ -30,5 +30,5 @@ clean:
 	@for r in $(ALL_BOXES); do \
 		sudo -E ./clean.sh $${r}\
 		                   vagrant-lxc-base-$${r}-amd64 \
-				               output/${TODAY}/vagrant-lxc-$${r}-amd64-${TODAY}.box; \
+				               output/${TODAY}/vagrant-lxc-$${r}-amd64.box; \
 		done
