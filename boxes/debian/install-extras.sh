@@ -13,21 +13,25 @@ utils.lxc.start
 log 'Sleeping for 5 seconds...'
 sleep 5
 
-# TODO: Support for setting this from outside
-UBUNTU_PACKAGES=(vim curl wget man-db bash-completion python-software-properties software-properties-common)
+# TODO: Support for appending to this list from outside
+PACKAGES=(vim curl wget man-db bash-completion python-software-properties ca-certificates sudo)
+if [ $DISTRIBUTION = 'ubuntu' ]; then
+  PACKAGES+=' software-properties-common'
+fi
 utils.lxc.attach apt-get update
-utils.lxc.attach apt-get install ${UBUNTU_PACKAGES[*]} -y --force-yes
+utils.lxc.attach apt-get install ${PACKAGES[*]} -y --force-yes
 utils.lxc.attach apt-get upgrade -y --force-yes
-
-# TODO: SEPARATE FILE!
-# Ensure locales are properly set, based on http://askubuntu.com/a/238063
-utils.lxc.attach locale-gen en_US.UTF-8
-utils.lxc.attach dpkg-reconfigure locales
 
 CHEF=${CHEF:-0}
 PUPPET=${PUPPET:-0}
 SALT=${SALT:-0}
 BABUSHKA=${BABUSHKA:-0}
+
+if [ $DISTRIBUTION = 'debian' ]; then
+  # Enable bash-completion
+  sed -e '/^#if ! shopt -oq posix; then/,/^#fi/ s/^#\(.*\)/\1/g' \
+    -i ${ROOTFS}/etc/bash.bashrc
+fi
 
 if [ $CHEF = 1 ]; then
   if $(lxc-attach -n ${CONTAINER} -- which chef-solo &>/dev/null); then
@@ -50,6 +54,8 @@ if [ $PUPPET = 1 ]; then
     log "Puppet has been installed on container, skipping"
   elif [ ${RELEASE} = 'trusty' ]; then
     warn "Puppet can't be installed on Ubuntu Trusty 14.04, skipping"
+  elif [ ${RELEASE} = 'sid' ]; then
+    warn "Puppet can't be installed on Debian sid, skipping"
   else
     log "Installing Puppet"
     wget http://apt.puppetlabs.com/puppetlabs-release-stable.deb -O "${ROOTFS}/tmp/puppetlabs-release-stable.deb" &>>${LOG}
@@ -65,9 +71,25 @@ if [ $SALT = 1 ]; then
   if $(lxc-attach -n ${CONTAINER} -- which salt-minion &>/dev/null); then
     log "Salt has been installed on container, skipping"
   elif [ ${RELEASE} = 'raring' ]; then
-    warn "Puppet can't be installed on Ubuntu Raring 13.04, skipping"
+    warn "Salt can't be installed on Ubuntu Raring 13.04, skipping"
   else
-    utils.lxc.attach apt-add-repository -y ppa:saltstack/salt
+    if [ $DISTRIBUTION = 'ubuntu' ]; then
+      utils.lxc.attach add-apt-repository -y ppa:saltstack/salt
+    else # DEBIAN
+      if [ $RELEASE == "squeeze" ]; then
+        SALT_SOURCE_1="deb http://debian.saltstack.com/debian squeeze-saltstack main"
+        SALT_SOURCE_2="deb http://backports.debian.org/debian-backports squeeze-backports main contrib non-free"
+      elif [ $RELEASE == "wheezy" ]; then
+        SALT_SOURCE_1="deb http://debian.saltstack.com/debian wheezy-saltstack main"
+      else
+        SALT_SOURCE_1="deb http://debian.saltstack.com/debian unstable main"
+      fi
+      echo $SALT_SOURCE_1 > ${ROOTFS}/etc/apt/sources.list.d/saltstack.list
+      echo $SALT_SOURCE_2 >> ${ROOTFS}/etc/apt/sources.list.d/saltstack.list
+
+      utils.lxc.attach wget -q -O /tmp/salt.key "http://debian.saltstack.com/debian-salt-team-joehealy.gpg.key"
+      utils.lxc.attach apt-key add /tmp/salt.key
+    fi
     utils.lxc.attach apt-get update
     utils.lxc.attach apt-get install salt-minion -y --force-yes
   fi

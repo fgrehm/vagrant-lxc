@@ -36,8 +36,9 @@ mkdir -p ${WORKING_DIR}
 info "Building box to '${PACKAGE}'..."
 
 ./common/download.sh ${DISTRIBUTION} ${RELEASE} ${ARCH} ${CONTAINER}
-./common/prepare-vagrant-user.sh ${CONTAINER}
+./debian/vagrant-lxc-fixes.sh ${DISTRIBUTION} ${RELEASE} ${ARCH} ${CONTAINER}
 ./debian/install-extras.sh ${CONTAINER}
+./common/prepare-vagrant-user.sh ${CONTAINER}
 ./debian/clean.sh ${CONTAINER}
 ./common/package.sh ${CONTAINER} ${PACKAGE}
 

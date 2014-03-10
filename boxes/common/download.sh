@@ -30,6 +30,10 @@ if [ $RELEASE = 'raring' ]; then
   utils.lxc.create -t ubuntu -- \
                    --release ${RELEASE} \
                    --arch ${ARCH}
+elif [ $RELEASE = 'squeeze' ]; then
+  utils.lxc.create -t debian -- \
+                   --release ${RELEASE} \
+                   --arch ${ARCH}
 else
   utils.lxc.create -t download -- \
                    --dist ${DISTRIBUTION} \
@@ -37,11 +41,3 @@ else
                    --arch ${ARCH}
 fi
 log "Container created!"
-
-
-# Fixes some networking issues
-# See https://github.com/fgrehm/vagrant-lxc/issues/91 for more info
-if ! $(grep -q 'ip6-allhosts' ${ROOTFS}/etc/hosts); then
-  log "Adding ipv6 allhosts entry to container's /etc/hosts"
-  echo 'ff02::3 ip6-allhosts' >> ${ROOTFS}/etc/hosts
-fi

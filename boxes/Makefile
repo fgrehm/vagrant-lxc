@@ -1,5 +1,5 @@
 UBUNTU_BOXES= precise quantal raring saucy trusty
-DEBIAN_BOXES= squeeze wheezy sid
+DEBIAN_BOXES= squeeze wheezy sid jessie
 TODAY=$(shell date -u +"%Y-%m-%d")
 
 default:

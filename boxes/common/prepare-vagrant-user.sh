@@ -10,13 +10,18 @@ info "Preparing vagrant user..."
 # Create vagrant user
 if $(grep -q 'vagrant' ${ROOTFS}/etc/shadow); then
   log 'Skipping vagrant user creation'
-else
+elif $(grep -q 'ubuntu' ${ROOTFS}/etc/shadow); then
   debug 'vagrant user does not exist, renaming ubuntu user...'
   mv ${ROOTFS}/home/{ubuntu,vagrant}
-  chroot ${ROOTFS} usermod -l vagrant -d /home/vagrant ubuntu
-  chroot ${ROOTFS} groupmod -n vagrant ubuntu
+  chroot ${ROOTFS} usermod -l vagrant -d /home/vagrant ubuntu &>> ${LOG}
+  chroot ${ROOTFS} groupmod -n vagrant ubuntu &>> ${LOG}
   echo -n 'vagrant:vagrant' | chroot ${ROOTFS} chpasswd
   log 'Renamed ubuntu user to vagrant and changed password.'
+else
+  debug 'Creating vagrant user...'
+  chroot ${ROOTFS} useradd --create-home -s /bin/bash vagrant &>> ${LOG}
+  chroot ${ROOTFS} adduser vagrant sudo &>> ${LOG}
+  echo -n 'vagrant:vagrant' | chroot ${ROOTFS} chpasswd
 fi
 
 # Configure SSH access
