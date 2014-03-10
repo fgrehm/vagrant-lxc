@@ -17,8 +17,6 @@ if [ ${DISTRIBUTION} = 'debian' ]; then
   # Ensure locales are properly set, based on http://askubuntu.com/a/238063
   LANG=${LANG:-en_US.UTF-8}
   sed -i "s/^# ${LANG}/${LANG}/" ${ROOTFS}/etc/locale.gen
-  utils.lxc.attach /usr/sbin/locale-gen
-  utils.lxc.attach update-locale LANG=${LANG}
 
   # Fixes some networking issues
   # See https://github.com/fgrehm/vagrant-lxc/issues/91 for more info
@@ -30,3 +28,6 @@ if [ ${DISTRIBUTION} = 'debian' ]; then
   utils.lxc.attach /usr/sbin/update-rc.d -f mountall-bootclean.sh remove
   utils.lxc.attach /usr/sbin/update-rc.d -f mountnfs-bootclean.sh remove
 fi
+
+utils.lxc.attach /usr/sbin/locale-gen ${LANG}
+utils.lxc.attach update-locale LANG=${LANG}
