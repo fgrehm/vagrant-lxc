@@ -12,9 +12,6 @@ en:
         Starting container...
       force_shutdown: |-
         Forcing shutdown of container...
-      # TODO: Remove the following keys after we drop support for vagrant < 1.3
-      waiting_for_start: |-
-        Waiting for container to start. This should not take long.
       warn_networks: |-
         Warning! The LXC provider doesn't support any of the Vagrant public / private
         network configurations (ex: `config.vm.network :private_network, ip: "some-ip"`).
