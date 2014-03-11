@@ -1,17 +1,17 @@
 GIT
-  remote: git://github.com/fgrehm/vagrant-cachier.git
+  remote: https://github.com/fgrehm/vagrant-cachier.git
   revision: 2df1e319408a7e6f1c6e75d48e36591199e98527
   specs:
     vagrant-cachier (0.6.1.dev)
 
 GIT
-  remote: git://github.com/fgrehm/vagrant-pristine.git
+  remote: https://github.com/fgrehm/vagrant-pristine.git
   revision: 503dbc47848c81d0fbfa6840491856f518d244a1
   specs:
     vagrant-pristine (0.3.0)
 
 GIT
-  remote: git://github.com/mitchellh/vagrant-spec.git
+  remote: https://github.com/mitchellh/vagrant-spec.git
   revision: 4c1bad4b06085c7f1296f8ea66d803a3717ddb00
   specs:
     vagrant-spec (0.0.1)
@@ -21,7 +21,7 @@ GIT
       thor (~> 0.18.1)
 
 GIT
-  remote: git://github.com/mitchellh/vagrant.git
+  remote: https://github.com/mitchellh/vagrant.git
   revision: 240523b1aa9f328c09060cff34a211bd3f93f7ca
   specs:
     vagrant (1.5.1.dev)

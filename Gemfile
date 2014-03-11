@@ -7,7 +7,7 @@ if ENV['USER'] != 'vagrant'
 end
 
 group :development do
-  gem 'vagrant', github: 'mitchellh/vagrant'
+  gem 'vagrant', git: 'https://github.com/mitchellh/vagrant.git'
   gem 'guard'
   gem 'guard-rspec'
   gem 'rb-inotify'
@@ -15,15 +15,16 @@ end
 
 group :development, :test do
   gem 'rake'
-  # Update https://github.com/fgrehm/vagrant-lxc/issues/111
+  # TODO: Update https://github.com/fgrehm/vagrant-lxc/issues/111
   gem 'rspec',        '2.99.0.beta2'
   gem 'coveralls',    require: false
-  gem 'vagrant-spec', github: 'mitchellh/vagrant-spec'
+  gem 'vagrant-spec', git: 'https://github.com/mitchellh/vagrant-spec.git'
 end
 
 group :plugins do
   gem 'vagrant-lxc',      path: '.'
-  gem 'vagrant-cachier',  github: 'fgrehm/vagrant-cachier'
-  gem 'vagrant-pristine', github: 'fgrehm/vagrant-pristine'
+  # TODO: Disable these plugins when running acceptance specs
+  gem 'vagrant-cachier',  git: 'https://github.com/fgrehm/vagrant-cachier.git'
+  gem 'vagrant-pristine', git: 'https://github.com/fgrehm/vagrant-pristine.git'
   gem 'vagrant-omnibus'
 end

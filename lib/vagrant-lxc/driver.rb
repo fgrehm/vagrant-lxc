@@ -87,6 +87,7 @@ module Vagrant
 
       def forced_halt
         @logger.info('Shutting down container...')
+        # TODO: Remove `lxc-shutdown` usage, graceful halt is enough
         @cli.transition_to(:stopped) { |c| c.shutdown }
       # REFACTOR: Do not use exception to control the flow
       rescue CLI::TargetStateNotReached, CLI::ShutdownNotSupported
