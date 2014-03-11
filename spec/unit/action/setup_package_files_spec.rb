@@ -5,9 +5,9 @@ require 'vagrant-lxc/action/setup_package_files'
 describe Vagrant::LXC::Action::SetupPackageFiles do
   let(:app)         { double(:app, call: true) }
   let(:env)         { {machine: machine, tmp_path: tmp_path, ui: double(info: true), 'package.rootfs' => rootfs_path} }
-  let(:machine)     { instance_double('Vagrant::Machine', box: box) }
+  let(:machine)     { double(Vagrant::Machine, box: box) }
   let!(:tmp_path)   { Pathname.new(Dir.mktmpdir) }
-  let(:box)         { instance_double('Vagrant::Box', directory: tmp_path.join('box')) }
+  let(:box)         { double(Vagrant::Box, directory: tmp_path.join('box')) }
   let(:rootfs_path) { tmp_path.join('rootfs-amd64.tar.gz') }
 
   subject { described_class.new(app, env) }

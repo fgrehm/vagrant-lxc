@@ -1,15 +1,15 @@
 require 'unit_helper'
 
-require 'vagrant'
 require 'vagrant-lxc/driver'
 require 'vagrant-lxc/driver/cli'
+require 'vagrant-lxc/sudo_wrapper'
 
 describe Vagrant::LXC::Driver do
   describe 'container name validation' do
     let(:unknown_container) { described_class.new('unknown', nil, cli) }
     let(:valid_container)   { described_class.new('valid', nil, cli) }
     let(:new_container)     { described_class.new(nil, nil) }
-    let(:cli)               { instance_double('Vagrant::LXC::Driver::CLI', list: ['valid']) }
+    let(:cli)               { double(Vagrant::LXC::Driver::CLI, list: ['valid']) }
 
     it 'raises a ContainerNotFound error if an unknown container name gets provided' do
       expect {
@@ -37,7 +37,7 @@ describe Vagrant::LXC::Driver do
     let(:template_opts)  { {'--some' => 'random-option'} }
     let(:config_file)    { '/path/to/lxc-config-from-box' }
     let(:rootfs_tarball) { '/path/to/cache/rootfs.tar.gz' }
-    let(:cli)            { instance_double('Vagrant::LXC::Driver::CLI', :create => true, :name= => true) }
+    let(:cli)            { double(Vagrant::LXC::Driver::CLI, :create => true, :name= => true) }
 
     subject { described_class.new(nil, nil, cli) }
 
@@ -60,7 +60,7 @@ describe Vagrant::LXC::Driver do
   end
 
   describe 'destruction' do
-    let(:cli) { instance_double('Vagrant::LXC::Driver::CLI', destroy: true) }
+    let(:cli) { double(Vagrant::LXC::Driver::CLI, destroy: true) }
 
     subject { described_class.new('name', nil, cli) }
 
@@ -74,8 +74,8 @@ describe Vagrant::LXC::Driver do
   describe 'start' do
     let(:customizations)         { [['a', '1'], ['b', '2']] }
     let(:internal_customization) { ['internal', 'customization'] }
-    let(:cli)                    { instance_double('Vagrant::LXC::Driver::CLI', start: true) }
-    let(:sudo)                   { instance_double('Vagrant::LXC::SudoWrapper', su_c: true) }
+    let(:cli)                    { double(Vagrant::LXC::Driver::CLI, start: true) }
+    let(:sudo)                   { double(Vagrant::LXC::SudoWrapper, su_c: true) }
 
     subject { described_class.new('name', sudo, cli) }
 
@@ -94,7 +94,7 @@ describe Vagrant::LXC::Driver do
   end
 
   describe 'halt' do
-    let(:cli) { instance_double('Vagrant::LXC::Driver::CLI', shutdown: true) }
+    let(:cli) { double(Vagrant::LXC::Driver::CLI, shutdown: true) }
 
     subject { described_class.new('name', nil, cli) }
 
@@ -129,7 +129,7 @@ describe Vagrant::LXC::Driver do
 
   describe 'state' do
     let(:cli_state) { :something }
-    let(:cli)       { instance_double('Vagrant::LXC::Driver::CLI', state: cli_state) }
+    let(:cli)       { double(Vagrant::LXC::Driver::CLI, state: cli_state) }
 
     subject { described_class.new('name', nil, cli) }
 
@@ -143,7 +143,7 @@ describe Vagrant::LXC::Driver do
     let(:folders)             { [shared_folder] }
     let(:rootfs_path)         { Pathname('/path/to/rootfs') }
     let(:expected_guest_path) { "#{rootfs_path}/vagrant" }
-    let(:sudo_wrapper)        { instance_double('Vagrant::LXC::SudoWrapper', run: true) }
+    let(:sudo_wrapper)        { double(Vagrant::LXC::SudoWrapper, run: true) }
 
     subject { described_class.new('name', sudo_wrapper) }
 

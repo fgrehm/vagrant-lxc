@@ -10,21 +10,9 @@ require 'bundler/setup'
 
 require 'i18n'
 
-require 'rspec-spies'
+require 'vagrant-lxc/plugin'
 
 Dir[File.dirname(__FILE__) + "/support/**/*.rb"].each { |f| require f }
-
-# If we should verify constant names, eager loads
-if ENV['VERIFY_CONSTANT_NAMES']
-  require 'vagrant-lxc/plugin'
-  require 'vagrant-lxc/provider'
-  require 'vagrant-lxc/config'
-end
-
-require 'rspec/fire'
-RSpec::Fire.configure do |config|
-  config.verify_constant_names = ENV['VERIFY_CONSTANT_NAMES'] == '1'
-end
 
 RSpec.configure do |config|
   config.treat_symbols_as_metadata_keys_with_true_values = true

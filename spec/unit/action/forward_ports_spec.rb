@@ -1,7 +1,7 @@
 require 'unit_helper'
 
 require 'tmpdir'
-require 'vagrant-lxc/errors'
+require 'vagrant-lxc/provider'
 require 'vagrant-lxc/action/forward_ports'
 
 describe Vagrant::LXC::Action::ForwardPorts do
@@ -9,7 +9,7 @@ describe Vagrant::LXC::Action::ForwardPorts do
   let(:env)          { {machine: machine, ui: double(info: true)} }
   let(:machine)      { double(:machine) }
   let!(:data_dir)    { Pathname.new(Dir.mktmpdir) }
-  let(:provider)     { instance_double('Vagrant::LXC::Provider', ssh_info: {host: container_ip}) }
+  let(:provider)     { double(Vagrant::LXC::Provider, ssh_info: {host: container_ip}) }
   let(:host_ip)      { '127.0.0.1' }
   let(:host_port)    { 8080 }
   let(:guest_port)   { 80 }
