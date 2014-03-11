@@ -14,7 +14,7 @@ log 'Sleeping for 5 seconds...'
 sleep 5
 
 # TODO: Support for appending to this list from outside
-PACKAGES=(vim curl wget man-db bash-completion python-software-properties ca-certificates sudo)
+PACKAGES=(vim curl wget man-db bash-completion python-software-properties ca-certificates sudo nfs-common)
 if [ $DISTRIBUTION = 'ubuntu' ]; then
   PACKAGES+=' software-properties-common'
 fi
