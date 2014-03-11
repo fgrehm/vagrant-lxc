@@ -23,6 +23,9 @@ require 'vagrant-lxc/action/warn_networks'
 unless Vagrant::Backports.vagrant_1_3_or_later?
   require 'vagrant-backports/action/wait_for_communicator'
 end
+unless Vagrant::Backports.vagrant_1_5_or_later?
+  require 'vagrant-backports/action/handle_box'
+end
 
 module Vagrant
   module LXC
@@ -108,7 +111,7 @@ module Vagrant
           b.use Builtin::Call, Created do |env, b2|
             # If the VM is NOT created yet, then do the setup steps
             if !env[:result]
-              b2.use Builtin::HandleBoxUrl
+              b2.use Builtin::HandleBox
               b2.use HandleBoxMetadata
               b2.use Create
             end
