@@ -1,26 +1,40 @@
 GIT
   remote: git://github.com/fgrehm/vagrant-cachier.git
-  revision: 2faa6615466f8d518893f5ba51b493b877d2efde
+  revision: 2df1e319408a7e6f1c6e75d48e36591199e98527
   specs:
     vagrant-cachier (0.6.1.dev)
 
 GIT
   remote: git://github.com/fgrehm/vagrant-pristine.git
-  revision: 4638491786943bfbf6f115b1fc379f069963fe46
+  revision: 503dbc47848c81d0fbfa6840491856f518d244a1
   specs:
     vagrant-pristine (0.3.0)
 
 GIT
-  remote: git://github.com/mitchellh/vagrant.git
-  revision: a92e03cf4ce936243d3959b7b5603262a234a58d
+  remote: git://github.com/mitchellh/vagrant-spec.git
+  revision: 4c1bad4b06085c7f1296f8ea66d803a3717ddb00
   specs:
-    vagrant (1.3.6.dev)
-      childprocess (~> 0.3.7)
+    vagrant-spec (0.0.1)
+      childprocess (~> 0.5.0)
+      log4r (~> 1.1.9)
+      rspec (~> 2.14)
+      thor (~> 0.18.1)
+
+GIT
+  remote: git://github.com/mitchellh/vagrant.git
+  revision: 240523b1aa9f328c09060cff34a211bd3f93f7ca
+  specs:
+    vagrant (1.5.1.dev)
+      bundler (~> 1.5.2)
+      childprocess (~> 0.5.0)
       erubis (~> 2.7.0)
       i18n (~> 0.6.0)
-      log4r (~> 1.1.9)
+      listen (~> 2.4.0)
+      log4r (~> 1.1.9, < 1.1.11)
       net-scp (~> 1.1.0)
-      net-ssh (~> 2.6.6)
+      net-ssh (>= 2.6.6, < 2.8.0)
+      rb-kqueue (~> 0.2.0)
+      wdm (~> 0.1.0)
 
 PATH
   remote: .
@@ -32,9 +46,9 @@ GEM
   specs:
     celluloid (0.15.2)
       timers (~> 1.1.0)
-    childprocess (0.3.9)
+    childprocess (0.5.1)
       ffi (~> 1.0, >= 1.0.11)
-    coderay (1.0.9)
+    coderay (1.1.0)
     coveralls (0.7.0)
       multi_json (~> 1.3)
       rest-client
@@ -42,64 +56,65 @@ GEM
       term-ansicolor
       thor
     diff-lcs (1.2.5)
+    docile (1.1.3)
     erubis (2.7.0)
     ffi (1.9.3)
     formatador (0.2.4)
-    guard (2.2.3)
+    guard (2.4.0)
       formatador (>= 0.2.4)
       listen (~> 2.1)
       lumberjack (~> 1.0)
       pry (>= 0.9.12)
       thor (>= 0.18.1)
-    guard-rspec (3.1.0)
-      guard (>= 1.8)
-      rspec (~> 2.13)
-    i18n (0.6.5)
-    listen (2.2.0)
+    guard-rspec (4.2.8)
+      guard (~> 2.1)
+      rspec (>= 2.14, < 4.0)
+    i18n (0.6.9)
+    listen (2.4.1)
       celluloid (>= 0.15.2)
       rb-fsevent (>= 0.9.3)
       rb-inotify (>= 0.9)
     log4r (1.1.10)
     lumberjack (1.0.4)
     method_source (0.8.2)
-    mime-types (2.0)
-    multi_json (1.8.2)
+    mime-types (2.1)
+    multi_json (1.9.0)
     net-scp (1.1.2)
       net-ssh (>= 2.6.5)
-    net-ssh (2.6.8)
-    pry (0.9.12.2)
-      coderay (~> 1.0.5)
+    net-ssh (2.7.0)
+    pry (0.9.12.6)
+      coderay (~> 1.0)
       method_source (~> 0.8)
       slop (~> 3.4)
-    rake (10.1.0)
-    rb-fsevent (0.9.3)
-    rb-inotify (0.9.2)
+    rake (10.1.1)
+    rb-fsevent (0.9.4)
+    rb-inotify (0.9.3)
+      ffi (>= 0.5.0)
+    rb-kqueue (0.2.2)
       ffi (>= 0.5.0)
     rest-client (1.6.7)
       mime-types (>= 1.16)
-    rspec (2.13.0)
-      rspec-core (~> 2.13.0)
-      rspec-expectations (~> 2.13.0)
-      rspec-mocks (~> 2.13.0)
-    rspec-core (2.13.1)
-    rspec-expectations (2.13.0)
+    rspec (2.99.0.beta2)
+      rspec-core (= 2.99.0.beta2)
+      rspec-expectations (= 2.99.0.beta2)
+      rspec-mocks (= 2.99.0.beta2)
+    rspec-core (2.99.0.beta2)
+    rspec-expectations (2.99.0.beta2)
       diff-lcs (>= 1.1.3, < 2.0)
-    rspec-fire (1.3.0)
-      rspec (>= 2.11, < 4)
-    rspec-mocks (2.13.1)
-    rspec-spies (2.1.4)
-      rspec (~> 2.0)
-    simplecov (0.7.1)
-      multi_json (~> 1.0)
-      simplecov-html (~> 0.7.1)
-    simplecov-html (0.7.1)
-    slop (3.4.6)
-    term-ansicolor (1.2.2)
-      tins (~> 0.8)
+    rspec-mocks (2.99.0.beta2)
+    simplecov (0.8.2)
+      docile (~> 1.1.0)
+      multi_json
+      simplecov-html (~> 0.8.0)
+    simplecov-html (0.8.0)
+    slop (3.4.7)
+    term-ansicolor (1.3.0)
+      tins (~> 1.0)
     thor (0.18.1)
     timers (1.1.0)
-    tins (0.13.0)
-    vagrant-omnibus (1.1.2)
+    tins (1.0.0)
+    vagrant-omnibus (1.3.0)
+    wdm (0.1.0)
 
 PLATFORMS
   ruby
@@ -110,11 +125,10 @@ DEPENDENCIES
   guard-rspec
   rake
   rb-inotify
-  rspec (~> 2.13.0)
-  rspec-fire
-  rspec-spies
+  rspec (= 2.99.0.beta2)
   vagrant!
   vagrant-cachier!
   vagrant-lxc!
   vagrant-omnibus
   vagrant-pristine!
+  vagrant-spec!

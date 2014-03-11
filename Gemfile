@@ -4,6 +4,7 @@ gemspec
 
 group :development do
   gem 'vagrant',          github: 'mitchellh/vagrant'
+  gem 'vagrant-spec',     github: 'mitchellh/vagrant-spec'
   gem 'vagrant-cachier',  github: 'fgrehm/vagrant-cachier'
   gem 'vagrant-pristine', github: 'fgrehm/vagrant-pristine'
   gem 'vagrant-omnibus'
@@ -15,10 +16,7 @@ end
 
 group :development, :test do
   gem 'rake'
-  # Update https://github.com/fgrehm/vagrant-lxc/issues/111 once we are able to
-  # upgrade to a newer release
-  gem 'rspec',       '~> 2.13.0'
-  gem 'rspec-fire',  require: 'rspec/fire'
-  gem 'rspec-spies', require: false
+  # Update https://github.com/fgrehm/vagrant-lxc/issues/111
+  gem 'rspec',       '2.99.0.beta2'
   gem 'coveralls',   require: false
 end
