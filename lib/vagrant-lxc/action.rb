@@ -20,9 +20,8 @@ require 'vagrant-lxc/action/setup_package_files'
 require 'vagrant-lxc/action/share_folders'
 require 'vagrant-lxc/action/warn_networks'
 
-unless Vagrant::LXC.vagrant_1_3_or_later
-  require 'vagrant-lxc/action/wait_for_communicator'
-  Vagrant::Action::Builtin.const_set :WaitForCommunicator, Vagrant::LXC::Action::WaitForCommunicator
+unless Vagrant::Backports.vagrant_1_3_or_later?
+  require 'vagrant-backports/action/wait_for_communicator'
 end
 
 module Vagrant
@@ -157,7 +156,7 @@ module Vagrant
                 b3.use Builtin::EnvSet, :force_halt => true
                 b3.use action_halt
                 b3.use Destroy
-                if Vagrant::LXC.vagrant_1_3_or_later
+                if Vagrant::Backports.vagrant_1_3_or_later?
                   b3.use Builtin::ProvisionerCleanup
                 end
               else

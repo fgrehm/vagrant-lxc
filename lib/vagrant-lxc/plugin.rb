@@ -1,4 +1,5 @@
-require "vagrant"
+require 'vagrant'
+require 'vagrant-backports/utils'
 
 module Vagrant
   module LXC
@@ -22,10 +23,6 @@ module Vagrant
         require File.expand_path("../config", __FILE__)
         Config
       end
-    end
-
-    def self.vagrant_1_3_or_later
-      Gem::Version.new(Vagrant::VERSION) >= Gem::Version.new('1.3.0')
     end
   end
 end
