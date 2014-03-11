@@ -106,22 +106,19 @@ fi
 # Unpack the rootfs
 echo "Unpacking the rootfs"
 
-
 (
     flock -x 200
     if [ $? -ne 0 ]; then
         echo "Cache repository is busy."
-        return 1
+        exit 1
     fi
 
     mkdir -p ${LXC_ROOTFS}
     (cd ${LXC_ROOTFS} && tar xfz ${LXC_TARBALL} --strip-components=2)
     if [ $? -ne 0 ]; then
         echo "Failed to extract rootfs"
-        return 1
+        exit 1
     fi
-
-    return 0
 
 ) 200>/var/lock/subsys/lxc
 
