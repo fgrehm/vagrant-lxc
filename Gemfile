@@ -2,6 +2,10 @@ source 'https://rubygems.org'
 
 gemspec
 
+if ENV['USER'] != 'vagrant'
+  raise 'vagrant 1.5 is enabled but it has not been fully tested, make sure you run it from within another VM!'
+end
+
 group :development do
   gem 'vagrant', github: 'mitchellh/vagrant'
   gem 'guard'
