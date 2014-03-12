@@ -23,6 +23,13 @@ module Vagrant
         require File.expand_path("../config", __FILE__)
         Config
       end
+
+      if Vagrant::Backports.vagrant_1_4_or_later?
+        synced_folder(:lxc) do
+          require File.expand_path("../synced_folder", __FILE__)
+          SyncedFolder
+        end
+      end
     end
   end
 end
