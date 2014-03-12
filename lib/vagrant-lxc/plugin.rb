@@ -30,6 +30,13 @@ module Vagrant
           SyncedFolder
         end
       end
+
+      if Vagrant::Backports.vagrant_1_5_or_later?
+        provider_capability("lxc", "public_address") do
+          require_relative "provider/cap/public_address"
+          Provider::Cap::PublicAddress
+        end
+      end
     end
   end
 end
