@@ -15,9 +15,10 @@ require 'vagrant-lxc/action/forward_ports'
 require 'vagrant-lxc/action/handle_box_metadata'
 require 'vagrant-lxc/action/is_running'
 require 'vagrant-lxc/action/message'
+require 'vagrant-lxc/action/prepare_nfs_settings'
+require 'vagrant-lxc/action/prepare_nfs_valid_ids'
 require 'vagrant-lxc/action/remove_temporary_files'
 require 'vagrant-lxc/action/setup_package_files'
-require 'vagrant-lxc/action/share_folders'
 require 'vagrant-lxc/action/warn_networks'
 
 unless Vagrant::Backports.vagrant_1_3_or_later?
@@ -59,7 +60,15 @@ module Vagrant
           b.use Builtin::Provision
           b.use Builtin::EnvSet, :port_collision_repair => true
           b.use Builtin::HandleForwardedPortCollisions
-          b.use ShareFolders
+          if Vagrant::Backports.vagrant_1_4_or_later?
+            b.use PrepareNFSValidIds
+            b.use Builtin::SyncedFolderCleanup
+            b.use Builtin::SyncedFolders
+            b.use PrepareNFSSettings
+          else
+            require 'vagrant-lxc/action/share_folders'
+            b.use ShareFolders
+          end
           b.use Builtin::SetHostname
           b.use WarnNetworks
           b.use ForwardPorts

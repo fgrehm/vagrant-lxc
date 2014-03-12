@@ -31,6 +31,10 @@ module Vagrant
         raise ContainerNotFound if @container_name && ! @cli.list.include?(@container_name)
       end
 
+      def all_containers
+        @cli.list
+      end
+
       def base_path
         Pathname.new("#{CONTAINERS_PATH}/#{@container_name}")
       end
@@ -68,8 +72,12 @@ module Vagrant
             end
           end
 
-          @customizations << ['mount.entry', "#{folder[:hostpath]} #{guestpath} none bind 0 0"]
+          share_folder(folder[:hostpath], guestpath)
         end
+      end
+
+      def share_folder(host_path, guest_path)
+        @customizations << ['mount.entry', "#{host_path} #{guest_path} none bind 0 0"]
       end
 
       def start(customizations)
