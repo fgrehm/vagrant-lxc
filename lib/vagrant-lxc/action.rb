@@ -66,7 +66,7 @@ module Vagrant
             b.use Builtin::SyncedFolders
             b.use PrepareNFSSettings
           else
-            require 'vagrant-lxc/action/share_folders'
+            require 'vagrant-lxc/backports/action/share_folders'
             b.use ShareFolders
           end
           b.use Builtin::SetHostname
