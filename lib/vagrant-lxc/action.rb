@@ -26,6 +26,7 @@ unless Vagrant::Backports.vagrant_1_5_or_later?
   require 'vagrant-backports/ui'
   require 'vagrant-backports/action/handle_box'
   require 'vagrant-backports/action/message'
+  require 'vagrant-backports/action/is_state'
 end
 
 module Vagrant
