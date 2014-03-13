@@ -11,7 +11,6 @@ end
 
 group :development, :test do
   gem 'rake'
-  # TODO: Update https://github.com/fgrehm/vagrant-lxc/issues/111
   gem 'rspec',        '2.99.0.beta2'
   gem 'coveralls',    require: (ENV['COVERAGE'] == 'true')
   gem 'vagrant-spec', git: 'https://github.com/mitchellh/vagrant-spec.git'
