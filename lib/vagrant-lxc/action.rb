@@ -25,6 +25,7 @@ unless Vagrant::Backports.vagrant_1_3_or_later?
   require 'vagrant-backports/action/wait_for_communicator'
 end
 unless Vagrant::Backports.vagrant_1_5_or_later?
+  require 'vagrant-backports/ui'
   require 'vagrant-backports/action/handle_box'
 end
 
