@@ -1,2 +1,1 @@
-# TODO: Implement this for vagrant < 1.5
-raise 'Action::HandleBox has not been backported yet!'
+Vagrant::Action::Builtin.const_set :HandleBox, Vagrant::Action::Builtin::HandleBoxUrl
