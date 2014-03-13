@@ -52,5 +52,5 @@ on knowing what makes a base box for vagrant-lxc, here's what's needed:
 | ---             | ---       | ---         |
 | `provider`      | Yes       | Required by Vagrant |
 | `version`       | Yes       | Tracks backward incompatibilities |
-| `built-on`      | No        | Date / time when the box was packaged |
+| `built-on`      | No        | Date / time when the box was packaged for the first time |
 | `template-opts` | No        | Extra options to be passed to the `lxc-template` script provided with the .box package |
