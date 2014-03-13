@@ -6,7 +6,6 @@ require 'vagrant-lxc/action/create'
 require 'vagrant-lxc/action/created'
 require 'vagrant-lxc/action/destroy'
 require 'vagrant-lxc/action/destroy_confirm'
-require 'vagrant-lxc/action/disconnect'
 require 'vagrant-lxc/action/compress_rootfs'
 require 'vagrant-lxc/action/fetch_ip_with_lxc_attach'
 require 'vagrant-lxc/action/fetch_ip_from_dnsmasq_leases'
@@ -136,8 +135,6 @@ module Vagrant
         Builder.new.tap do |b|
           b.use Builtin::Call, Created do |env, b2|
             if env[:result]
-              # TODO: Remove once we drop support for vagrant 1.1
-              b2.use Disconnect
               b2.use ClearForwardedPorts
               b2.use RemoveTemporaryFiles
               b2.use Builtin::Call, Builtin::GracefulHalt, :stopped, :running do |env2, b3|
