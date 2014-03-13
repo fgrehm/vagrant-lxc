@@ -10,7 +10,9 @@ module Vagrant
       LXC-based virtual machines.
       EOF
 
-      provider(:lxc, parallel: true) do
+      extra = []
+      extra << {parallel: true} if Vagrant::Backports.vagrant_1_2_or_later?
+      provider(:lxc, *extra) do
         require File.expand_path("../provider", __FILE__)
 
         I18n.load_path << File.expand_path(File.dirname(__FILE__) + '/../../locales/en.yml')
