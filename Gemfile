@@ -23,8 +23,9 @@ end
 
 group :plugins do
   gem 'vagrant-lxc',      path: '.'
-  # TODO: Disable these plugins when running acceptance specs
-  gem 'vagrant-cachier',  git: 'https://github.com/fgrehm/vagrant-cachier.git'
-  gem 'vagrant-pristine', git: 'https://github.com/fgrehm/vagrant-pristine.git'
-  gem 'vagrant-omnibus'
+  if ENV['ACCEPTANCE'] != 'true'
+    gem 'vagrant-cachier',  git: 'https://github.com/fgrehm/vagrant-cachier.git'
+    gem 'vagrant-pristine', git: 'https://github.com/fgrehm/vagrant-pristine.git'
+    gem 'vagrant-omnibus'
+  end
 end

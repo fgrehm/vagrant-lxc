@@ -3,7 +3,7 @@ begin
   require 'coveralls/rake/task'
 
   desc 'Run all specs'
-  task :spec => ['spec:unit', 'spec:acceptance']
+  task :spec => ['spec:set_coverage', 'spec:unit', 'spec:acceptance']
 
   desc 'Default task which runs all specs with code coverage enabled'
   task :default => ['spec:set_coverage', 'spec:unit']
@@ -17,17 +17,24 @@ namespace :spec do
     ENV['COVERAGE'] = 'true'
   end
 
-  def types
-    dirs = Dir['./spec/**/*_spec.rb'].map { |f| f.sub(/^\.\/(spec\/\w+)\/.*/, '\\1') }.uniq
-    Hash[dirs.map { |d| [d.split('/').last, d] }]
+  desc 'Run acceptance specs using vagrant-spec'
+  task :acceptance do
+    components = %w(
+      basic
+      network/forwarded_port
+      synced_folder
+      synced_folder/nfs
+      synced_folder/rsync
+      provisioner/shell
+      provisioner/puppet
+      provisioner/chef-solo
+      package
+    ).map{|s| "provider/lxc/#{s}" }
+    sh "export ACCEPTANCE=true && bundle exec vagrant-spec test --components=#{components.join(' ')}"
   end
-  types.each do |type, dir|
-    desc "Run the code examples in #{dir}"
-    RSpec::Core::RakeTask.new(type) do |t|
-      # Tells rspec-fire to verify if constants used really exist
-      ENV['VERIFY_CONSTANT_NAMES'] = '1'
 
-      t.pattern = "./#{dir}/**/*_spec.rb"
-    end
+  desc "Run unit specs with rspec"
+  RSpec::Core::RakeTask.new(:unit) do |t|
+    t.pattern = "./unit/**/*_spec.rb"
   end
 end
