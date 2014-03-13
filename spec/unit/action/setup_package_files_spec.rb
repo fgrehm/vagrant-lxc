@@ -60,4 +60,14 @@ describe Vagrant::LXC::Action::SetupPackageFiles do
       expect { subject.call(env) }.to_not raise_error
     end
   end
+
+  context 'when lxc-config file is not present' do
+    before do
+      box.directory.join('lxc-config').delete
+    end
+
+    it 'does not blow up' do
+      expect { subject.call(env) }.to_not raise_error
+    end
+  end
 end
