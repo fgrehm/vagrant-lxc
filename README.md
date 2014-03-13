@@ -13,6 +13,13 @@ to see it in action.
 latest stable version of the plugin, please check the [0.8-stable](https://github.com/fgrehm/vagrant-lxc/tree/0.8-stable)
 branch.
 
+## Usage with Vagrant 1.5
+
+Usage with the recently released Vagrant 1.5 is only possible by [building the
+plugin from sources](https://github.com/fgrehm/vagrant-lxc/wiki/Development#wiki-installing-the-plugin-from-source).
+The 1.0.0.beta1 version of the plugin that will ship with the changes required
+is expected to be released by the end of March 2014.
+
 
 ## Features
 
