@@ -17,15 +17,14 @@ group :development, :test do
   gem 'rake'
   # TODO: Update https://github.com/fgrehm/vagrant-lxc/issues/111
   gem 'rspec',        '2.99.0.beta2'
-  gem 'coveralls',    require: false
+  gem 'coveralls',    require: (ENV['COVERAGE'] == 'true')
   gem 'vagrant-spec', git: 'https://github.com/mitchellh/vagrant-spec.git'
 end
 
 group :plugins do
   gem 'vagrant-lxc',      path: '.'
-  if ENV['ACCEPTANCE'] != 'true'
-    gem 'vagrant-cachier',  git: 'https://github.com/fgrehm/vagrant-cachier.git'
-    gem 'vagrant-pristine', git: 'https://github.com/fgrehm/vagrant-pristine.git'
-    gem 'vagrant-omnibus'
-  end
+  acceptance = (ENV['ACCEPTANCE'] == 'true')
+  gem 'vagrant-cachier',  git: 'https://github.com/fgrehm/vagrant-cachier.git',  require: !acceptance
+  gem 'vagrant-pristine', git: 'https://github.com/fgrehm/vagrant-pristine.git', require: !acceptance
+  gem 'vagrant-omnibus',  require: !acceptance
 end
