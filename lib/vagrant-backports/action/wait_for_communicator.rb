@@ -1,12 +1,11 @@
-# This acts like a backport of Vagrant's built in action from 1.3+ for older versions
-# and will probably be deprecated on 0.8+
+# This acts like a backport of Vagrant's built in action from 1.3+ for previous version
 #   https://github.com/mitchellh/vagrant/blob/master/lib/vagrant/action/builtin/wait_for_communicator.rb
 module Vagrant
-  module LXC
+  module Backports
     module Action
       class WaitForCommunicator
         def initialize(app, env)
-          @app    = app
+          @app = app
         end
 
         def call(env)
@@ -21,7 +20,7 @@ module Vagrant
           max_tries = @env[:machine].config.ssh.max_tries.to_i
           max_tries.times do |i|
             if @env[:machine].communicate.ready?
-              @env[:ui].info I18n.t("vagrant_lxc.messages.container_ready")
+              @env[:ui].info 'Machine booted and ready!'
               return true
             end
 
@@ -39,3 +38,5 @@ module Vagrant
     end
   end
 end
+
+Vagrant::Action::Builtin.const_set :WaitForCommunicator, Vagrant::Backports::Action::WaitForCommunicator

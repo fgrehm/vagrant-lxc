@@ -5,16 +5,16 @@ require 'vagrant-lxc/action/setup_package_files'
 describe Vagrant::LXC::Action::SetupPackageFiles do
   let(:app)         { double(:app, call: true) }
   let(:env)         { {machine: machine, tmp_path: tmp_path, ui: double(info: true), 'package.rootfs' => rootfs_path} }
-  let(:machine)     { instance_double('Vagrant::Machine', box: box) }
+  let(:machine)     { double(Vagrant::Machine, box: box) }
   let!(:tmp_path)   { Pathname.new(Dir.mktmpdir) }
-  let(:box)         { instance_double('Vagrant::Box', directory: tmp_path.join('box')) }
+  let(:box)         { double(Vagrant::Box, directory: tmp_path.join('box')) }
   let(:rootfs_path) { tmp_path.join('rootfs-amd64.tar.gz') }
 
   subject { described_class.new(app, env) }
 
   before do
     box.directory.mkdir
-    files = %w( lxc-template metadata.json lxc.conf ).map { |f| box.directory.join(f) }
+    files = %w( lxc-template metadata.json lxc.conf lxc-config ).map { |f| box.directory.join(f) }
     (files + [rootfs_path]).each do |file|
       file.open('w') { |f| f.puts file.to_s }
     end
@@ -41,6 +41,10 @@ describe Vagrant::LXC::Action::SetupPackageFiles do
       env['package.directory'].join('lxc-template').should be_file
     end
 
+    it 'copies box lxc-config to package directory' do
+      env['package.directory'].join('lxc-config').should be_file
+    end
+
     it 'moves the compressed rootfs to package directory' do
       env['package.directory'].join(rootfs_path.basename).should be_file
       env['package.rootfs'].should_not be_file
@@ -50,6 +54,16 @@ describe Vagrant::LXC::Action::SetupPackageFiles do
   context 'when lxc.conf file is not present' do
     before do
       box.directory.join('lxc.conf').delete
+    end
+
+    it 'does not blow up' do
+      expect { subject.call(env) }.to_not raise_error
+    end
+  end
+
+  context 'when lxc-config file is not present' do
+    before do
+      box.directory.join('lxc-config').delete
     end
 
     it 'does not blow up' do

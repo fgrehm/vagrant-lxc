@@ -9,14 +9,18 @@ as an alternative to the built in VirtualBox provider for Linux hosts. Check out
 [this blog post](http://fabiorehm.com/blog/2013/04/28/lxc-provider-for-vagrant/)
 to see it in action.
 
+**NOTICE:** The master branch is targetting an initial beta for 1.0.0, for the
+latest stable version of the plugin, please check the [0.8-stable](https://github.com/fgrehm/vagrant-lxc/tree/0.8-stable)
+branch.
 
-## Features / Limitations
+
+## Features
 
 * Provides the same workflow as the Vagrant VirtualBox provider
 * Port forwarding via [`redir`](http://linux.die.net/man/1/redir)
-* Does not support public / private networks
-* Assumes you have a `lxcbr0` bridge configured on your host similar to [Ubuntu's built-in](https://help.ubuntu.com/lts/serverguide/lxc.html#lxcbr0)
 
+As of now, it does not support public / private networks, but [private networks](https://github.com/fgrehm/vagrant-lxc/issues/120)
+will be coming along _soon_.
 
 ## Requirements
 

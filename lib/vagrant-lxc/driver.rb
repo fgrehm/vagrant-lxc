@@ -31,6 +31,10 @@ module Vagrant
         raise ContainerNotFound if @container_name && ! @cli.list.include?(@container_name)
       end
 
+      def all_containers
+        @cli.list
+      end
+
       def base_path
         Pathname.new("#{CONTAINERS_PATH}/#{@container_name}")
       end
@@ -58,18 +62,22 @@ module Vagrant
 
       def share_folders(folders)
         folders.each do |folder|
-          guestpath = rootfs_path.join(folder[:guestpath].gsub(/^\//, ''))
-          unless guestpath.directory?
-            begin
-              @logger.debug("Guest path doesn't exist, creating: #{guestpath}")
-              @sudo_wrapper.run('mkdir', '-p', guestpath.to_s)
-            rescue Errno::EACCES
-              raise Vagrant::Errors::SharedFolderCreateFailed, :path => guestpath.to_s
-            end
-          end
-
-          @customizations << ['mount.entry', "#{folder[:hostpath]} #{guestpath} none bind 0 0"]
+          share_folder(folder[:hostpath], folder[:guestpath])
         end
+      end
+
+      def share_folder(host_path, guest_path)
+        guest_path = rootfs_path.join(guest_path.gsub(/^\//, ''))
+        unless guest_path.directory?
+          begin
+            @logger.debug("Guest path doesn't exist, creating: #{guest_path}")
+            @sudo_wrapper.run('mkdir', '-p', guest_path.to_s)
+          rescue Errno::EACCES
+            raise Vagrant::Errors::SharedFolderCreateFailed, :path => guest_path.to_s
+          end
+        end
+
+        @customizations << ['mount.entry', "#{host_path} #{guest_path} none bind 0 0"]
       end
 
       def start(customizations)
@@ -87,6 +95,7 @@ module Vagrant
 
       def forced_halt
         @logger.info('Shutting down container...')
+        # TODO: Remove `lxc-shutdown` usage, graceful halt is enough
         @cli.transition_to(:stopped) { |c| c.shutdown }
       # REFACTOR: Do not use exception to control the flow
       rescue CLI::TargetStateNotReached, CLI::ShutdownNotSupported

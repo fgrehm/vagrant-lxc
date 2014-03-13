@@ -1,28 +1,28 @@
 require 'vagrant-lxc/action/boot'
-require 'vagrant-lxc/action/check_created'
-require 'vagrant-lxc/action/check_running'
 require 'vagrant-lxc/action/clear_forwarded_ports'
 require 'vagrant-lxc/action/create'
-require 'vagrant-lxc/action/created'
 require 'vagrant-lxc/action/destroy'
 require 'vagrant-lxc/action/destroy_confirm'
-require 'vagrant-lxc/action/disconnect'
 require 'vagrant-lxc/action/compress_rootfs'
 require 'vagrant-lxc/action/fetch_ip_with_lxc_attach'
 require 'vagrant-lxc/action/fetch_ip_from_dnsmasq_leases'
 require 'vagrant-lxc/action/forced_halt'
 require 'vagrant-lxc/action/forward_ports'
 require 'vagrant-lxc/action/handle_box_metadata'
-require 'vagrant-lxc/action/is_running'
-require 'vagrant-lxc/action/message'
+require 'vagrant-lxc/action/prepare_nfs_settings'
+require 'vagrant-lxc/action/prepare_nfs_valid_ids'
 require 'vagrant-lxc/action/remove_temporary_files'
 require 'vagrant-lxc/action/setup_package_files'
-require 'vagrant-lxc/action/share_folders'
 require 'vagrant-lxc/action/warn_networks'
 
-unless Vagrant::LXC.vagrant_1_3_or_later
-  require 'vagrant-lxc/action/wait_for_communicator'
-  Vagrant::Action::Builtin.const_set :WaitForCommunicator, Vagrant::LXC::Action::WaitForCommunicator
+unless Vagrant::Backports.vagrant_1_3_or_later?
+  require 'vagrant-backports/action/wait_for_communicator'
+end
+unless Vagrant::Backports.vagrant_1_5_or_later?
+  require 'vagrant-backports/ui'
+  require 'vagrant-backports/action/handle_box'
+  require 'vagrant-backports/action/message'
+  require 'vagrant-backports/action/is_state'
 end
 
 module Vagrant
@@ -37,9 +37,9 @@ module Vagrant
       # machine back up with the new configuration.
       def self.action_reload
         Builder.new.tap do |b|
-          b.use Builtin::Call, Created do |env1, b2|
-            if !env1[:result]
-              b2.use Message, :not_created
+          b.use Builtin::Call, Builtin::IsState, :not_created do |env1, b2|
+            if env1[:result]
+              b2.use Builtin::Message, I18n.t("vagrant_lxc.messages.not_created")
               next
             end
 
@@ -57,7 +57,15 @@ module Vagrant
           b.use Builtin::Provision
           b.use Builtin::EnvSet, :port_collision_repair => true
           b.use Builtin::HandleForwardedPortCollisions
-          b.use ShareFolders
+          if Vagrant::Backports.vagrant_1_4_or_later?
+            b.use PrepareNFSValidIds
+            b.use Builtin::SyncedFolderCleanup
+            b.use Builtin::SyncedFolders
+            b.use PrepareNFSSettings
+          else
+            require 'vagrant-lxc/backports/action/share_folders'
+            b.use ShareFolders
+          end
           b.use Builtin::SetHostname
           b.use WarnNetworks
           b.use ForwardPorts
@@ -70,15 +78,15 @@ module Vagrant
       def self.action_provision
         Builder.new.tap do |b|
           b.use Builtin::ConfigValidate
-          b.use Builtin::Call, Created do |env1, b2|
-            if !env1[:result]
-              b2.use Message, :not_created
+          b.use Builtin::Call, Builtin::IsState, :not_created do |env1, b2|
+            if env1[:result]
+              b2.use Builtin::Message, I18n.t("vagrant_lxc.messages.not_created")
               next
             end
 
-            b2.use Builtin::Call, IsRunning do |env2, b3|
+            b2.use Builtin::Call, Builtin::IsState, :running do |env2, b3|
               if !env2[:result]
-                b3.use Message, :not_running
+                b3.use Builtin::Message, I18n.t("vagrant_lxc.messages.not_running")
                 next
               end
 
@@ -93,7 +101,7 @@ module Vagrant
       def self.action_start
         Builder.new.tap do |b|
           b.use Builtin::ConfigValidate
-          b.use Builtin::Call, IsRunning do |env, b2|
+          b.use Builtin::Call, Builtin::IsState, :running do |env, b2|
             # If the VM is running, then our work here is done, exit
             next if env[:result]
             b2.use action_boot
@@ -106,10 +114,10 @@ module Vagrant
       def self.action_up
         Builder.new.tap do |b|
           b.use Builtin::ConfigValidate
-          b.use Builtin::Call, Created do |env, b2|
+          b.use Builtin::Call, Builtin::IsState, :not_created do |env, b2|
             # If the VM is NOT created yet, then do the setup steps
-            if !env[:result]
-              b2.use Builtin::HandleBoxUrl
+            if env[:result]
+              b2.use Builtin::HandleBox
               b2.use HandleBoxMetadata
               b2.use Create
             end
@@ -122,19 +130,18 @@ module Vagrant
       # the virtual machine, gracefully or by force.
       def self.action_halt
         Builder.new.tap do |b|
-          b.use Builtin::Call, Created do |env, b2|
+          b.use Builtin::Call, Builtin::IsState, :not_created do |env, b2|
             if env[:result]
-              # TODO: Remove once we drop support for vagrant 1.1
-              b2.use Disconnect
-              b2.use ClearForwardedPorts
-              b2.use RemoveTemporaryFiles
-              b2.use Builtin::Call, Builtin::GracefulHalt, :stopped, :running do |env2, b3|
-                if !env2[:result]
-                  b3.use ForcedHalt
-                end
+              b2.use Builtin::Message, I18n.t("vagrant_lxc.messages.not_created")
+              next
+            end
+
+            b2.use ClearForwardedPorts
+            b2.use RemoveTemporaryFiles
+            b2.use Builtin::Call, Builtin::GracefulHalt, :stopped, :running do |env2, b3|
+              if !env2[:result]
+                b3.use ForcedHalt
               end
-            else
-              b2.use Message, :not_created
             end
           end
         end
@@ -144,9 +151,9 @@ module Vagrant
       # freeing the resources of the underlying virtual machine.
       def self.action_destroy
         Builder.new.tap do |b|
-          b.use Builtin::Call, Created do |env1, b2|
-            if !env1[:result]
-              b2.use Message, :not_created
+          b.use Builtin::Call, Builtin::IsState, :not_created do |env1, b2|
+            if env1[:result]
+              b2.use Builtin::Message, I18n.t("vagrant_lxc.messages.not_created")
               next
             end
 
@@ -157,11 +164,11 @@ module Vagrant
                 b3.use Builtin::EnvSet, :force_halt => true
                 b3.use action_halt
                 b3.use Destroy
-                if Vagrant::LXC.vagrant_1_3_or_later
+                if Vagrant::Backports.vagrant_1_3_or_later?
                   b3.use Builtin::ProvisionerCleanup
                 end
               else
-                b3.use Message, :will_not_destroy
+                b3.use Builtin::Message, I18n.t("vagrant_lxc.messages.will_not_destroy")
               end
             end
           end
@@ -171,9 +178,9 @@ module Vagrant
       # This action packages the virtual machine into a single box file.
       def self.action_package
         Builder.new.tap do |b|
-          b.use Builtin::Call, Created do |env1, b2|
-            if !env1[:result]
-              b2.use Message, :not_created
+          b.use Builtin::Call, Builtin::IsState, :not_created do |env1, b2|
+            if env1[:result]
+              b2.use Builtin::Message, I18n.t("vagrant_lxc.messages.not_created")
               next
             end
 
@@ -198,18 +205,44 @@ module Vagrant
       # This is the action that will exec into an SSH shell.
       def self.action_ssh
         Builder.new.tap do |b|
-          b.use CheckCreated
-          b.use CheckRunning
-          b.use Builtin::SSHExec
+          b.use Builtin::ConfigValidate
+          b.use Builtin::Call, Builtin::IsState, :not_created do |env, b2|
+            if env[:result]
+              b2.use Builtin::Message, I18n.t("vagrant_lxc.messages.not_created")
+              next
+            end
+
+            b2.use Builtin::Call, Builtin::IsState, :running do |env1, b3|
+              if !env1[:result]
+                b3.use Builtin::Message, I18n.t("vagrant_lxc.messages.not_running")
+                next
+              end
+
+              b3.use BuiltIn::SSHExec
+            end
+          end
         end
       end
 
       # This is the action that will run a single SSH command.
       def self.action_ssh_run
         Builder.new.tap do |b|
-          b.use CheckCreated
-          b.use CheckRunning
-          b.use Builtin::SSHRun
+          b.use Builtin::ConfigValidate
+          b.use Builtin::Call, Builtin::IsState, :not_created do |env, b2|
+            if env[:result]
+              b2.use Builtin::Message, I18n.t("vagrant_lxc.messages.not_created")
+              next
+            end
+
+            b2.use Builtin::Call, Builtin::IsState, :running do |env1, b3|
+              if !env1[:result]
+                b3.use Builtin::Message, I18n.t("vagrant_lxc.messages.not_running")
+                next
+              end
+
+              b3.use Builtin::SSHRun
+            end
+          end
         end
       end
     end

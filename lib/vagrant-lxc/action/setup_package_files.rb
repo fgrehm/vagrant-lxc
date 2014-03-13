@@ -45,8 +45,10 @@ module Vagrant
           box_dir = @env[:machine].box.directory
           FileUtils.cp box_dir.join('lxc-template').to_s, @env['package.directory'].to_s
           FileUtils.cp box_dir.join('metadata.json').to_s, @env['package.directory'].to_s
-          # TODO: Update built-on metadata.json
           if (conf = box_dir.join('lxc.conf')).exist?
+            FileUtils.cp conf.to_s, @env['package.directory'].to_s
+          end
+          if (conf = box_dir.join('lxc-config')).exist?
             FileUtils.cp conf.to_s, @env['package.directory'].to_s
           end
         end
