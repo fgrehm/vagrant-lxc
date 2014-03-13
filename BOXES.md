@@ -14,7 +14,7 @@ For example:
 ```
 git clone https://github.com/fgrehm/vagrant-lxc.git
 cd vagrant-lxc/boxes
-PUPPET=1 CHEF=1 sudo -E ./build-ubuntu-box.sh precise amd64
+PUPPET=1 CHEF=1 make precise
 ```
 
 Will build a Ubuntu Precise x86_64 box with latest Puppet and Chef pre-installed, please refer to the scripts for more information.
@@ -30,15 +30,16 @@ on knowing what makes a base box for vagrant-lxc, here's what's needed:
 | ---             | ---         |
 | `lxc-template`  | Script responsible for creating and setting up the container (used with `lxc-create`), a ["generic script"]() is provided along with project's source. |
 | `rootfs.tar.gz` | Compressed container rootfs tarball (need to remeber to pass in `--numeric-owner` when creating it) |
-| `lxc.conf`      | |
-| `metadata.json` | |
+| `lxc.conf`      | File passed in to `lxc-create -f` |
+| `lxc-config`    | Box specific configuration to be _appended_ to the container's config file |
+| `metadata.json` | Required by Vagrant |
 
 ### metadata.json
 
 ```json
 {
   "provider": "lxc",
-  "version":  "3",
+  "version":  "1.0.0",
   "built-on": "Sat Sep 21 21:10:00 UTC 2013",
   "template-opts": {
     "--arch":    "amd64",
