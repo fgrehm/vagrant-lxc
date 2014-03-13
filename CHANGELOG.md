@@ -10,6 +10,17 @@ DEPRECATIONS:
   - `--auth-key` argument is no longer provided to `lxc-template`. This will cause
     all official base boxes prior to 09/28/2013 to break.
 
+IMPROVEMENTS:
+
+  - Acceptance specs are now powered by `vagrant-spec` [[GH-213]]
+  - Improved compatibility with Vagrant 1.4 [[GH-191]] / 1.5 [[GH-241]] [[GH-242]]
+
+[GH-213]: https://github.com/fgrehm/vagrant-lxc/issues/213
+[GH-191]: https://github.com/fgrehm/vagrant-lxc/issues/191
+[GH-241]: https://github.com/fgrehm/vagrant-lxc/issues/241
+[GH-242]: https://github.com/fgrehm/vagrant-lxc/issues/242
+
+
 BASE BOXES:
 
   - Switched to [`lxc-download`](https://github.com/lxc/lxc/blob/master/templates/lxc-download.in)
