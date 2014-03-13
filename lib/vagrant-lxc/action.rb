@@ -14,7 +14,6 @@ require 'vagrant-lxc/action/forced_halt'
 require 'vagrant-lxc/action/forward_ports'
 require 'vagrant-lxc/action/handle_box_metadata'
 require 'vagrant-lxc/action/is_running'
-require 'vagrant-lxc/action/message'
 require 'vagrant-lxc/action/prepare_nfs_settings'
 require 'vagrant-lxc/action/prepare_nfs_valid_ids'
 require 'vagrant-lxc/action/remove_temporary_files'
@@ -27,6 +26,7 @@ end
 unless Vagrant::Backports.vagrant_1_5_or_later?
   require 'vagrant-backports/ui'
   require 'vagrant-backports/action/handle_box'
+  require 'vagrant-backports/action/message'
 end
 
 module Vagrant
@@ -43,7 +43,7 @@ module Vagrant
         Builder.new.tap do |b|
           b.use Builtin::Call, Created do |env1, b2|
             if !env1[:result]
-              b2.use Message, :not_created
+              b2.use Builtin::Message, I18n.t("vagrant_lxc.messages.not_created")
               next
             end
 
@@ -84,13 +84,13 @@ module Vagrant
           b.use Builtin::ConfigValidate
           b.use Builtin::Call, Created do |env1, b2|
             if !env1[:result]
-              b2.use Message, :not_created
+              b2.use Builtin::Message, I18n.t("vagrant_lxc.messages.not_created")
               next
             end
 
             b2.use Builtin::Call, IsRunning do |env2, b3|
               if !env2[:result]
-                b3.use Message, :not_running
+                b3.use Builtin::Message, I18n.t("vagrant_lxc.messages.not_running")
                 next
               end
 
@@ -146,7 +146,7 @@ module Vagrant
                 end
               end
             else
-              b2.use Message, :not_created
+              b2.use Builtin::Message, I18n.t("vagrant_lxc.messages.not_created")
             end
           end
         end
@@ -158,7 +158,7 @@ module Vagrant
         Builder.new.tap do |b|
           b.use Builtin::Call, Created do |env1, b2|
             if !env1[:result]
-              b2.use Message, :not_created
+              b2.use Builtin::Message, I18n.t("vagrant_lxc.messages.not_created")
               next
             end
 
@@ -173,7 +173,7 @@ module Vagrant
                   b3.use Builtin::ProvisionerCleanup
                 end
               else
-                b3.use Message, :will_not_destroy
+                b3.use Builtin::Message, I18n.t("vagrant_lxc.messages.will_not_destroy")
               end
             end
           end
@@ -185,7 +185,7 @@ module Vagrant
         Builder.new.tap do |b|
           b.use Builtin::Call, Created do |env1, b2|
             if !env1[:result]
-              b2.use Message, :not_created
+              b2.use Builtin::Message, I18n.t("vagrant_lxc.messages.not_created")
               next
             end
 
