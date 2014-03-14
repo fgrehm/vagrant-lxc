@@ -218,7 +218,7 @@ module Vagrant
                 next
               end
 
-              b3.use BuiltIn::SSHExec
+              b3.use Builtin::SSHExec
             end
           end
         end
