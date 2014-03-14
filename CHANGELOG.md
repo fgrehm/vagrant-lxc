@@ -12,12 +12,16 @@ DEPRECATIONS:
 
 IMPROVEMENTS:
 
+  - Set container utsname to configured hostname by default [[GH-253]]
+  - Added libvirt dnsmasq leases file to the lookup paths [[GH-251]]
   - Acceptance specs are now powered by `vagrant-spec` [[GH-213]]
   - Improved compatibility with Vagrant 1.4 / 1.5 including the ability
     to use `rsync` and `nfs` shared folders to work around synced folders
     permission problems. More information can be found on the following
     issues: [[GH-151]] [[GH-191]] [[GH-241]] [[GH-242]]
 
+[GH-251]: https://github.com/fgrehm/vagrant-lxc/pull/251
+[GH-253]: https://github.com/fgrehm/vagrant-lxc/pull/253
 [GH-151]: https://github.com/fgrehm/vagrant-lxc/issues/151
 [GH-213]: https://github.com/fgrehm/vagrant-lxc/issues/213
 [GH-191]: https://github.com/fgrehm/vagrant-lxc/issues/191
