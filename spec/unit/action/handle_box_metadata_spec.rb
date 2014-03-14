@@ -116,11 +116,11 @@ describe Vagrant::LXC::Action::HandleBoxMetadata do
       }.to raise_error(Vagrant::LXC::Errors::RootFSTarballMissing)
     end
 
-    it 'raises an error if the lxc-template script cant be found' do
+    it 'does not raise an error if the lxc-template script cant be found' do
       File.stub(:exists?).with(box_directory.join('lxc-template').to_s).and_return(false)
       expect {
         subject.call(env)
-      }.to raise_error(Vagrant::LXC::Errors::TemplateFileMissing)
+      }.to_not raise_error
     end
   end
 end
