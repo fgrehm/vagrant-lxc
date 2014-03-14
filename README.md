@@ -31,7 +31,7 @@ will be coming along _soon_.
 
 ## Requirements
 
-* [Vagrant 1.1+](http://downloads.vagrantup.com/)
+* [Vagrant 1.1+](http://www.vagrantup.com/downloads.html)
 * lxc 0.7.5+
 * redir (if you are planning to use port forwarding)
 * A [kernel != 3.5.0-17.28](https://github.com/fgrehm/vagrant-lxc/wiki/Troubleshooting#wiki-im-unable-to-restart-containers)

@@ -42,7 +42,12 @@ module Vagrant
         end
 
         def template_src
-          @template_src ||= @box.directory.join('lxc-template').to_s
+          @template_src ||=
+            if (box_template = @box.directory.join('lxc-template')).exist?
+              box_template.to_s
+            else
+              Vagrant::LXC.source_root.join('scripts/lxc-template').to_s
+            end
         end
 
         def template_config_file

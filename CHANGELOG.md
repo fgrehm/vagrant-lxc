@@ -20,7 +20,9 @@ FEATURES:
 
 IMPROVEMENTS:
 
-  - Set container utsname to configured hostname by default [[GH-253]]
+  - `lxc-template` is now optional for base boxes and are bundled with the plugin,
+    allowing us to roll out updates without the need to rebuild boxes [[GH-254]]
+  - Set container's `utsname` to `config.vm.hostname` by default [[GH-253]]
   - Added libvirt dnsmasq leases file to the lookup paths [[GH-251]]
   - Improved compatibility with Vagrant 1.4 / 1.5 including the ability
     to use `rsync` and `nfs` shared folders to work around synced folders
@@ -29,6 +31,7 @@ IMPROVEMENTS:
   - Warn in case `:group` or `:owner` are specified for synced folders [[GH-251]]
   - Acceptance specs are now powered by `vagrant-spec` [[GH-213]]
 
+[GH-254]: https://github.com/fgrehm/vagrant-lxc/issues/254
 [GH-196]: https://github.com/fgrehm/vagrant-lxc/issues/196
 [GH-251]: https://github.com/fgrehm/vagrant-lxc/pull/251
 [GH-253]: https://github.com/fgrehm/vagrant-lxc/pull/253
