@@ -10,6 +10,14 @@ DEPRECATIONS:
   - `--auth-key` argument is no longer provided to `lxc-template`. This will cause
     all official base boxes prior to 09/28/2013 to break.
 
+FEATURES:
+
+  - Support for NFS and rsync synced folders.
+  - Support for synced folder mount options allowing for using read only synced
+    folders [[GH-193]]
+
+[GH-193]: https://github.com/fgrehm/vagrant-lxc/issues/193
+
 IMPROVEMENTS:
 
   - Set container utsname to configured hostname by default [[GH-253]]
