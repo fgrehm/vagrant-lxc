@@ -49,7 +49,7 @@ describe Vagrant::LXC::Action::HandleBoxMetadata do
       env[:lxc_template_opts].should include(metadata['template-opts'])
     end
 
-    it 'sets the template source path on env hash' do
+    xit 'sets the template source path on env hash' do
       env[:lxc_template_src].should == box_directory.join('lxc-template').to_s
     end
 
@@ -87,7 +87,7 @@ describe Vagrant::LXC::Action::HandleBoxMetadata do
       env[:lxc_template_opts].should include(metadata['template-opts'])
     end
 
-    it 'sets the template source path on env hash' do
+    xit 'sets the template source path on env hash' do
       env[:lxc_template_src].should == box_directory.join('lxc-template').to_s
     end
 
