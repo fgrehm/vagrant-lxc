@@ -106,6 +106,7 @@ fi
 # Unpack the rootfs
 echo "Unpacking the rootfs"
 
+mkdir -p /var/lock/subsys
 (
     flock -x 200
     if [ $? -ne 0 ]; then
