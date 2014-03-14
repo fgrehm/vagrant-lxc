@@ -11,8 +11,8 @@ module Vagrant
 
           config = env[:machine].provider_config
 
-          config.customize 'utsname',
-            env[:machine].config.vm.hostname || env[:machine].id
+          utsname = env[:machine].config.vm.hostname || env[:machine].id
+          config.customize 'utsname', utsname
 
           env[:ui].info I18n.t("vagrant_lxc.messages.starting")
           env[:machine].provider.driver.start(config.customizations)
