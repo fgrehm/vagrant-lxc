@@ -28,7 +28,7 @@ IMPROVEMENTS:
     to use `rsync` and `nfs` shared folders to work around synced folders
     permission problems. More information can be found on the following
     issues: [[GH-151]] [[GH-191]] [[GH-241]] [[GH-242]]
-  - Warn in case `:group` or `:owner` are specified for synced folders [[GH-251]]
+  - Warn in case `:group` or `:owner` are specified for synced folders [[GH-196]]
   - Acceptance specs are now powered by `vagrant-spec` [[GH-213]]
 
 [GH-254]: https://github.com/fgrehm/vagrant-lxc/issues/254
