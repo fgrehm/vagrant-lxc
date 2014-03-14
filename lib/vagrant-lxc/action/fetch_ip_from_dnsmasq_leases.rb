@@ -35,6 +35,7 @@ module Vagrant
           /var/lib/misc/dnsmasq.leases
           /var/lib/dnsmasq/dnsmasq.leases
           /var/db/dnsmasq.leases
+          /var/lib/libvirt/dnsmasq/*.leases
         )
 
         def read_dnsmasq_leases
