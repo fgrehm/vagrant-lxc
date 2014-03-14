@@ -13,8 +13,12 @@ DEPRECATIONS:
 IMPROVEMENTS:
 
   - Acceptance specs are now powered by `vagrant-spec` [[GH-213]]
-  - Improved compatibility with Vagrant 1.4 [[GH-191]] / 1.5 [[GH-241]] [[GH-242]]
+  - Improved compatibility with Vagrant 1.4 / 1.5 including the ability
+    to use `rsync` and `nfs` shared folders to work around synced folders
+    permission problems. More information can be found on the following
+    issues: [[GH-151]] [[GH-191]] [[GH-241]] [[GH-242]]
 
+[GH-151]: https://github.com/fgrehm/vagrant-lxc/issues/151
 [GH-213]: https://github.com/fgrehm/vagrant-lxc/issues/213
 [GH-191]: https://github.com/fgrehm/vagrant-lxc/issues/191
 [GH-241]: https://github.com/fgrehm/vagrant-lxc/issues/241
