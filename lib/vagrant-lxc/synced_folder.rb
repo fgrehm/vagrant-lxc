@@ -13,6 +13,9 @@ module Vagrant
           host_path  = Pathname.new(File.expand_path(data[:hostpath], machine.env.root_path))
           guest_path = data[:guestpath]
 
+          env[:ui].warn(I18n.t("vagrant_lxc.messages.warn_owner")) if data[:owner]
+          env[:ui].warn(I18n.t("vagrant_lxc.messages.warn_group")) if data[:group]
+
           if !host_path.directory? && data[:create]
             # Host path doesn't exist, so let's create it.
             @logger.info("Host path doesn't exist, creating: #{host_path}")

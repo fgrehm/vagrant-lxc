@@ -16,6 +16,12 @@ en:
         Warning! The LXC provider doesn't support any of the Vagrant public / private
         network configurations (ex: `config.vm.network :private_network, ip: "some-ip"`).
         They will be silently ignored.
+      warn_group: |-
+        Warning! The LXC provider doesn't support the :group parameter for synced
+        folders. It will be silently ignored.
+      warn_owner: |-
+        Warning! The LXC provider doesn't support the :owner parameter for synced
+        folders. It will be silently ignored.
 
   vagrant:
     commands:
