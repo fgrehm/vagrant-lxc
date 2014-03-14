@@ -66,7 +66,7 @@ module Vagrant
         end
       end
 
-      def share_folder(host_path, guest_path, mount_options = ['bind'])
+      def share_folder(host_path, guest_path, mount_options = nil)
         guest_path = rootfs_path.join(guest_path.gsub(/^\//, ''))
         unless guest_path.directory?
           begin
@@ -77,7 +77,7 @@ module Vagrant
           end
         end
 
-        mount_options = Array(mount_options)
+        mount_options = Array(mount_options || ['bind'])
         @customizations << ['mount.entry', "#{host_path} #{guest_path} none #{mount_options.join(',')} 0 0"]
       end
 
