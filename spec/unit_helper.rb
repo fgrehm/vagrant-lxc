@@ -10,4 +10,8 @@ RSpec.configure do |config|
   config.include UnitExampleGroup, :type => :unit, :example_group => {
     :file_path => /\bspec\/unit\//
   }
+
+  config.mock_with :rspec do |c|
+    c.yield_receiver_to_any_instance_implementation_blocks = true
+  end
 end

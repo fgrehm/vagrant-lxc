@@ -24,4 +24,8 @@ RSpec.configure do |config|
   # the seed, which is printed after each run.
   #     --seed 1234
   config.order = 'random'
+
+  config.mock_with :rspec do |c|
+    c.yield_receiver_to_any_instance_implementation_blocks = true
+  end
 end

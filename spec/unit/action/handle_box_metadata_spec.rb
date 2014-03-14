@@ -28,33 +28,33 @@ describe Vagrant::LXC::Action::HandleBoxMetadata do
     end
 
     it 'sets the tarball argument for the template' do
-      env[:lxc_template_opts].should include(
+      expect(env[:lxc_template_opts]).to include(
         '--tarball' => box_directory.join('rootfs.tar.gz').to_s
       )
     end
 
     it 'sets the template --config parameter' do
-      env[:lxc_template_opts].should include(
+      expect(env[:lxc_template_opts]).to include(
         '--config' => box_directory.join('lxc-config').to_s
       )
     end
 
     it 'does not set the auth key argument for the template' do
-      env[:lxc_template_opts].should_not include(
+      expect(env[:lxc_template_opts]).not_to include(
         '--auth-key' => vagrant_key
       )
     end
 
     it 'sets the template options from metadata on env hash' do
-      env[:lxc_template_opts].should include(metadata['template-opts'])
+      expect(env[:lxc_template_opts]).to include(metadata['template-opts'])
     end
 
     xit 'sets the template source path on env hash' do
-      env[:lxc_template_src].should == box_directory.join('lxc-template').to_s
+      expect(env[:lxc_template_src]).to eq(box_directory.join('lxc-template').to_s)
     end
 
     it 'does not warn about deprecation' do
-      env[:ui].should_not have_received(:warn)
+      expect(env[:ui]).not_to have_received(:warn)
     end
   end
 
@@ -68,31 +68,31 @@ describe Vagrant::LXC::Action::HandleBoxMetadata do
     end
 
     it 'sets the tarball argument for the template' do
-      env[:lxc_template_opts].should include(
+      expect(env[:lxc_template_opts]).to include(
         '--tarball' => box_directory.join('rootfs.tar.gz').to_s
       )
     end
 
     it 'sets the auth key argument for the template' do
-      env[:lxc_template_opts].should include(
+      expect(env[:lxc_template_opts]).to include(
         '--auth-key' => vagrant_key
       )
     end
 
     it 'sets the lxc config file parameter' do
-      env[:lxc_template_config].should == box_directory.join('lxc.conf').to_s
+      expect(env[:lxc_template_config]).to eq(box_directory.join('lxc.conf').to_s)
     end
 
     it 'sets the template options from metadata on env hash' do
-      env[:lxc_template_opts].should include(metadata['template-opts'])
+      expect(env[:lxc_template_opts]).to include(metadata['template-opts'])
     end
 
     xit 'sets the template source path on env hash' do
-      env[:lxc_template_src].should == box_directory.join('lxc-template').to_s
+      expect(env[:lxc_template_src]).to eq(box_directory.join('lxc-template').to_s)
     end
 
     it 'warns about deprecation' do
-      env[:ui].should have_received(:warn)
+      expect(env[:ui]).to have_received(:warn)
     end
   end
 
@@ -110,14 +110,14 @@ describe Vagrant::LXC::Action::HandleBoxMetadata do
     end
 
     it 'raises an error if the rootfs tarball cant be found' do
-      File.stub(:exists?).with(box_directory.join('rootfs.tar.gz').to_s).and_return(false)
+      allow(File).to receive(:exists?).with(box_directory.join('rootfs.tar.gz').to_s).and_return(false)
       expect {
         subject.call(env)
       }.to raise_error(Vagrant::LXC::Errors::RootFSTarballMissing)
     end
 
     it 'does not raise an error if the lxc-template script cant be found' do
-      File.stub(:exists?).with(box_directory.join('lxc-template').to_s).and_return(false)
+      allow(File).to receive(:exists?).with(box_directory.join('lxc-template').to_s).and_return(false)
       expect {
         subject.call(env)
       }.to_not raise_error

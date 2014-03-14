@@ -30,24 +30,24 @@ describe Vagrant::LXC::Action::SetupPackageFiles do
     before { subject.call(env) }
 
     it 'copies box lxc-template to package directory' do
-      env['package.directory'].join('lxc-template').should be_file
+      expect(env['package.directory'].join('lxc-template')).to be_file
     end
 
     it 'copies metadata.json to package directory' do
-      env['package.directory'].join('metadata.json').should be_file
+      expect(env['package.directory'].join('metadata.json')).to be_file
     end
 
     it 'copies box lxc.conf to package directory' do
-      env['package.directory'].join('lxc-template').should be_file
+      expect(env['package.directory'].join('lxc-template')).to be_file
     end
 
     it 'copies box lxc-config to package directory' do
-      env['package.directory'].join('lxc-config').should be_file
+      expect(env['package.directory'].join('lxc-config')).to be_file
     end
 
     it 'moves the compressed rootfs to package directory' do
-      env['package.directory'].join(rootfs_path.basename).should be_file
-      env['package.rootfs'].should_not be_file
+      expect(env['package.directory'].join(rootfs_path.basename)).to be_file
+      expect(env['package.rootfs']).not_to be_file
     end
   end
 

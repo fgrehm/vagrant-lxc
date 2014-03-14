@@ -20,10 +20,10 @@ describe Vagrant::LXC::Action::CompressRootFS do
   end
 
   it "asks the driver to compress container's rootfs" do
-    driver.should have_received(:compress_rootfs)
+    expect(driver).to have_received(:compress_rootfs)
   end
 
   it 'sets export.temp_dir on action env' do
-    env['package.rootfs'].should == compressed_rootfs_path
+    expect(env['package.rootfs']).to eq(compressed_rootfs_path)
   end
 end

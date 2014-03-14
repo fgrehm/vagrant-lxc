@@ -33,7 +33,7 @@ describe Vagrant::LXC::Action::ForwardPorts do
   it 'forwards ports using redir' do
     subject.stub(system: true)
     subject.call(env)
-    subject.should have_received(:spawn).with(
+    expect(subject).to have_received(:spawn).with(
       "redir --laddr=#{host_ip} --lport=#{host_port} --caddr=#{container_ip} --cport=#{guest_port} 2>/dev/null"
     )
   end
@@ -42,7 +42,7 @@ describe Vagrant::LXC::Action::ForwardPorts do
     forward_conf.delete(:host_ip)
     subject.stub(system: true)
     subject.call(env)
-    subject.should have_received(:spawn).with(
+    expect(subject).to have_received(:spawn).with(
       "redir --lport=#{host_port} --caddr=#{container_ip} --cport=#{guest_port} 2>/dev/null"
     )
   end
@@ -51,7 +51,7 @@ describe Vagrant::LXC::Action::ForwardPorts do
     forward_conf[:host_ip] = ' '
     subject.stub(system: true)
     subject.call(env)
-    subject.should have_received(:spawn).with(
+    expect(subject).to have_received(:spawn).with(
       "redir --lport=#{host_port} --caddr=#{container_ip} --cport=#{guest_port} 2>/dev/null"
     )
   end
@@ -60,18 +60,18 @@ describe Vagrant::LXC::Action::ForwardPorts do
     subject.stub(system: true)
     subject.call(env)
     pid_file = data_dir.join('pids', "redir_#{host_port}.pid").read
-    pid_file.should == pid
+    expect(pid_file).to eq(pid)
   end
 
   it 'allows disabling a previously forwarded port' do
     forward_conf[:disabled] = true
     subject.stub(system: true)
     subject.call(env)
-    subject.should_not have_received(:spawn)
+    expect(subject).not_to have_received(:spawn)
   end
 
   it 'raises RedirNotInstalled error if `redir` is not installed' do
     subject.stub(system: false)
-    lambda { subject.call(env) }.should raise_error(Vagrant::LXC::Errors::RedirNotInstalled)
+    expect { subject.call(env) }.to raise_error(Vagrant::LXC::Errors::RedirNotInstalled)
   end
 end

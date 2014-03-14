@@ -42,16 +42,16 @@ describe Vagrant::LXC::Driver do
     subject { described_class.new(nil, nil, cli) }
 
     before do
-      subject.stub(:import_template).and_yield(template_name)
+      allow(subject).to receive(:import_template).and_yield(template_name)
       subject.create name, template_path, config_file, template_opts
     end
 
     it 'sets the cli object container name' do
-      cli.should have_received(:name=).with(name)
+      expect(cli).to have_received(:name=).with(name)
     end
 
     it 'creates container with the right arguments' do
-      cli.should have_received(:create).with(
+      expect(cli).to have_received(:create).with(
         template_name,
         config_file,
         template_opts
@@ -67,7 +67,7 @@ describe Vagrant::LXC::Driver do
     before { subject.destroy }
 
     it 'delegates to cli object' do
-      cli.should have_received(:destroy)
+      expect(cli).to have_received(:destroy)
     end
   end
 
@@ -89,7 +89,7 @@ describe Vagrant::LXC::Driver do
     it 'writes configurations to config file'
 
     it 'starts container with configured customizations' do
-      cli.should have_received(:start)
+      expect(cli).to have_received(:start)
     end
   end
 
@@ -99,30 +99,30 @@ describe Vagrant::LXC::Driver do
     subject { described_class.new('name', nil, cli) }
 
     before do
-      cli.stub(:transition_to).and_yield(cli)
+      allow(cli).to receive(:transition_to).and_yield(cli)
     end
 
     it 'delegates to cli shutdown' do
-      cli.should_receive(:shutdown)
+      expect(cli).to receive(:shutdown)
       subject.forced_halt
     end
 
     it 'expects a transition to running state to take place' do
-      cli.should_receive(:transition_to).with(:stopped)
+      expect(cli).to receive(:transition_to).with(:stopped)
       subject.forced_halt
     end
 
     it 'attempts to force the container to stop in case a shutdown doesnt work' do
-      cli.stub(:shutdown).and_raise(Vagrant::LXC::Driver::CLI::TargetStateNotReached.new :target, :source)
-      cli.should_receive(:transition_to).with(:stopped).twice
-      cli.should_receive(:stop)
+      allow(cli).to receive(:shutdown).and_raise(Vagrant::LXC::Driver::CLI::TargetStateNotReached.new :target, :source)
+      expect(cli).to receive(:transition_to).with(:stopped).twice
+      expect(cli).to receive(:stop)
       subject.forced_halt
     end
 
     it 'attempts to force the container to stop in case lxc-shutdown is not supported' do
-      cli.stub(:shutdown).and_raise(Vagrant::LXC::Driver::CLI::ShutdownNotSupported)
-      cli.should_receive(:transition_to).with(:stopped).twice
-      cli.should_receive(:stop)
+      allow(cli).to receive(:shutdown).and_raise(Vagrant::LXC::Driver::CLI::ShutdownNotSupported)
+      expect(cli).to receive(:transition_to).with(:stopped).twice
+      expect(cli).to receive(:stop)
       subject.forced_halt
     end
   end
@@ -134,7 +134,7 @@ describe Vagrant::LXC::Driver do
     subject { described_class.new('name', nil, cli) }
 
     it 'delegates to cli' do
-      subject.state.should == cli_state
+      expect(subject.state).to eq(cli_state)
     end
   end
 
@@ -154,18 +154,18 @@ describe Vagrant::LXC::Driver do
     end
 
     it "creates guest folder under container's rootfs" do
-      sudo_wrapper.should have_received(:run).with("mkdir", "-p", expected_guest_path)
+      expect(sudo_wrapper).to have_received(:run).with("mkdir", "-p", expected_guest_path)
     end
 
     it 'adds a mount.entry to its local customizations' do
-      subject.customizations.should include [
+      expect(subject.customizations).to include [
         'mount.entry',
         "#{shared_folder[:hostpath]} #{expected_guest_path} none bind 0 0"
       ]
     end
 
     it 'supports additional mount options' do
-      subject.customizations.should include [
+      expect(subject.customizations).to include [
         'mount.entry',
         "#{ro_rw_folder[:hostpath]} #{rootfs_path}/vagrant/ro_rw none ro,rw 0 0"
       ]

@@ -13,18 +13,18 @@ describe Vagrant::LXC::Driver::CLI do
     let(:result)     { @result }
 
     before do
-      subject.stub(:run).with(:ls).and_return(lxc_ls_out)
+      allow(subject).to receive(:run).with(:ls).and_return(lxc_ls_out)
       @result = subject.list
     end
 
     it 'grabs previously created containers from lxc-ls output' do
-      result.should be_an Enumerable
-      result.should include 'a-container'
-      result.should include 'dup-container'
+      expect(result).to be_an Enumerable
+      expect(result).to include 'a-container'
+      expect(result).to include 'dup-container'
     end
 
     it 'removes duplicates from lxc-ls output' do
-      result.uniq.should == result
+      expect(result.uniq).to eq(result)
     end
   end
 
@@ -32,11 +32,11 @@ describe Vagrant::LXC::Driver::CLI do
     let(:lxc_version_out) { "lxc version:  0.x.y-rc1\n" }
 
     before do
-      subject.stub(:run).with(:version).and_return(lxc_version_out)
+      allow(subject).to receive(:run).with(:version).and_return(lxc_version_out)
     end
 
     it 'parses the version from the output' do
-      subject.version.should == '0.x.y-rc1'
+      expect(subject.version).to eq('0.x.y-rc1')
     end
   end
 
@@ -49,12 +49,12 @@ describe Vagrant::LXC::Driver::CLI do
     subject { described_class.new(sudo_wrapper, name) }
 
     before do
-      subject.stub(:run) { |*args| @run_args = args }
+      allow(subject).to receive(:run) { |*args| @run_args = args }
     end
 
     it 'issues a lxc-create with provided template, container name and hash of arguments' do
       subject.create(template, config_file, template_args)
-      subject.should have_received(:run).with(
+      expect(subject).to have_received(:run).with(
         :create,
         '--template', template,
         '--name',     name,
@@ -66,7 +66,7 @@ describe Vagrant::LXC::Driver::CLI do
     end
 
     it 'wraps a low level error into something more meaningful in case the container already exists' do
-      subject.stub(:run) { raise Vagrant::LXC::Errors::ExecuteError, stderr: 'alreAdy Exists' }
+      allow(subject).to receive(:run) { raise Vagrant::LXC::Errors::ExecuteError, stderr: 'alreAdy Exists' }
       expect {
         subject.create(template, config_file, template_args)
       }.to raise_error(Vagrant::LXC::Errors::ContainerAlreadyExists)
@@ -79,12 +79,12 @@ describe Vagrant::LXC::Driver::CLI do
     subject { described_class.new(sudo_wrapper, name) }
 
     before do
-      subject.stub(:run)
+      allow(subject).to receive(:run)
       subject.destroy
     end
 
     it 'issues a lxc-destroy with container name' do
-      subject.should have_received(:run).with(:destroy, '--name', name)
+      expect(subject).to have_received(:run).with(:destroy, '--name', name)
     end
   end
 
@@ -93,12 +93,12 @@ describe Vagrant::LXC::Driver::CLI do
     subject    { described_class.new(sudo_wrapper, name) }
 
     before do
-      subject.stub(:run)
+      allow(subject).to receive(:run)
     end
 
     it 'starts container on the background' do
       subject.start
-      subject.should have_received(:run).with(
+      expect(subject).to have_received(:run).with(
         :start,
         '-d',
         '--name',  name
@@ -112,16 +112,16 @@ describe Vagrant::LXC::Driver::CLI do
 
     before do
       subject.stub(system: true)
-      subject.stub(:run)
+      allow(subject).to receive(:run)
     end
 
     it 'issues a lxc-shutdown with provided container name' do
       subject.shutdown
-      subject.should have_received(:run).with(:shutdown, '--name', name)
+      expect(subject).to have_received(:run).with(:shutdown, '--name', name)
     end
 
     it 'raises a ShutdownNotSupported in case it is not supported' do
-      subject.stub(:system).with('which lxc-shutdown > /dev/null').and_return(false)
+      allow(subject).to receive(:system).with('which lxc-shutdown > /dev/null').and_return(false)
       expect { subject.shutdown }.to raise_error(described_class::ShutdownNotSupported)
     end
   end
@@ -131,21 +131,21 @@ describe Vagrant::LXC::Driver::CLI do
     subject    { described_class.new(sudo_wrapper, name) }
 
     before do
-      subject.stub(:run).and_return("state: STOPPED\npid: 2")
+      allow(subject).to receive(:run).and_return("state: STOPPED\npid: 2")
     end
 
     it 'calls lxc-info with the right arguments' do
       subject.state
-      subject.should have_received(:run).with(:info, '--name', name, retryable: true)
+      expect(subject).to have_received(:run).with(:info, '--name', name, retryable: true)
     end
 
     it 'maps the output of lxc-info status out to a symbol' do
-      subject.state.should == :stopped
+      expect(subject.state).to eq(:stopped)
     end
 
     it 'is not case sensitive' do
-      subject.stub(:run).and_return("StatE: STarTED\npid: 2")
-      subject.state.should == :started
+      allow(subject).to receive(:run).and_return("StatE: STarTED\npid: 2")
+      expect(subject.state).to eq(:started)
     end
   end
 
@@ -161,17 +161,17 @@ describe Vagrant::LXC::Driver::CLI do
 
     it 'calls lxc-attach with specified command' do
       subject.attach(*command)
-      subject.should have_received(:run).with(:attach, '--name', name, '--', *command)
+      expect(subject).to have_received(:run).with(:attach, '--name', name, '--', *command)
     end
 
     it 'supports a "namespaces" parameter' do
-      subject.stub(:run).with(:attach, '-h', :show_stderr => true).and_return({:stdout => '', :stderr => '--namespaces'})
+      allow(subject).to receive(:run).with(:attach, '-h', :show_stderr => true).and_return({:stdout => '', :stderr => '--namespaces'})
       subject.attach *(command + [{namespaces: ['network', 'mount']}])
-      subject.should have_received(:run).with(:attach, '--name', name, '--namespaces', 'NETWORK|MOUNT', '--', *command)
+      expect(subject).to have_received(:run).with(:attach, '--name', name, '--namespaces', 'NETWORK|MOUNT', '--', *command)
     end
 
     it 'raises a NamespacesNotSupported error if not supported' do
-      subject.stub(:run).with(:attach, '-h', :show_stderr => true).and_return({:stdout => '', :stderr => 'not supported'})
+      allow(subject).to receive(:run).with(:attach, '-h', :show_stderr => true).and_return({:stdout => '', :stderr => 'not supported'})
       expect {
         subject.attach *(command + [{namespaces: ['network', 'mount']}])
       }.to raise_error(Vagrant::LXC::Errors::NamespacesNotSupported)
@@ -187,9 +187,9 @@ describe Vagrant::LXC::Driver::CLI do
     end
 
     it 'yields a cli object' do
-      subject.stub(:shutdown)
+      allow(subject).to receive(:shutdown)
       subject.transition_to(:stopped) { |c| c.shutdown }
-      subject.should have_received(:shutdown)
+      expect(subject).to have_received(:shutdown)
     end
 
     it 'throws an exception if block is not provided' do

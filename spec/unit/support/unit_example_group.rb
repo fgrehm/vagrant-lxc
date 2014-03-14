@@ -2,23 +2,23 @@ module UnitExampleGroup
   def self.included(base)
     base.metadata[:type] = :unit
     base.before do
-      Object.any_instance.stub(:system) { |*args, &block|
+      allow_any_instance_of(Object).to receive(:system) { |instance, *args, &block|
         UnitExampleGroup.prevent_system_calls(*args, &block)
       }
-      Object.any_instance.stub(:`) { |*args, &block|
+      allow_any_instance_of(Object).to receive(:`) { |instance, *args, &block|
         UnitExampleGroup.prevent_system_calls(*args, &block)
       }
-      Object.any_instance.stub(:exec) { |*args, &block|
+      allow_any_instance_of(Object).to receive(:exec) { |instance, *args, &block|
         UnitExampleGroup.prevent_system_calls(*args, &block)
       }
-      Object.any_instance.stub(:fork) { |*args, &block|
+      allow_any_instance_of(Object).to receive(:fork) { |instance, *args, &block|
         UnitExampleGroup.prevent_system_calls(*args, &block)
       }
-      Object.any_instance.stub(:spawn) { |*args, &block|
+      allow_any_instance_of(Object).to receive(:spawn) { |instance, *args, &block|
         UnitExampleGroup.prevent_system_calls(*args, &block)
       }
       require 'vagrant/util/subprocess'
-      Vagrant::Util::Subprocess.stub(:execute) { |*args, &block|
+      allow(Vagrant::Util::Subprocess).to receive(:execute) { |*args, &block|
         UnitExampleGroup.prevent_system_calls(*args, &block)
       }
     end
