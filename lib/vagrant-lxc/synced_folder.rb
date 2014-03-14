@@ -25,7 +25,8 @@ module Vagrant
             end
           end
 
-          machine.provider.driver.share_folder(host_path, guest_path)
+          mount_opts = data[:mount_options]
+          machine.provider.driver.share_folder(host_path, guest_path, mount_opts)
           # Guest path specified, so mount the folder to specified point
           machine.ui.detail(I18n.t("vagrant.actions.vm.share_folders.mounting_entry",
                                 guestpath:  data[:guestpath],

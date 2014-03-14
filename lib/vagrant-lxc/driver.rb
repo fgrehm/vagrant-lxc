@@ -61,12 +61,12 @@ module Vagrant
       end
 
       def share_folders(folders)
-        folders.each do |folder|
-          share_folder(folder[:hostpath], folder[:guestpath])
+        folders.each do |f|
+          share_folder(f[:hostpath], f[:guestpath], f.fetch(:mount_options, 'bind'))
         end
       end
 
-      def share_folder(host_path, guest_path)
+      def share_folder(host_path, guest_path, mount_options = ['bind'])
         guest_path = rootfs_path.join(guest_path.gsub(/^\//, ''))
         unless guest_path.directory?
           begin
@@ -77,7 +77,8 @@ module Vagrant
           end
         end
 
-        @customizations << ['mount.entry', "#{host_path} #{guest_path} none bind 0 0"]
+        mount_options = Array(mount_options)
+        @customizations << ['mount.entry', "#{host_path} #{guest_path} none #{mount_options.join(',')} 0 0"]
       end
 
       def start(customizations)

@@ -140,7 +140,8 @@ describe Vagrant::LXC::Driver do
 
   describe 'folder sharing' do
     let(:shared_folder)       { {guestpath: '/vagrant', hostpath: '/path/to/host/dir'} }
-    let(:folders)             { [shared_folder] }
+    let(:ro_rw_folder)        { {guestpath: '/vagrant/ro_rw', hostpath: '/path/to/host/dir', mount_options: ['ro', 'rw']} }
+    let(:folders)             { [shared_folder, ro_rw_folder] }
     let(:rootfs_path)         { Pathname('/path/to/rootfs') }
     let(:expected_guest_path) { "#{rootfs_path}/vagrant" }
     let(:sudo_wrapper)        { double(Vagrant::LXC::SudoWrapper, run: true) }
@@ -160,6 +161,13 @@ describe Vagrant::LXC::Driver do
       subject.customizations.should include [
         'mount.entry',
         "#{shared_folder[:hostpath]} #{expected_guest_path} none bind 0 0"
+      ]
+    end
+
+    it 'supports additional mount options' do
+      subject.customizations.should include [
+        'mount.entry',
+        "#{ro_rw_folder[:hostpath]} #{rootfs_path}/vagrant/ro_rw none ro,rw 0 0"
       ]
     end
   end
