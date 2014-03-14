@@ -10,7 +10,7 @@ require 'bundler/setup'
 
 require 'i18n'
 
-require 'vagrant-lxc/plugin'
+require 'vagrant-lxc'
 
 Dir[File.dirname(__FILE__) + "/support/**/*.rb"].each { |f| require f }
 
