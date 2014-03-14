@@ -236,7 +236,7 @@ module Vagrant
 
             b2.use Builtin::Call, Builtin::IsState, :running do |env1, b3|
               if !env1[:result]
-                b3.use Builtin::Message, I18n.t("vagrant_lxc.messages.not_running")
+                raise Vagrant::Errors::VMNotRunningError
                 next
               end
 
