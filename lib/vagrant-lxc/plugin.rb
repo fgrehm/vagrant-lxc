@@ -9,6 +9,11 @@ module Vagrant
       LXC-based virtual machines.
       EOF
 
+      command "lxc" do
+        require_relative 'command/root'
+        Command::Root
+      end
+
       provider(:lxc, parallel: true) do
         require File.expand_path("../provider", __FILE__)
 
