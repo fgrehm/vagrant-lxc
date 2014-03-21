@@ -28,4 +28,8 @@ RSpec.configure do |config|
   config.mock_with :rspec do |c|
     c.yield_receiver_to_any_instance_implementation_blocks = true
   end
+  config.expect_with :rspec do |c|
+    c.syntax = :expect
+  end
+  config.raise_errors_for_deprecations!
 end
