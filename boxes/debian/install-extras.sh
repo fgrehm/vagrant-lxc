@@ -14,9 +14,12 @@ log 'Sleeping for 5 seconds...'
 sleep 5
 
 # TODO: Support for appending to this list from outside
-PACKAGES=(vim curl wget man-db bash-completion python-software-properties ca-certificates sudo nfs-common)
+PACKAGES=(vim curl wget man-db bash-completion python-software-properties ca-certificates sudo)
 if [ $DISTRIBUTION = 'ubuntu' ]; then
   PACKAGES+=' software-properties-common'
+fi
+if [ $RELEASE != 'raring' ] && [ $RELEASE != 'saucy' ] && [ $RELEASE != 'trusty' ] ; then
+  PACKAGES+=' nfs-common'
 fi
 utils.lxc.attach apt-get update
 utils.lxc.attach apt-get install ${PACKAGES[*]} -y --force-yes

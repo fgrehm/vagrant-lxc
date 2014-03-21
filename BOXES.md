@@ -19,6 +19,11 @@ PUPPET=1 CHEF=1 make precise
 
 Will build a Ubuntu Precise x86_64 box with latest Puppet and Chef pre-installed, please refer to the scripts for more information.
 
+## Known issues
+
+We can't get the NFS client to be installed on the containers used for building
+Ubuntu 13.04 / 13.10 / 14.04 base boxes.
+
 ## "Anatomy" of a box
 
 If you need to go deeper and build your scripts from scratch or if you are interested
