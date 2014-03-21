@@ -25,7 +25,15 @@ $(DEBIAN_BOXES):
 	@sudo chmod +rw $(PACKAGE)
 	@sudo chown ${USER}: $(PACKAGE)
 
-clean: ALL_BOXES = ${DEBIAN_BOXES} ${UBUNTU_BOXES}
+acceptance: CONTAINER = "vagrant-base-acceptance-amd64"
+acceptance: PACKAGE = "output/${TODAY}/vagrant-lxc-acceptance-amd64.box"
+acceptance:
+	@mkdir -p $$(dirname $(PACKAGE))
+	@PUPPET=1 CHEF=1 sudo -E ./mk-debian.sh ubuntu precise amd64 $(CONTAINER) $(PACKAGE)
+	@sudo chmod +rw $(PACKAGE)
+	@sudo chown ${USER}: $(PACKAGE)
+
+clean: ALL_BOXES = ${DEBIAN_BOXES} ${UBUNTU_BOXES} acceptance
 clean:
 	@for r in $(ALL_BOXES); do \
 		sudo -E ./clean.sh $${r}\
