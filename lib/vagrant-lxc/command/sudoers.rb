@@ -53,7 +53,7 @@ module Vagrant
         end
 
         def commands
-         [ 
+         [
            { :cmd => '/usr/bin/lxc-ls',        :args => '' },
            { :cmd => '/usr/bin/lxc-info',      :args => '' },
            { :cmd => '/usr/bin/lxc-attach',    :args => '' },

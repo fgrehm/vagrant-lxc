@@ -35,7 +35,7 @@ module Vagrant
             opts.banner = "Usage: vagrant lxc <subcommand> [<args>]"
             opts.separator ""
             opts.separator "Available subcommands:"
-           
+
             # https://github.com/mitchellh/vagrant/commit/4194da19c60956f6e59239c0145f772be257e79d
             keys = []
             @subcommands.each { |key, value| keys << key }
