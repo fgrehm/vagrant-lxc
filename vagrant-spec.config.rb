@@ -12,13 +12,9 @@ if ENV['COVERAGE'] == 'true'
   SimpleCov.command_name 'acceptance'
 end
 
-# if defined? SimpleCov
-#   SimpleCov.command_name 'acceptance'
-# end
-
 if ENV['BOX_PATH'] == nil
-  latest     = ENV.fetch('LATEST_BOXES','2014-03-11')
-  release    = ENV.fetch('RELEASE', 'precise')
+  latest     = ENV.fetch('LATEST_BOXES','2014-03-21')
+  release    = ENV.fetch('RELEASE', 'acceptance')
   local_path ="#{File.expand_path("../", __FILE__)}/boxes/output/#{latest}/vagrant-lxc-#{release}-amd64.box"
   if File.exists?(local_path)
     ENV['BOX_PATH'] = local_path
