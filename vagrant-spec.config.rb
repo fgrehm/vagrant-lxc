@@ -1,8 +1,3 @@
-unless ENV['USER'] == 'vagrant'
-  puts 'Acceptance specs are supposed to run from one of the vagrant-lxc dev machines'
-  exit 1
-end
-
 # FIXME: Figure out why this doesn't work
 if ENV['COVERAGE'] == 'true'
   require 'simplecov'
