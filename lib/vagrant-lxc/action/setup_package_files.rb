@@ -43,8 +43,10 @@ module Vagrant
 
         def copy_box_files_to_pkg_dir
           box_dir = @env[:machine].box.directory
-          FileUtils.cp box_dir.join('lxc-template').to_s, @env['package.directory'].to_s
           FileUtils.cp box_dir.join('metadata.json').to_s, @env['package.directory'].to_s
+          if (template = box_dir.join('lxc-template')).exist?
+            FileUtils.cp template.to_s, @env['package.directory'].to_s
+          end
           if (conf = box_dir.join('lxc.conf')).exist?
             FileUtils.cp conf.to_s, @env['package.directory'].to_s
           end
