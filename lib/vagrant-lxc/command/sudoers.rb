@@ -11,8 +11,8 @@ module Vagrant
           opts = OptionParser.new do |opts|
             opts.banner = "Usage: vagrant lxc sudoers"
             opts.separator ""
-            opts.on('-u', '--user', "The user for which to create the policy") do |u|
-              options[:user]=u
+            opts.on('-u', '--user', "The user for which to create the policy (defaults to '#{options[:user]}')") do |u|
+              options[:user] = u
             end
           end
 
@@ -24,6 +24,9 @@ module Vagrant
         end
 
         private
+
+        # REFACTOR: Make use ERB rendering after https://github.com/mitchellh/vagrant/issues/3231
+        #           lands into core
         def create_tempfile!(user, filename)
           sudoers = Tempfile.new(filename).tap do |file|
             file.write "# Automatically created by vagrant-lxc\n"
