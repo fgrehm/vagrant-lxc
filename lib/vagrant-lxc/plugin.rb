@@ -21,6 +21,11 @@ module Vagrant
         Provider
       end
 
+      command "lxc" do
+        require_relative 'command/root'
+        Command::Root
+      end
+
       config(:lxc, :provider) do
         require File.expand_path("../config", __FILE__)
         Config
