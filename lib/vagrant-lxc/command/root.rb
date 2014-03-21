@@ -36,7 +36,8 @@ module Vagrant
             opts.separator ""
             opts.separator "Available subcommands:"
 
-            # https://github.com/mitchellh/vagrant/commit/4194da19c60956f6e59239c0145f772be257e79d
+            # REFACTOR Use @subcommands.keys.sort  
+            #          https://github.com/mitchellh/vagrant/commit/4194da19c60956f6e59239c0145f772be257e79d
             keys = []
             @subcommands.each { |key, value| keys << key }
 
