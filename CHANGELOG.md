@@ -12,10 +12,14 @@ DEPRECATIONS:
 
 FEATURES:
 
+  - New `vagrant lxc sudoers` command for creating a policy for users in order to
+    avoid `sudo` passwords [[GH-237]] / [[GH-257]]
   - Support for NFS and rsync synced folders.
   - Support for synced folder mount options allowing for using read only synced
     folders [[GH-193]]
 
+[GH-237]: https://github.com/fgrehm/vagrant-lxc/issues/237
+[GH-257]: https://github.com/fgrehm/vagrant-lxc/pull/257
 [GH-193]: https://github.com/fgrehm/vagrant-lxc/issues/193
 
 IMPROVEMENTS:
