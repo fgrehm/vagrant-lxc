@@ -3,7 +3,7 @@ module Vagrant
     module Command
       class Root < Vagrant.plugin("2", :command)
         def self.synopsis
-          'LXC setup'
+          'vagrant-lxc specific commands'
         end
 
         def initialize(argv, env)

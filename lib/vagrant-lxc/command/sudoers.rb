@@ -4,7 +4,6 @@ module Vagrant
   module LXC
     module Command
       class Sudoers < Vagrant.plugin("2", :command)
-
         def execute
           options = { user: ENV['USER'] }
 
