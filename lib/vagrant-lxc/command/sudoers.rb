@@ -6,7 +6,7 @@ module Vagrant
       class Sudoers < Vagrant.plugin("2", :command)
 
         def execute
-          options = { :user => ENV['USER'] }
+          options = { user: ENV['USER'] }
 
           opts = OptionParser.new do |opts|
             opts.banner = "Usage: vagrant lxc sudoers"
@@ -48,7 +48,7 @@ module Vagrant
 
         def sudoers_policy(user, command, args)
           home = `echo ~#{user}`.chomp
-          args = args.gsub /\$\{BOXES\}/, "#{home}/.vagrant.d/boxes"
+          args = args.gsub /%\{BOXES\}/, "#{home}/.vagrant.d/boxes"
           "#{user} ALL=(root) NOPASSWD: #{command} #{args}\n"
         end
 
@@ -63,8 +63,8 @@ module Vagrant
            { :cmd => '/bin/su',                :args => "root -c sed -e '*' -ibak /var/lib/lxc/*" },
            { :cmd => '/bin/su',                :args => "root -c echo '*' >> /var/lib/lxc/*" },
            { :cmd => '/usr/bin/lxc-start',     :args => '-d --name *' },
-           { :cmd => '/bin/cp',                :args => '${BOXES}/*/lxc/lxc-template /usr/lib/lxc/templates/*' },
-           { :cmd => '/bin/cp',                :args => '${BOXES}/*/lxc/lxc-template /usr/share/lxc/templates/*' },
+           { :cmd => '/bin/cp',                :args => '%{BOXES}/*/lxc/lxc-template /usr/lib/lxc/templates/*' },
+           { :cmd => '/bin/cp',                :args => '%{BOXES}/*/lxc/lxc-template /usr/share/lxc/templates/*' },
            { :cmd => '/bin/rm',                :args => '/usr/lib/lxc/templates/*' },
            { :cmd => '/bin/rm',                :args => '/usr/share/lxc/templates/*' },
            { :cmd => '/bin/chmod',             :args => '+x /usr/lib/lxc/*' },
@@ -76,7 +76,6 @@ module Vagrant
            { :cmd => '/usr/bin/lxc-destroy',   :args => '--name *' }
          ]
         end
-
       end
     end
   end
