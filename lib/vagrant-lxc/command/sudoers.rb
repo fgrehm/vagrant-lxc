@@ -56,26 +56,26 @@ module Vagrant
 
         def commands
          [
-           { :cmd => '/usr/bin/lxc-ls',        :args => '' },
-           { :cmd => '/usr/bin/lxc-info',      :args => '' },
-           { :cmd => '/usr/bin/lxc-attach',    :args => '' },
-           { :cmd => '/usr/bin/which',         :args => 'lxc-*' },
-           { :cmd => '/bin/cat',               :args => '/var/lib/lxc/*' },
-           { :cmd => '/bin/mkdir',             :args => '/var/lib/lxc/*' },
-           { :cmd => '/bin/su',                :args => "root -c sed -e '*' -ibak /var/lib/lxc/*" },
-           { :cmd => '/bin/su',                :args => "root -c echo '*' >> /var/lib/lxc/*" },
-           { :cmd => '/usr/bin/lxc-start',     :args => '-d --name *' },
-           { :cmd => '/bin/cp',                :args => '%{BOXES}/*/lxc/lxc-template /usr/lib/lxc/templates/*' },
-           { :cmd => '/bin/cp',                :args => '%{BOXES}/*/lxc/lxc-template /usr/share/lxc/templates/*' },
-           { :cmd => '/bin/rm',                :args => '/usr/lib/lxc/templates/*' },
-           { :cmd => '/bin/rm',                :args => '/usr/share/lxc/templates/*' },
-           { :cmd => '/bin/chmod',             :args => '+x /usr/lib/lxc/*' },
-           { :cmd => '/bin/chmod',             :args => '+x /usr/share/lxc/*' },
-           { :cmd => '/usr/bin/lxc-create',    :args => '--template * --name * -- --tarball ${BOXES}/*' },
-           { :cmd => '/bin/rm',                :args => '-rf /var/lib/lxc/*/rootfs/tmp/*' },
-           { :cmd => '/usr/bin/lxc-shutdown',  :args => '--name *' },
-           { :cmd => '/usr/bin/lxc-stop',      :args => '--name *' },
-           { :cmd => '/usr/bin/lxc-destroy',   :args => '--name *' }
+           { cmd: '/usr/bin/lxc-ls',        args: '' },
+           { cmd: '/usr/bin/lxc-info',      args: '' },
+           { cmd: '/usr/bin/lxc-attach',    args: '' },
+           { cmd: '/usr/bin/which',         args: 'lxc-*' },
+           { cmd: '/bin/cat',               args: '/var/lib/lxc/*' },
+           { cmd: '/bin/mkdir',             args: '/var/lib/lxc/*' },
+           { cmd: '/bin/su',                args: "root -c sed -e '*' -ibak /var/lib/lxc/*" },
+           { cmd: '/bin/su',                args: "root -c echo '*' >> /var/lib/lxc/*" },
+           { cmd: '/usr/bin/lxc-start',     args: '-d --name *' },
+           { cmd: '/bin/cp',                args: '%{BOXES}/*/lxc/lxc-template /usr/lib/lxc/templates/*' },
+           { cmd: '/bin/cp',                args: '%{BOXES}/*/lxc/lxc-template /usr/share/lxc/templates/*' },
+           { cmd: '/bin/rm',                args: '/usr/lib/lxc/templates/*' },
+           { cmd: '/bin/rm',                args: '/usr/share/lxc/templates/*' },
+           { cmd: '/bin/chmod',             args: '+x /usr/lib/lxc/*' },
+           { cmd: '/bin/chmod',             args: '+x /usr/share/lxc/*' },
+           { cmd: '/usr/bin/lxc-create',    args: '--template * --name * -- --tarball ${BOXES}/*' },
+           { cmd: '/bin/rm',                args: '-rf /var/lib/lxc/*/rootfs/tmp/*' },
+           { cmd: '/usr/bin/lxc-shutdown',  args: '--name *' },
+           { cmd: '/usr/bin/lxc-stop',      args: '--name *' },
+           { cmd: '/usr/bin/lxc-destroy',   args: '--name *' }
          ]
         end
       end
