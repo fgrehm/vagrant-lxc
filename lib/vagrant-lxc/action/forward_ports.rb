@@ -79,8 +79,11 @@ module Vagrant
           params = %W( --lport=#{host_port} --caddr=#{guest_ip} --cport=#{guest_port} )
           params.unshift "--laddr=#{host_ip}" if host_ip
           params << '--syslog' if ENV['REDIR_LOG']
-          redir_cmd = "sudo redir #{params.join(' ')} 2>/dev/null"
-
+	  if host_port < 1024 
+          	redir_cmd = "sudo redir #{params.join(' ')} 2>/dev/null"
+	  else
+          	redir_cmd = "redir #{params.join(' ')} 2>/dev/null"
+	  end
           @logger.debug "Forwarding port with `#{redir_cmd}`"
           spawn redir_cmd
         end
