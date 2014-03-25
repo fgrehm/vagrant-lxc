@@ -34,6 +34,7 @@ IMPROVEMENTS:
     issues: [[GH-151]] [[GH-191]] [[GH-241]] [[GH-242]]
   - Warn in case `:group` or `:owner` are specified for synced folders [[GH-196]]
   - Acceptance specs are now powered by `vagrant-spec` [[GH-213]]
+  - Base boxes creation scripts were moved out to https://github.com/fgrehm/vagrant-lxc-base-boxes.
 
 [GH-254]: https://github.com/fgrehm/vagrant-lxc/issues/254
 [GH-196]: https://github.com/fgrehm/vagrant-lxc/issues/196
@@ -44,33 +45,6 @@ IMPROVEMENTS:
 [GH-191]: https://github.com/fgrehm/vagrant-lxc/issues/191
 [GH-241]: https://github.com/fgrehm/vagrant-lxc/issues/241
 [GH-242]: https://github.com/fgrehm/vagrant-lxc/issues/242
-
-
-BASE BOXES:
-
-  - Switched to [`lxc-download`](https://github.com/lxc/lxc/blob/master/templates/lxc-download.in)
-    as the "reference implementation" for the generic `lxc-template` script [[GH-236]]
-  - Added support for _appending_ custom boxes configs with the `lxc-config` file,
-    allowing usage of host's specific configs from `/etc/lxc/default.conf` [[GH-222]]
-  - Include NFS client on Ubuntu and Debian base boxes [[GH-218]]
-  - Improved output for building base boxes
-  - Improved `vagrant` user `sudo` rights [[GH-231]] [[GH-188]]
-  - Locale configuration may follow builder's LANG environment variable [[GH-221]]
-  - Enable bash completion for Debian base boxes [[GH-220]]
-  - Fix broken locale in Ubuntu boxes [[GH-201]]
-  - Install `python-software-properties` by default [[GH-155]]
-  - Fix apt-get error when building Ubuntu boxes [[GH-200]]
-
-[GH-236]: https://github.com/fgrehm/vagrant-lxc/issues/236
-[GH-222]: https://github.com/fgrehm/vagrant-lxc/issues/222
-[GH-218]: https://github.com/fgrehm/vagrant-lxc/issues/218
-[GH-231]: https://github.com/fgrehm/vagrant-lxc/issues/231
-[GH-221]: https://github.com/fgrehm/vagrant-lxc/issues/221
-[GH-220]: https://github.com/fgrehm/vagrant-lxc/issues/220
-[GH-201]: https://github.com/fgrehm/vagrant-lxc/issues/201
-[GH-188]: https://github.com/fgrehm/vagrant-lxc/issues/188
-[GH-155]: https://github.com/fgrehm/vagrant-lxc/issues/155
-[GH-200]: https://github.com/fgrehm/vagrant-lxc/issues/200
 
 
 ## [0.8.0](https://github.com/fgrehm/vagrant-lxc/compare/v0.7.0...v0.8.0) (Feb 26, 2014)
