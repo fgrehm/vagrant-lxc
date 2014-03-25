@@ -18,7 +18,7 @@ branch.
 Usage with the recently released Vagrant 1.5 is only possible by [building the
 plugin from sources](https://github.com/fgrehm/vagrant-lxc/wiki/Development#wiki-installing-the-plugin-from-source).
 The 1.0.0.beta1 version of the plugin that will ship with the changes required
-is expected to be released by the end of March 2014.
+is expected to be released by April, 2014.
 
 
 ## Features
@@ -104,7 +104,7 @@ vagrant-lxc will then write out `lxc.cgroup.memory.limit_in_bytes='1024M'` to th
 container config file (usually kept under `/var/lib/lxc/<container>/config`)
 prior to starting it.
 
-For other configuration options, please check the [lxc.conf manpages](http://manpages.ubuntu.com/manpages/quantal/man5/lxc.conf.5.html).
+For other configuration options, please check the [lxc.conf manpages](http://manpages.ubuntu.com/manpages/precise/man5/lxc.conf.5.html).
 
 ### Container naming
 
@@ -139,10 +139,14 @@ _vagrant-lxc < 1.0.0 users, please check this [Wiki page](https://github.com/fgr
 
 ### Base boxes
 
-Please check [the wiki](https://github.com/fgrehm/vagrant-lxc/wiki/Base-boxes)
-for a list of [pre built](https://github.com/fgrehm/vagrant-lxc/wiki/Base-boxes#available-boxes)
-base boxes and have a look at [`BOXES.md`](https://github.com/fgrehm/vagrant-lxc/tree/master/BOXES.md)
-for more information on building your own.
+Scripts for building Ubuntu and Debian base boxes are available at
+[fgrehm/vagrant-lxc-base-boxes](https://github.com/fgrehm/vagrant-lxc-base-boxes)
+and the link to pre built Ubuntu boxes can be found at [this section](https://github.com/fgrehm/vagrant-lxc-base-boxes#pre-built-base-boxes).
+
+If you want to build your own boxes, please have a look at [`BOXES.md`](https://github.com/fgrehm/vagrant-lxc/tree/master/BOXES.md)
+for more information.
+
+_vagrant-lxc < 1.0.0 users, please check this [Wiki page](https://github.com/fgrehm/vagrant-lxc/wiki/Base-boxes)_
 
 
 ## More information

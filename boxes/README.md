@@ -1,7 +1,7 @@
 # vagrant-lxc base boxes
 
 This repository contains a set of scripts for creating base boxes for usage with
-[vagrant-lxc](https://github.com/fgrehm/vagrant-lxc).
+[vagrant-lxc](https://github.com/fgrehm/vagrant-lxc) 1.0+.
 
 ## What distros / versions can I build with this?
 
@@ -36,17 +36,18 @@ make precise
 Will build a Ubuntu Precise x86_64 box with latest Puppet, Chef, Salt and
 Babushka pre-installed.
 
-## Pre built base boxes
 
-_vagrant-lxc 1.0+ only_
+## Pre built base boxes
 
 | Box | VagrantCloud | Direct URL |
 | --- | ------------ | ---------- |
 |     |              |            |
 
+
 ## What makes up for a vagrant-lxc base box?
 
 See [vagrant-lxc/BOXES.md](https://github.com/fgrehm/vagrant-lxc/blob/master/BOXES.md)
+
 
 ## Known issues
 
