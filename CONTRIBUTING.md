@@ -1,14 +1,17 @@
 ### Please read before contributing
 
+* If you have an issue with base boxes, please create it on https://github.com/fgrehm/vagrant-lxc-base-boxes,
+  this repository is for the Vagrant plugin only.
+
 * Try not to post questions in the issues tracker. I will probably answer you
   but I'll most likely close the issue right away and will continue the discussion
   with the issue closed. If you have any questions about the plugin, make sure
   you go through the [Wiki](https://github.com/fgrehm/vagrant-lxc/wiki) pages
   first (specially the [Troubleshooting Section](https://github.com/fgrehm/vagrant-lxc/wiki/Troubleshooting))
   and if you still need answers please ask a question on [Stack Overflow](http://stackoverflow.com/questions/tagged/vagrant-lxc)
-  using the `vagrant-lxc` tag on it so that I get notified :)
+  using the `vagrant` / `lxc` tag on it so that I get notified :)
 
-* Please do a small search on the issues tracker before submitting your issue to
+* Please do a search on the issues tracker before submitting your issue to
   check if it was already reported / fixed.
 
 * When reporting a bug, please include **all** information that you can get
