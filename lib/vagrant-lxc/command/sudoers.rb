@@ -49,8 +49,9 @@ module Vagrant
         end
 
         def sudoers_policy(user, command, args)
-          home = `echo ~#{user}`.chomp
-          args = args.gsub /%\{BOXES\}/, "#{home}/.vagrant.d/boxes"
+          vagrant_home = "#{`echo ~#{user}`.chomp}/.vagrant.d"
+          args = args.gsub /%\{VAGRANT_D\}/, vagrant_home
+          args = args.gsub /%\{BOXES\}/, "#{vagrant_home}/boxes"
           "#{user} ALL=(root) NOPASSWD: #{command} #{args}\n"
         end
 
@@ -66,12 +67,14 @@ module Vagrant
            { cmd: '/bin/su',                args: "root -c echo '*' >> /var/lib/lxc/*" },
            { cmd: '/usr/bin/lxc-start',     args: '-d --name *' },
            { cmd: '/bin/cp',                args: '%{BOXES}/*/lxc/lxc-template /usr/lib/lxc/templates/*' },
+           { cmd: '/bin/cp',                args: '%{VAGRANT_D}/gems/gems/vagrant-lxc-*/scripts/lxc-template /usr/lib/lxc/templates/*' },
            { cmd: '/bin/cp',                args: '%{BOXES}/*/lxc/lxc-template /usr/share/lxc/templates/*' },
+           { cmd: '/bin/cp',                args: '%{VAGRANT_D}/gems/gems/vagrant-lxc-*/scripts/lxc-template /usr/share/lxc/templates/*' },
            { cmd: '/bin/rm',                args: '/usr/lib/lxc/templates/*' },
            { cmd: '/bin/rm',                args: '/usr/share/lxc/templates/*' },
            { cmd: '/bin/chmod',             args: '+x /usr/lib/lxc/*' },
            { cmd: '/bin/chmod',             args: '+x /usr/share/lxc/*' },
-           { cmd: '/usr/bin/lxc-create',    args: '--template * --name * -- --tarball ${BOXES}/*' },
+           { cmd: '/usr/bin/lxc-create',    args: '--template * --name * -- --tarball %{BOXES}/*' },
            { cmd: '/bin/rm',                args: '-rf /var/lib/lxc/*/rootfs/tmp/*' },
            { cmd: '/usr/bin/lxc-shutdown',  args: '--name *' },
            { cmd: '/usr/bin/lxc-stop',      args: '--name *' },
