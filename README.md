@@ -61,26 +61,23 @@ vagrant plugin install vagrant-lxc
 ```
 
 
-## Usage
+## Quick start
 
-After installing, add a [base box](#base-boxes) using any name you want, for example:
+On Vagrant 1.5+:
 
 ```
-vagrant box add quantal64 http://bit.ly/vagrant-lxc-quantal64-2013-10-23
+vagrant init fgrehm/precise64-lxc
+vagrant up --provider=lxc
 ```
 
-Then create a Vagrantfile that looks like the following, changing the box name
-to the one you've just added:
+On Vagrant < 1.5:
 
-```ruby
-Vagrant.configure("2") do |config|
-  config.vm.box = "quantal64"
-end
+```
+vagrant box init precise64 http://bit.ly/vagrant-lxc-precise64-2013-10-23
+vagrant up --provider=lxc
 ```
 
-And finally run `vagrant up --provider=lxc`.
-
-If you are using Vagrant 1.2+ you can also set `VAGRANT_DEFAULT_PROVIDER`
+If you are using Vagrant 1.2+ you can also set the `VAGRANT_DEFAULT_PROVIDER`
 environmental variable to `lxc` in order to avoid typing `--provider=lxc` all
 the time.
 
@@ -139,14 +136,11 @@ _vagrant-lxc < 1.0.0 users, please check this [Wiki page](https://github.com/fgr
 
 ### Base boxes
 
-Scripts for building Ubuntu and Debian base boxes are available at
-[fgrehm/vagrant-lxc-base-boxes](https://github.com/fgrehm/vagrant-lxc-base-boxes)
-and the link to pre built Ubuntu boxes can be found at [this section](https://github.com/fgrehm/vagrant-lxc-base-boxes#pre-built-base-boxes).
+Base boxes can be found on [VagrantCloud](https://vagrantcloud.com/search?provider=lxc)
+and some scripts to build your own are available at [fgrehm/vagrant-lxc-base-boxes](https://github.com/fgrehm/vagrant-lxc-base-boxes).
 
 If you want to build your own boxes, please have a look at [`BOXES.md`](https://github.com/fgrehm/vagrant-lxc/tree/master/BOXES.md)
 for more information.
-
-_vagrant-lxc < 1.0.0 users, please check this [Wiki page](https://github.com/fgrehm/vagrant-lxc/wiki/Base-boxes)_
 
 
 ## More information
