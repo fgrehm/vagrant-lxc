@@ -6,7 +6,7 @@ require 'vagrant-lxc/action/forward_ports'
 
 describe Vagrant::LXC::Action::ForwardPorts do
   let(:app)          { double(:app, call: true) }
-  let(:env)          { {machine: machine, ui: double(info: true)} }
+  let(:env)          { {machine: machine, ui: double(info: true, warn: true)} }
   let(:machine)      { double(:machine) }
   let!(:data_dir)    { Pathname.new(Dir.mktmpdir) }
   let(:provider)     { double(Vagrant::LXC::Provider, ssh_info: {host: container_ip}) }
@@ -33,7 +33,6 @@ describe Vagrant::LXC::Action::ForwardPorts do
   it 'forwards ports using redir' do
     subject.stub(system: true)
     subject.call(env)
-    expect(env).to have_received(:warn)
     expect(subject).to have_received(:spawn).with(
       "sudo redir --laddr=#{host_ip} --lport=#{host_port} --caddr=#{container_ip} --cport=#{guest_port} 2>/dev/null"
     )
@@ -43,7 +42,6 @@ describe Vagrant::LXC::Action::ForwardPorts do
     forward_conf.delete(:host_ip)
     subject.stub(system: true)
     subject.call(env)
-    expect(env).to have_received(:warn)
     expect(subject).to have_received(:spawn).with(
       "sudo redir --lport=#{host_port} --caddr=#{container_ip} --cport=#{guest_port} 2>/dev/null"
     )
@@ -53,7 +51,6 @@ describe Vagrant::LXC::Action::ForwardPorts do
     forward_conf[:host_ip] = ' '
     subject.stub(system: true)
     subject.call(env)
-    expect(env).to have_received(:warn)
     expect(subject).to have_received(:spawn).with(
       "sudo redir --lport=#{host_port} --caddr=#{container_ip} --cport=#{guest_port} 2>/dev/null"
     )
