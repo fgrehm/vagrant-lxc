@@ -73,7 +73,7 @@ vagrant up --provider=lxc
 On Vagrant < 1.5:
 
 ```
-vagrant box init precise64 http://bit.ly/vagrant-lxc-precise64-2013-10-23
+vagrant init precise64 http://bit.ly/vagrant-lxc-precise64-2013-10-23
 vagrant up --provider=lxc
 ```
 
