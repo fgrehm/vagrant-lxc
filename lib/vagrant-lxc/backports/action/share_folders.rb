@@ -57,7 +57,7 @@ module Vagrant
               :guestpath => data[:guestpath]
             }
             @env[:ui].info(I18n.t("vagrant.actions.vm.share_folders.mounting_entry",
-                                  :guest_path => data[:guestpath]))
+                                  :guest_path => data[:guestpath], :hostpath => data[:hostpath]))
           end
           @env[:machine].provider.driver.share_folders(folders)
         end
