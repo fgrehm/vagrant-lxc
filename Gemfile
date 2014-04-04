@@ -1,7 +1,5 @@
 source 'https://rubygems.org'
 
-gemspec
-
 group :development do
   gem 'vagrant', git: 'https://github.com/mitchellh/vagrant.git', tag: 'v1.5.1'
   gem 'guard'
@@ -17,9 +15,9 @@ group :development, :test do
 end
 
 group :plugins do
-  gem 'vagrant-lxc',      path: '.'
   acceptance = (ENV['ACCEPTANCE'] == 'true')
   gem 'vagrant-cachier',  git: 'https://github.com/fgrehm/vagrant-cachier.git',  require: !acceptance
   gem 'vagrant-pristine', git: 'https://github.com/fgrehm/vagrant-pristine.git', require: !acceptance
   gem 'vagrant-omnibus',  require: !acceptance
+  gemspec
 end
