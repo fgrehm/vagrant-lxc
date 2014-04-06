@@ -1,4 +1,4 @@
-## [1.0.0.alpha.1](https://github.com/fgrehm/vagrant-lxc/compare/v0.8.0...v1.0.0.alpha.1) (Mar 04, 2014)
+## [1.0.0.alpha.1](https://github.com/fgrehm/vagrant-lxc/compare/v0.8.0...v1.0.0.alpha.1) (Apr 06, 2014)
 
 DEPRECATIONS:
 
