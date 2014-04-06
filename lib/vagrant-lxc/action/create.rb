@@ -7,7 +7,9 @@ module Vagrant
         end
 
         def call(env)
-          container_name = env[:machine].provider_config.container_name
+          config = env[:machine].provider_config
+
+          container_name = config.container_name
 
           case container_name
             when :machine
@@ -22,12 +24,17 @@ module Vagrant
               container_name << "_#{(Time.now.to_f * 1000.0).to_i}_#{rand(100000)}"
           end
 
-          env[:machine].provider.driver.create(
-            container_name,
-            env[:lxc_template_src],
-            env[:lxc_template_config],
-            env[:lxc_template_opts]
-          )
+          if config.existing_container_name
+            env[:machine].provider.driver.clone(config.existing_container_name, container_name)
+          else
+            env[:machine].provider.driver.create(
+              container_name,
+              config.backingstore,
+              config.backingstore_options,
+              env[:lxc_template_src],
+              env[:lxc_template_config],
+              env[:lxc_template_opts])
+          end
 
           env[:machine].id = container_name
 
