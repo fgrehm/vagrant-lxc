@@ -54,6 +54,8 @@ module Vagrant
       def create(name, template_path, config_file, template_options = {})
         @cli.name = @container_name = name
 
+        template_options['--rootfs'] = base_path.join('rootfs').to_s
+
         import_template(template_path) do |template_name|
           @logger.debug "Creating container..."
           @cli.create template_name, config_file, template_options
