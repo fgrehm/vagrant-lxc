@@ -6,5 +6,9 @@ module Vagrant
     def self.source_root
       @source_root ||= Pathname.new(File.dirname(__FILE__)).join('..').expand_path
     end
+
+    def self.sudo_wrapper_path
+      "/usr/local/bin/vagrant-lxc-wrapper-#{VERSION}"
+    end
   end
 end

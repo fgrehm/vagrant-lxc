@@ -19,8 +19,9 @@ module Vagrant
 
       def sudo_wrapper
         @shell ||= begin
-          wrapper = @machine.provider_config.sudo_wrapper
-          wrapper = Pathname(wrapper).expand_path(@machine.env.root_path).to_s if wrapper
+          wrapper = Pathname.new(LXC.sudo_wrapper_path).exist? &&
+            LXC.sudo_wrapper_path || nil
+          @logger.debug("Found sudo wrapper : #{wrapper}") if wrapper
           SudoWrapper.new(wrapper)
         end
       end
