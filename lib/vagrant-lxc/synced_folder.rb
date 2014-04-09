@@ -8,6 +8,15 @@ module Vagrant
 
       def prepare(machine, folders, _opts)
         machine.ui.output(I18n.t("vagrant.actions.lxc.share_folders.preparing"))
+        # short guestpaths first, so we don't step on ourselves
+        folders = folders.sort_by do |id, data|
+          if data[:guestpath]
+            data[:guestpath].length
+          else
+            # A long enough path to just do this at the end.
+            10000
+          end
+        end
 
         folders.each do |id, data|
           host_path  = Pathname.new(File.expand_path(data[:hostpath], machine.env.root_path))
