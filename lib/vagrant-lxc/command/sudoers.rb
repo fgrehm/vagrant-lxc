@@ -126,8 +126,8 @@ Whitelist.add '/bin/cat', base_path
 # - Shared folders
 Whitelist.add '/bin/mkdir', '-p', base_path
 # - Container config customizations and pruning
-Whitelist.add '/bin/su', 'root', '-c', %r{\\A"sed -e '.*' -ibak \#{base}/.*/config"\\z}
-Whitelist.add '/bin/su', 'root', '-c', %r{\\A"echo '.*' >> \#{base}/.*/config"\\z}
+Whitelist.add '/bin/cp', '-f', %r{/tmp/.*}, base_path
+Whitelist.add '/bin/chown', 'root:root', base_path
 # - Template import
 Whitelist.add '/bin/cp', boxes_path, templates_path
 Whitelist.add '/bin/cp', gems_path, templates_path
@@ -136,7 +136,7 @@ Whitelist.add '/bin/chmod', '+x', templates_path
 # - Template removal
 Whitelist.add '/bin/rm', templates_path
 # - Packaging
-Whitelist.add '/bin/su', 'root', '-c', %r{\\A"cd \#{base}/.* && rm -f rootfs\.tar\.gz && tar --numeric-owner -czf /tmp/.*/rootfs\.tar\.gz -C \#{base}/.*/rootfs '\./\.'"\\z}
+Whitelist.add '/bin/tar', '--numeric-owner', '-cvzf', %r{/tmp/.*/rootfs.tar.gz}, '-C', base_path, './rootfs'
 Whitelist.add '/bin/chown', /\\A\\d+:\\d+\\z/, %r{\\A/tmp/.*/rootfs\.tar\.gz\\z}
 
 ##
