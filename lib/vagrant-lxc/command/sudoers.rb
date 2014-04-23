@@ -111,9 +111,6 @@ end
 base = "/var/lib/lxc"
 base_path = %r{\\A\#{base}/.*\\z}
 templates_path = %r{\\A/usr/(share|lib|lib64|local/lib)/lxc/templates/.*\\z}
-boxes_path = %r{\\A#{Regexp.escape(@env.boxes_path.to_s)}/.*\\z}
-gems_path = %r{\\A#{Regexp.escape(@env.gems_path.to_s)}/.*\\z}
-template_src = %r{\\A#{Vagrant::LXC.source_root.join('scripts/lxc-template').to_s}\\z}
 
 ##
 # Commands from provider.rb
@@ -130,9 +127,9 @@ Whitelist.add '/bin/mkdir', '-p', base_path
 Whitelist.add '/bin/cp', '-f', %r{/tmp/.*}, base_path
 Whitelist.add '/bin/chown', 'root:root', base_path
 # - Template import
-Whitelist.add '/bin/cp', boxes_path, templates_path
-Whitelist.add '/bin/cp', gems_path, templates_path
-Whitelist.add '/bin/cp', template_src, templates_path
+Whitelist.add '/bin/cp', %r{\\A.*\\z}, templates_path
+Whitelist.add '/bin/cp', %r{\\A.*\\z}, templates_path
+Whitelist.add '/bin/cp', %r{\\A.*\\z}, templates_path
 Whitelist.add '/bin/chmod', '+x', templates_path
 # - Template removal
 Whitelist.add '/bin/rm', templates_path
