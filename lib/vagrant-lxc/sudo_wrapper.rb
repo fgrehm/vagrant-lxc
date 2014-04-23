@@ -10,18 +10,9 @@ module Vagrant
       end
 
       def run(*command)
-        command.unshift @wrapper_path if @wrapper_path
+        options = command.last.is_a?(Hash) ? command.last : {}
+        command.unshift @wrapper_path if @wrapper_path && !options[:no_wrapper]
         execute *(['sudo'] + command)
-      end
-
-      def su_c(command)
-        su_command = if @wrapper_path
-            "#{@wrapper_path} \"#{command}\""
-          else
-            "su root -c \"#{command}\""
-          end
-        @logger.debug "Running 'sudo #{su_command}'"
-        system "sudo #{su_command}"
       end
 
       private
