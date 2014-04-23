@@ -7,6 +7,7 @@ module Vagrant
 
         def initialize(argv, env)
           super
+          @argv
           @env = env
         end
 
@@ -16,7 +17,7 @@ module Vagrant
           opts = OptionParser.new do |opts|
             opts.banner = "Usage: vagrant lxc sudoers"
             opts.separator ""
-            opts.on('-u', '--user', "The user for which to create the policy (defaults to '#{options[:user]}')") do |u|
+            opts.on('-u user', '--user user', String, "The user for which to create the policy (defaults to '#{options[:user]}')") do |u|
               options[:user] = u
             end
           end
