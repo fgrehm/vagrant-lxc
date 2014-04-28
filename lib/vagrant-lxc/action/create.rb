@@ -7,7 +7,8 @@ module Vagrant
         end
 
         def call(env)
-          container_name = env[:machine].provider_config.container_name
+          config = env[:machine].provider_config
+          container_name = config.container_name
 
           case container_name
             when :machine
@@ -24,6 +25,8 @@ module Vagrant
 
           env[:machine].provider.driver.create(
             container_name,
+            config.backingstore,
+            config.backingstore_options,
             env[:lxc_template_src],
             env[:lxc_template_config],
             env[:lxc_template_opts]
