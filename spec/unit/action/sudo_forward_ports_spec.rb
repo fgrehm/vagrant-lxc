@@ -6,7 +6,7 @@ require 'vagrant-lxc/action/forward_ports'
 
 describe Vagrant::LXC::Action::ForwardPorts do
   let(:app)          { double(:app, call: true) }
-  let(:env)          { {machine: machine, ui: double(info: true)} }
+  let(:env)          { {machine: machine, ui: double(info: true, warn: true)} }
   let(:machine)      { double(:machine) }
   let!(:data_dir)    { Pathname.new(Dir.mktmpdir) }
   let(:provider)     { double(Vagrant::LXC::Provider, ssh_info: {host: container_ip}) }
