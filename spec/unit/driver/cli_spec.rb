@@ -41,10 +41,12 @@ describe Vagrant::LXC::Driver::CLI do
   end
 
   describe 'create' do
-    let(:template)      { 'quantal-64' }
-    let(:name)          { 'quantal-container' }
-    let(:config_file)   { 'config' }
-    let(:template_args) { { '--extra-param' => 'param', '--other' => 'value' } }
+    let(:template)          { 'quantal-64' }
+    let(:name)              { 'quantal-container' }
+    let(:backingstore)      { 'btrfs' }
+    let(:backingstore_opts) { [['--dir', '/tmp/foo'], ['--foo', 'bar']] }
+    let(:config_file)       { 'config' }
+    let(:template_args)     { { '--extra-param' => 'param', '--other' => 'value' } }
 
     subject { described_class.new(sudo_wrapper, name) }
 
@@ -53,9 +55,11 @@ describe Vagrant::LXC::Driver::CLI do
     end
 
     it 'issues a lxc-create with provided template, container name and hash of arguments' do
-      subject.create(template, config_file, template_args)
+      subject.create(template, backingstore, backingstore_opts, config_file, template_args)
       expect(subject).to have_received(:run).with(
         :create,
+        '-B',         backingstore,
+        *(backingstore_opts.flatten),
         '--template', template,
         '--name',     name,
         '-f',         config_file,
@@ -68,7 +72,7 @@ describe Vagrant::LXC::Driver::CLI do
     it 'wraps a low level error into something more meaningful in case the container already exists' do
       allow(subject).to receive(:run) { raise Vagrant::LXC::Errors::ExecuteError, stderr: 'alreAdy Exists' }
       expect {
-        subject.create(template, config_file, template_args)
+        subject.create(template, backingstore, backingstore_opts, config_file, template_args)
       }.to raise_error(Vagrant::LXC::Errors::ContainerAlreadyExists)
     end
   end

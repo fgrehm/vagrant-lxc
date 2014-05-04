@@ -31,19 +31,21 @@ describe Vagrant::LXC::Driver do
   end
 
   describe 'creation' do
-    let(:name)           { 'container-name' }
-    let(:template_name)  { 'auto-assigned-template-id' }
-    let(:template_path)  { '/path/to/lxc-template-from-box' }
-    let(:template_opts)  { {'--some' => 'random-option'} }
-    let(:config_file)    { '/path/to/lxc-config-from-box' }
-    let(:rootfs_tarball) { '/path/to/cache/rootfs.tar.gz' }
-    let(:cli)            { double(Vagrant::LXC::Driver::CLI, :create => true, :name= => true) }
+    let(:name)              { 'container-name' }
+    let(:backingstore)      { 'btrfs' }
+    let(:backingstore_opts) { [['--dir', '/tmp/foo'], ['--foo', 'bar']] }
+    let(:template_name)     { 'auto-assigned-template-id' }
+    let(:template_path)     { '/path/to/lxc-template-from-box' }
+    let(:template_opts)     { {'--some' => 'random-option'} }
+    let(:config_file)       { '/path/to/lxc-config-from-box' }
+    let(:rootfs_tarball)    { '/path/to/cache/rootfs.tar.gz' }
+    let(:cli)               { double(Vagrant::LXC::Driver::CLI, :create => true, :name= => true) }
 
     subject { described_class.new(nil, nil, cli) }
 
     before do
       allow(subject).to receive(:import_template).and_yield(template_name)
-      subject.create name, template_path, config_file, template_opts
+      subject.create name, backingstore, backingstore_opts, template_path, config_file, template_opts
     end
 
     it 'sets the cli object container name' do
@@ -53,6 +55,8 @@ describe Vagrant::LXC::Driver do
     it 'creates container with the right arguments' do
       expect(cli).to have_received(:create).with(
         template_name,
+        backingstore,
+        backingstore_opts,
         config_file,
         template_opts
       )
