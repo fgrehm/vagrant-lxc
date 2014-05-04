@@ -121,17 +121,8 @@ module Vagrant
         target_path    = "#{Dir.mktmpdir}/rootfs.tar.gz"
 
         @logger.info "Compressing '#{rootfs_path}' rootfs to #{target_path}"
-        # "vagrant package" will copy the existing lxc-template in the new box file
-        # To keep this function backwards compatible with existing boxes, the path
-        # included in the tarball needs to have the same amount of path components (2)
-        # that will be stripped before extraction, hence the './.'
-        # TODO: This should be reviewed before 1.0
-        cmds = [
-          "cd #{base_path}",
-          "rm -f rootfs.tar.gz",
-          "tar --numeric-owner -czf #{target_path} -C #{rootfs_path} './.'"
-        ]
-        @sudo_wrapper.su_c(cmds.join(' && '))
+        @sudo_wrapper.run('tar', '--numeric-owner', '-cvzf', target_path, '-C',
+          rootfs_path.parent.to_s, "./#{rootfs_path.basename.to_s}")
 
         @logger.info "Changing rootfs tarball owner"
         user_details = Etc.getpwnam(Etc.getlogin)
@@ -149,7 +140,9 @@ module Vagrant
       def prune_customizations
         # Use sed to just strip out the block of code which was inserted by Vagrant
         @logger.debug 'Prunning vagrant-lxc customizations'
-        @sudo_wrapper.su_c("sed -e '/^# VAGRANT-BEGIN/,/^# VAGRANT-END/ d' -ibak #{base_path.join('config')}")
+        contents = config_string
+        config_string.gsub! /^# VAGRANT-BEGIN(.|\s)*# VAGRANT-END/, ''
+        write_config(contents)
       end
 
       protected
@@ -160,10 +153,23 @@ module Vagrant
         end
         customizations.unshift '# VAGRANT-BEGIN'
         customizations      << '# VAGRANT-END'
+        contents = config_string
 
         config_file = base_path.join('config').to_s
         customizations.each do |line|
-          @sudo_wrapper.su_c("echo '#{line}' >> #{config_file}")
+          contents << line
+          contents << "\n"
+        end
+        write_config(contents)
+      end
+
+      def write_config(contents)
+        Tempfile.new('lxc-config').tap do |file|
+          file.chmod 0644
+          file.write contents
+          file.close
+          @sudo_wrapper.run 'cp', '-f', file.path, base_path.join('config').to_s
+          @sudo_wrapper.run 'chown', 'root:root', base_path.join('config').to_s
         end
       end
 
