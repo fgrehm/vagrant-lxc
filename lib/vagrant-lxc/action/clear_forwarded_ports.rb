@@ -35,9 +35,8 @@ module Vagrant
 
         def redir_pids
           @redir_pids = Dir[@env[:machine].data_dir.join('pids').to_s + "/redir_*.pid"].map do |file|
-	     port_number = file.split(/[^\d]/).join
-	     privileged_port = true if Integer(port_number) > 1024
-	     a = [ File.read(file).strip.chomp , privileged_port ]
+            port_number = File.basename(file).split(/[^\d]/).join
+            [ File.read(file).strip.chomp , Integer(port_number) <= 1024 ]
           end
         end
 
