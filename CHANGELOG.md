@@ -7,12 +7,16 @@ BACKWARDS INCOMPATIBILITIES:
 
 IMPROVEMENTS:
 
+  - Sort synced folders when mounting [[GH-271]]
+  - Privileged ports can now be forwarded with `sudo` [[GH-259]]
   - The `vagrant lxc sudoers` generated sudoers configuration and wrapper script
     are safer and properly whitelists the commands required by vagrant-lxc to run.
     [[GH-272]] / [[GH-269]]
 
 [GH-269]: https://github.com/fgrehm/vagrant-lxc/issues/269
 [GH-272]: https://github.com/fgrehm/vagrant-lxc/pull/272
+[GH-259]: https://github.com/fgrehm/vagrant-lxc/pull/259
+[GH-271]: https://github.com/fgrehm/vagrant-lxc/pull/271
 
 
 ## [1.0.0.alpha.1](https://github.com/fgrehm/vagrant-lxc/compare/v0.8.0...v1.0.0.alpha.1) (Apr 06, 2014)
