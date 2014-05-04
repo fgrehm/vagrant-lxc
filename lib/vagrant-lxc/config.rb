@@ -10,6 +10,8 @@ module Vagrant
       attr_accessor :backingstore
 
       # Optional arguments for the backing store, such as --fssize, --fstype, ...
+      #
+      # @return [Array]
       attr_accessor :backingstore_options
 
       # A string to explicitly set the container name. To use the vagrant
@@ -47,7 +49,7 @@ module Vagrant
       def finalize!
         @sudo_wrapper = nil if @sudo_wrapper == UNSET_VALUE
         @container_name = nil if @container_name == UNSET_VALUE
-        @backingstore = "none" if @backingstore == UNSET_VALUE
+        @backingstore = "best" if @backingstore == UNSET_VALUE
         @existing_container_name = nil if @existing_container_name == UNSET_VALUE
       end
     end
