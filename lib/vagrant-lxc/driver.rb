@@ -67,11 +67,13 @@ module Vagrant
       end
 
       def share_folder(host_path, guest_path, mount_options = nil)
-        guest_path = rootfs_path.join(guest_path.gsub(/^\//, ''))
-        unless guest_path.directory?
+        guest_path      = guest_path.gsub(/^\//, '')
+        guest_full_path = rootfs_path.join(guest_path)
+
+        unless guest_full_path.directory?
           begin
-            @logger.debug("Guest path doesn't exist, creating: #{guest_path}")
-            @sudo_wrapper.run('mkdir', '-p', guest_path.to_s)
+            @logger.debug("Guest path doesn't exist, creating: #{guest_full_path}")
+            @sudo_wrapper.run('mkdir', '-p', guest_full_path.to_s)
           rescue Errno::EACCES
             raise Vagrant::Errors::SharedFolderCreateFailed, :path => guest_path.to_s
           end

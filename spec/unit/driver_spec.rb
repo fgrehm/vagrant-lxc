@@ -151,7 +151,7 @@ describe Vagrant::LXC::Driver do
     let(:ro_rw_folder)        { {guestpath: '/vagrant/ro_rw', hostpath: '/path/to/host/dir', mount_options: ['ro', 'rw']} }
     let(:folders)             { [shared_folder, ro_rw_folder] }
     let(:rootfs_path)         { Pathname('/path/to/rootfs') }
-    let(:expected_guest_path) { "#{rootfs_path}/vagrant" }
+    let(:expected_guest_path) { "vagrant" }
     let(:sudo_wrapper)        { double(Vagrant::LXC::SudoWrapper, run: true) }
 
     subject { described_class.new('name', sudo_wrapper) }
@@ -162,7 +162,7 @@ describe Vagrant::LXC::Driver do
     end
 
     it "creates guest folder under container's rootfs" do
-      expect(sudo_wrapper).to have_received(:run).with("mkdir", "-p", expected_guest_path)
+      expect(sudo_wrapper).to have_received(:run).with("mkdir", "-p", "#{rootfs_path}/#{expected_guest_path}")
     end
 
     it 'adds a mount.entry to its local customizations' do
@@ -175,7 +175,7 @@ describe Vagrant::LXC::Driver do
     it 'supports additional mount options' do
       expect(subject.customizations).to include [
         'mount.entry',
-        "#{ro_rw_folder[:hostpath]} #{rootfs_path}/vagrant/ro_rw none ro,rw 0 0"
+        "#{ro_rw_folder[:hostpath]} vagrant/ro_rw none ro,rw 0 0"
       ]
     end
   end
