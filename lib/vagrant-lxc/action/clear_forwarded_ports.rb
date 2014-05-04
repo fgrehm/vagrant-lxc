@@ -15,11 +15,11 @@ module Vagrant
             redir_pids.each do |pid|
               next unless is_redir_pid?(pid[0])
               @logger.debug "Killing pid #{pid[0]}"
-	      if pid[1]
-		system  "sudo pkill -TERM -P #{pid[0]}"
-	      else
-		system "pkill -TERM -P #{pid[0]}"
-	      end
+              if pid[1]
+                system "sudo pkill -TERM -P #{pid[0]}"
+              else
+                system "pkill -TERM -P #{pid[0]}"
+              end
             end
 
             @logger.info "Removing redir pids files"
