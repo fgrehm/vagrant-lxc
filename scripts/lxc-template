@@ -162,4 +162,21 @@ echo "" >> ${LXC_PATH}/config
 echo "##############################################" >> ${LXC_PATH}/config
 echo "# vagrant-lxc container specific configuration" >> ${LXC_PATH}/config
 
+cat <<EOF >> ${LXC_PATH}/config
+lxc.network.type=veth
+lxc.network.link=lxcbr0
+lxc.network.flags=up
+EOF
+
+# if there is exactly one veth network entry, make sure it has an
+# associated hwaddr.
+nics=`grep -e '^lxc\.network\.type[ \t]*=[ \t]*veth' ${LXC_PATH}/config | wc -l`
+if [ $nics -eq 1 ]; then
+  grep -q "^lxc.network.hwaddr" ${LXC_PATH}/config || cat <<EOF >> ${LXC_PATH}/config
+lxc.network.hwaddr = 00:16:3e:$(openssl rand -hex 3| sed 's/\(..\)/\1:/g; s/.$//')
+EOF
+fi
+
+grep -q "^lxc.rootfs" ${LXC_PATH}/config 2>/dev/null || echo "lxc.rootfs = ${LXC_ROOTFS}" >> ${LXC_PATH}/config
+
 exit 0
