@@ -88,8 +88,8 @@ if [ -z "${LXC_TARBALL}" ]; then
     exit 1
 fi
 
-if [ -z "${LXC_ROOTFS}" ]; then
-    echo "'rootfs' parameter is required"
+if [ -z "${LXC_PATH}" ]; then
+    echo "'path' parameter is required"
     exit 1
 fi
 
@@ -98,9 +98,14 @@ if [ -z "${LXC_CONFIG}" ]; then
     exit 1
 fi
 
-if [ -z "${LXC_PATH}" ]; then
-    echo "'path' parameter is required"
-    exit 1
+# if $LXC_ROOTFS exists here, it was passed in with --rootfs
+if [ -z "${LXC_ROOTFS}" ]; then
+    config=${LXC_PATH}/config
+    if grep -q '^lxc.rootfs' $config 2>/dev/null ; then
+        LXC_ROOTFS=`grep 'lxc.rootfs =' $config | awk -F= '{ print $2 }'`
+    else
+        LXC_ROOTFS=$LXC_PATH/rootfs
+    fi
 fi
 
 # Unpack the rootfs
