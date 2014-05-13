@@ -29,15 +29,12 @@ will be coming along _soon_.
 * `redir` (if you are planning to use port forwarding)
 * A [kernel != 3.5.0-17.28](https://github.com/fgrehm/vagrant-lxc/wiki/Troubleshooting#wiki-im-unable-to-restart-containers)
 
-The plugin is known to work better and pretty much out of the box on Ubuntu 12.04+
+The plugin is known to work better and pretty much out of the box on Ubuntu 14.04+
 hosts and installing the dependencies on it basically means a `apt-get install lxc lxc-templates cgroup-lite redir`
 and a `apt-get update && apt-get dist-upgrade` to upgrade the kernel. For Debian
-hosts you'll need to follow the instructions described on the [Wiki](https://github.com/fgrehm/vagrant-lxc/wiki/Usage-on-debian-hosts).
-
-Some manual steps are required to set up a Linode machine prior to using this
-plugin, please check [the wiki](https://github.com/fgrehm/vagrant-lxc/wiki/Usage-on-Linode)
-for more information. Documentation on how to set things up for other distros
-[are welcome](https://github.com/fgrehm/vagrant-lxc/wiki) :)
+hosts you'll need to follow the instructions described on the [Wiki](https://github.com/fgrehm/vagrant-lxc/wiki/Usage-on-debian-hosts)
+and old lxc versions (like 0.7.5 shipped with Ubuntu 12.04 by default) might require
+[additional configurations to work](#backingstore-options).
 
 If you are on a Mac or Windows machine, you might want to have a look at [this](http://the.taoofmac.com/space/HOWTO/Vagrant)
 blog post for some ideas on how to set things up or check out [this other repo](https://github.com/fgrehm/vagrant-lxc-vbox-hosts)
@@ -52,7 +49,7 @@ disable checksum offloading as described on [this comment](https://github.com/fg
 On Vagrant 1.5+:
 
 ```
-vagrant plugin install vagrant-lxc --plugin-version 1.0.0.alpha.1
+vagrant plugin install vagrant-lxc --plugin-version 1.0.0.alpha.2
 ```
 
 On Vagrant < 1.5:
@@ -83,7 +80,7 @@ environmental variable to `lxc` in order to avoid typing `--provider=lxc` all
 the time.
 
 
-### Advanced configuration
+## Advanced configuration
 
 If you want, you can modify container configurations from within your Vagrantfile
 using the [provider block](http://docs.vagrantup.com/v2/providers/configuration.html):
@@ -123,13 +120,17 @@ end
 
 ### Backingstore options
 
-Support for setting `lxc-create`'s backingstore option (`-B`) can be specified
-from the provider block and it defaults to `best`, to change it you can:
+Support for setting `lxc-create`'s backingstore option (`-B` and related) can be
+specified from the provider block and it defaults to `best`, to change it:
 
 ```ruby
 Vagrant.configure("2") do |config|
   config.vm.provider :lxc do |lxc|
-    lxc.backingstore = 'none' # or 'btrfs', 'lvm', ...
+    lxc.backingstore = 'lvm' # or 'btrfs',...
+    # lvm specific options
+    lxc.backingstore_option '--vgname', 'schroots'
+    lxc.backingstore_option '--fssize', '5G'
+    lxc.backingstore_option '--fstype', 'xfs'
   end
 end
 ```
@@ -137,8 +138,15 @@ end
 For old versions of lxc (like 0.7.5 shipped with Ubuntu 12.04 by default) that
 does not support `best` for the backingstore option, changing it to `none` is
 required and a default for all Vagrant environments can be set from your
-`~/.vagrant.d/Vagrantfile` using the same `provider` block above.
+`~/.vagrant.d/Vagrantfile` using the same `provider` block:
 
+```ruby
+Vagrant.configure("2") do |config|
+  config.vm.provider :lxc do |lxc|
+    lxc.backingstore = 'none'
+  end
+end
+```
 
 ### Avoiding `sudo` passwords
 
