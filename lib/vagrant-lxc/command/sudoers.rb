@@ -142,7 +142,7 @@ Whitelist.add '/bin/chown', /\\A\\d+:\\d+\\z/, %r{\\A/tmp/.*/rootfs\.tar\.gz\\z}
 Whitelist.add '/usr/bin/lxc-version'
 Whitelist.add '/usr/bin/lxc-ls'
 Whitelist.add '/usr/bin/lxc-info', '--name', /.*/
-Whitelist.add '/usr/bin/lxc-create', '--template', /.*/, '--name', /.*/, '**'
+Whitelist.add '/usr/bin/lxc-create', '-B', /.*/, '--template', /.*/, '--name', /.*/, '**'
 Whitelist.add '/usr/bin/lxc-destroy',  '--name', /.*/
 Whitelist.add '/usr/bin/lxc-start', '-d', '--name', /.*/, '**'
 Whitelist.add '/usr/bin/lxc-stop', '--name', /.*/
