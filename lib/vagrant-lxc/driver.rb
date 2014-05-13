@@ -44,7 +44,11 @@ module Vagrant
       end
 
       def mac_address
-        @mac_address ||= config_string.match(/^lxc\.network\.hwaddr\s*+=\s*+(.+)$/)[1]
+        return @mac_address if @mac_address
+
+        if config_string =~ /^lxc\.network\.hwaddr\s*+=\s*+(.+)$/
+          @mac_address = $1
+        end
       end
 
       def config_string
