@@ -11,6 +11,7 @@ FEATURES:
 
 IMPROVEMENTS:
 
+  - Make `dnsmasq` leases MAC address regex check case insensitive [[GH-283]]
   - Use relative paths for `lxc.mount.entry` to avoid issues with `lxc-clone` [[GH-258]].
   - Sort synced folders when mounting [[GH-271]]
   - Privileged ports can now be forwarded with `sudo` [[GH-259]]
@@ -18,6 +19,7 @@ IMPROVEMENTS:
     are safer and properly whitelists the commands required by vagrant-lxc to run.
     [[GH-272]] / [[GH-269]]
 
+[GH-283]: https://github.com/fgrehm/vagrant-lxc/pull/283
 [GH-269]: https://github.com/fgrehm/vagrant-lxc/issues/269
 [GH-272]: https://github.com/fgrehm/vagrant-lxc/pull/272
 [GH-259]: https://github.com/fgrehm/vagrant-lxc/pull/259
