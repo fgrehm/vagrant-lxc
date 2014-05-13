@@ -105,6 +105,7 @@ if [ -z "${LXC_ROOTFS}" ]; then
         LXC_ROOTFS=`grep 'lxc.rootfs =' $config | awk -F= '{ print $2 }'`
     else
         LXC_ROOTFS=$LXC_PATH/rootfs
+        echo "lxc.rootfs = ${LXC_ROOTFS}" >> $config
     fi
 fi
 

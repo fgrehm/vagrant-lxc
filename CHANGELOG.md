@@ -19,7 +19,12 @@ IMPROVEMENTS:
     are safer and properly whitelists the commands required by vagrant-lxc to run.
     [[GH-272]] / [[GH-269]]
 
+BUG FIXES:
+
+  - Fix `lxc-create` issues with pre 1.0.0 versions [[GH-282]]
+
 [GH-283]: https://github.com/fgrehm/vagrant-lxc/pull/283
+[GH-282]: https://github.com/fgrehm/vagrant-lxc/pull/282
 [GH-269]: https://github.com/fgrehm/vagrant-lxc/issues/269
 [GH-272]: https://github.com/fgrehm/vagrant-lxc/pull/272
 [GH-259]: https://github.com/fgrehm/vagrant-lxc/pull/259
