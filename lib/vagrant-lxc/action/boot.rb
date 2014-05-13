@@ -14,6 +14,12 @@ module Vagrant
           utsname = env[:machine].config.vm.hostname || env[:machine].id
           config.customize 'utsname', utsname
 
+          # Fix apparmor issues when starting Ubuntu 14.04 containers
+          # See https://github.com/fgrehm/vagrant-lxc/issues/278 for more information
+          if Dir.exists?('/sys/fs/pstore')
+            config.customize 'mount.entry', '/sys/fs/pstore sys/fs/pstore none bind,optional 0 0'
+          end
+
           env[:ui].info I18n.t("vagrant_lxc.messages.starting")
           env[:machine].provider.driver.start(config.customizations)
 
