@@ -84,7 +84,7 @@ describe Vagrant::LXC::Driver do
     subject { described_class.new('name', sudo, cli) }
 
     before do
-      sudo.should_receive(:run).with('cat', '/var/lib/lxc/name/config').exactly(3).times.
+      sudo.should_receive(:run).with('cat', '/var/lib/lxc/name/config').exactly(2).times.
         and_return('# CONFIGURATION')
       sudo.should_receive(:run).twice.with('cp', '-f', %r{/tmp/.*}, '/var/lib/lxc/name/config')
       sudo.should_receive(:run).twice.with('chown', 'root:root', '/var/lib/lxc/name/config')
