@@ -112,8 +112,6 @@ for you. However, if the container name is important to you, you may use the
 
 ```ruby
 Vagrant.configure("2") do |config|
-  config.vm.box = "quantal64"
-
   config.vm.define "db" do |node|
     node.vm.provider :lxc do |lxc|
       lxc.container_name = :machine # Sets the container name to 'db'
@@ -122,6 +120,25 @@ Vagrant.configure("2") do |config|
   end
 end
 ```
+
+### Backingstore options
+
+Support for setting `lxc-create`'s backingstore option (`-B`) can be specified
+from the provider block and it defaults to `best`, to change it you can:
+
+```ruby
+Vagrant.configure("2") do |config|
+  config.vm.provider :lxc do |lxc|
+    lxc.backingstore = 'none' # or 'btrfs', 'lvm', ...
+  end
+end
+```
+
+For old versions of lxc (like 0.7.5 shipped with Ubuntu 12.04 by default) that
+does not support `best` for the backingstore option, changing it to `none` is
+required and a default for all Vagrant environments can be set from your
+`~/.vagrant.d/Vagrantfile` using the same `provider` block above.
+
 
 ### Avoiding `sudo` passwords
 
