@@ -19,7 +19,7 @@ module Vagrant
             dnsmasq_leases = read_dnsmasq_leases
             @logger.debug "Attempting to load ip from dnsmasq leases (mac: #{mac_address})"
             @logger.debug dnsmasq_leases
-            if dnsmasq_leases =~ /#{Regexp.escape mac_address}\s+([0-9.]+)\s+/i
+            if dnsmasq_leases =~ /#{Regexp.escape mac_address.to_s}\s+([0-9.]+)\s+/i
               ip = $1.to_s
               break
             else
