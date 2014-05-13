@@ -1,3 +1,6 @@
+## [1.0.0.beta.1](https://github.com/fgrehm/vagrant-lxc/compare/v1.0.0.alpha.2...master) (unreleased)
+
+
 ## [1.0.0.alpha.2](https://github.com/fgrehm/vagrant-lxc/compare/v1.0.0.alpha.1...v1.0.0.alpha.2) (May 13, 2014)
 
 BACKWARDS INCOMPATIBILITIES:
