@@ -143,7 +143,7 @@ module Vagrant
         # Use sed to just strip out the block of code which was inserted by Vagrant
         @logger.debug 'Prunning vagrant-lxc customizations'
         contents = config_string
-        config_string.gsub! /^# VAGRANT-BEGIN(.|\s)*# VAGRANT-END/, ''
+        contents.gsub! /^# VAGRANT-BEGIN(.|\s)*# VAGRANT-END\n/, ''
         write_config(contents)
       end
 
@@ -154,14 +154,11 @@ module Vagrant
           "lxc.#{key}=#{value}"
         end
         customizations.unshift '# VAGRANT-BEGIN'
-        customizations      << '# VAGRANT-END'
-        contents = config_string
+        customizations      << "# VAGRANT-END\n"
 
-        config_file = base_path.join('config').to_s
-        customizations.each do |line|
-          contents << line
-          contents << "\n"
-        end
+        contents = config_string
+        contents << customizations.join("\n")
+
         write_config(contents)
       end
 
