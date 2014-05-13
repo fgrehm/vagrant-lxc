@@ -1,8 +1,8 @@
 GIT
   remote: https://github.com/fgrehm/vagrant-cachier.git
-  revision: 184330dfb4d8b469c67cd25783b3cc066de2ba76
+  revision: 6e160ba4cbfc197f8fff1db385fb9d6b9463eba1
   specs:
-    vagrant-cachier (0.7.0)
+    vagrant-cachier (0.7.2)
 
 GIT
   remote: https://github.com/fgrehm/vagrant-pristine.git
@@ -12,7 +12,7 @@ GIT
 
 GIT
   remote: https://github.com/mitchellh/vagrant-spec.git
-  revision: aae28ee57071cdd121ca782c6e0709a5c650a4be
+  revision: c0dafc996165bf1628b672dd533f1858ff66fe4a
   specs:
     vagrant-spec (0.0.1)
       childprocess (~> 0.5.0)
@@ -22,9 +22,9 @@ GIT
 
 GIT
   remote: https://github.com/mitchellh/vagrant.git
-  revision: 51ffa4181c9b2c8a5b6246d41dfdf55085fe3b52
+  revision: 9475ed9a50650b88db444ac07a7034775d3b814e
   specs:
-    vagrant (1.6.0.dev)
+    vagrant (1.6.2)
       bundler (>= 1.5.2, < 1.7.0)
       childprocess (~> 0.5.0)
       erubis (~> 2.7.0)
@@ -70,13 +70,13 @@ GEM
     formatador (0.2.4)
     gssapi (1.0.3)
       ffi (>= 1.0.1)
-    guard (2.6.0)
+    guard (2.6.1)
       formatador (>= 0.2.4)
       listen (~> 2.7)
       lumberjack (~> 1.0)
       pry (>= 0.9.12)
       thor (>= 0.18.1)
-    guard-rspec (4.2.8)
+    guard-rspec (4.2.9)
       guard (~> 2.1)
       rspec (>= 2.14, < 4.0)
     gyoku (1.1.1)
@@ -99,13 +99,13 @@ GEM
     method_source (0.8.2)
     mime-types (2.2)
     mini_portile (0.5.3)
-    multi_json (1.9.3)
+    multi_json (1.10.0)
     net-scp (1.1.2)
       net-ssh (>= 2.6.5)
     net-ssh (2.9.0)
     nio4r (1.0.0)
-    nokogiri (1.6.1)
-      mini_portile (~> 0.5.0)
+    nokogiri (1.6.2)
+      mini_portile (~> 0.5.2)
     nori (1.1.5)
     pry (0.9.12.6)
       coderay (~> 1.0)
@@ -147,7 +147,7 @@ GEM
       tins (~> 1.0)
     thor (0.18.1)
     timers (1.1.0)
-    tins (1.1.0)
+    tins (1.2.0)
     uuidtools (2.1.4)
     vagrant-omnibus (1.4.1)
     wasabi (1.0.0)
