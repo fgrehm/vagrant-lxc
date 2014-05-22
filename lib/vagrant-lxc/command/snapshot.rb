@@ -44,7 +44,7 @@ module Vagrant
         end
 
         def list_snapshots
-          with_target_vms(argv) do |machine|
+          with_target_vms do |machine|
             snapshot_list=machine.provider.driver.all_containers.grep(/lxcsnap/)
             snapshot_names = []
             snapshot_list.each do |m|
@@ -56,7 +56,7 @@ module Vagrant
         end
 
         def create_snapshot(snapshot_suffix)
-          with_target_vms(argv) do |machine|
+          with_target_vms do |machine|
             machine.action(:halt, :force_halt => true)
             container_name=machine.provider.driver.container_name.to_s
             snapshot_name = container_name + "_lxcsnap_" + snapshot_suffix
