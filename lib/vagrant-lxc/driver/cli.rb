@@ -45,6 +45,13 @@ module Vagrant
           end
         end
 
+	def clone(existing_container_name, name)
+	  run :clone,
+	      '-s',
+	      '-o', existing_container_name,
+	      '-n', name
+        end
+
         def create(template, backingstore, backingstore_options, config_file, template_opts = {})
           if config_file
             config_opts = ['-f', config_file]

@@ -55,6 +55,12 @@ module Vagrant
         @sudo_wrapper.run('cat', base_path.join('config').to_s)
       end
 
+      def clone(existing_container_name, name)
+      	@cli.name = @container_name = name
+	@logger.debug "Cloning container..."
+	@cli.clone(existing_container_name, name)
+      end
+
       def create(name, backingstore, backingstore_options, template_path, config_file, template_options = {})
         @cli.name = @container_name = name
 
