@@ -37,7 +37,7 @@ module Vagrant
             if machine.provider.driver.all_containers.include?(snapshot_name)
               raise Vagrant::Errors::SnapshotAlreadyExists, name: @name
             end
-            machine.provider.driver.clone(tmp_name, snapshot_name)
+            machine.provider.driver.clone(container_name, snapshot_name)
           end
         end
       end
