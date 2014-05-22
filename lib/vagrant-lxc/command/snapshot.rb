@@ -52,6 +52,7 @@ module Vagrant
             end
             snapshot_names.uniq!
             puts snapshot_names
+            break
           end
         end
 
