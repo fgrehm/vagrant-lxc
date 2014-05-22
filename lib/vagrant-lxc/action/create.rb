@@ -20,7 +20,6 @@ module Vagrant
               container_name = "#{env[:root_path].basename}_#{env[:machine].name}"
               container_name.gsub!(/[^-a-z0-9_]/i, "")
               # make a copy of this variable for use in snapshot search later
-              container_name_prefix = container_name.dup
               # milliseconds + random number suffix to allow for simultaneous
               # `vagrant up` of the same box in different dirs
               container_name << "_#{(Time.now.to_f * 1000.0).to_i}_#{rand(100000)}"
@@ -36,7 +35,7 @@ module Vagrant
             # Try to find a container based on a snapshot
             if !config.snapshot_suffix.nil? && config.existing_container_name.nil?
               snapshots_array = all_containers.select { |c|
-                c =~ /#{container_name_prefix}_([0-9_]+)_lxcsnap_#{config.snapshot_suffix}/
+                c =~ /#{env[:machine].name}_([0-9_]+)_lxcsnap_#{config.snapshot_suffix}/
               }
               if snapshots_array.empty?
                 config.existing_container_name = nil
