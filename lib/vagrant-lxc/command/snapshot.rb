@@ -45,10 +45,11 @@ module Vagrant
 
         def list_snapshots
           with_target_vms do |machine|
-            snapshot_list=machine.provider.driver.all_containers.grep(/lxcsnap/)
+            snapshot_list=machine.provider.driver.all_containers.grep(/^s_/)
             snapshot_names = []
             snapshot_list.each do |m|
-              snapshot_names << m.match(/_lxcsnap_(.*)/)[1]
+              t = m.match(/s_(.*)_(.*)/)
+              snapshot_names << "#{t[1]}_#{t[2]}" if t
             end
             snapshot_names.uniq!
             puts snapshot_names
@@ -60,11 +61,15 @@ module Vagrant
           with_target_vms do |machine|
             machine.action(:halt, :force_halt => true)
             container_name=machine.provider.driver.container_name.to_s
-            snapshot_name = container_name + "_lxcsnap_" + snapshot_suffix
+            snapshot_name = "s_#{machine.name}_#{snapshot_suffix}"
             if machine.provider.driver.all_containers.include?(snapshot_name)
               raise Vagrant::Errors::SnapshotAlreadyExists, name: snapshot_name
             end
-            machine.provider.driver.clone(container_name, snapshot_name)
+            if machine.state.id == :not_created
+              puts "Snapshot of #{machine.name} is not possible"
+            else
+              machine.provider.driver.clone(container_name, snapshot_name)
+            end
           end
         end
       end
