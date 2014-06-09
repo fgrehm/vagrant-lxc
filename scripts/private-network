@@ -1,6 +1,7 @@
 #!/bin/bash
 
 # This is a snapshot of https://github.com/jpetazzo/pipework/blob/edbd33ab49ab0dff0bee46b019055360f325a6e5/pipework
+# with docker specifics trimmed out
 
 set -e
 
@@ -79,18 +80,8 @@ done < /proc/mounts
 N=$(find "$CGROUPMNT" -name "$GUESTNAME" | wc -l)
 case "$N" in
     0)
-	# If we didn't find anything, try to lookup the container with Docker.
-	if which docker >/dev/null
-	then
-      	    DOCKERPID=$(docker inspect --format='{{ .State.Pid }}' $GUESTNAME)
-            [ "$DOCKERPID" = "<no value>" ] && {
-      		echo "Container $GUESTNAME not found, and unknown to Docker."
-    		exit 1
-      	    }
-	else
-	    echo "Container $GUESTNAME not found, and Docker not installed."
-	    exit 1
-	fi
+  echo "Container $GUESTNAME not found."
+  exit 1
 	;;
     1)
 	true
@@ -132,15 +123,11 @@ else
     fi
 fi
 
-if [ $DOCKERPID ]; then
-  NSPID=$DOCKERPID
-else
-  NSPID=$(head -n 1 $(find "$CGROUPMNT" -name "$GUESTNAME" | head -n 1)/tasks)
-  [ "$NSPID" ] || {
-      echo "Could not find a process inside container $GUESTNAME."
-      exit 1
-  }
-fi
+NSPID=$(head -n 1 $(find "$CGROUPMNT" -name "$GUESTNAME" | head -n 1)/tasks)
+[ "$NSPID" ] || {
+    echo "Could not find a process inside container $GUESTNAME."
+    exit 1
+}
 
 [ ! -d /var/run/netns ] && mkdir -p /var/run/netns
 [ -f /var/run/netns/$NSPID ] && rm -f /var/run/netns/$NSPID
