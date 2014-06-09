@@ -167,8 +167,7 @@ Whitelist.run!(ARGV)
         def create_sudoers!(user, command)
           sudoers = Tempfile.new('vagrant-lxc-sudoers').tap do |file|
             file.puts "# Automatically created by vagrant-lxc"
-            file.puts "Cmnd_Alias LXC = #{command}"
-            file.puts "#{user} ALL=(root) NOPASSWD: LXC"
+            file.puts "#{user} ALL=(root) NOPASSWD: #{command}"
           end
           sudoers.close
           sudoers.path
