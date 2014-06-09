@@ -77,7 +77,7 @@ module Vagrant
         end
 
         def stop
-          attach '/sbin/halt'
+          attach '/sbin/halt' if supports_attach?
           run :stop, '--name', @name
         end
 
@@ -124,6 +124,19 @@ module Vagrant
             # TODO: Raise an user friendly message
             raise TargetStateNotReached.new target_state, last_state
           end
+        end
+
+        def supports_attach?
+          unless defined?(@supports_attach)
+            begin
+              @supports_attach = true
+              run(:attach, '--name', @name, 'true')
+            rescue LXC::Errors::ExecuteError
+              @supports_attach = false
+            end
+          end
+
+          return @supports_attach
         end
 
         private
