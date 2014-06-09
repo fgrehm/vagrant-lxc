@@ -130,6 +130,65 @@ describe Vagrant::LXC::Driver::CLI do
     end
   end
 
+  describe 'stop' do
+    let(:name) { 'a-running-container' }
+    subject    { described_class.new(sudo_wrapper, name) }
+
+    before do
+      allow(subject).to receive(:run)
+    end
+
+    context 'lxc-attach is supported' do
+      before do
+        subject.stub(attach: true, supports_attach?: true)
+        subject.stop
+      end
+
+      it 'runs a /sbin/halt within the container' do
+        expect(subject).to have_received(:attach).with('/sbin/halt')
+      end
+
+      it 'issues a lxc-stop with provided container name' do
+        expect(subject).to have_received(:run).with(:stop, '--name', name)
+      end
+    end
+
+    context 'lxc-attach is not supported' do
+      before do
+        subject.stub(attach: false, supports_attach?: false)
+        subject.stop
+      end
+
+      it 'runs a /sbin/halt within the container' do
+        expect(subject).to_not have_received(:attach)
+      end
+
+      it 'issues a lxc-stop with provided container name' do
+        expect(subject).to have_received(:run).with(:stop, '--name', name)
+      end
+    end
+  end
+
+  describe 'shutdown' do
+    let(:name) { 'a-running-container' }
+    subject    { described_class.new(sudo_wrapper, name) }
+
+    before do
+      subject.stub(system: true)
+      allow(subject).to receive(:run)
+    end
+
+    it 'issues a lxc-shutdown with provided container name' do
+      subject.shutdown
+      expect(subject).to have_received(:run).with(:shutdown, '--name', name)
+    end
+
+    it 'raises a ShutdownNotSupported in case it is not supported' do
+      allow(subject).to receive(:system).with('which lxc-shutdown > /dev/null').and_return(false)
+      expect { subject.shutdown }.to raise_error(described_class::ShutdownNotSupported)
+    end
+  end
+
   describe 'state' do
     let(:name) { 'a-container' }
     subject    { described_class.new(sudo_wrapper, name) }
@@ -183,9 +242,6 @@ describe Vagrant::LXC::Driver::CLI do
   end
 
   describe 'transition block' do
-    let(:name) { 'a-running-container' }
-    subject    { described_class.new(name) }
-
     before do
       subject.stub(run: true, sleep: true, state: :stopped)
     end
@@ -203,5 +259,34 @@ describe Vagrant::LXC::Driver::CLI do
     end
 
     skip 'waits for the expected container state'
+  end
+
+  describe 'check for whether lxc-attach is supported' do
+    let(:name) { 'a-running-container' }
+    subject    { described_class.new(sudo_wrapper, name) }
+
+    context 'lxc-attach is present on system' do
+      before { subject.stub(run: true) }
+
+      it 'returns true if `lxc-attach --name CNAME -- /bin/true` works' do
+        expect(subject.supports_attach?).to be_truthy
+        expect(subject).to have_received(:run).with(
+          :attach, '--name', name, '--', '/bin/true'
+        )
+      end
+    end
+
+    context 'lxc-attach is not present on system' do
+      before do
+        allow(subject).to receive(:run).and_raise(Vagrant::LXC::Errors::ExecuteError.new('msg'))
+      end
+
+      it 'returns true if `lxc-attach --name CNAME -- /bin/true` works' do
+        expect(subject.supports_attach?).to be_falsy
+        expect(subject).to have_received(:run).with(
+          :attach, '--name', name, '--', '/bin/true'
+        )
+      end
+    end
   end
 end

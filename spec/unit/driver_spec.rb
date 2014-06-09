@@ -75,6 +75,17 @@ describe Vagrant::LXC::Driver do
     end
   end
 
+  describe 'supports_attach?' do
+    let(:cli) { double(Vagrant::LXC::Driver::CLI, supports_attach?: true) }
+
+    subject { described_class.new('name', nil, cli) }
+
+    it 'delegates to cli object' do
+      expect(subject.supports_attach?).to be_truthy
+      expect(cli).to have_received(:supports_attach?)
+    end
+  end
+
   describe 'start' do
     let(:customizations)         { [['a', '1'], ['b', '2']] }
     let(:internal_customization) { ['internal', 'customization'] }
