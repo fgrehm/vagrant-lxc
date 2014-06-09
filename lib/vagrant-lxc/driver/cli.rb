@@ -130,7 +130,7 @@ module Vagrant
           unless defined?(@supports_attach)
             begin
               @supports_attach = true
-              run(:attach, '--name', @name, 'true')
+              run(:attach, '--name', @name, '--', '/bin/true')
             rescue LXC::Errors::ExecuteError
               @supports_attach = false
             end
