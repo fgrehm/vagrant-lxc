@@ -6,6 +6,11 @@ IMPROVEMENTS:
 
 [GH-294]: https://github.com/fgrehm/vagrant-lxc/pull/294
 
+BUG FIXES:
+
+  - Escape space characters for synced folders [[GH-291]]
+
+[GH-291]: https://github.com/fgrehm/vagrant-lxc/issues/291
 
 ## [1.0.0.alpha.2](https://github.com/fgrehm/vagrant-lxc/compare/v1.0.0.alpha.1...v1.0.0.alpha.2) (May 13, 2014)
 

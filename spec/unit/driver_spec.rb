@@ -160,7 +160,8 @@ describe Vagrant::LXC::Driver do
   describe 'folder sharing' do
     let(:shared_folder)       { {guestpath: '/vagrant', hostpath: '/path/to/host/dir'} }
     let(:ro_rw_folder)        { {guestpath: '/vagrant/ro_rw', hostpath: '/path/to/host/dir', mount_options: ['ro', 'rw']} }
-    let(:folders)             { [shared_folder, ro_rw_folder] }
+    let(:with_space_folder)   { {guestpath: '/tmp/with space', hostpath: '/path/with space'} }
+    let(:folders)             { [shared_folder, ro_rw_folder, with_space_folder] }
     let(:rootfs_path)         { Pathname('/path/to/rootfs') }
     let(:expected_guest_path) { "vagrant" }
     let(:sudo_wrapper)        { double(Vagrant::LXC::SudoWrapper, run: true) }
@@ -187,6 +188,13 @@ describe Vagrant::LXC::Driver do
       expect(subject.customizations).to include [
         'mount.entry',
         "#{ro_rw_folder[:hostpath]} vagrant/ro_rw none ro,rw 0 0"
+      ]
+    end
+
+    it 'supports directories with spaces' do
+      expect(subject.customizations).to include [
+        'mount.entry',
+        "/path/with\\040space tmp/with\\040space none bind 0 0"
       ]
     end
   end

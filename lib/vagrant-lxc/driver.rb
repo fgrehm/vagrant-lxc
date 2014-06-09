@@ -84,6 +84,8 @@ module Vagrant
         end
 
         mount_options = Array(mount_options || ['bind'])
+        host_path     = host_path.to_s.gsub(' ', '\\\040')
+        guest_path    = guest_path.gsub(' ', '\\\040')
         @customizations << ['mount.entry', "#{host_path} #{guest_path} none #{mount_options.join(',')} 0 0"]
       end
 
