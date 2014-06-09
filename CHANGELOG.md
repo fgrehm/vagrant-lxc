@@ -9,8 +9,12 @@ IMPROVEMENTS:
 BUG FIXES:
 
   - Escape space characters for synced folders [[GH-291]]
+  - Use Vagrant's ruby on the sudoers file so that it works on systems that don't
+    have a global ruby installation [[GH-289]]
 
 [GH-291]: https://github.com/fgrehm/vagrant-lxc/issues/291
+[GH-289]: https://github.com/fgrehm/vagrant-lxc/issues/289
+
 
 ## [1.0.0.alpha.2](https://github.com/fgrehm/vagrant-lxc/compare/v1.0.0.alpha.1...v1.0.0.alpha.2) (May 13, 2014)
 

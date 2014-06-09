@@ -44,7 +44,7 @@ module Vagrant
         #           lands into core
         def create_wrapper!
           wrapper = Tempfile.new('lxc-wrapper').tap do |file|
-            file.puts "#!/usr/bin/env ruby"
+            file.puts "#!/opt/vagrant/embedded/bin/ruby"
             file.puts "# Automatically created by vagrant-lxc"
             file.puts <<-EOF
 class Whitelist
