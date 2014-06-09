@@ -120,14 +120,14 @@ GEM
       ffi (>= 0.5.0)
     rest-client (1.6.7)
       mime-types (>= 1.16)
-    rspec (2.99.0.beta2)
-      rspec-core (= 2.99.0.beta2)
-      rspec-expectations (= 2.99.0.beta2)
-      rspec-mocks (= 2.99.0.beta2)
-    rspec-core (2.99.0.beta2)
-    rspec-expectations (2.99.0.beta2)
+    rspec (2.99.0)
+      rspec-core (~> 2.99.0)
+      rspec-expectations (~> 2.99.0)
+      rspec-mocks (~> 2.99.0)
+    rspec-core (2.99.0)
+    rspec-expectations (2.99.0)
       diff-lcs (>= 1.1.3, < 2.0)
-    rspec-mocks (2.99.0.beta2)
+    rspec-mocks (2.99.0)
     rubyntlm (0.1.1)
     savon (0.9.5)
       akami (~> 1.0)
@@ -171,7 +171,7 @@ DEPENDENCIES
   guard-rspec
   rake
   rb-inotify
-  rspec (= 2.99.0.beta2)
+  rspec (= 2.99.0)
   vagrant!
   vagrant-cachier!
   vagrant-lxc!

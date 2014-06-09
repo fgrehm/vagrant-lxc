@@ -9,7 +9,7 @@ end
 
 group :development, :test do
   gem 'rake'
-  gem 'rspec',        '2.99.0.beta2'
+  gem 'rspec',        '2.99.0'
   gem 'coveralls',    require: (ENV['COVERAGE'] == 'true')
   gem 'vagrant-spec', git: 'https://github.com/mitchellh/vagrant-spec.git'
 end
