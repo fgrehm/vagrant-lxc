@@ -1,4 +1,10 @@
-## [1.0.0.beta.1](https://github.com/fgrehm/vagrant-lxc/compare/v1.0.0.alpha.2...master) (unreleased)
+## [1.0.0.alpha.3](https://github.com/fgrehm/vagrant-lxc/compare/v1.0.0.alpha.2...master) (unreleased)
+
+IMPROVEMENTS:
+
+  - Add fallback mechanism for platforms without `lxc-attach` support [[GH-294]]
+
+[GH-294]: https://github.com/fgrehm/vagrant-lxc/pull/294
 
 
 ## [1.0.0.alpha.2](https://github.com/fgrehm/vagrant-lxc/compare/v1.0.0.alpha.1...v1.0.0.alpha.2) (May 13, 2014)
