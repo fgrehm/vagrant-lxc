@@ -8,10 +8,13 @@ IMPROVEMENTS:
 
 BUG FIXES:
 
+  - Attach to containers using the `MOUNT` namespace when attempting to fetch
+    container's IP [[GH-300]]
   - Escape space characters for synced folders [[GH-291]]
   - Use Vagrant's ruby on the sudoers file so that it works on systems that don't
     have a global ruby installation [[GH-289]]
 
+[GH-300]: https://github.com/fgrehm/vagrant-lxc/issues/300
 [GH-291]: https://github.com/fgrehm/vagrant-lxc/issues/291
 [GH-289]: https://github.com/fgrehm/vagrant-lxc/issues/289
 

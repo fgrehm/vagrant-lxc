@@ -32,7 +32,7 @@ module Vagrant
 
         # From: https://github.com/lxc/lxc/blob/staging/src/python-lxc/lxc/__init__.py#L371-L385
         def get_container_ip_from_ip_addr(driver)
-          output = driver.attach '/sbin/ip', '-4', 'addr', 'show', 'scope', 'global', 'eth0', namespaces: 'network'
+          output = driver.attach '/sbin/ip', '-4', 'addr', 'show', 'scope', 'global', 'eth0', namespaces: ['network', 'mount']
           if output =~ /^\s+inet ([0-9.]+)\/[0-9]+\s+/
             return $1.to_s
           end
