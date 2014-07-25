@@ -113,7 +113,7 @@ describe Vagrant::LXC::Driver do
   end
 
   describe 'halt' do
-    let(:cli) { double(Vagrant::LXC::Driver::CLI, shutdown: true) }
+    let(:cli) { double(Vagrant::LXC::Driver::CLI, stop: true) }
 
     subject { described_class.new('name', nil, cli) }
 
@@ -121,8 +121,8 @@ describe Vagrant::LXC::Driver do
       allow(cli).to receive(:transition_to).and_yield(cli)
     end
 
-    it 'delegates to cli shutdown' do
-      expect(cli).to receive(:shutdown)
+    it 'delegates to cli stop' do
+      expect(cli).to receive(:stop)
       subject.forced_halt
     end
 
@@ -133,14 +133,7 @@ describe Vagrant::LXC::Driver do
 
     it 'attempts to force the container to stop in case a shutdown doesnt work' do
       allow(cli).to receive(:shutdown).and_raise(Vagrant::LXC::Driver::CLI::TargetStateNotReached.new :target, :source)
-      expect(cli).to receive(:transition_to).with(:stopped).twice
-      expect(cli).to receive(:stop)
-      subject.forced_halt
-    end
-
-    it 'attempts to force the container to stop in case lxc-shutdown is not supported' do
-      allow(cli).to receive(:shutdown).and_raise(Vagrant::LXC::Driver::CLI::ShutdownNotSupported)
-      expect(cli).to receive(:transition_to).with(:stopped).twice
+      expect(cli).to receive(:transition_to).with(:stopped)
       expect(cli).to receive(:stop)
       subject.forced_halt
     end

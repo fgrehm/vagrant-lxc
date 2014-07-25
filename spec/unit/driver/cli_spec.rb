@@ -4,7 +4,7 @@ require 'vagrant-lxc/sudo_wrapper'
 require 'vagrant-lxc/driver/cli'
 
 describe Vagrant::LXC::Driver::CLI do
-  let(:sudo_wrapper) { double(Vagrant::LXC::SudoWrapper, run: true) }
+  let(:sudo_wrapper) { double(Vagrant::LXC::SudoWrapper, run: true, wrapper_path: nil) }
 
   subject { described_class.new(sudo_wrapper) }
 
@@ -110,26 +110,6 @@ describe Vagrant::LXC::Driver::CLI do
     end
   end
 
-  describe 'shutdown' do
-    let(:name) { 'a-running-container' }
-    subject    { described_class.new(sudo_wrapper, name) }
-
-    before do
-      subject.stub(system: true)
-      allow(subject).to receive(:run)
-    end
-
-    it 'issues a lxc-shutdown with provided container name' do
-      subject.shutdown
-      expect(subject).to have_received(:run).with(:shutdown, '--name', name)
-    end
-
-    it 'raises a ShutdownNotSupported in case it is not supported' do
-      allow(subject).to receive(:system).with('which lxc-shutdown > /dev/null').and_return(false)
-      expect { subject.shutdown }.to raise_error(described_class::ShutdownNotSupported)
-    end
-  end
-
   describe 'stop' do
     let(:name) { 'a-running-container' }
     subject    { described_class.new(sudo_wrapper, name) }
@@ -166,26 +146,6 @@ describe Vagrant::LXC::Driver::CLI do
       it 'issues a lxc-stop with provided container name' do
         expect(subject).to have_received(:run).with(:stop, '--name', name)
       end
-    end
-  end
-
-  describe 'shutdown' do
-    let(:name) { 'a-running-container' }
-    subject    { described_class.new(sudo_wrapper, name) }
-
-    before do
-      subject.stub(system: true)
-      allow(subject).to receive(:run)
-    end
-
-    it 'issues a lxc-shutdown with provided container name' do
-      subject.shutdown
-      expect(subject).to have_received(:run).with(:shutdown, '--name', name)
-    end
-
-    it 'raises a ShutdownNotSupported in case it is not supported' do
-      allow(subject).to receive(:system).with('which lxc-shutdown > /dev/null').and_return(false)
-      expect { subject.shutdown }.to raise_error(described_class::ShutdownNotSupported)
     end
   end
 
