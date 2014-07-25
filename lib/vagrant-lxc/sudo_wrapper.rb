@@ -4,6 +4,8 @@ module Vagrant
       # Include this so we can use `Subprocess` more easily.
       include Vagrant::Util::Retryable
 
+      attr_reader :wrapper_path
+
       def initialize(wrapper_path = nil)
         @wrapper_path = wrapper_path
         @logger       = Log4r::Logger.new("vagrant::lxc::sudo_wrapper")

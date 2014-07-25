@@ -97,6 +97,11 @@ module Vagrant
             opts       = cmd.pop
             namespaces = Array(opts[:namespaces]).map(&:upcase).join('|')
 
+            # HACK: The wrapper script should be able to handle this
+            if @sudo_wrapper.wrapper_path
+              namespaces = "'#{namespaces}'"
+            end
+
             if namespaces
               if supports_attach_with_namespaces?
                 extra = ['--namespaces', namespaces]
