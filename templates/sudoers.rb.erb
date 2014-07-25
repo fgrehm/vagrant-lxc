@@ -1,0 +1,110 @@
+#!/opt/vagrant/embedded/bin/ruby
+# Automatically created by vagrant-lxc
+
+class Whitelist
+  class << self
+    def add(command, *args)
+      list[command] << args
+    end
+
+    def list
+      @list ||= Hash.new do |key, hsh|
+        key[hsh] = []
+      end
+    end
+
+    def allowed(command)
+      list[command] || []
+    end
+
+    def run!(argv)
+      begin
+        command, args = `which #{argv.shift}`.chomp, argv || []
+        check!(command, args)
+        puts `#{command} #{args.join(" ")}`
+        exit $?.to_i
+      rescue => e
+        STDERR.puts e.message
+        exit 1
+      end
+    end
+
+    private
+    def check!(command, args)
+      allowed(command).each do |checks|
+        return if valid_args?(args, checks)
+      end
+      raise_invalid(command, args)
+    end
+
+    def valid_args?(args, checks)
+      return false unless valid_length?(args, checks)
+      check = nil
+      args.each_with_index do |provided, i|
+        check = checks[i] unless check == '**'
+        return false unless match?(provided, check)
+      end
+      true
+    end
+
+    def valid_length?(args, checks)
+      args.length == checks.length || checks.last == '**'
+    end
+
+    def match?(arg, check)
+      check == '**' || check.is_a?(Regexp) && !!check.match(arg) || arg == check
+    end
+
+    def raise_invalid(command, args)
+      raise "Invalid arguments for command #{command}, " <<
+      "provided args: #{args.inspect}"
+    end
+  end
+end
+
+base = "/var/lib/lxc"
+base_path = %r{\A#{base}/.*\z}
+templates_path = %r{\A/usr/(share|lib|lib64|local/lib)/lxc/templates/.*\z}
+
+##
+# Commands from provider.rb
+# - Check lxc is installed
+Whitelist.add '<%= cmd_paths['which'] %>', /\Alxc-\w+\z/
+
+##
+# Commands from driver.rb
+# - Container config file
+Whitelist.add '<%= cmd_paths['cat'] %>', base_path
+# - Shared folders
+Whitelist.add '<%= cmd_paths['mkdir'] %>', '-p', base_path
+# - Container config customizations and pruning
+Whitelist.add '<%= cmd_paths['cp'] %>', '-f', %r{/tmp/.*}, base_path
+Whitelist.add '<%= cmd_paths['chown'] %>', 'root:root', base_path
+# - Template import
+Whitelist.add '<%= cmd_paths['cp'] %>', %r{\A.*\z}, templates_path
+Whitelist.add '<%= cmd_paths['chmod'] %>', '+x', templates_path
+# - Template removal
+Whitelist.add '<%= cmd_paths['rm'] %>', templates_path
+# - Packaging
+Whitelist.add '<%= cmd_paths['tar'] %>', '--numeric-owner', '-cvzf', %r{/tmp/.*/rootfs.tar.gz}, '-C', base_path, './rootfs'
+Whitelist.add '<%= cmd_paths['chown'] %>', /\A\d+:\d+\z/, %r{\A/tmp/.*/rootfs\.tar\.gz\z}
+
+##
+# Commands from driver/cli.rb
+Whitelist.add '<%= cmd_paths['lxc_bin'] %>/lxc-version'
+Whitelist.add '<%= cmd_paths['lxc_bin'] %>/lxc-ls'
+Whitelist.add '<%= cmd_paths['lxc_bin'] %>/lxc-info', '--name', /.*/
+Whitelist.add '<%= cmd_paths['lxc_bin'] %>/lxc-create', '-B', /.*/, '--template', /.*/, '--name', /.*/, '**'
+Whitelist.add '<%= cmd_paths['lxc_bin'] %>/lxc-destroy', '--name', /.*/
+Whitelist.add '<%= cmd_paths['lxc_bin'] %>/lxc-start', '-d', '--name', /.*/, '**'
+Whitelist.add '<%= cmd_paths['lxc_bin'] %>/lxc-stop', '--name', /.*/
+Whitelist.add '<%= cmd_paths['lxc_bin'] %>/lxc-shutdown', '--name', /.*/
+Whitelist.add '<%= cmd_paths['lxc_bin'] %>/lxc-attach', '--name', /.*/, '**'
+Whitelist.add '<%= cmd_paths['lxc_bin'] %>/lxc-attach', '-h'
+
+##
+# Commands from driver/action/remove_temporary_files.rb
+Whitelist.add '<%= cmd_paths['rm'] %>', '-rf', %r{\A#{base}/.*/rootfs/tmp/.*}
+
+# Watch out for stones
+Whitelist.run!(ARGV)
