@@ -10,7 +10,6 @@ module Vagrant
         attr_accessor :name
 
         class TransitionBlockNotProvided < RuntimeError; end
-        class ShutdownNotSupported < RuntimeError; end
         class TargetStateNotReached < RuntimeError
           def initialize(target_state, state)
             msg = "Target state '#{target_state}' not reached, currently on '#{state}'"
@@ -79,15 +78,6 @@ module Vagrant
         def stop
           attach '/sbin/halt' if supports_attach?
           run :stop, '--name', @name
-        end
-
-        def shutdown
-          if system('which lxc-shutdown > /dev/null')
-            run :shutdown, '--name', @name
-          else
-            # REFACTOR: Do not use exception to control the flow
-            raise ShutdownNotSupported
-          end
         end
 
         def attach(*cmd)

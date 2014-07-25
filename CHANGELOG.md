@@ -2,6 +2,7 @@
 
 IMPROVEMENTS:
 
+  - Remove `lxc-shutdown` usage in favor of Vagrant's built in graceful halt
   - Add fallback mechanism for platforms without `lxc-attach` support [[GH-294]]
 
 [GH-294]: https://github.com/fgrehm/vagrant-lxc/pull/294
