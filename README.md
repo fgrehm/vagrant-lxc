@@ -20,7 +20,7 @@ branch.
 * Port forwarding via [`redir`](http://linux.die.net/man/1/redir)
 
 As of now, it does not support public / private networks, but [private networks](https://github.com/fgrehm/vagrant-lxc/issues/120)
-will be coming along _soon_.
+will be coming along with the final 1.0.0 release.
 
 ## Requirements
 
@@ -49,7 +49,7 @@ disable checksum offloading as described on [this comment](https://github.com/fg
 On Vagrant 1.5+:
 
 ```
-vagrant plugin install vagrant-lxc --plugin-version 1.0.0.alpha.2
+vagrant plugin install vagrant-lxc --plugin-version 1.0.0.alpha.3
 ```
 
 On Vagrant < 1.5:
