@@ -33,6 +33,7 @@ LXC_PATH=
 LXC_ROOTFS=
 LXC_TARBALL=
 LXC_CONFIG=
+LXC_STRIP_COMPONENTS=2
 
 usage() {
     cat <<EOF
@@ -51,11 +52,12 @@ LXC internal arguments (do not pass manually!):
 [ --rootfs <rootfs> ]: The path to the container's rootfs
 [ --mapped-uid <map> ]: A uid map (user namespaces)
 [ --mapped-gid <map> ]: A gid map (user namespaces)
+[ --strip-components <num> ]: Number of path components to strip from tarball
 EOF
     return 0
 }
 
-options=$(getopt -o h -l tarball:,config:,help:,name:,path:,rootfs:,mapped-uid:,mapped-gid: -- "$@")SS
+options=$(getopt -o h -l tarball:,config:,help:,name:,path:,rootfs:,mapped-uid:,mapped-gid:,strip-components: -- "$@")SS
 
 if [ $? -ne 0 ]; then
     usage $(basename $0)
@@ -74,6 +76,7 @@ do
         --rootfs)           LXC_ROOTFS=$2; shift 2;;
         --mapped-uid)       LXC_MAPPED_UID=$2; shift 2;;
         --mapped-gid)       LXC_MAPPED_GID=$2; shift 2;;
+        --strip-components) LXC_STRIP_COMPONENTS=$2; shift 2;;
         *)                  break;;
     esac
 done
@@ -121,7 +124,7 @@ mkdir -p /var/lock/subsys
     fi
 
     mkdir -p ${LXC_ROOTFS}
-    (cd ${LXC_ROOTFS} && tar xfz ${LXC_TARBALL} --strip-components=2)
+    (cd ${LXC_ROOTFS} && tar xfz ${LXC_TARBALL} --strip-components=${LXC_STRIP_COMPONENTS})
     if [ $? -ne 0 ]; then
         echo "Failed to extract rootfs"
         exit 1
