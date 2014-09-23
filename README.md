@@ -46,14 +46,6 @@ disable checksum offloading as described on [this comment](https://github.com/fg
 
 ## Installation
 
-On Vagrant 1.5+:
-
-```
-vagrant plugin install vagrant-lxc --plugin-version 1.0.0.alpha.3
-```
-
-On Vagrant < 1.5:
-
 ```
 vagrant plugin install vagrant-lxc
 ```
@@ -61,23 +53,13 @@ vagrant plugin install vagrant-lxc
 
 ## Quick start
 
-On Vagrant 1.5+:
-
 ```
 vagrant init fgrehm/precise64-lxc
 vagrant up --provider=lxc
 ```
 
-On Vagrant < 1.5:
-
-```
-vagrant init precise64 http://bit.ly/vagrant-lxc-precise64-2013-10-23
-vagrant up --provider=lxc
-```
-
-If you are using Vagrant 1.2+ you can also set the `VAGRANT_DEFAULT_PROVIDER`
-environmental variable to `lxc` in order to avoid typing `--provider=lxc` all
-the time.
+_Set the `VAGRANT_DEFAULT_PROVIDER` environmental variable to `lxc` in order to
+avoid typing `--provider=lxc` all the time._
 
 
 ## Base boxes
