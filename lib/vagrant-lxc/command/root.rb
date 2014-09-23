@@ -13,6 +13,10 @@ module Vagrant
               require_relative 'sudoers'
               Sudoers
             end
+            registry.register(:snapshot) do
+              require_relative 'snapshot'
+              Snapshot
+            end
           end
           super(argv, env)
         end

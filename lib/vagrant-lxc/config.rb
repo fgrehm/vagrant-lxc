@@ -18,12 +18,18 @@ module Vagrant
       # machine name, set this to :machine
       attr_accessor :container_name
 
+      attr_accessor :existing_container_name
+
+      # A string that contains the suffix of the snapshot to load
+      attr_accessor :snapshot_suffix
+
       def initialize
         @customizations = []
         @backingstore = UNSET_VALUE
         @backingstore_options = []
         @sudo_wrapper   = UNSET_VALUE
         @container_name = UNSET_VALUE
+        @snapshot_suffix = UNSET_VALUE
       end
 
       # Customize the container by calling `lxc-start` with the given
@@ -51,6 +57,7 @@ module Vagrant
         @container_name = nil if @container_name == UNSET_VALUE
         @backingstore = "best" if @backingstore == UNSET_VALUE
         @existing_container_name = nil if @existing_container_name == UNSET_VALUE
+        @snapshot_suffix = nil if @snapshot_suffix == UNSET_VALUE
       end
     end
   end
