@@ -17,11 +17,4 @@ Gem::Specification.new do |gem|
   gem.executables   = gem.files.grep(%r{^bin/}).map{ |f| File.basename(f) }
   gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})
   gem.require_paths = ["lib"]
-
-  gem.post_install_message = %Q{
-  Thanks for giving vagrant-lxc #{Vagrant::LXC::VERSION} a try!
-  This version introduces many changes and includes some deprecations,
-  please see the project's CHANGELOG:
-    https://github.com/fgrehm/vagrant-lxc/blob/master/CHANGELOG.md
-  }
 end
