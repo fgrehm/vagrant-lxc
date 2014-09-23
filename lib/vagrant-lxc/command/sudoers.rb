@@ -36,7 +36,7 @@ module Vagrant
         end
 
         def sudoers_path
-          "/etc/sudoers.d/vagrant-lxc-#{Vagrant::LXC::VERSION.gsub( /\./, '-')}"
+          "/etc/sudoers.d/vagrant-lxc"
         end
 
         private

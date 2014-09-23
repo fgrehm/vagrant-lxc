@@ -8,7 +8,7 @@ module Vagrant
     end
 
     def self.sudo_wrapper_path
-      "/usr/local/bin/vagrant-lxc-wrapper-#{VERSION}"
+      "/usr/local/bin/vagrant-lxc-wrapper"
     end
   end
 end
