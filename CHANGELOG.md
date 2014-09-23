@@ -1,3 +1,18 @@
+## [1.0.0](https://github.com/fgrehm/vagrant-lxc/compare/v1.0.0.alpha.3...v1.0.0) (Sep 22, 2014)
+
+IMPROVEMENTS:
+
+  - Add support for specifying the `--strip-parameters` used by the [default template](scripts/lxc-template)
+    when extracting rootfs tarballs [[GH-311]]
+
+BUG FIXES:
+
+  - Check for outdated base boxes when starting containers [[GH-314]]
+
+[GH-311]: https://github.com/fgrehm/vagrant-lxc/pull/311
+[GH-314]: https://github.com/fgrehm/vagrant-lxc/pull/314
+
+
 ## [1.0.0.alpha.3](https://github.com/fgrehm/vagrant-lxc/compare/v1.0.0.alpha.2...v1.0.0.alpha.3) (Aug 9, 2014)
 
 IMPROVEMENTS:
