@@ -101,6 +101,7 @@ module Vagrant
       def self.action_start
         Builder.new.tap do |b|
           b.use Builtin::ConfigValidate
+          b.use Builtin::BoxCheckOutdated
           b.use Builtin::Call, Builtin::IsState, :running do |env, b2|
             # If the VM is running, then our work here is done, exit
             next if env[:result]
