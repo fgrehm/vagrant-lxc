@@ -1,4 +1,4 @@
-## [1.0.0](https://github.com/fgrehm/vagrant-lxc/compare/v1.0.0.alpha.3...v1.0.0) (Sep 22, 2014)
+## [1.0.0](https://github.com/fgrehm/vagrant-lxc/compare/v1.0.0.alpha.3...v1.0.0) (Sep 23, 2014)
 
 BACKWARDS INCOMPATIBILITIES:
 
@@ -8,8 +8,11 @@ BACKWARDS INCOMPATIBILITIES:
 
 IMPROVEMENTS:
 
+  - `vagrant-mounted` upstart event is now emited on containers that support it [[GH-302]]
   - Add support for specifying the `--strip-parameters` used by the [default template](scripts/lxc-template)
     when extracting rootfs tarballs [[GH-311]]
+
+[GH-302]: https://github.com/fgrehm/vagrant-lxc/issues/302
 
 BUG FIXES:
 

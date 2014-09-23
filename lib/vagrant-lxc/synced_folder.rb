@@ -46,6 +46,27 @@ module Vagrant
                                 guest_path: data[:guestpath]))
         end
       end
+
+      def enable(machine, folders, _opts)
+        # Emit an upstart event if we can
+        return unless machine.communicate.test("test -x /sbin/initctl")
+
+        # short guestpaths first, so we don't step on ourselves
+        folders = folders.sort_by do |id, data|
+          if data[:guestpath]
+            data[:guestpath].length
+          else
+            # A long enough path to just do this at the end.
+            10000
+          end
+        end
+
+        folders.each do |id, data|
+          guest_path = data[:guestpath]
+          machine.communicate.sudo(
+            "/sbin/initctl emit --no-wait vagrant-mounted MOUNTPOINT=#{guest_path}")
+        end
+      end
     end
   end
 end
