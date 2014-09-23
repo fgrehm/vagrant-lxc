@@ -66,3 +66,7 @@ en:
         There is container on your system with the same name you've specified
         on your Vagrantfile (%{name}), please choose a different one or
         run `lxc-destroy --name %{name}` and try again.
+
+      lxc_command_not_supported: |-
+        Command (lxc-%{command}) not supported in version %{version}.
+        This command is available with version %{available_version}.

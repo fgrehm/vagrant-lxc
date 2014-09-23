@@ -28,11 +28,21 @@ module Vagrant
         end
 
         def version
-          if run(:version) =~ /lxc version:\s+(.+)\s*$/
-            $1.downcase
+          return @version if @version
+          @version = support_version_command? ? run(:version) : run(:create, '--version')
+          if @version =~ /(lxc version:\s+|)(.+)\s*$/
+            @version = $2.downcase
           else
             # TODO: Raise an user friendly error
             raise 'Unable to parse lxc version!'
+          end
+        end
+
+        def config(param)
+          if support_config_command?
+            run(:config, param).gsub("\n", '')
+          else
+            raise Errors::CommandNotSupported, name: 'config', available_version: '> 1.x.x', version: version
           end
         end
 
@@ -132,6 +142,17 @@ module Vagrant
           end
 
           return @supports_attach
+        end
+
+        def support_config_command?
+          version[0].to_i >= 1
+        end
+
+        def support_version_command?
+          @sudo_wrapper.run('which', 'lxc-version')
+          return true
+        rescue Vagrant::LXC::Errors::ExecuteError
+          return false
         end
 
         private

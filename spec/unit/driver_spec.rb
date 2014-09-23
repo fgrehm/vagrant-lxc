@@ -89,7 +89,7 @@ describe Vagrant::LXC::Driver do
   describe 'start' do
     let(:customizations)         { [['a', '1'], ['b', '2']] }
     let(:internal_customization) { ['internal', 'customization'] }
-    let(:cli)                    { double(Vagrant::LXC::Driver::CLI, start: true) }
+    let(:cli)                    { double(Vagrant::LXC::Driver::CLI, start: true, support_config_command?: false) }
     let(:sudo)                   { double(Vagrant::LXC::SudoWrapper) }
 
     subject { described_class.new('name', sudo, cli) }
@@ -99,6 +99,7 @@ describe Vagrant::LXC::Driver do
         and_return('# CONFIGURATION')
       sudo.should_receive(:run).twice.with('cp', '-f', %r{/tmp/.*}, '/var/lib/lxc/name/config')
       sudo.should_receive(:run).twice.with('chown', 'root:root', '/var/lib/lxc/name/config')
+
       subject.customizations << internal_customization
       subject.start(customizations)
     end
@@ -147,6 +148,30 @@ describe Vagrant::LXC::Driver do
 
     it 'delegates to cli' do
       expect(subject.state).to eq(cli_state)
+    end
+  end
+
+  describe 'containers_path' do
+    let(:cli) { double(Vagrant::LXC::Driver::CLI, config: cli_config_value, support_config_command?: cli_support_config_command_value) }
+
+    subject { described_class.new('name', nil, cli) }
+
+    describe 'lxc version before 1.x.x' do
+      let(:cli_support_config_command_value) { false }
+      let(:cli_config_value)                 { '/var/lib/lxc' }
+
+      it 'delegates to cli' do
+        expect(subject.containers_path).to eq(cli_config_value)
+      end
+    end
+
+    describe 'lxc version after 1.x.x' do
+      let(:cli_support_config_command_value) { true }
+      let(:cli_config_value)                 { '/etc/lxc' }
+
+      it 'delegates to cli' do
+        expect(subject.containers_path).to eq(cli_config_value)
+      end
     end
   end
 
