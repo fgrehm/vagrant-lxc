@@ -197,14 +197,9 @@ module Vagrant
       # is expected to be put into the `:machine_ip` key.
       def self.action_fetch_ip
         Builder.new.tap do |b|
-          b.use Builtin::ConfigValidate
-          b.use Builtin::Call, Builtin::IsState, :running do |env, b2|
-            if env[:result]
-              b2.use FetchIpWithLxcAttach if env[:machine].provider.driver.supports_attach?
-              b2.use FetchIpFromDnsmasqLeases
-            else
-              b2.use Builtin::Message, I18n.t("vagrant_lxc.messages.not_running")
-            end
+          b.use Builtin::Call, Builtin::ConfigValidate do |env, b2|
+            b2.use FetchIpWithLxcAttach if env[:machine].provider.driver.supports_attach?
+            b2.use FetchIpFromDnsmasqLeases
           end
         end
       end
