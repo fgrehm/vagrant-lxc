@@ -1,3 +1,15 @@
+## [1.0.1](https://github.com/fgrehm/vagrant-lxc/compare/v1.0.0...v1.0.1) (Oct 15, 2014)
+
+IMPROVEMENTS:
+
+  - Avoid lock race condition when fetching container's IP [[GH-318]] and SSH execution [[GH-321]]
+  - Support for custom containers storage path by reading `lxc.lxcpath` [[GH-317]]
+
+
+[GH-317]: https://github.com/fgrehm/vagrant-lxc/pull/317
+[GH-318]: https://github.com/fgrehm/vagrant-lxc/pull/318
+[GH-321]: https://github.com/fgrehm/vagrant-lxc/issues/321
+
 ## [1.0.0](https://github.com/fgrehm/vagrant-lxc/compare/v1.0.0.alpha.3...v1.0.0) (Sep 23, 2014)
 
 DEPRECATIONS:
