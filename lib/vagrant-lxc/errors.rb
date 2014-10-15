@@ -26,6 +26,10 @@ module Vagrant
         error_key(:lxc_container_already_exists)
       end
 
+      class CommandNotSupported < Vagrant::Errors::VagrantError
+        error_key(:lxc_command_not_supported)
+      end
+
       # Box related errors
       class TemplateFileMissing < Vagrant::Errors::VagrantError
         error_key(:lxc_template_file_missing)
