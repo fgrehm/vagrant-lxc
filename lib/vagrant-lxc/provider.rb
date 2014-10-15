@@ -64,9 +64,9 @@ module Vagrant
 
       # Returns the SSH info for accessing the Container.
       def ssh_info
-        # If the Container is not created then we cannot possibly SSH into it, so
+        # If the Container is not running then we cannot possibly SSH into it, so
         # we return nil.
-        return nil if state == :not_created
+        return nil if state.id != :running
 
         # Run a custom action called "fetch_ip" which does what it says and puts
         # the IP found into the `:machine_ip` key in the environment.
