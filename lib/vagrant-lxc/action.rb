@@ -195,7 +195,7 @@ module Vagrant
 
       # This action is called to read the IP of the container. The IP found
       # is expected to be put into the `:machine_ip` key.
-      def self.action_fetch_ip
+      def self.action_ssh_ip
         Builder.new.tap do |b|
           b.use Builtin::Call, Builtin::ConfigValidate do |env, b2|
             b2.use FetchIpWithLxcAttach if env[:machine].provider.driver.supports_attach?

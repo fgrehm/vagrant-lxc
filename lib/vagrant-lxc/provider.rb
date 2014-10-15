@@ -68,9 +68,9 @@ module Vagrant
         # we return nil.
         return nil if state.id != :running
 
-        # Run a custom action called "fetch_ip" which does what it says and puts
+        # Run a custom action called "ssh_ip" which does what it says and puts
         # the IP found into the `:machine_ip` key in the environment.
-        env = @machine.action("fetch_ip")
+        env = @machine.action("ssh_ip")
 
         # If we were not able to identify the container's IP, we return nil
         # here and we let Vagrant core deal with it ;)
