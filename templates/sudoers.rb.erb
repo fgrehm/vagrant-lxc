@@ -95,12 +95,14 @@ Whitelist.add '<%= cmd_paths['lxc_bin'] %>/lxc-version'
 Whitelist.add '<%= cmd_paths['lxc_bin'] %>/lxc-ls'
 Whitelist.add '<%= cmd_paths['lxc_bin'] %>/lxc-info', '--name', /.*/
 Whitelist.add '<%= cmd_paths['lxc_bin'] %>/lxc-create', '-B', /.*/, '--template', /.*/, '--name', /.*/, '**'
+Whitelist.add '<%= cmd_paths['lxc_bin'] %>/lxc-create', '--version'
 Whitelist.add '<%= cmd_paths['lxc_bin'] %>/lxc-destroy', '--name', /.*/
 Whitelist.add '<%= cmd_paths['lxc_bin'] %>/lxc-start', '-d', '--name', /.*/, '**'
 Whitelist.add '<%= cmd_paths['lxc_bin'] %>/lxc-stop', '--name', /.*/
 Whitelist.add '<%= cmd_paths['lxc_bin'] %>/lxc-shutdown', '--name', /.*/
 Whitelist.add '<%= cmd_paths['lxc_bin'] %>/lxc-attach', '--name', /.*/, '**'
 Whitelist.add '<%= cmd_paths['lxc_bin'] %>/lxc-attach', '-h'
+Whitelist.add '<%= cmd_paths['lxc_bin'] %>/lxc-config', 'lxc.lxcpath'
 
 ##
 # Commands from driver/action/remove_temporary_files.rb

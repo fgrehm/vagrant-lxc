@@ -149,8 +149,7 @@ module Vagrant
         end
 
         def support_version_command?
-          @sudo_wrapper.run('which', 'lxc-version')
-          return true
+          @sudo_wrapper.run('which', 'lxc-version').strip.chomp != ''
         rescue Vagrant::LXC::Errors::ExecuteError
           return false
         end
