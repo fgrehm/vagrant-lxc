@@ -20,6 +20,7 @@ to see it in action.
 * [Vagrant 1.1+](http://www.vagrantup.com/downloads.html)
 * lxc 0.7.5+
 * `redir` (if you are planning to use port forwarding)
+* `brctl` (if you are planning to use private networks, on Ubuntu this means `apt-get install bridge-utils`)
 * A [kernel != 3.5.0-17.28](https://github.com/fgrehm/vagrant-lxc/wiki/Troubleshooting#wiki-im-unable-to-restart-containers)
 
 The plugin is known to work better and pretty much out of the box on Ubuntu 14.04+
