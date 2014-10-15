@@ -30,6 +30,7 @@ describe Vagrant::LXC::Driver::CLI do
 
   describe 'version' do
     before do
+      allow(subject).to receive(:support_version_command?).and_return(true)
       allow(subject).to receive(:run).with(:version).and_return(lxc_version_out)
     end
 
@@ -52,6 +53,7 @@ describe Vagrant::LXC::Driver::CLI do
 
   describe 'config' do
     before do
+      allow(subject).to receive(:support_version_command?).and_return(support_version_command?)
       allow(subject).to receive(:run).with(:config, 'lxc.lxcpath').and_return(lxc_config_out)
       allow(subject).to receive(:run).with(:version).and_return(lxc_version_out)
       allow(subject).to receive(:run).with(:create, '--version').and_return(lxc_version_out)
