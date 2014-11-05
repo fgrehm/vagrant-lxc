@@ -6,6 +6,8 @@ require "vagrant-lxc/driver/cli"
 
 require "etc"
 
+require "tempfile"
+
 module Vagrant
   module LXC
     class Driver
