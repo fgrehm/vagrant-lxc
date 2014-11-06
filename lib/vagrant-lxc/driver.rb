@@ -36,7 +36,21 @@ module Vagrant
       end
 
       def rootfs_path
-        Pathname.new(config_string.match(/^lxc\.rootfs\s+=\s+(.+)$/)[1])
+        config_entry = config_string.match(/^lxc\.rootfs\s+=\s+(.+)$/)[1]
+        case config_entry
+        when /^overlayfs:/
+          # Split on colon (:), ignoring any colon escaped by an escape character ( \ )
+          # Pays attention to when the escape character is itself escaped.
+          fs_type, master_path, overlay_path = config_entry.split(/(?<!\\)(?:\\\\)*:/)
+          if overlay_path
+            Pathname.new(overlay_path)
+          else
+            # Malformed: fall back to prior behaviour
+            Pathname.new(config_entry)
+          end
+        else
+          Pathname.new(config_entry)
+        end
       end
 
       def mac_address
