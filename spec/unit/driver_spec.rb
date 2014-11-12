@@ -143,6 +143,7 @@ describe Vagrant::LXC::Driver do
     
     let(:shared_folder)       { {guestpath: '/vagrant', hostpath: '/path/to/host/dir'} }
     let(:folders)             { [shared_folder] }
+    let(:expected_mount_path) { "vagrant" }
     let(:expected_guest_path) { "#{rootfs_path}/vagrant" }
     let(:sudo_wrapper)        { instance_double('Vagrant::LXC::SudoWrapper', run: true) }
 
@@ -161,7 +162,7 @@ describe Vagrant::LXC::Driver do
       it 'adds a mount.entry to its local customizations' do
         subject.customizations.should include [
           'mount.entry',
-          "#{shared_folder[:hostpath]} #{expected_guest_path} none bind 0 0"
+          "#{shared_folder[:hostpath]} #{expected_mount_path} none bind 0 0"
         ]
       end
     end
@@ -189,7 +190,7 @@ describe Vagrant::LXC::Driver do
       it 'adds a mount.entry to its local customizations' do
         subject.customizations.should include [
           'mount.entry',
-          "#{shared_folder[:hostpath]} #{expected_guest_path} none bind 0 0"
+          "#{shared_folder[:hostpath]} #{expected_mount_path} none bind 0 0"
         ]
       end
     end
@@ -217,7 +218,7 @@ describe Vagrant::LXC::Driver do
       it 'adds a mount.entry to its local customizations' do
         subject.customizations.should include [
           'mount.entry',
-          "#{shared_folder[:hostpath]} #{expected_guest_path} none bind 0 0"
+          "#{shared_folder[:hostpath]} #{expected_mount_path} none bind 0 0"
         ]
       end
     end

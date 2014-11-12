@@ -70,19 +70,28 @@ module Vagrant
         end
       end
 
+      def share_folder(host_path, guest_path, mount_options = nil)
+        guest_path      = guest_path.gsub(/^\//, '')
+        guest_full_path = rootfs_path.join(guest_path)
+
+        unless guest_full_path.directory?
+          begin
+            @logger.debug("Guest path doesn't exist, creating: #{guest_full_path}")
+            @sudo_wrapper.run('mkdir', '-p', guest_full_path.to_s)
+          rescue Errno::EACCES
+            raise Vagrant::Errors::SharedFolderCreateFailed, :path => guest_path.to_s
+          end
+        end
+
+        mount_options = Array(mount_options || ['bind'])
+        host_path     = host_path.to_s.gsub(' ', '\\\040')
+        guest_path    = guest_path.gsub(' ', '\\\040')
+        @customizations << ['mount.entry', "#{host_path} #{guest_path} none #{mount_options.join(',')} 0 0"]
+      end
+
       def share_folders(folders)
         folders.each do |folder|
-          guestpath = rootfs_path.join(folder[:guestpath].gsub(/^\//, ''))
-          unless guestpath.directory?
-            begin
-              @logger.debug("Guest path doesn't exist, creating: #{guestpath}")
-              @sudo_wrapper.run('mkdir', '-p', guestpath.to_s)
-            rescue Errno::EACCES
-              raise Vagrant::Errors::SharedFolderCreateFailed, :path => guestpath.to_s
-            end
-          end
-
-          @customizations << ['mount.entry', "#{folder[:hostpath]} #{guestpath} none bind 0 0"]
+          share_folder(folder[:hostpath], folder[:guestpath], folder[:mountoptions] || nil)
         end
       end
 
