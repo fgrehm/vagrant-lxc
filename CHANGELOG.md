@@ -8,6 +8,8 @@ IMPROVEMENTS:
 
   - The provider will now have a higher priority over the VirtualBox provider
     in case VirtualBox is installed alongside lxc dependecies.
+  - Show an user friendly message when trying to use the plugin on non-Linux
+    environments.
 
 
 ## [1.0.1](https://github.com/fgrehm/vagrant-lxc/compare/v1.0.0...v1.0.1) (Oct 15, 2014)

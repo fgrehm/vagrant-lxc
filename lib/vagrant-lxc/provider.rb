@@ -9,6 +9,14 @@ module Vagrant
     class Provider < Vagrant.plugin("2", :provider)
       attr_reader :driver
 
+      def self.usable?(raise_error=false)
+        if !Vagrant::Util::Platform.linux?
+          raise Errors::LxcLinuxRequired
+        end
+
+        true
+      end
+
       def initialize(machine)
         @logger    = Log4r::Logger.new("vagrant::provider::lxc")
         @machine   = machine

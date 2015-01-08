@@ -56,6 +56,10 @@ en:
 
         Looked up under: %{paths}
 
+      lxc_linux_required: |-
+        The LXC provider only works on Linux. Please try to use
+        another provider.
+
       lxc_not_installed: |-
         The `lxc` package does not seem to be installed or is not accessible on the PATH.
 
