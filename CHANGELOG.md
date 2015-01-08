@@ -4,6 +4,11 @@ BACKWARDS INCOMPATIBILITIES:
 
   - Support for Vagrant versions prior to 1.5 have been removed.
 
+IMPROVEMENTS:
+
+  - The provider will now have a higher priority over the VirtualBox provider
+    in case VirtualBox is installed alongside lxc dependecies.
+
 
 ## [1.0.1](https://github.com/fgrehm/vagrant-lxc/compare/v1.0.0...v1.0.1) (Oct 15, 2014)
 
