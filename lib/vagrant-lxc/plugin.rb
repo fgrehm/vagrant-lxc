@@ -1,5 +1,4 @@
 require 'vagrant'
-require 'vagrant-backports/utils'
 
 module Vagrant
   module LXC
@@ -10,9 +9,7 @@ module Vagrant
       LXC-based virtual machines.
       EOF
 
-      extra = []
-      extra << {parallel: true} if Vagrant::Backports.vagrant_1_2_or_later?
-      provider(:lxc, *extra) do
+      provider(:lxc, parallel: true) do
         require File.expand_path("../provider", __FILE__)
 
         I18n.load_path << File.expand_path(File.dirname(__FILE__) + '/../../locales/en.yml')
@@ -31,18 +28,14 @@ module Vagrant
         Config
       end
 
-      if Vagrant::Backports.vagrant_1_4_or_later?
-        synced_folder(:lxc) do
-          require File.expand_path("../synced_folder", __FILE__)
-          SyncedFolder
-        end
+      synced_folder(:lxc) do
+        require File.expand_path("../synced_folder", __FILE__)
+        SyncedFolder
       end
 
-      if Vagrant::Backports.vagrant_1_5_or_later?
-        provider_capability("lxc", "public_address") do
-          require_relative "provider/cap/public_address"
-          Provider::Cap::PublicAddress
-        end
+      provider_capability("lxc", "public_address") do
+        require_relative "provider/cap/public_address"
+        Provider::Cap::PublicAddress
       end
     end
   end

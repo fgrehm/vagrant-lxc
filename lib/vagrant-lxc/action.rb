@@ -15,16 +15,6 @@ require 'vagrant-lxc/action/remove_temporary_files'
 require 'vagrant-lxc/action/setup_package_files'
 require 'vagrant-lxc/action/warn_networks'
 
-unless Vagrant::Backports.vagrant_1_3_or_later?
-  require 'vagrant-backports/action/wait_for_communicator'
-end
-unless Vagrant::Backports.vagrant_1_5_or_later?
-  require 'vagrant-backports/ui'
-  require 'vagrant-backports/action/handle_box'
-  require 'vagrant-backports/action/message'
-  require 'vagrant-backports/action/is_state'
-end
-
 module Vagrant
   module LXC
     module Action
@@ -57,15 +47,10 @@ module Vagrant
           b.use Builtin::Provision
           b.use Builtin::EnvSet, :port_collision_repair => true
           b.use Builtin::HandleForwardedPortCollisions
-          if Vagrant::Backports.vagrant_1_4_or_later?
-            b.use PrepareNFSValidIds
-            b.use Builtin::SyncedFolderCleanup
-            b.use Builtin::SyncedFolders
-            b.use PrepareNFSSettings
-          else
-            require 'vagrant-lxc/backports/action/share_folders'
-            b.use ShareFolders
-          end
+          b.use PrepareNFSValidIds
+          b.use Builtin::SyncedFolderCleanup
+          b.use Builtin::SyncedFolders
+          b.use PrepareNFSSettings
           b.use Builtin::SetHostname
           b.use WarnNetworks
           b.use ForwardPorts
@@ -165,9 +150,7 @@ module Vagrant
                 b3.use Builtin::EnvSet, :force_halt => true
                 b3.use action_halt
                 b3.use Destroy
-                if Vagrant::Backports.vagrant_1_3_or_later?
-                  b3.use Builtin::ProvisionerCleanup
-                end
+                b3.use Builtin::ProvisionerCleanup
               else
                 b3.use Builtin::Message, I18n.t("vagrant_lxc.messages.will_not_destroy")
               end
