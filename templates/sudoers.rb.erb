@@ -22,7 +22,11 @@ class Whitelist
         command, args = `which #{argv.shift}`.chomp, argv || []
         check!(command, args)
         puts `#{command} #{args.join(" ")}`
-        exit $?.to_i
+
+        exit_code = $?.to_i
+        exit_code = 1 if exit_code == 256
+
+        exit exit_code
       rescue => e
         STDERR.puts e.message
         exit 1
