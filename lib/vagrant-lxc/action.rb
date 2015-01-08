@@ -8,6 +8,7 @@ require 'vagrant-lxc/action/fetch_ip_with_lxc_attach'
 require 'vagrant-lxc/action/fetch_ip_from_dnsmasq_leases'
 require 'vagrant-lxc/action/forced_halt'
 require 'vagrant-lxc/action/forward_ports'
+require 'vagrant-lxc/action/gc_private_network_bridges'
 require 'vagrant-lxc/action/handle_box_metadata'
 require 'vagrant-lxc/action/prepare_nfs_settings'
 require 'vagrant-lxc/action/prepare_nfs_valid_ids'
@@ -131,6 +132,7 @@ module Vagrant
                 b3.use ForcedHalt
               end
             end
+            b2.use GcPrivateNetworkBridges
           end
         end
       end
