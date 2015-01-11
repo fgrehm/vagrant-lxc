@@ -2,7 +2,18 @@
 
 BACKWARDS INCOMPATIBILITIES:
 
-  - Support for Vagrant versions prior to 1.5 have been removed.
+  - Support for Vagrant versions prior to 1.5 have been removed. The plugin now targets
+    Vagrant 1.7+ but it _might_ work on 1.5+.
+
+FEATURES:
+
+  - New experimental support for private networking [[GH-298]] / [[GH-120]].
+  - Support for formatted overlayfs path [[GH-329]]
+
+
+[GH-298]: https://github.com/fgrehm/vagrant-lxc/pull/298
+[GH-120]: https://github.com/fgrehm/vagrant-lxc/issues/120
+[GH-329]: https://github.com/fgrehm/vagrant-lxc/pull/329
 
 IMPROVEMENTS:
 
