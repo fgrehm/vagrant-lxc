@@ -16,11 +16,7 @@ module Vagrant
             when String
               # Nothing to do here, move along...
             else
-              container_name = "#{env[:root_path].basename}_#{env[:machine].name}"
-              container_name.gsub!(/[^-a-z0-9_]/i, "")
-              # milliseconds + random number suffix to allow for simultaneous
-              # `vagrant up` of the same box in different dirs
-              container_name << "_#{(Time.now.to_f * 1000.0).to_i}_#{rand(100000)}"
+              container_name = generate_container_name(env)
           end
 
           env[:machine].provider.driver.create(
@@ -35,6 +31,19 @@ module Vagrant
           env[:machine].id = container_name
 
           @app.call env
+        end
+
+        def generate_container_name(env)
+          container_name = "#{env[:root_path].basename}_#{env[:machine].name}"
+          container_name.gsub!(/[^-a-z0-9_]/i, "")
+
+          # milliseconds + random number suffix to allow for simultaneous
+          # `vagrant up` of the same box in different dirs
+          container_name << "_#{(Time.now.to_f * 1000.0).to_i}_#{rand(100000)}"
+
+          # Trim container name to 64 chars, keeping "randomness"
+          trim_point = container_name.size > 64 ? -64 : -(container_name.size)
+          container_name[trim_point..-1]
         end
       end
     end
