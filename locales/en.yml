@@ -21,6 +21,10 @@ en:
       warn_owner: |-
         Warning! The LXC provider doesn't support the :owner parameter for synced
         folders. It will be silently ignored.
+      setup_private_network: |-
+        Setting up private networks...
+      remove_bridge: |-
+        Removing bridge '%{name}'...
 
   vagrant:
     commands:

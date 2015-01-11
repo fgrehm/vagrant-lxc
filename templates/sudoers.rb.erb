@@ -4,24 +4,36 @@
 class Whitelist
   class << self
     def add(command, *args)
+      list[command] ||= []
       list[command] << args
     end
 
+    def add_regex(regex, *args)
+      regex_list << [regex, [args]]
+    end
+
     def list
-      @list ||= Hash.new do |key, hsh|
-        key[hsh] = []
-      end
+      @list ||= {}
+    end
+
+    def regex_list
+      @regex_list ||= []
     end
 
     def allowed(command)
-      list[command] || []
+      list[command] || allowed_regex(command) || []
+    end
+
+    def allowed_regex(command)
+      found = regex_list.find { |r| r[0] =~ command }
+      return found[1] if found
     end
 
     def run!(argv)
       begin
         command, args = `which #{argv.shift}`.chomp, argv || []
         check!(command, args)
-        puts `#{command} #{args.join(" ")}`
+        system "#{command} #{args.join(" ")}"
 
         exit_code = $?.to_i
         exit_code = 1 if exit_code == 256
@@ -92,6 +104,11 @@ Whitelist.add '<%= cmd_paths['rm'] %>', templates_path
 # - Packaging
 Whitelist.add '<%= cmd_paths['tar'] %>', '--numeric-owner', '-cvzf', %r{/tmp/.*/rootfs.tar.gz}, '-C', base_path, './rootfs'
 Whitelist.add '<%= cmd_paths['chown'] %>', /\A\d+:\d+\z/, %r{\A/tmp/.*/rootfs\.tar\.gz\z}
+# - Private network script and commands
+Whitelist.add '<%= cmd_paths['ip'] %>', 'addr', 'add', /(\d+|\.)+\/24/, 'dev', /.+/
+Whitelist.add '<%= cmd_paths['ifconfig'] %>', /.+/, 'down'
+Whitelist.add '<%= cmd_paths['brctl'] %>', 'delbr', /.+/
+Whitelist.add_regex %r{<%= pipework_regex %>}, '**'
 
 ##
 # Commands from driver/cli.rb

@@ -46,8 +46,9 @@ module Vagrant
           wrapper = Tempfile.new('lxc-wrapper').tap do |file|
             template = Vagrant::Util::TemplateRenderer.new(
               'sudoers.rb',
-              :template_root => Vagrant::LXC.source_root.join('templates').to_s,
-              :cmd_paths     => build_cmd_paths_hash
+              :template_root  => Vagrant::LXC.source_root.join('templates').to_s,
+              :cmd_paths      => build_cmd_paths_hash,
+              :pipework_regex => "#{ENV['HOME']}/\.vagrant\.d/gems/gems/vagrant-lxc.+/scripts/pipework"
             )
             file.puts template.render
           end
@@ -78,7 +79,7 @@ module Vagrant
 
         def build_cmd_paths_hash
           {}.tap do |hash|
-            %w( which cat mkdir cp chown chmod rm tar chown ).each do |cmd|
+            %w( which cat mkdir cp chown chmod rm tar chown ip ifconfig brctl ).each do |cmd|
               hash[cmd] = `which #{cmd}`.strip
             end
             hash['lxc_bin'] = Pathname(`which lxc-create`.strip).parent.to_s

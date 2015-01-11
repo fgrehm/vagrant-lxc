@@ -126,6 +126,52 @@ module Vagrant
         @cli.attach(*command)
       end
 
+      def configure_private_network(bridge_name, bridge_ip, container_name, ip)
+        @logger.info "Configuring network interface for #{container_name} using #{ip} and bridge #{bridge_name}"
+        cmd = [
+          Vagrant::LXC.source_root.join('scripts/pipework').to_s,
+          bridge_name,
+          container_name,
+          "#{ip}/24"
+        ]
+        @sudo_wrapper.run(*cmd)
+
+        if ! bridge_has_an_ip?(bridge_name)
+          @logger.info "Adding #{bridge_ip} to the bridge #{bridge_name}"
+          cmd = [
+            'ip',
+            'addr',
+            'add',
+            "#{bridge_ip}/24",
+            'dev',
+            bridge_name
+          ]
+          @sudo_wrapper.run(*cmd)
+        end
+      end
+
+      def bridge_has_an_ip?(bridge_name)
+        @logger.info "Checking whether the bridge #{bridge_name} has an IP"
+        `ip -4 addr show scope global #{bridge_name}` =~ /^\s+inet ([0-9.]+)\/[0-9]+\s+/
+      end
+
+      def bridge_is_in_use?(bridge_name)
+        # REFACTOR: This method is **VERY** hacky
+        @logger.info "Checking if bridge #{bridge_name} is in use"
+        brctl_output = `brctl show #{bridge_name} 2>/dev/null | tail -n +2 | grep -q veth`
+        $?.to_i == 0
+      end
+
+      def remove_bridge(bridge_name)
+        @logger.info "Checking whether bridge #{bridge_name} exists"
+        brctl_output = `ifconfig -a | grep -q #{bridge_name}`
+        return if $?.to_i != 0
+
+        @logger.info "Removing bridge #{bridge_name}"
+        @sudo_wrapper.run('ifconfig', bridge_name, 'down')
+        @sudo_wrapper.run('brctl', 'delbr', bridge_name)
+      end
+
       def version
         @version ||= @cli.version
       end

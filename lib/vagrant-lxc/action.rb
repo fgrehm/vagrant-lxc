@@ -56,9 +56,9 @@ module Vagrant
           b.use Builtin::SetHostname
           b.use WarnNetworks
           b.use ForwardPorts
+          b.use PrivateNetworks
           b.use Boot
           b.use Builtin::WaitForCommunicator
-          b.use PrivateNetworks
         end
       end
 
@@ -127,12 +127,12 @@ module Vagrant
 
             b2.use ClearForwardedPorts
             b2.use RemoveTemporaryFiles
+            b2.use GcPrivateNetworkBridges
             b2.use Builtin::Call, Builtin::GracefulHalt, :stopped, :running do |env2, b3|
               if !env2[:result]
                 b3.use ForcedHalt
               end
             end
-            b2.use GcPrivateNetworkBridges
           end
         end
       end
@@ -147,7 +147,6 @@ module Vagrant
               next
             end
 
-            # TODO: Use Vagrant's built in action once we drop support for vagrant 1.2
             b2.use Builtin::Call, DestroyConfirm do |env2, b3|
               if env2[:result]
                 b3.use Builtin::ConfigValidate
