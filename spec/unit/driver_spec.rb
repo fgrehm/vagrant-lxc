@@ -176,20 +176,19 @@ describe Vagrant::LXC::Driver do
   end
 
   describe 'folder sharing' do
-    rootfs_path = Pathname('/path/to/rootfs')
-    
     let(:shared_folder)       { {guestpath: '/vagrant', hostpath: '/path/to/host/dir'} }
     let(:ro_rw_folder)        { {guestpath: '/vagrant/ro_rw', hostpath: '/path/to/host/dir', mount_options: ['ro', 'rw']} }
     let(:with_space_folder)   { {guestpath: '/tmp/with space', hostpath: '/path/with space'} }
     let(:folders)             { [shared_folder, ro_rw_folder, with_space_folder] }
     let(:expected_guest_path) { "vagrant" }
     let(:sudo_wrapper)        { double(Vagrant::LXC::SudoWrapper, run: true) }
+    let(:rootfs_path)         { Pathname('/path/to/rootfs') }
 
     subject { described_class.new('name', sudo_wrapper) }
 
     describe "with fixed rootfs" do
       before do
-        subject.stub(rootfs_path: rootfs_path, system: true)
+        subject.stub(rootfs_path: Pathname('/path/to/rootfs'), system: true)
         subject.share_folders(folders)
       end
 
@@ -220,25 +219,27 @@ describe Vagrant::LXC::Driver do
     end
 
     describe "with directory-based LXC config" do
-      config_string = <<-ENDCONFIG.gsub(/^\s+/, '')
-        # Blah blah comment
-        lxc.mount.entry = proc proc proc nodev,noexec,nosuid 0 0
-        lxc.mount.entry = sysfs sys sysfs defaults  0 0
-        lxc.tty = 4
-        lxc.pts = 1024
-        lxc.rootfs = #{rootfs_path}
-        # VAGRANT-BEGIN
-        lxc.network.type=veth
-        lxc.network.name=eth1
-        # VAGRANT-END
-      ENDCONFIG
-      
+      let(:config_string) {
+        <<-ENDCONFIG.gsub(/^\s+/, '')
+          # Blah blah comment
+          lxc.mount.entry = proc proc proc nodev,noexec,nosuid 0 0
+          lxc.mount.entry = sysfs sys sysfs defaults  0 0
+          lxc.tty = 4
+          lxc.pts = 1024
+          lxc.rootfs = #{rootfs_path}
+          # VAGRANT-BEGIN
+          lxc.network.type=veth
+          lxc.network.name=eth1
+          # VAGRANT-END
+        ENDCONFIG
+      }
+
       before do
         subject { described_class.new('name', sudo_wrapper) }
         subject.stub(config_string: config_string)
         subject.share_folders(folders)
       end
-      
+
       it 'adds a mount.entry to its local customizations' do
         expect(subject.customizations).to include [
           'mount.entry',
@@ -248,18 +249,20 @@ describe Vagrant::LXC::Driver do
     end
 
     describe "with overlayfs-based LXC config" do
-      config_string = <<-ENDCONFIG.gsub(/^\s+/, '')
-        # Blah blah comment
-        lxc.mount.entry = proc proc proc nodev,noexec,nosuid 0 0
-        lxc.mount.entry = sysfs sys sysfs defaults  0 0
-        lxc.tty = 4
-        lxc.pts = 1024
-        lxc.rootfs = overlayfs:/path/to/master/directory:#{rootfs_path}
-        # VAGRANT-BEGIN
-        lxc.network.type=veth
-        lxc.network.name=eth1
-        # VAGRANT-END
-      ENDCONFIG
+      let(:config_string) {
+        <<-ENDCONFIG.gsub(/^\s+/, '')
+          # Blah blah comment
+          lxc.mount.entry = proc proc proc nodev,noexec,nosuid 0 0
+          lxc.mount.entry = sysfs sys sysfs defaults  0 0
+          lxc.tty = 4
+          lxc.pts = 1024
+          lxc.rootfs = overlayfs:/path/to/master/directory:#{rootfs_path}
+          # VAGRANT-BEGIN
+          lxc.network.type=veth
+          lxc.network.name=eth1
+          # VAGRANT-END
+        ENDCONFIG
+      }
 
       before do
         subject { described_class.new('name', sudo_wrapper) }
