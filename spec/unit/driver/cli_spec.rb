@@ -99,9 +99,9 @@ describe Vagrant::LXC::Driver::CLI do
       expect(subject).to have_received(:run).with(
         :create,
         '-B',         backingstore,
-        *(backingstore_opts.flatten),
         '--template', template,
         '--name',     name,
+        *(backingstore_opts.flatten),
         '-f',         config_file,
         '--',
         '--extra-param', 'param',

@@ -24,9 +24,11 @@ IMPROVEMENTS:
 
 BUG FIXES:
 
+  - Allow backingstore options to be used along with the sudo wrapper script [[GH-310]]
   - Trim automatically generated container names to 64 chars [[GH-337]]
 
 [GH-337]: https://github.com/fgrehm/vagrant-lxc/issues/337
+[GH-310]: https://github.com/fgrehm/vagrant-lxc/issues/310
 
 
 ## [1.0.1](https://github.com/fgrehm/vagrant-lxc/compare/v1.0.0...v1.0.1) (Oct 15, 2014)

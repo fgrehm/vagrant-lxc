@@ -64,9 +64,9 @@ module Vagrant
 
           run :create,
               '-B', backingstore,
-              *(backingstore_options.to_a.flatten),
               '--template', template,
               '--name',     @name,
+              *(backingstore_options.to_a.flatten),
               *(config_opts),
               *extra
         rescue Errors::ExecuteError => e
