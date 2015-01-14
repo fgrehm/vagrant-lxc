@@ -67,7 +67,7 @@ You can modify container configurations from within your Vagrantfile using the
 
 ```ruby
 Vagrant.configure("2") do |config|
-  config.vm.box = "quantal64"
+  config.vm.box = "fgrehm/trusty64-lxc"
   config.vm.provider :lxc do |lxc|
     # Same effect as 'customize ["modifyvm", :id, "--memory", "1024"]' for VirtualBox
     lxc.customize 'cgroup.memory.limit_in_bytes', '1024M'
