@@ -191,6 +191,11 @@ module Vagrant
       end
 
       def remove_bridge(bridge_name)
+        if bridge_name == "lxcbr0"
+           @logger.info "Skipping removal system bridge #{bridge_name}"
+           return
+        end
+
         return unless bridge_exists?(bridge_name)
 
         @logger.info "Removing bridge #{bridge_name}"
