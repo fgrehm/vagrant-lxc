@@ -20,6 +20,12 @@ module Vagrant
             config.customize 'mount.entry', '/sys/fs/pstore sys/fs/pstore none bind,optional 0 0'
           end
 
+          # Make selinux read-only, see
+          # https://github.com/fgrehm/vagrant-lxc/issues/301
+          if Dir.exists?('/sys/fs/selinux')
+            config.customize 'mount.entry', '/sys/fs/selinux sys/fs/selinux none bind,ro 0 0'
+          end
+
           env[:ui].info I18n.t("vagrant_lxc.messages.starting")
           env[:machine].provider.driver.start(config.customizations)
 
