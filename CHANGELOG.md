@@ -1,3 +1,11 @@
+## [1.1.1](https://github.com/fgrehm/vagrant-lxc/compare/v1.1.0...master) (unreleased)
+
+IMPROVEMENTS:
+
+  - Move mountpoint creation to lxc template for lvm rootfs support [[GH-361]]
+
+[GH-361]: https://github.com/fgrehm/vagrant-lxc/pull/361
+
 ## [1.1.0](https://github.com/fgrehm/vagrant-lxc/compare/v1.0.1...1.1.0) (Jan 14, 2015)
 
 BACKWARDS INCOMPATIBILITIES:
