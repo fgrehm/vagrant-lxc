@@ -83,6 +83,7 @@ module Vagrant
               hash[cmd] = `which #{cmd}`.strip
             end
             hash['lxc_bin'] = Pathname(`which lxc-create`.strip).parent.to_s
+            hash['ruby'] = Gem.ruby
           end
         end
       end
