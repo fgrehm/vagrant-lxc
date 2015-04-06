@@ -1,7 +1,7 @@
 ## [1.1.1](https://github.com/fgrehm/vagrant-lxc/compare/v1.1.0...master) (unreleased)
 
 FEATURES:
-  - Support private networking using DHCP [GH-352]
+  - Support private networking using DHCP [[GH-352]]
   
 [GH-352]: https://github.com/fgrehm/vagrant-lxc/pull/352
 
