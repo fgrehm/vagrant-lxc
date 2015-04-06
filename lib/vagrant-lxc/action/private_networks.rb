@@ -26,16 +26,19 @@ module Vagrant
             next if type.to_sym != :private_network
 
             container_name = env[:machine].provider.driver.container_name
+            address_type   = config[:type]
             ip             = config[:ip]
             bridge_ip      = config.fetch(:lxc__bridge_ip) { build_bridge_ip(ip) }
             bridge         = config.fetch(:lxc__bridge_name)
 
-            env[:machine].provider.driver.configure_private_network(bridge, bridge_ip, container_name, ip)
+            env[:machine].provider.driver.configure_private_network(bridge, bridge_ip, container_name, address_type, ip)
           end
         end
 
         def build_bridge_ip(ip)
-          ip.sub(/^(\d+\.\d+\.\d+)\.\d+/, '\1.254')
+          if ip
+            ip.sub(/^(\d+\.\d+\.\d+)\.\d+/, '\1.254')
+          end
         end
       end
     end

@@ -128,17 +128,16 @@ module Vagrant
         @cli.attach(*command)
       end
 
-      def configure_private_network(bridge_name, bridge_ip, container_name, ip)
+      def configure_private_network(bridge_name, bridge_ip, container_name, address_type, ip)
         @logger.info "Configuring network interface for #{container_name} using #{ip} and bridge #{bridge_name}"
-        cmd = [
-          Vagrant::LXC.source_root.join('scripts/pipework').to_s,
-          bridge_name,
-          container_name,
-          "#{ip}/24"
-        ]
-        @sudo_wrapper.run(*cmd)
+        if ip
+          ip += '/24'
+        end
 
         if ! bridge_has_an_ip?(bridge_name)
+          if not bridge_ip
+            raise "Bridge has no IP and none was specified!"
+          end
           @logger.info "Adding #{bridge_ip} to the bridge #{bridge_name}"
           cmd = [
             'ip',
@@ -150,6 +149,14 @@ module Vagrant
           ]
           @sudo_wrapper.run(*cmd)
         end
+
+        cmd = [
+          Vagrant::LXC.source_root.join('scripts/pipework').to_s,
+          bridge_name,
+          container_name,
+          ip ||= "dhcp"
+        ]
+        @sudo_wrapper.run(*cmd)
       end
 
       def bridge_has_an_ip?(bridge_name)
