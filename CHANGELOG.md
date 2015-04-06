@@ -2,8 +2,12 @@
 
 IMPROVEMENTS:
 
-  - Move mountpoint creation to lxc template for lvm rootfs support [[GH-361]]
+  - Move mountpoint creation to lxc template for lvm rootfs support [[GH-361]] / [[GH-359]]
+  - Mount selinux sys dir read-only [[GH-357]] / [[GH-301]]
 
+[GH-301]: https://github.com/fgrehm/vagrant-lxc/issues/301
+[GH-357]: https://github.com/fgrehm/vagrant-lxc/pull/357
+[GH-359]: https://github.com/fgrehm/vagrant-lxc/issues/359
 [GH-361]: https://github.com/fgrehm/vagrant-lxc/pull/361
 
 ## [1.1.0](https://github.com/fgrehm/vagrant-lxc/compare/v1.0.1...1.1.0) (Jan 14, 2015)
