@@ -1,11 +1,18 @@
 ## [1.1.1](https://github.com/fgrehm/vagrant-lxc/compare/v1.1.0...master) (unreleased)
 
+FEATURES:
+  - Support private networking using DHCP [GH-352]
+  
+[GH-352]: https://github.com/fgrehm/vagrant-lxc/pull/352
+
 IMPROVEMENTS:
 
   - Move mountpoint creation to lxc template for lvm rootfs support [[GH-361]] / [[GH-359]]
   - Mount selinux sys dir read-only [[GH-357]] / [[GH-301]]
+  - Use correct ruby interpreter when generating sudoers file [[GH-355]]
 
 [GH-301]: https://github.com/fgrehm/vagrant-lxc/issues/301
+[GH-355]: https://github.com/fgrehm/vagrant-lxc/pull/355
 [GH-357]: https://github.com/fgrehm/vagrant-lxc/pull/357
 [GH-359]: https://github.com/fgrehm/vagrant-lxc/issues/359
 [GH-361]: https://github.com/fgrehm/vagrant-lxc/pull/361
