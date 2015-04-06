@@ -192,14 +192,10 @@ describe Vagrant::LXC::Driver do
         subject.share_folders(folders)
       end
 
-      it "creates guest folder under container's rootfs" do
-        expect(sudo_wrapper).to have_received(:run).with("mkdir", "-p", "#{rootfs_path}/#{expected_guest_path}")
-      end
-
       it 'adds a mount.entry to its local customizations' do
         expect(subject.customizations).to include [
           'mount.entry',
-          "#{shared_folder[:hostpath]} #{expected_guest_path} none bind 0 0"
+          "#{shared_folder[:hostpath]} #{expected_guest_path} none bind,create=dir 0 0"
         ]
       end
 
@@ -213,7 +209,7 @@ describe Vagrant::LXC::Driver do
       it 'supports directories with spaces' do
         expect(subject.customizations).to include [
           'mount.entry',
-          "/path/with\\040space tmp/with\\040space none bind 0 0"
+          "/path/with\\040space tmp/with\\040space none bind,create=dir 0 0"
         ]
       end
     end
@@ -243,7 +239,7 @@ describe Vagrant::LXC::Driver do
       it 'adds a mount.entry to its local customizations' do
         expect(subject.customizations).to include [
           'mount.entry',
-          "#{shared_folder[:hostpath]} #{expected_guest_path} none bind 0 0"
+          "#{shared_folder[:hostpath]} #{expected_guest_path} none bind,create=dir 0 0"
         ]
       end
     end
@@ -273,7 +269,7 @@ describe Vagrant::LXC::Driver do
       it 'adds a mount.entry to its local customizations' do
         expect(subject.customizations).to include [
           'mount.entry',
-          "#{shared_folder[:hostpath]} #{expected_guest_path} none bind 0 0"
+          "#{shared_folder[:hostpath]} #{expected_guest_path} none bind,create=dir 0 0"
         ]
       end
     end
