@@ -27,6 +27,7 @@ module Vagrant
         @cli            = cli || CLI.new(sudo_wrapper, container_name)
         @logger         = Log4r::Logger.new("vagrant::provider::lxc::driver")
         @customizations = []
+        @pipework       = `which pipework`.to_s[/.+/m] || Vagrant::LXC.source_root.join('scripts/pipework').to_s
       end
 
       def validate!
@@ -151,7 +152,7 @@ module Vagrant
         end
 
         cmd = [
-          Vagrant::LXC.source_root.join('scripts/pipework').to_s,
+          @pipework,
           bridge_name,
           container_name,
           ip ||= "dhcp"
