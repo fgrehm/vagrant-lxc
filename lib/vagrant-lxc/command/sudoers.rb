@@ -48,7 +48,7 @@ module Vagrant
               'sudoers.rb',
               :template_root  => Vagrant::LXC.source_root.join('templates').to_s,
               :cmd_paths      => build_cmd_paths_hash,
-              :pipework_regex => "#{ENV['HOME']}/\.vagrant\.d/gems/gems/vagrant-lxc.+/scripts/pipework"
+              :pipework_regex => "\\A" + ( `which pipework`.to_s.strip[/.+/m] || "#{ENV['HOME']}/\\.vagrant\\.d/gems/gems/vagrant-lxc.+/scripts/pipework" )
             )
             file.puts template.render
           end
