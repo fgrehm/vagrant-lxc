@@ -54,7 +54,7 @@ describe Vagrant::LXC::Driver do
 
     it 'creates container with the right arguments' do
       expect(cli).to have_received(:create).with(
-        template_name,
+        template_path,
         backingstore,
         backingstore_opts,
         config_file,
