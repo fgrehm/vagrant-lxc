@@ -80,7 +80,6 @@ end
 
 base = "/var/lib/lxc"
 base_path = %r{\A#{base}/.*\z}
-templates_path = %r{\A/usr/(share|lib|lib64|local/lib)/lxc/templates/.*\z}
 
 ##
 # Commands from provider.rb
@@ -96,11 +95,6 @@ Whitelist.add '<%= cmd_paths['mkdir'] %>', '-p', base_path
 # - Container config customizations and pruning
 Whitelist.add '<%= cmd_paths['cp'] %>', '-f', %r{/tmp/.*}, base_path
 Whitelist.add '<%= cmd_paths['chown'] %>', 'root:root', base_path
-# - Template import
-Whitelist.add '<%= cmd_paths['cp'] %>', %r{\A.*\z}, templates_path
-Whitelist.add '<%= cmd_paths['chmod'] %>', '+x', templates_path
-# - Template removal
-Whitelist.add '<%= cmd_paths['rm'] %>', templates_path
 # - Packaging
 Whitelist.add '<%= cmd_paths['tar'] %>', '--numeric-owner', '-cvzf', %r{/tmp/.*/rootfs.tar.gz}, '-C', base_path, './rootfs'
 Whitelist.add '<%= cmd_paths['chown'] %>', /\A\d+:\d+\z/, %r{\A/tmp/.*/rootfs\.tar\.gz\z}
