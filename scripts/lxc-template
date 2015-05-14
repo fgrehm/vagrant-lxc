@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # This is a modified version of /usr/share/lxc/templates/lxc-download
 # that comes with ubuntu-lxc 1.0.0 stable from ppa changed to suit vagrant-lxc needs
