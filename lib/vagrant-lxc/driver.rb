@@ -79,10 +79,8 @@ module Vagrant
       def create(name, backingstore, backingstore_options, template_path, config_file, template_options = {})
         @cli.name = @container_name = name
 
-        import_template(template_path) do |template_name|
-          @logger.debug "Creating container..."
-          @cli.create template_name, backingstore, backingstore_options, config_file, template_options
-        end
+        @logger.debug "Creating container..."
+        @cli.create template_path, backingstore, backingstore_options, config_file, template_options
       end
 
       def share_folders(folders)
@@ -92,7 +90,7 @@ module Vagrant
       end
 
       def share_folder(host_path, guest_path, mount_options = nil)
-        guest_path      = guest_path.gsub(/^\//, '').gsub(' ', '\\\040')
+        guest_path    = guest_path.gsub(/^\//, '').gsub(' ', '\\\040')
         mount_options = Array(mount_options || ['bind', 'create=dir'])
         host_path     = host_path.to_s.gsub(' ', '\\\040')
         @customizations << ['mount.entry', "#{host_path} #{guest_path} none #{mount_options.join(',')} 0 0"]
@@ -257,39 +255,6 @@ module Vagrant
           @sudo_wrapper.run 'cp', '-f', file.path, base_path.join('config').to_s
           @sudo_wrapper.run 'chown', 'root:root', base_path.join('config').to_s
         end
-      end
-
-      def import_template(path)
-        template_name     = "vagrant-tmp-#{@container_name}"
-        tmp_template_path = templates_path.join("lxc-#{template_name}").to_s
-
-        @logger.info 'Copying LXC template into place'
-        @sudo_wrapper.run('cp', path, tmp_template_path)
-        @sudo_wrapper.run('chmod', '+x', tmp_template_path)
-
-        yield template_name
-      ensure
-        @logger.info 'Removing LXC template'
-        if tmp_template_path
-          @sudo_wrapper.run('rm', tmp_template_path)
-        end
-      end
-
-      TEMPLATES_PATH_LOOKUP = %w(
-        /usr/share/lxc/templates
-        /usr/lib/lxc/templates
-        /usr/lib64/lxc/templates
-        /usr/local/lib/lxc/templates
-      )
-      def templates_path
-        return @templates_path if @templates_path
-
-        path = TEMPLATES_PATH_LOOKUP.find { |candidate| File.directory?(candidate) }
-        if !path
-          raise Errors::TemplatesDirMissing.new paths: TEMPLATES_PATH_LOOKUP.inspect
-        end
-
-        @templates_path = Pathname(path)
       end
     end
   end
