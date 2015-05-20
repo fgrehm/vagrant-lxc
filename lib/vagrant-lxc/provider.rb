@@ -36,7 +36,7 @@ module Vagrant
 
       def ensure_lxc_installed!
         begin
-          sudo_wrapper.run("/usr/bin/which", "lxc-create")
+          sudo_wrapper.run("/usr/bin/env", "which", "lxc-create")
         rescue Vagrant::LXC::Errors::ExecuteError
           raise Errors::LxcNotInstalled
         end
