@@ -134,6 +134,20 @@ module Vagrant
           ip += '/24'
         end
 
+        if ! bridge_exists?(bridge_name)
+          if not bridge_ip
+            raise "Bridge is missing and no IP was specified!"
+          end
+
+          @logger.info "Creating the bridge #{bridge_name}"
+          cmd = [
+            'brctl',
+            'addbr',
+            bridge_name
+          ]
+          @sudo_wrapper.run(*cmd)
+        end
+
         if ! bridge_has_an_ip?(bridge_name)
           if not bridge_ip
             raise "Bridge has no IP and none was specified!"
@@ -148,6 +162,7 @@ module Vagrant
             bridge_name
           ]
           @sudo_wrapper.run(*cmd)
+          @sudo_wrapper.run('ifconfig', bridge_name, 'up')
         end
 
         cmd = [
