@@ -164,6 +164,12 @@ module Vagrant
         `ip -4 addr show scope global #{bridge_name}` =~ /^\s+inet ([0-9.]+)\/[0-9]+\s+/
       end
 
+      def bridge_exists?(bridge_name)
+        @logger.info "Checking whether bridge #{bridge_name} exists"
+        brctl_output = `ifconfig -a | grep -q #{bridge_name}`
+        $?.to_i == 0
+      end
+
       def bridge_is_in_use?(bridge_name)
         # REFACTOR: This method is **VERY** hacky
         @logger.info "Checking if bridge #{bridge_name} is in use"
@@ -172,9 +178,7 @@ module Vagrant
       end
 
       def remove_bridge(bridge_name)
-        @logger.info "Checking whether bridge #{bridge_name} exists"
-        brctl_output = `ifconfig -a | grep -q #{bridge_name}`
-        return if $?.to_i != 0
+        return unless bridge_exists?(bridge_name)
 
         @logger.info "Removing bridge #{bridge_name}"
         @sudo_wrapper.run('ifconfig', bridge_name, 'down')
