@@ -38,21 +38,21 @@ describe Vagrant::LXC::Action::ForwardPorts do
     )
   end
 
-  it 'skips --laddr parameter if host_ip is nil' do
+  it 'Uses 127.0.0.1 as default if host_ip is nil' do
     forward_conf.delete(:host_ip)
     subject.stub(system: true)
     subject.call(env)
     expect(subject).to have_received(:spawn).with(
-      "redir --lport=#{host_port} --caddr=#{container_ip} --cport=#{guest_port} 2>/dev/null"
+      "redir --laddr=127.0.0.1 --lport=#{host_port} --caddr=#{container_ip} --cport=#{guest_port} 2>/dev/null"
     )
   end
 
-  it 'skips --laddr parameter if host_ip is a blank string' do
+  it 'Uses 127.0.0.1 by default if host_ip is a blank string' do
     forward_conf[:host_ip] = ' '
     subject.stub(system: true)
     subject.call(env)
     expect(subject).to have_received(:spawn).with(
-      "redir --lport=#{host_port} --caddr=#{container_ip} --cport=#{guest_port} 2>/dev/null"
+      "redir --laddr=127.0.0.1 --lport=#{host_port} --caddr=#{container_ip} --cport=#{guest_port} 2>/dev/null"
     )
   end
 
@@ -86,21 +86,21 @@ describe Vagrant::LXC::Action::ForwardPorts do
       )
     end
 
-    it 'skips --laddr parameter if host_ip is nil' do
+    it 'Uses 127.0.0.1 by default if host_ip is nil' do
       forward_conf.delete(:host_ip)
       subject.stub(system: true)
       subject.call(env)
       expect(subject).to have_received(:spawn).with(
-        "sudo redir --lport=#{host_port} --caddr=#{container_ip} --cport=#{guest_port} 2>/dev/null"
+        "sudo redir --laddr=127.0.0.1 --lport=#{host_port} --caddr=#{container_ip} --cport=#{guest_port} 2>/dev/null"
       )
     end
 
-    it 'skips --laddr parameter if host_ip is a blank string' do
+    it 'Uses 127.0.0.1 by default if host_ip is a blank string' do
       forward_conf[:host_ip] = ' '
       subject.stub(system: true)
       subject.call(env)
       expect(subject).to have_received(:spawn).with(
-        "sudo redir --lport=#{host_port} --caddr=#{container_ip} --cport=#{guest_port} 2>/dev/null"
+        "sudo redir --laddr=127.0.0.1 --lport=#{host_port} --caddr=#{container_ip} --cport=#{guest_port} 2>/dev/null"
       )
     end
   end
