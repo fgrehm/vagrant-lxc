@@ -67,7 +67,9 @@ module Vagrant
 
             # TODO: Deprecate this behavior of "automagically" skipping ssh forwarded ports
             if type == :forwarded_port && options[:id] != 'ssh'
-              options.delete(:host_ip) if options.fetch(:host_ip, '').to_s.strip.empty?
+              if options.fetch(:host_ip, '').to_s.strip.empty?
+                options[:host_ip] = '127.0.0.1'
+              end
               mappings[options[:host]] = options
             end
           end
