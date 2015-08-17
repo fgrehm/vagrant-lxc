@@ -26,6 +26,9 @@ module Vagrant
             config.customize 'mount.entry', '/sys/fs/selinux sys/fs/selinux none bind,ro 0 0'
           end
 
+          # Make /tmp a tmpfs to prevent init scripts from nuking synced folders mounted in here
+          config.customize 'mount.entry', 'tmpfs tmp tmpfs nodev,nosuid,size=2G 0 0'
+
           env[:ui].info I18n.t("vagrant_lxc.messages.starting")
           env[:machine].provider.driver.start(config.customizations)
 
