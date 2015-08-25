@@ -162,7 +162,7 @@ module Vagrant
             bridge_name
           ]
           @sudo_wrapper.run(*cmd)
-          @sudo_wrapper.run('ifconfig', bridge_name, 'up')
+          @sudo_wrapper.run('ip', 'link', 'set', bridge_name, 'up')
         end
 
         cmd = [
@@ -181,7 +181,7 @@ module Vagrant
 
       def bridge_exists?(bridge_name)
         @logger.info "Checking whether bridge #{bridge_name} exists"
-        brctl_output = `ifconfig -a | grep -q #{bridge_name}`
+        brctl_output = `ip link | grep -q #{bridge_name}`
         $?.to_i == 0
       end
 
@@ -196,7 +196,7 @@ module Vagrant
         return unless bridge_exists?(bridge_name)
 
         @logger.info "Removing bridge #{bridge_name}"
-        @sudo_wrapper.run('ifconfig', bridge_name, 'down')
+        @sudo_wrapper.run('ip', 'link', 'set', bridge_name, 'down')
         @sudo_wrapper.run('brctl', 'delbr', bridge_name)
       end
 

@@ -106,7 +106,7 @@ Whitelist.add '<%= cmd_paths['tar'] %>', '--numeric-owner', '-cvzf', %r{/tmp/.*/
 Whitelist.add '<%= cmd_paths['chown'] %>', /\A\d+:\d+\z/, %r{\A/tmp/.*/rootfs\.tar\.gz\z}
 # - Private network script and commands
 Whitelist.add '<%= cmd_paths['ip'] %>', 'addr', 'add', /(\d+|\.)+\/24/, 'dev', /.+/
-Whitelist.add '<%= cmd_paths['ifconfig'] %>', /.+/, /(up|down)/
+Whitelist.add '<%= cmd_paths['ip'] %>', 'link', 'set', /.+/, /(up|down)/
 Whitelist.add '<%= cmd_paths['brctl'] %>', /(addbr|delbr)/, /.+/
 Whitelist.add_regex %r{<%= pipework_regex %>}, '**'
 
