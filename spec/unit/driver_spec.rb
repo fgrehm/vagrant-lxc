@@ -54,7 +54,7 @@ describe Vagrant::LXC::Driver do
 
     it 'creates container with the right arguments' do
       expect(cli).to have_received(:create).with(
-        template_name,
+        template_path,
         backingstore,
         backingstore_opts,
         config_file,
@@ -97,7 +97,7 @@ describe Vagrant::LXC::Driver do
     before do
       sudo.should_receive(:run).with('cat', '/var/lib/lxc/name/config').exactly(2).times.
         and_return('# CONFIGURATION')
-      sudo.should_receive(:run).twice.with('cp', '-f', %r{/tmp/.*}, '/var/lib/lxc/name/config')
+      sudo.should_receive(:run).twice.with('cp', '-f', %r{/(run|tmp)/.*}, '/var/lib/lxc/name/config')
       sudo.should_receive(:run).twice.with('chown', 'root:root', '/var/lib/lxc/name/config')
 
       subject.customizations << internal_customization
