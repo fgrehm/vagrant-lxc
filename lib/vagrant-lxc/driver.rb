@@ -181,7 +181,7 @@ module Vagrant
 
       def bridge_exists?(bridge_name)
         @logger.info "Checking whether bridge #{bridge_name} exists"
-        brctl_output = `ip link | grep -q #{bridge_name}`
+        brctl_output = `ip link | egrep -q " #{bridge_name}:"`
         $?.to_i == 0
       end
 
