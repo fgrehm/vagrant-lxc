@@ -35,8 +35,9 @@ module Vagrant
 
             if ! driver.bridge_is_in_use?(bridge)
               env[:ui].info I18n.t("vagrant_lxc.messages.remove_bridge", name: bridge)
-              # TODO: Output that bridge is being removed
-              driver.remove_bridge(bridge)
+              unless ['lxcbr0', 'virbr0'].include? bridge
+                driver.remove_bridge(bridge)
+              end
             end
           end
         end

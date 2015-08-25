@@ -170,6 +170,11 @@ module Vagrant
       end
 
       def remove_bridge(bridge_name)
+        if ['lxcbr0', 'virbr0'].include? bridge_name
+           @logger.info "Skipping removal of system bridge #{bridge_name}"
+           return
+        end
+
         @logger.info "Checking whether bridge #{bridge_name} exists"
         brctl_output = `ifconfig -a | grep -q #{bridge_name}`
         return if $?.to_i != 0
