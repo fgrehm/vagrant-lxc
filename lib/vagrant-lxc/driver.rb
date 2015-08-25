@@ -192,7 +192,7 @@ module Vagrant
 
       def remove_bridge(bridge_name)
         if ['lxcbr0', 'virbr0'].include? bridge_name
-           @logger.info "Skipping removal system bridge #{bridge_name}"
+           @logger.info "Skipping removal of system bridge #{bridge_name}"
            return
         end
 
