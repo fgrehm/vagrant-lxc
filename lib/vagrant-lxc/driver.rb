@@ -132,6 +132,20 @@ module Vagrant
           ip += '/24'
         end
 
+        if ! bridge_exists?(bridge_name)
+          if not bridge_ip
+            raise "Bridge is missing and no IP was specified!"
+          end
+
+          @logger.info "Creating the bridge #{bridge_name}"
+          cmd = [
+            'brctl',
+            'addbr',
+            bridge_name
+          ]
+          @sudo_wrapper.run(*cmd)
+        end
+
         if ! bridge_has_an_ip?(bridge_name)
           if not bridge_ip
             raise "Bridge has no IP and none was specified!"
@@ -146,6 +160,7 @@ module Vagrant
             bridge_name
           ]
           @sudo_wrapper.run(*cmd)
+          @sudo_wrapper.run('ip', 'link', 'set', bridge_name, 'up')
         end
 
         cmd = [
@@ -162,6 +177,12 @@ module Vagrant
         `ip -4 addr show scope global #{bridge_name}` =~ /^\s+inet ([0-9.]+)\/[0-9]+\s+/
       end
 
+      def bridge_exists?(bridge_name)
+        @logger.info "Checking whether bridge #{bridge_name} exists"
+        brctl_output = `ip link | egrep -q " #{bridge_name}:"`
+        $?.to_i == 0
+      end
+
       def bridge_is_in_use?(bridge_name)
         # REFACTOR: This method is **VERY** hacky
         @logger.info "Checking if bridge #{bridge_name} is in use"
@@ -175,12 +196,10 @@ module Vagrant
            return
         end
 
-        @logger.info "Checking whether bridge #{bridge_name} exists"
-        brctl_output = `ifconfig -a | grep -q #{bridge_name}`
-        return if $?.to_i != 0
+        return unless bridge_exists?(bridge_name)
 
         @logger.info "Removing bridge #{bridge_name}"
-        @sudo_wrapper.run('ifconfig', bridge_name, 'down')
+        @sudo_wrapper.run('ip', 'link', 'set', bridge_name, 'down')
         @sudo_wrapper.run('brctl', 'delbr', bridge_name)
       end
 
