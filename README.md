@@ -134,7 +134,7 @@ specified from the provider block and it defaults to `best`, to change it:
 ```ruby
 Vagrant.configure("2") do |config|
   config.vm.provider :lxc do |lxc|
-    lxc.backingstore = 'lvm' # or 'btrfs',...
+    lxc.backingstore = 'lvm' # or 'btrfs', 'overlayfs', ...
     # lvm specific options
     lxc.backingstore_option '--vgname', 'schroots'
     lxc.backingstore_option '--fssize', '5G'
