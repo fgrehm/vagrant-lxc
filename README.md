@@ -9,10 +9,6 @@ as an alternative to the built in VirtualBox provider for Linux hosts. Check out
 [this blog post](http://fabiorehm.com/blog/2013/04/28/lxc-provider-for-vagrant/)
 to see it in action.
 
-## Help Needed!
-
-This project is looking for maintainers, please see [GH-375](https://github.com/fgrehm/vagrant-lxc/issues/375) for more.
-
 ## Features
 
 * Provides the same workflow as the Vagrant VirtualBox provider
