@@ -64,7 +64,7 @@ en:
         another provider.
 
       lxc_not_installed: |-
-        The `lxc` package does not seem to be installed or is not accessible on the PATH.
+        The `lxc` package does not seem to be installed or `lxc-create` is not accessible on the PATH.
 
       lxc_redir_not_installed: |-
         `redir` is not installed or is not accessible on the PATH.
