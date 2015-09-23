@@ -13,8 +13,12 @@ module Vagrant
 
       def run(*command)
         options = command.last.is_a?(Hash) ? command.last : {}
-        command.unshift @wrapper_path if @wrapper_path && !options[:no_wrapper]
-        execute *(['sudo', '/usr/bin/env'] + command)
+        if @wrapper_path && !options[:no_wrapper]
+          command.unshift @wrapper_path
+          execute *(['sudo'] + command)
+        else
+          execute *(['sudo', '/usr/bin/env'] + command)
+        end
       end
 
       private
