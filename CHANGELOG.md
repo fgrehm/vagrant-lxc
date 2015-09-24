@@ -1,3 +1,9 @@
+## [1.2.1](https://github.com/fgrehm/vagrant-lxc/compare/v1.2.0...v1.2.1) (Sep 24, 2015)
+
+BUGFIX:
+  - Fix sudo Wrapper [[GH-393]]
+[GH-393]: https://github.com/fgrehm/vagrant-lxc/pull/393
+
 ## [1.2.0](https://github.com/fgrehm/vagrant-lxc/compare/v1.1.0...v1.2.0) (Sep 15, 2015)
 
 FEATURES:
