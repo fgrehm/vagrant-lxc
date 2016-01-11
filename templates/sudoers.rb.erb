@@ -78,7 +78,12 @@ class Whitelist
   end
 end
 
-base = "/var/lib/lxc"
+base = if File.exists?('<%= cmd_paths['lxc_bin'] %>/lxc-config')
+  `<%= cmd_paths['lxc_bin'] %>/lxc-config lxc.lxcpath`.chomp
+else
+  '/var/lib/lxc'
+end
+
 base_path = %r{\A#{base}/.*\z}
 
 ##
