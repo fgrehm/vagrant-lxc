@@ -126,8 +126,11 @@ module Vagrant
         @cli.attach(*command)
       end
 
-      def configure_private_network(bridge_name, bridge_ip, container_name, address_type, ip)
-        @logger.info "Configuring network interface for #{container_name} using #{ip} and bridge #{bridge_name}"
+      def configure_private_network(bridge_name, bridge_ip, container_name, container_interface, address_type, ip)
+        if ! container_interface
+          container_interface = "eth1"
+        end
+        @logger.info "Configuring network interface #{container_interface} for #{container_name} using #{ip} and bridge #{bridge_name}"
         if ip
           ip += '/24'
         end
@@ -166,6 +169,8 @@ module Vagrant
         cmd = [
           Vagrant::LXC.source_root.join('scripts/pipework').to_s,
           bridge_name,
+          "-i",
+          container_interface,
           container_name,
           ip ||= "dhcp"
         ]
