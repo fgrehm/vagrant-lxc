@@ -49,7 +49,7 @@ module Vagrant
               @logger.info("Exit code != 0, but interrupted. Ignoring.")
             else
               raise LXC::Errors::ExecuteError,
-                command: command.inspect, stderr: r.stderr, stdout: r.stdout
+                command: command.inspect, stderr: r.stderr, stdout: r.stdout, exitcode: r.exit_code
             end
           end
         end
