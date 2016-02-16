@@ -85,9 +85,20 @@ module Vagrant
           run :start, '-d', '--name', @name, *Array(options)
         end
 
+        ## lxc-stop will exit 2 if machine was already stopped
+        # Man Page: 
+        # 2      The specified container exists but was not running.
         def stop
           attach '/sbin/halt' if supports_attach?
-          run :stop, '--name', @name
+          begin
+            run :stop, '--name', @name
+          rescue LXC::Errors::ExecuteError => e
+            if e.exitcode == 2
+               @logger.info "Machine already stopped, lxc-stop returned 2"
+            else
+		raise e
+            end 
+          end
         end
 
         def attach(*cmd)
