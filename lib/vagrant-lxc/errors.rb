@@ -5,12 +5,13 @@ module Vagrant
     module Errors
       class ExecuteError < Vagrant::Errors::VagrantError
         error_key(:lxc_execute_error)
-        attr_reader :stderr, :stdout
+        attr_reader :stderr, :stdout, :exitcode
         def initialize(message, *args)
           super
           if message.is_a?(Hash)
             @stderr = message[:stderr]
             @stdout = message[:stdout]
+            @exitcode = message[:exitcode]
           end
         end
       end
