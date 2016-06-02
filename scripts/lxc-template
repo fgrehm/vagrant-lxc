@@ -124,7 +124,7 @@ mkdir -p /var/lock/subsys
     fi
 
     mkdir -p ${LXC_ROOTFS}
-    (cd ${LXC_ROOTFS} && tar xfz ${LXC_TARBALL} --strip-components=${LXC_STRIP_COMPONENTS})
+    (cd ${LXC_ROOTFS} && tar xfz ${LXC_TARBALL} --strip-components=${LXC_STRIP_COMPONENTS} --xattrs --xattrs-include=*)
     if [ $? -ne 0 ]; then
         echo "Failed to extract rootfs"
         exit 1

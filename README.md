@@ -19,6 +19,7 @@ to see it in action.
 
 * [Vagrant 1.5+](http://www.vagrantup.com/downloads.html) (tested with 1.7.2)
 * lxc 0.7.5+
+* tar 1.27 (the lxc-template script uses the --xattrs option)
 * `redir` (if you are planning to use port forwarding)
 * `brctl` (if you are planning to use private networks, on Ubuntu this means `apt-get install bridge-utils`)
 * A [kernel != 3.5.0-17.28](https://github.com/fgrehm/vagrant-lxc/wiki/Troubleshooting#wiki-im-unable-to-restart-containers)
