@@ -78,7 +78,38 @@ class Whitelist
   end
 end
 
-base = "/var/lib/lxc"
+def get_lxc_conf_value(search_key, file_name = "/etc/lxc/lxc.conf")
+  found = "n"
+  found_value = ""
+  if File.file?(file_name) then
+    IO.foreach(file_name) do |line|
+      line.chomp!
+      key, equals, value, rest = line.split(nil, 4)
+      case key
+      when /^([#;]|$)/; # ignore line
+      when search_key; found = "y"
+      end
+      if found == "y" then
+        found_value = value
+        break
+      end
+    end
+  end
+  return found_value
+end
+
+##
+# Resolve lxcpath
+# - Check /etc/lxc/lxc.conf
+# - Check /usr/local/etc/lxc/lxc.conf
+base = get_lxc_conf_value "lxc.lxcpath"
+if base == "" then
+  base = get_lxc_conf_value "lxc.lxcpath", "/usr/local/etc/lxc/lxc.conf"
+  if base == "" then
+    base = "/var/lib/lxc"
+  end
+end
+base.chomp!("/")
 base_path = %r{\A#{base}/.*\z}
 
 ##
