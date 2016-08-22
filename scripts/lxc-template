@@ -96,11 +96,6 @@ if [ -z "${LXC_PATH}" ]; then
     exit 1
 fi
 
-if [ -z "${LXC_CONFIG}" ]; then
-    echo "'config' parameter is required"
-    exit 1
-fi
-
 # if $LXC_ROOTFS exists here, it was passed in with --rootfs
 if [ -z "${LXC_ROOTFS}" ]; then
     config=${LXC_PATH}/config
@@ -160,11 +155,13 @@ if [ -e "${LXC_PATH}/config-network" ]; then
     rm ${LXC_PATH}/config-network
 fi
 
-## Append the defaults
-echo "" >> ${LXC_PATH}/config
-echo "##############################################" >> ${LXC_PATH}/config
-echo "# vagrant-lxc base box specific configuration" >> ${LXC_PATH}/config
-cat ${LXC_CONFIG} >> ${LXC_PATH}/config
+if [ -n "${LXC_CONFIG}" ]; then
+    ## Append the defaults
+    echo "" >> ${LXC_PATH}/config
+    echo "##############################################" >> ${LXC_PATH}/config
+    echo "# vagrant-lxc base box specific configuration" >> ${LXC_PATH}/config
+    cat ${LXC_CONFIG} >> ${LXC_PATH}/config
+fi
 
 # Empty section for lxc.customize calls from vagrantfile
 echo "" >> ${LXC_PATH}/config
