@@ -11,20 +11,19 @@ module Vagrant
 
       provider(:lxc, parallel: true, priority: 7) do
         require File.expand_path("../provider", __FILE__)
-
-        I18n.load_path << File.expand_path(File.dirname(__FILE__) + '/../../locales/en.yml')
-        I18n.reload!
-
+        init!
         Provider
       end
 
       command "lxc" do
         require_relative 'command/root'
+        init!
         Command::Root
       end
 
       config(:lxc, :provider) do
         require File.expand_path("../config", __FILE__)
+        init!
         Config
       end
 
@@ -37,6 +36,16 @@ module Vagrant
         require_relative "provider/cap/public_address"
         Provider::Cap::PublicAddress
       end
+
+      protected
+
+      def self.init!
+        return if defined?(@_init)
+        I18n.load_path << File.expand_path(File.dirname(__FILE__) + '/../../locales/en.yml')
+        I18n.reload!
+        @_init = true
+      end
+
     end
   end
 end
