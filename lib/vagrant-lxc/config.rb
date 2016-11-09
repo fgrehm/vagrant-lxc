@@ -18,12 +18,15 @@ module Vagrant
       # machine name, set this to :machine
       attr_accessor :container_name
 
+      attr_accessor :fetch_ip_tries
+
       def initialize
         @customizations = []
         @backingstore = UNSET_VALUE
         @backingstore_options = []
         @sudo_wrapper   = UNSET_VALUE
         @container_name = UNSET_VALUE
+        @fetch_ip_tries = 10
       end
 
       # Customize the container by calling `lxc-start` with the given
