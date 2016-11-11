@@ -26,7 +26,7 @@ module Vagrant
         @backingstore_options = []
         @sudo_wrapper   = UNSET_VALUE
         @container_name = UNSET_VALUE
-        @fetch_ip_tries = 10
+        @fetch_ip_tries = UNSET_VALUE
       end
 
       # Customize the container by calling `lxc-start` with the given
@@ -54,6 +54,7 @@ module Vagrant
         @container_name = nil if @container_name == UNSET_VALUE
         @backingstore = "best" if @backingstore == UNSET_VALUE
         @existing_container_name = nil if @existing_container_name == UNSET_VALUE
+        @fetch_ip_tries = 10 if @fetch_ip_tries == UNSET_VALUE
       end
     end
   end
