@@ -19,9 +19,11 @@ module Vagrant
         end
 
         def assigned_ip(env)
+          config = env[:machine].provider_config
+          fetch_ip_tries = config.fetch_ip_tries
           driver = env[:machine].provider.driver
           ip = ''
-          retryable(:on => LXC::Errors::ExecuteError, :tries => 10, :sleep => 3) do
+          retryable(:on => LXC::Errors::ExecuteError, :tries => fetch_ip_tries, :sleep => 3) do
             unless ip = get_container_ip_from_ip_addr(driver)
               # retry
               raise LXC::Errors::ExecuteError, :command => "lxc-attach"
