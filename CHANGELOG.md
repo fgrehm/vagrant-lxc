@@ -1,3 +1,7 @@
+## [1.2.3](https://github.com/fgrehm/vagrant-lxc/compare/v1.2.2...v1.2.3) (Dec 20, 2016)
+
+  - Fix bug in Gemfile.lock
+
 ## [1.2.2](https://github.com/fgrehm/vagrant-lxc/compare/v1.2.1...v1.2.2) (Dec 20, 2016)
 
   - Make the timeout for fetching container IP's configurable [[GH-426]]
