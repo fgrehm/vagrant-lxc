@@ -2,7 +2,7 @@ GIT
   remote: https://github.com/fgrehm/vagrant-cachier.git
   revision: 40dddfb368526948e769492a00a7937c5a044a4d
   specs:
-    vagrant-cachier (1.2.2)
+    vagrant-cachier (1.2.1)
 
 GIT
   remote: https://github.com/fgrehm/vagrant-pristine.git
@@ -46,7 +46,7 @@ GIT
 PATH
   remote: .
   specs:
-    vagrant-lxc (1.2.1)
+    vagrant-lxc (1.2.2)
 
 GEM
   remote: https://rubygems.org/
