@@ -164,7 +164,7 @@ module Vagrant
         end
 
         cmd = [
-          Vagrant::LXC.source_root.join('scripts/pipework').to_s,
+          `which pipework`.to_s.strip[/.+/m] || Vagrant::LXC.source_root.join('scripts/pipework').to_s,
           bridge_name,
           container_name,
           ip ||= "dhcp"
