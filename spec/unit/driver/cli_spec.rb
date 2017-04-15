@@ -210,6 +210,11 @@ describe Vagrant::LXC::Driver::CLI do
       allow(subject).to receive(:run).and_return("StatE: STarTED\npid: 2")
       expect(subject.state).to eq(:started)
     end
+
+    it "maps the output of lxc-info v1.0.0" do
+      subject.stub(:run).and_return("State:     RUNNING\nPID:   2")
+      subject.state.should == :running
+    end
   end
 
   describe 'attach' do
