@@ -25,9 +25,6 @@ module Vagrant
       end
 
 
-      class NamespacesNotSupported < Vagrant::Errors::VagrantError
-      end
-
       class LxcLinuxRequired < Vagrant::Errors::VagrantError
         error_key(:lxc_linux_required)
       end

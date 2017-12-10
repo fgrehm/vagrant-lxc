@@ -4,8 +4,7 @@ require 'vagrant-lxc/action/create'
 require 'vagrant-lxc/action/destroy'
 require 'vagrant-lxc/action/destroy_confirm'
 require 'vagrant-lxc/action/compress_rootfs'
-require 'vagrant-lxc/action/fetch_ip_with_lxc_attach'
-require 'vagrant-lxc/action/fetch_ip_from_dnsmasq_leases'
+require 'vagrant-lxc/action/fetch_ip_with_lxc_info'
 require 'vagrant-lxc/action/forced_halt'
 require 'vagrant-lxc/action/forward_ports'
 require 'vagrant-lxc/action/gc_private_network_bridges'
@@ -182,8 +181,7 @@ module Vagrant
       def self.action_ssh_ip
         Builder.new.tap do |b|
           b.use Builtin::Call, Builtin::ConfigValidate do |env, b2|
-            b2.use FetchIpWithLxcAttach if env[:machine].provider.driver.supports_attach?
-            b2.use FetchIpFromDnsmasqLeases
+            b2.use FetchIpWithLxcInfo
           end
         end
       end

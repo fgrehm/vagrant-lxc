@@ -109,6 +109,7 @@ Whitelist.add_regex %r{<%= pipework_regex %>}, '**'
 Whitelist.add '<%= cmd_paths['lxc_bin'] %>/lxc-version'
 Whitelist.add '<%= cmd_paths['lxc_bin'] %>/lxc-ls'
 Whitelist.add '<%= cmd_paths['lxc_bin'] %>/lxc-info', '--name', /.*/
+Whitelist.add '<%= cmd_paths['lxc_bin'] %>/lxc-info', '--name', /.*/, '-iH'
 Whitelist.add '<%= cmd_paths['lxc_bin'] %>/lxc-create', '-B', /.*/, '--template', /.*/, '--name', /.*/, '**'
 Whitelist.add '<%= cmd_paths['lxc_bin'] %>/lxc-create', '--version'
 Whitelist.add '<%= cmd_paths['lxc_bin'] %>/lxc-destroy', '--name', /.*/

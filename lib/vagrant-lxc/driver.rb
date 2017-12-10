@@ -127,6 +127,10 @@ module Vagrant
         @cli.attach(*command)
       end
 
+      def info(*command)
+        @cli.info(*command)
+      end
+
       def configure_private_network(bridge_name, bridge_ip, container_name, address_type, ip)
         @logger.info "Configuring network interface for #{container_name} using #{ip} and bridge #{bridge_name}"
         if ip

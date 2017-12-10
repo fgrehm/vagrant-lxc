@@ -114,15 +114,15 @@ module Vagrant
             end
 
             if namespaces
-              if supports_attach_with_namespaces?
-                extra = ['--namespaces', namespaces]
-              else
-                raise LXC::Errors::NamespacesNotSupported
-              end
+              extra = ['--namespaces', namespaces]
             end
           end
 
           run :attach, '--name', @name, *((extra || []) + cmd)
+        end
+
+        def info(*cmd)
+          run(:info, '--name', @name, *cmd)
         end
 
         def transition_to(target_state, tries = 30, timeout = 1, &block)
@@ -169,14 +169,6 @@ module Vagrant
 
         def run(command, *args)
           @sudo_wrapper.run("lxc-#{command}", *args)
-        end
-
-        def supports_attach_with_namespaces?
-          unless defined?(@supports_attach_with_namespaces)
-            @supports_attach_with_namespaces = run(:attach, '-h', :show_stderr => true).values.join.include?('--namespaces')
-          end
-
-          return @supports_attach_with_namespaces
         end
       end
     end

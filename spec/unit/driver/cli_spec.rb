@@ -232,13 +232,6 @@ describe Vagrant::LXC::Driver::CLI do
       subject.attach *(command + [{namespaces: ['network', 'mount']}])
       expect(subject).to have_received(:run).with(:attach, '--name', name, '--namespaces', 'NETWORK|MOUNT', '--', *command)
     end
-
-    it 'raises a NamespacesNotSupported error if not supported' do
-      allow(subject).to receive(:run).with(:attach, '-h', :show_stderr => true).and_return({:stdout => '', :stderr => 'not supported'})
-      expect {
-        subject.attach *(command + [{namespaces: ['network', 'mount']}])
-      }.to raise_error(Vagrant::LXC::Errors::NamespacesNotSupported)
-    end
   end
 
   describe 'transition block' do
