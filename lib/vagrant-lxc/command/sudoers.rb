@@ -84,9 +84,9 @@ module Vagrant
         def build_cmd_paths_hash
           {}.tap do |hash|
             %w( which cat mkdir cp chown chmod rm tar chown ip ifconfig brctl ).each do |cmd|
-              hash[cmd] = `which #{cmd}`.strip
+              hash[cmd] = `sudo which #{cmd}`.strip
             end
-            hash['lxc_bin'] = Pathname(`which lxc-create`.strip).parent.to_s
+            hash['lxc_bin'] = Pathname(`sudo which lxc-create`.strip).parent.to_s
             hash['ruby'] = Gem.ruby
           end
         end
