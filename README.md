@@ -18,7 +18,7 @@ to see it in action.
 ## Requirements
 
 * [Vagrant 1.5+](http://www.vagrantup.com/downloads.html) (tested with 1.7.2)
-* lxc 0.7.5+
+* lxc >=0.7.5 and <2.1.0 (see [#445](https://github.com/fgrehm/vagrant-lxc/issues/445))
 * tar 1.27 (the lxc-template script uses the --xattrs option)
 * `redir` (if you are planning to use port forwarding)
 * `brctl` (if you are planning to use private networks, on Ubuntu this means `apt-get install bridge-utils`)
