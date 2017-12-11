@@ -78,7 +78,7 @@ class Whitelist
   end
 end
 
-base = "/var/lib/lxc"
+base = "<%= lxc_base_path %>"
 base_path = %r{\A#{base}/.*\z}
 
 ##

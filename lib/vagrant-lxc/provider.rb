@@ -2,7 +2,6 @@ require "log4r"
 
 require "vagrant-lxc/action"
 require "vagrant-lxc/driver"
-require "vagrant-lxc/sudo_wrapper"
 
 module Vagrant
   module LXC
@@ -26,12 +25,7 @@ module Vagrant
       end
 
       def sudo_wrapper
-        @shell ||= begin
-          wrapper = Pathname.new(LXC.sudo_wrapper_path).exist? &&
-            LXC.sudo_wrapper_path || nil
-          @logger.debug("Found sudo wrapper : #{wrapper}") if wrapper
-          SudoWrapper.new(wrapper)
-        end
+        @shell ||= LXC.sudo_wrapper
       end
 
       def ensure_lxc_installed!
