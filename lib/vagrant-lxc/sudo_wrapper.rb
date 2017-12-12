@@ -13,11 +13,24 @@ module Vagrant
 
       def run(*command)
         options = command.last.is_a?(Hash) ? command.last : {}
-        if @wrapper_path && !options[:no_wrapper]
-          command.unshift @wrapper_path
-          execute *(['sudo'] + command)
-        else
-          execute *(['sudo', '/usr/bin/env'] + command)
+
+        # Avoid running LXC commands with a restrictive umask.
+        # Otherwise disasters occur, like the container root directory
+        # having permissions `rwxr-x---` which prevents the `vagrant`
+        # user from accessing its own home directory; among other
+        # problems, SSH cannot then read `authorized_keys`!
+        old_mask = File.umask
+        File.umask(old_mask & 022)  # allow all `r` and `x` bits
+
+        begin
+          if @wrapper_path && !options[:no_wrapper]
+            command.unshift @wrapper_path
+            execute *(['sudo'] + command)
+          else
+            execute *(['sudo', '/usr/bin/env'] + command)
+          end
+        ensure
+          File.umask(old_mask)
         end
       end
 
