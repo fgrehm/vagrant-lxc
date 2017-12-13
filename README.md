@@ -17,17 +17,14 @@ to see it in action.
 
 ## Requirements
 
-* [Vagrant 1.5+](http://www.vagrantup.com/downloads.html) (tested with 1.7.2)
-* lxc >=0.7.5 and <2.1.0 (see [#445](https://github.com/fgrehm/vagrant-lxc/issues/445))
-* tar 1.27 (the lxc-template script uses the --xattrs option)
+* [Vagrant 1.8+](http://www.vagrantup.com/downloads.html)
+* lxc >=1.0 and <2.1.0 (see [#445](https://github.com/fgrehm/vagrant-lxc/issues/445))
 * `redir` (if you are planning to use port forwarding)
 * `brctl` (if you are planning to use private networks, on Ubuntu this means `apt-get install bridge-utils`)
-* A [kernel != 3.5.0-17.28](https://github.com/fgrehm/vagrant-lxc/wiki/Troubleshooting#wiki-im-unable-to-restart-containers)
 
 The plugin is known to work better and pretty much out of the box on Ubuntu 14.04+
-hosts and installing the dependencies on it basically means a `apt-get install lxc lxc-templates cgroup-lite redir`
-(older LXC versions like 0.7.5 shipped with Ubuntu 12.04 by default might require
-[additional configurations to work](#backingstore-options)). For setting up other
+hosts and installing the dependencies on it basically means a
+`apt-get install lxc lxc-templates cgroup-lite redir`. For setting up other
 types of hosts please have a look at the [Wiki](https://github.com/fgrehm/vagrant-lxc/wiki).
 
 If you are on a Mac or Windows machine, you might want to have a look at [this](http://the.taoofmac.com/space/HOWTO/Vagrant)
