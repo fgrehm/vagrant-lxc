@@ -8,10 +8,10 @@ group :development do
 end
 
 group :development, :test do
-  gem 'rake'
-  gem 'rspec',        '2.99.0'
-  gem 'coveralls',    require: (ENV['COVERAGE'] == 'true')
-  gem 'vagrant-spec', git: 'https://github.com/mitchellh/vagrant-spec.git'
+  gem 'rake', '~> 10.4.2'
+  gem 'rspec', '~> 2.99.0'
+  gem 'coveralls', '~> 0.7.2', require: (ENV['COVERAGE'] == 'true')
+  gem 'vagrant-spec', git: 'https://github.com/mitchellh/vagrant-spec.git', ref: '1df5a3af81cb7cce568b2eac52b8f6822bcb1d8e'
 end
 
 group :plugins do
