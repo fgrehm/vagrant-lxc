@@ -24,7 +24,6 @@ module Vagrant
         @customizations = []
         @backingstore = UNSET_VALUE
         @backingstore_options = []
-        @sudo_wrapper   = UNSET_VALUE
         @container_name = UNSET_VALUE
         @fetch_ip_tries = UNSET_VALUE
       end
@@ -50,7 +49,6 @@ module Vagrant
       end
 
       def finalize!
-        @sudo_wrapper = nil if @sudo_wrapper == UNSET_VALUE
         @container_name = nil if @container_name == UNSET_VALUE
         @backingstore = "best" if @backingstore == UNSET_VALUE
         @existing_container_name = nil if @existing_container_name == UNSET_VALUE

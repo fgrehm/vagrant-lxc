@@ -3,6 +3,7 @@ require "vagrant/util/subprocess"
 
 require "vagrant-lxc/errors"
 require "vagrant-lxc/driver/cli"
+require "vagrant-lxc/sudo_wrapper"
 
 require "etc"
 
@@ -21,10 +22,10 @@ module Vagrant
       attr_reader :container_name,
                   :customizations
 
-      def initialize(container_name, sudo_wrapper, cli = nil)
+      def initialize(container_name, sudo_wrapper = nil, cli = nil)
         @container_name = container_name
-        @sudo_wrapper   = sudo_wrapper
-        @cli            = cli || CLI.new(sudo_wrapper, container_name)
+        @sudo_wrapper   = sudo_wrapper || SudoWrapper.new()
+        @cli            = cli || CLI.new(@sudo_wrapper, container_name)
         @logger         = Log4r::Logger.new("vagrant::provider::lxc::driver")
         @customizations = []
       end

@@ -1,6 +1,7 @@
 require 'tempfile'
 
 require "vagrant-lxc/driver"
+require "vagrant-lxc/sudo_wrapper"
 
 module Vagrant
   module LXC
@@ -27,7 +28,7 @@ module Vagrant
           argv = parse_options(opts)
           return unless argv
 
-          wrapper_path = Vagrant::LXC.sudo_wrapper_path
+          wrapper_path = SudoWrapper.bin_path
           wrapper = create_wrapper!
           sudoers = create_sudoers!(options[:user], wrapper_path)
 
@@ -45,7 +46,7 @@ module Vagrant
 
         # This requires vagrant 1.5.2+ https://github.com/mitchellh/vagrant/commit/3371c3716278071680af9b526ba19235c79c64cb
         def create_wrapper!
-          lxc_base_path = Driver.new(0, LXC.sudo_wrapper).containers_path
+          lxc_base_path = Driver.new("").containers_path
           wrapper = Tempfile.new('lxc-wrapper').tap do |file|
             template = Vagrant::Util::TemplateRenderer.new(
               'sudoers.rb',

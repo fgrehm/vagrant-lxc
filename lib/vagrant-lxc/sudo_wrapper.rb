@@ -6,8 +6,12 @@ module Vagrant
 
       attr_reader :wrapper_path
 
-      def initialize(wrapper_path = nil)
-        @wrapper_path = wrapper_path
+      def self.dest_path
+        "/usr/local/bin/vagrant-lxc-wrapper"
+      end
+
+      def initialize()
+        @wrapper_path = Pathname.new(SudoWrapper.dest_path).exist? && SudoWrapper.dest_path || nil
         @logger       = Log4r::Logger.new("vagrant::lxc::sudo_wrapper")
       end
 
