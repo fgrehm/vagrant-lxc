@@ -59,7 +59,7 @@ module Vagrant
           # nicely handled by Vagrant.
           if r.exit_code != 0
             if @interrupted
-              @logger.info("Exit code != 0, but interrupted. Ignoring.")
+              raise LXC::Errors::SubprocessInterruptError, command.inspect
             else
               raise LXC::Errors::ExecuteError,
                 command: command.inspect, stderr: r.stderr, stdout: r.stdout, exitcode: r.exit_code

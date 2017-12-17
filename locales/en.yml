@@ -40,6 +40,9 @@ en:
           preparing: Setting up mount entries for shared folders...
 
     errors:
+      lxc_interrupt_error: |-
+        Interrupted
+
       lxc_execute_error: |-
         There was an error executing %{command}
 

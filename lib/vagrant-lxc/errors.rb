@@ -16,6 +16,15 @@ module Vagrant
         end
       end
 
+      # Raised when user interrupts a subprocess
+      class SubprocessInterruptError < Vagrant::Errors::VagrantError
+        error_key(:lxc_interrupt_error)
+        def initialize(message, *args)
+          super
+        end
+      end
+
+
       class NamespacesNotSupported < Vagrant::Errors::VagrantError
       end
 
