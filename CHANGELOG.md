@@ -1,4 +1,4 @@
-## [1.2.4](https://github.com/fgrehm/vagrant-lxc/compare/v1.2.3...v1.2.4) (Dec 12, 2017)
+## [1.2.4](https://github.com/fgrehm/vagrant-lxc/compare/v1.2.3...v1.2.4) (Dec 20, 2017)
 
 BUGFIX:
   - Support alternative `lxcpath` [[GH-413]]
@@ -6,12 +6,14 @@ BUGFIX:
   - Work around restrictive `umask` values [[GH-435]]
   - Make `--config` in `lxc-template` optional [[GH-421]]
   - Fix sudo wrapper binpath construction logic [[GH-410]]
+  - Fix bug causing CTRL-C on `vagrant up` to destroy the VM [[GH-449]]
 
 [GH-413]: https://github.com/fgrehm/vagrant-lxc/pull/413
 [GH-438]: https://github.com/fgrehm/vagrant-lxc/pull/438
 [GH-435]: https://github.com/fgrehm/vagrant-lxc/pull/435
 [GH-421]: https://github.com/fgrehm/vagrant-lxc/pull/421
 [GH-410]: https://github.com/fgrehm/vagrant-lxc/pull/410
+[GH-449]: https://github.com/fgrehm/vagrant-lxc/pull/449
 
 ## [1.2.3](https://github.com/fgrehm/vagrant-lxc/compare/v1.2.2...v1.2.3) (Dec 20, 2016)
 
