@@ -1,14 +1,36 @@
+## [1.2.4](https://github.com/fgrehm/vagrant-lxc/compare/v1.2.3...v1.2.4) (Dec 12, 2017)
+
+BUGFIX:
+  - Support alternative `lxcpath` [[GH-413]]
+  - Update `pipework` regexp in sudo wrapper for Vagrant 1.9+ [[GH-438]]
+  - Work around restrictive `umask` values [[GH-435]]
+  - Make `--config` in `lxc-template` optional [[GH-421]]
+  - Fix sudo wrapper binpath construction logic [[GH-410]]
+
+[GH-413]: https://github.com/fgrehm/vagrant-lxc/pull/413
+[GH-438]: https://github.com/fgrehm/vagrant-lxc/pull/438
+[GH-435]: https://github.com/fgrehm/vagrant-lxc/pull/435
+[GH-421]: https://github.com/fgrehm/vagrant-lxc/pull/421
+[GH-410]: https://github.com/fgrehm/vagrant-lxc/pull/410
+
 ## [1.2.3](https://github.com/fgrehm/vagrant-lxc/compare/v1.2.2...v1.2.3) (Dec 20, 2016)
 
   - Fix bug in Gemfile.lock
 
 ## [1.2.2](https://github.com/fgrehm/vagrant-lxc/compare/v1.2.1...v1.2.2) (Dec 20, 2016)
 
+BUGFIX:
   - Make the timeout for fetching container IP's configurable [[GH-426]]
   - Load locale file only once [[GH-423]]
   - Preserve xattrs in container filesystems [[GH-411]]
   - Forward port latest pipework script [[GH-408]]
   - Fix handling of non-fatal lxc-stop return code [[GH-405]]
+
+[GH-426]: https://github.com/fgrehm/vagrant-lxc/pull/426
+[GH-423]: https://github.com/fgrehm/vagrant-lxc/pull/423
+[GH-411]: https://github.com/fgrehm/vagrant-lxc/pull/411
+[GH-408]: https://github.com/fgrehm/vagrant-lxc/pull/408
+[GH-405]: https://github.com/fgrehm/vagrant-lxc/pull/405
 
 ## [1.2.1](https://github.com/fgrehm/vagrant-lxc/compare/v1.2.0...v1.2.1) (Sep 24, 2015)
 
