@@ -144,7 +144,7 @@ if [ -e "${LXC_PATH}/config-auto" ]; then
     cat ${LXC_PATH}/config-auto >> ${LXC_PATH}/config
     rm ${LXC_PATH}/config-auto
 fi
-echo "lxc.utsname = ${LXC_NAME}" >> ${LXC_PATH}/config
+echo "lxc.uts.name = ${LXC_NAME}" >> ${LXC_PATH}/config
 
 ## Re-add the previously removed network config
 if [ -e "${LXC_PATH}/config-network" ]; then
