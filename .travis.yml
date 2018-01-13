@@ -3,7 +3,7 @@ rvm:
   - 2.2
   - 2.3
   - 2.4
-before_install:
+install:
   - gem install -v 1.12.5 bundler
-  - bundle _1.12.5_ install
+  - bundle _1.12.5_ install --jobs=3 --retry=3 --deployment
 script: "bundle _1.12.5_ exec rake ci"
