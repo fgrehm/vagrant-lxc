@@ -22,16 +22,17 @@ module Vagrant
         end
 
         def configure_private_networks(env)
-          env[:machine].config.vm.networks.find do |type, config|
+          env[:machine].config.vm.networks.find_all.each do |type, config|
             next if type.to_sym != :private_network
 
-            container_name = env[:machine].provider.driver.container_name
-            address_type   = config[:type]
-            ip             = config[:ip]
-            bridge_ip      = config.fetch(:lxc__bridge_ip) { build_bridge_ip(ip) }
-            bridge         = config.fetch(:lxc__bridge_name)
+            container_name      = env[:machine].provider.driver.container_name
+            container_interface = config[:interface]
+            address_type        = config[:type]
+            ip                  = config[:ip]
+            bridge_ip           = config.fetch(:lxc__bridge_ip) { build_bridge_ip(ip) }
+            bridge              = config.fetch(:lxc__bridge_name)
 
-            env[:machine].provider.driver.configure_private_network(bridge, bridge_ip, container_name, address_type, ip)
+            env[:machine].provider.driver.configure_private_network(bridge, bridge_ip, container_name, container_interface, address_type, ip)
           end
         end
 
