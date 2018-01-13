@@ -1,8 +1,9 @@
 language: ruby
 rvm:
-  - 2.0.0
-  - 2.1.1
-matrix:
-  allow_failures:
-    - rvm: 2.1.1
-script: "bundle exec rake ci"
+  - 2.2
+  - 2.3
+  - 2.4
+before_install:
+  - gem install -v 1.12.5 bundler
+  - bundle _1.12.5_ install
+script: "bundle _1.12.5_ exec rake ci"
