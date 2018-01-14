@@ -17,8 +17,6 @@ module Vagrant
       class ContainerNotFound < StandardError; end
 
       # Default root folder where container configs are stored
-      DEFAULT_CONTAINERS_PATH = '/var/lib/lxc'
-
       attr_reader :container_name,
                   :customizations
 
@@ -36,7 +34,7 @@ module Vagrant
 
       # Root folder where container configs are stored
       def containers_path
-        @containers_path ||= @cli.support_config_command? ? @cli.config('lxc.lxcpath') : DEFAULT_CONTAINERS_PATH
+        @containers_path ||= @cli.config('lxc.lxcpath')
       end
 
       def all_containers

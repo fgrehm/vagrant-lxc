@@ -30,16 +30,7 @@ describe Vagrant::LXC::Driver::CLI do
 
   describe 'version' do
     before do
-      allow(subject).to receive(:support_version_command?).and_return(true)
-      allow(subject).to receive(:run).with(:version).and_return(lxc_version_out)
-    end
-
-    describe 'lxc version before 1.x.x' do
-      let(:lxc_version_out) { "lxc version:  0.x.y-rc1\n" }
-
-      it 'parses the version from the output' do
-        expect(subject.version).to eq('0.x.y-rc1')
-      end
+      allow(subject).to receive(:run).with(:create, '--version').and_return(lxc_version_out)
     end
 
     describe 'lxc version after 1.x.x' do
@@ -53,24 +44,11 @@ describe Vagrant::LXC::Driver::CLI do
 
   describe 'config' do
     before do
-      allow(subject).to receive(:support_version_command?).and_return(support_version_command?)
       allow(subject).to receive(:run).with(:config, 'lxc.lxcpath').and_return(lxc_config_out)
-      allow(subject).to receive(:run).with(:version).and_return(lxc_version_out)
       allow(subject).to receive(:run).with(:create, '--version').and_return(lxc_version_out)
     end
 
-    describe 'lxc version before 1.x.x' do
-      let(:support_version_command?) { true }
-      let(:lxc_config_out)           { "/var/lib/lxc\n" }
-      let(:lxc_version_out)          { "lxc version:  0.x.y-rc1\n" }
-
-      it 'not supported' do
-        expect{subject.config('lxc.lxcpath')}.to raise_error(Vagrant::LXC::Errors::CommandNotSupported)
-      end
-    end
-
-    describe 'lxc version before after 1.x.x'do
-      let(:support_version_command?) { false }
+    describe 'lxc version after 1.x.x'do
       let(:lxc_config_out)           { "/var/lib/lxc\n" }
       let(:lxc_version_out)          { "1.0.0\n" }
 

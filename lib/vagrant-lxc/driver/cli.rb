@@ -29,7 +29,7 @@ module Vagrant
 
         def version
           return @version if @version
-          @version = support_version_command? ? run(:version) : run(:create, '--version')
+          @version = run(:create, '--version')
           if @version =~ /(lxc version:\s+|)(.+)\s*$/
             @version = $2.downcase
           else
@@ -39,11 +39,7 @@ module Vagrant
         end
 
         def config(param)
-          if support_config_command?
-            run(:config, param).gsub("\n", '')
-          else
-            raise Errors::CommandNotSupported, name: 'config', available_version: '> 1.x.x', version: version
-          end
+          run(:config, param).gsub("\n", '')
         end
 
         def state
@@ -153,16 +149,6 @@ module Vagrant
           end
 
           return @supports_attach
-        end
-
-        def support_config_command?
-          version[0].to_i >= 1
-        end
-
-        def support_version_command?
-          @sudo_wrapper.run('which', 'lxc-version').strip.chomp != ''
-        rescue Vagrant::LXC::Errors::ExecuteError
-          return false
         end
 
         private
