@@ -45,6 +45,10 @@ module Vagrant
         Pathname.new("#{containers_path}/#{@container_name}")
       end
 
+      def config_path
+        base_path.join('config').to_s
+      end 
+
       def rootfs_path
         config_entry = config_string.match(/^lxc\.rootfs\s+=\s+(.+)$/)[1]
         case config_entry
@@ -72,7 +76,7 @@ module Vagrant
       end
 
       def config_string
-        @sudo_wrapper.run('cat', base_path.join('config').to_s)
+        @sudo_wrapper.run('cat', config_path)
       end
 
       def create(name, backingstore, backingstore_options, template_path, config_file, template_options = {})
@@ -240,6 +244,12 @@ module Vagrant
         write_config(contents)
       end
 
+      def update_config_keys
+        @cli.update_config(config_path)
+      rescue Errors::ExecuteError
+        # not on LXC 2.1+. Doesn't matter, ignore.
+      end
+
       protected
 
       def write_customizations(customizations)
@@ -260,8 +270,8 @@ module Vagrant
           file.chmod 0644
           file.write contents
           file.close
-          @sudo_wrapper.run 'cp', '-f', file.path, base_path.join('config').to_s
-          @sudo_wrapper.run 'chown', 'root:root', base_path.join('config').to_s
+          @sudo_wrapper.run 'cp', '-f', file.path, config_path
+          @sudo_wrapper.run 'chown', 'root:root', config_path
         end
       end
     end

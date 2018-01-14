@@ -119,6 +119,7 @@ Whitelist.add '<%= cmd_paths['lxc_bin'] %>/lxc-shutdown', '--name', /.*/
 Whitelist.add '<%= cmd_paths['lxc_bin'] %>/lxc-attach', '--name', /.*/, '**'
 Whitelist.add '<%= cmd_paths['lxc_bin'] %>/lxc-attach', '-h'
 Whitelist.add '<%= cmd_paths['lxc_bin'] %>/lxc-config', 'lxc.lxcpath'
+Whitelist.add '<%= cmd_paths['lxc_bin'] %>/lxc-update-config', '-c', /.*/
 
 ##
 # Commands from driver/action/remove_temporary_files.rb

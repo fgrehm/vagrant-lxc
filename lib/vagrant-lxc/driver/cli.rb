@@ -42,6 +42,10 @@ module Vagrant
           run(:config, param).gsub("\n", '')
         end
 
+        def update_config(path)
+          run('update-config', '-c', path)
+        end
+
         def state
           if @name && run(:info, '--name', @name, retryable: true) =~ /^state:[^A-Z]+([A-Z]+)$/i
             $1.downcase.to_sym

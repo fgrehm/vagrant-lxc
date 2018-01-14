@@ -19,7 +19,8 @@ module Vagrant
               container_name = generate_container_name(env)
           end
 
-          env[:machine].provider.driver.create(
+          driver = env[:machine].provider.driver
+          driver.create(
             container_name,
             config.backingstore,
             config.backingstore_options,
@@ -27,6 +28,7 @@ module Vagrant
             env[:lxc_template_config],
             env[:lxc_template_opts]
           )
+          driver.update_config_keys
 
           env[:machine].id = container_name
 
