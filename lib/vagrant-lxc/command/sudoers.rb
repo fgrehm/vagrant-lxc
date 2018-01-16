@@ -28,7 +28,7 @@ module Vagrant
           argv = parse_options(opts)
           return unless argv
 
-          wrapper_path = SudoWrapper.bin_path
+          wrapper_path = SudoWrapper.dest_path
           wrapper = create_wrapper!
           sudoers = create_sudoers!(options[:user], wrapper_path)
 
