@@ -1,3 +1,20 @@
+## [1.3.0](https://github.com/fgrehm/vagrant-lxc/compare/v1.2.4...v1.3.0) (Jan 20, 2018)
+
+FEATURES:
+  - lxc-template: make runnable by unprivileged users [[GH-447]]
+  - Use `lxc-info` instead of `lxc-attach` to retrieve container IP
+  - Add support for LXC v2.1+ [[GH-445]]
+  - Remove 2Gb limitation on `/tmp`. [[GH-406]]
+
+OTHERS:
+  - Bump Vagrant requirements to v1.8+
+  - Bump LXC requirements to v1.0+
+
+
+[GH-447]: https://github.com/fgrehm/vagrant-lxc/pull/447
+[GH-445]: https://github.com/fgrehm/vagrant-lxc/pull/445
+[GH-406]: https://github.com/fgrehm/vagrant-lxc/pull/406
+
 ## [1.2.4](https://github.com/fgrehm/vagrant-lxc/compare/v1.2.3...v1.2.4) (Dec 20, 2017)
 
 BUGFIX:

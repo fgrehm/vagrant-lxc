@@ -1,5 +1,5 @@
 module Vagrant
   module LXC
-    VERSION = "1.3.0-dev"
+    VERSION = "1.3.0"
   end
 end
