@@ -125,7 +125,9 @@ module Vagrant
             end
 
             b2.use ClearForwardedPorts
-            b2.use RemoveTemporaryFiles
+            if env[:machine].state.id == :running
+              b2.use RemoveTemporaryFiles
+            end
             b2.use GcPrivateNetworkBridges
             b2.use Builtin::Call, Builtin::GracefulHalt, :stopped, :running do |env2, b3|
               if !env2[:result]
