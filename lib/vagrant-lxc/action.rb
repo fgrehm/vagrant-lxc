@@ -12,7 +12,6 @@ require 'vagrant-lxc/action/handle_box_metadata'
 require 'vagrant-lxc/action/prepare_nfs_settings'
 require 'vagrant-lxc/action/prepare_nfs_valid_ids'
 require 'vagrant-lxc/action/private_networks'
-require 'vagrant-lxc/action/remove_temporary_files'
 require 'vagrant-lxc/action/setup_package_files'
 require 'vagrant-lxc/action/warn_networks'
 
@@ -125,9 +124,6 @@ module Vagrant
             end
 
             b2.use ClearForwardedPorts
-            if env[:machine].state.id == :running
-              b2.use RemoveTemporaryFiles
-            end
             b2.use GcPrivateNetworkBridges
             b2.use Builtin::Call, Builtin::GracefulHalt, :stopped, :running do |env2, b3|
               if !env2[:result]
