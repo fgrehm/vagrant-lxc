@@ -18,6 +18,10 @@ module Vagrant
       # machine name, set this to :machine
       attr_accessor :container_name
 
+      # Size (as a string like '400M') of the tmpfs to mount at /tmp on boot.
+      # Set to false or nil to disable the tmpfs mount altogether. Defaults to '2G'.
+      attr_accessor :tmpfs_mount_size
+
       attr_accessor :fetch_ip_tries
 
       def initialize
@@ -25,6 +29,7 @@ module Vagrant
         @backingstore = UNSET_VALUE
         @backingstore_options = []
         @container_name = UNSET_VALUE
+        @tmpfs_mount_size = UNSET_VALUE
         @fetch_ip_tries = UNSET_VALUE
       end
 
@@ -52,6 +57,7 @@ module Vagrant
         @container_name = nil if @container_name == UNSET_VALUE
         @backingstore = "best" if @backingstore == UNSET_VALUE
         @existing_container_name = nil if @existing_container_name == UNSET_VALUE
+        @tmpfs_mount_size = '2G' if @tmpfs_mount_size == UNSET_VALUE
         @fetch_ip_tries = 10 if @fetch_ip_tries == UNSET_VALUE
       end
     end
