@@ -1,3 +1,10 @@
+## [1.3.1](https://github.com/fgrehm/vagrant-lxc/compare/v1.3.0...v1.3.1) (Fev 06, 2018)
+
+FIXES:
+  - Fix problems with `tmpfs` fiddling in v1.3.0. [[GH-455]]
+
+[GH-455]: https://github.com/fgrehm/vagrant-lxc/pull/455
+
 ## [1.3.0](https://github.com/fgrehm/vagrant-lxc/compare/v1.2.4...v1.3.0) (Jan 20, 2018)
 
 FEATURES:
