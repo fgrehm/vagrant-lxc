@@ -2,7 +2,6 @@ require "log4r"
 
 require "vagrant-lxc/action"
 require "vagrant-lxc/driver"
-require "vagrant-lxc/sudo_wrapper"
 
 module Vagrant
   module LXC
@@ -27,7 +26,7 @@ module Vagrant
 
       def ensure_lxc_installed!
         begin
-          SudoWrapper.new().run("which", "lxc-create")
+          SudoWrapper.new(privileged: @machine.provider_config.privileged).run("which", "lxc-create")
         rescue Vagrant::LXC::Errors::ExecuteError
           raise Errors::LxcNotInstalled
         end
@@ -40,7 +39,7 @@ module Vagrant
 
         begin
           @logger.debug("Instantiating the container for: #{id.inspect}")
-          @driver = Driver.new(id)
+          @driver = Driver.new(id, privileged: @machine.provider_config.privileged)
           @driver.validate!
         rescue Driver::ContainerNotFound
           # The container doesn't exist, so we probably have a stale

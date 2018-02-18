@@ -19,10 +19,14 @@ module Vagrant
               container_name = generate_container_name(env)
           end
 
+          backingstore = config.backingstore
+          if backingstore.nil?
+            backingstore = config.privileged ? "best" : "dir"
+          end
           driver = env[:machine].provider.driver
           driver.create(
             container_name,
-            config.backingstore,
+            backingstore,
             config.backingstore_options,
             env[:lxc_template_src],
             env[:lxc_template_config],

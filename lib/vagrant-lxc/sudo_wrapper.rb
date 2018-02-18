@@ -10,8 +10,9 @@ module Vagrant
         "/usr/local/bin/vagrant-lxc-wrapper"
       end
 
-      def initialize()
+      def initialize(privileged: true)
         @wrapper_path = Pathname.new(SudoWrapper.dest_path).exist? && SudoWrapper.dest_path || nil
+        @privileged   = privileged
         @logger       = Log4r::Logger.new("vagrant::lxc::sudo_wrapper")
       end
 
@@ -27,11 +28,15 @@ module Vagrant
         File.umask(old_mask & 022)  # allow all `r` and `x` bits
 
         begin
-          if @wrapper_path && !options[:no_wrapper]
-            command.unshift @wrapper_path
-            execute *(['sudo'] + command)
+          if @privileged
+            if @wrapper_path && !options[:no_wrapper]
+              command.unshift @wrapper_path
+              execute *(['sudo'] + command)
+            else
+              execute *(['sudo', '/usr/bin/env'] + command)
+            end
           else
-            execute *(['sudo', '/usr/bin/env'] + command)
+            execute *(['/usr/bin/env'] + command)
           end
         ensure
           File.umask(old_mask)

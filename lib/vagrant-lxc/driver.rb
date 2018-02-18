@@ -20,9 +20,9 @@ module Vagrant
       attr_reader :container_name,
                   :customizations
 
-      def initialize(container_name, sudo_wrapper = nil, cli = nil)
+      def initialize(container_name, sudo_wrapper = nil, cli = nil, privileged: true)
         @container_name = container_name
-        @sudo_wrapper   = sudo_wrapper || SudoWrapper.new()
+        @sudo_wrapper   = sudo_wrapper || SudoWrapper.new(privileged: privileged)
         @cli            = cli || CLI.new(@sudo_wrapper, container_name)
         @logger         = Log4r::Logger.new("vagrant::provider::lxc::driver")
         @customizations = []
@@ -266,12 +266,21 @@ module Vagrant
       end
 
       def write_config(contents)
-        Tempfile.new('lxc-config').tap do |file|
-          file.chmod 0644
-          file.write contents
-          file.close
-          @sudo_wrapper.run 'cp', '-f', file.path, config_path
-          @sudo_wrapper.run 'chown', 'root:root', config_path
+        confpath = base_path.join('config').to_s
+        begin
+          File.open(confpath, File::RDWR) do |file|
+            file.write contents
+          end
+        rescue
+          # We don't have permissions to write in the conf file. That's probably because it's a
+          # privileged container. Work around that through sudo_wrapper.
+          Tempfile.new('lxc-config').tap do |file|
+            file.chmod 0644
+            file.write contents
+            file.close
+            @sudo_wrapper.run 'cp', '-f', file.path, confpath
+            @sudo_wrapper.run 'chown', 'root:root', confpath
+          end
         end
       end
     end

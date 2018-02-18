@@ -24,6 +24,12 @@ module Vagrant
 
       attr_accessor :fetch_ip_tries
 
+      # Whether the container needs to be privileged. Defaults to true (unprivileged containers
+      # is a very new feature in vagrant-lxc). If false, will try creating an unprivileged
+      # container. If it can't, will revert to the old "sudo wrapper" method to create a privileged
+      # container.
+      attr_accessor :privileged
+
       def initialize
         @customizations = []
         @backingstore = UNSET_VALUE
@@ -31,6 +37,7 @@ module Vagrant
         @container_name = UNSET_VALUE
         @tmpfs_mount_size = UNSET_VALUE
         @fetch_ip_tries = UNSET_VALUE
+        @privileged = UNSET_VALUE
       end
 
       # Customize the container by calling `lxc-start` with the given
@@ -55,10 +62,11 @@ module Vagrant
 
       def finalize!
         @container_name = nil if @container_name == UNSET_VALUE
-        @backingstore = "best" if @backingstore == UNSET_VALUE
+        @backingstore = nil if @backingstore == UNSET_VALUE
         @existing_container_name = nil if @existing_container_name == UNSET_VALUE
         @tmpfs_mount_size = '2G' if @tmpfs_mount_size == UNSET_VALUE
         @fetch_ip_tries = 10 if @fetch_ip_tries == UNSET_VALUE
+        @privileged = true if @privileged == UNSET_VALUE
       end
     end
   end
