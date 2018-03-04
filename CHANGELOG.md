@@ -1,3 +1,10 @@
+## [1.4.0](https://github.com/fgrehm/vagrant-lxc/compare/v1.3.1...v1.4.0) (Mar 04, 2018)
+
+FEATURES:
+  - Add support for unprivileged containers. [[GH-312]]
+
+[GH-312]: https://github.com/fgrehm/vagrant-lxc/issues/312
+
 ## [1.3.1](https://github.com/fgrehm/vagrant-lxc/compare/v1.3.0...v1.3.1) (Fev 06, 2018)
 
 FIXES:
