@@ -1,3 +1,5 @@
+require 'open3'
+
 module Vagrant
   module LXC
     module Action
@@ -78,8 +80,13 @@ module Vagrant
         end
 
         def redirect_port(host_ip, host_port, guest_ip, guest_port)
-          params = %W( --lport=#{host_port} --caddr=#{guest_ip} --cport=#{guest_port} )
-          params.unshift "--laddr=#{host_ip}" if host_ip
+          if redir_version >= 3
+            params = %W( :#{host_port} #{guest_ip}:#{guest_port} )
+            params[0] =  "#{host_ip}:#{host_port}" if host_ip
+          else
+            params = %W( --lport=#{host_port} --caddr=#{guest_ip} --cport=#{guest_port} )
+            params.unshift "--laddr=#{host_ip}" if host_ip
+          end
           params << '--syslog' if ENV['REDIR_LOG']
           if host_port < 1024
             redir_cmd = "sudo redir #{params.join(' ')} 2>/dev/null"
@@ -97,6 +104,12 @@ module Vagrant
           data_dir.join("redir_#{host_port}.pid").open('w') do |pid_file|
             pid_file.write(redir_pid)
           end
+        end
+
+        def redir_version
+          # For some weird reason redir prints version information in STDERR
+          _, version, _ = Open3.capture3 "redir --version"
+          version.split('.')[0].to_i
         end
 
         def redir_installed?
