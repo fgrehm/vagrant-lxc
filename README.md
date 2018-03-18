@@ -12,7 +12,7 @@ to see it in action.
 ## Features
 
 * Provides the same workflow as the Vagrant VirtualBox provider
-* Port forwarding via [`redir`](http://linux.die.net/man/1/redir)
+* Port forwarding via [`redir`](https://github.com/troglobit/redir)
 * Private networking via [`pipework`](https://github.com/jpetazzo/pipework)
 
 ## Requirements

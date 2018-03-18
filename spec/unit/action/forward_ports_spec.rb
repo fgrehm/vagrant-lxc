@@ -24,6 +24,7 @@ describe Vagrant::LXC::Action::ForwardPorts do
     machine.stub_chain(:config, :vm, :networks).and_return(networks)
     machine.stub(provider: provider, data_dir: data_dir)
 
+    subject.stub(redir_version: 3)
     subject.stub(exec: true)
     subject.stub(spawn: pid)
   end
@@ -34,7 +35,7 @@ describe Vagrant::LXC::Action::ForwardPorts do
     subject.stub(system: true)
     subject.call(env)
     expect(subject).to have_received(:spawn).with(
-      "redir --laddr=#{host_ip} --lport=#{host_port} --caddr=#{container_ip} --cport=#{guest_port} 2>/dev/null"
+      "redir #{host_ip}:#{host_port} #{container_ip}:#{guest_port} 2>/dev/null"
     )
   end
 
@@ -43,7 +44,7 @@ describe Vagrant::LXC::Action::ForwardPorts do
     subject.stub(system: true)
     subject.call(env)
     expect(subject).to have_received(:spawn).with(
-      "redir --laddr=127.0.0.1 --lport=#{host_port} --caddr=#{container_ip} --cport=#{guest_port} 2>/dev/null"
+      "redir 127.0.0.1:#{host_port} #{container_ip}:#{guest_port} 2>/dev/null"
     )
   end
 
@@ -52,7 +53,7 @@ describe Vagrant::LXC::Action::ForwardPorts do
     subject.stub(system: true)
     subject.call(env)
     expect(subject).to have_received(:spawn).with(
-      "redir --laddr=127.0.0.1 --lport=#{host_port} --caddr=#{container_ip} --cport=#{guest_port} 2>/dev/null"
+      "redir 127.0.0.1:#{host_port} #{container_ip}:#{guest_port} 2>/dev/null"
     )
   end
 
@@ -70,6 +71,15 @@ describe Vagrant::LXC::Action::ForwardPorts do
     expect(subject).not_to have_received(:spawn)
   end
 
+  it 'uses redir 2.x command line interface' do
+    subject.stub(system: true)
+    subject.stub(redir_version: 2)
+    subject.call(env)
+    expect(subject).to have_received(:spawn).with(
+      "redir --laddr=#{host_ip} --lport=#{host_port} --caddr=#{container_ip} --cport=#{guest_port} 2>/dev/null"
+    )
+  end
+
   it 'raises RedirNotInstalled error if `redir` is not installed' do
     subject.stub(system: false)
     expect { subject.call(env) }.to raise_error(Vagrant::LXC::Errors::RedirNotInstalled)
@@ -82,7 +92,7 @@ describe Vagrant::LXC::Action::ForwardPorts do
       subject.stub(system: true)
       subject.call(env)
       expect(subject).to have_received(:spawn).with(
-        "sudo redir --laddr=#{host_ip} --lport=#{host_port} --caddr=#{container_ip} --cport=#{guest_port} 2>/dev/null"
+        "sudo redir #{host_ip}:#{host_port} #{container_ip}:#{guest_port} 2>/dev/null"
       )
     end
 
@@ -91,7 +101,7 @@ describe Vagrant::LXC::Action::ForwardPorts do
       subject.stub(system: true)
       subject.call(env)
       expect(subject).to have_received(:spawn).with(
-        "sudo redir --laddr=127.0.0.1 --lport=#{host_port} --caddr=#{container_ip} --cport=#{guest_port} 2>/dev/null"
+        "sudo redir 127.0.0.1:#{host_port} #{container_ip}:#{guest_port} 2>/dev/null"
       )
     end
 
@@ -100,7 +110,7 @@ describe Vagrant::LXC::Action::ForwardPorts do
       subject.stub(system: true)
       subject.call(env)
       expect(subject).to have_received(:spawn).with(
-        "sudo redir --laddr=127.0.0.1 --lport=#{host_port} --caddr=#{container_ip} --cport=#{guest_port} 2>/dev/null"
+        "sudo redir 127.0.0.1:#{host_port} #{container_ip}:#{guest_port} 2>/dev/null"
       )
     end
   end
