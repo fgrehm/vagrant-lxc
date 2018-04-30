@@ -12,7 +12,7 @@ module Vagrant
           config = env[:machine].provider_config
 
           utsname = env[:machine].config.vm.hostname || env[:machine].id
-          config.customize 'utsname', utsname
+          config.customize 'uts.name', utsname
 
           # Fix apparmor issues when starting Ubuntu 14.04 containers
           # See https://github.com/fgrehm/vagrant-lxc/issues/278 for more information
