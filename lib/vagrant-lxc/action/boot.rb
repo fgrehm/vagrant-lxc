@@ -8,11 +8,15 @@ module Vagrant
 
         def call(env)
           @env = env
-
+          driver = env[:machine].provider.driver
           config = env[:machine].provider_config
 
           utsname = env[:machine].config.vm.hostname || env[:machine].id
-          config.customize 'utsname', utsname
+          if driver.supports_new_config_format
+            config.customize 'uts.name', utsname
+          else
+            config.customize 'utsname', utsname
+          end
 
           # Fix apparmor issues when starting Ubuntu 14.04 containers
           # See https://github.com/fgrehm/vagrant-lxc/issues/278 for more information
@@ -32,7 +36,7 @@ module Vagrant
           end
 
           env[:ui].info I18n.t("vagrant_lxc.messages.starting")
-          env[:machine].provider.driver.start(config.customizations)
+          driver.start(config.customizations)
 
           @app.call env
         end

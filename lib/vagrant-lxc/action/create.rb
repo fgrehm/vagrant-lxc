@@ -24,13 +24,17 @@ module Vagrant
             backingstore = config.privileged ? "best" : "dir"
           end
           driver = env[:machine].provider.driver
+          template_options = env[:lxc_template_opts]
+          if ! driver.supports_new_config_format
+            template_options['--oldconfig'] = ''
+          end
           driver.create(
             container_name,
             backingstore,
             config.backingstore_options,
             env[:lxc_template_src],
             env[:lxc_template_config],
-            env[:lxc_template_opts]
+            template_options
           )
           driver.update_config_keys
 

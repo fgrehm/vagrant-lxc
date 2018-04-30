@@ -59,7 +59,7 @@ module Vagrant
             config_opts = ['-f', config_file]
           end
 
-          extra = template_opts.to_a.flatten
+          extra = template_opts.to_a.flatten.reject { |elem| elem.empty? }
           extra.unshift '--' unless extra.empty?
 
           run :create,

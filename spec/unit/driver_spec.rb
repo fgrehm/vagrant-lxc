@@ -211,9 +211,9 @@ describe Vagrant::LXC::Driver do
           # Blah blah comment
           lxc.mount.entry = proc proc proc nodev,noexec,nosuid 0 0
           lxc.mount.entry = sysfs sys sysfs defaults  0 0
-          lxc.tty = 4
-          lxc.pts = 1024
-          lxc.rootfs = #{rootfs_path}
+          lxc.tty.max = 4
+          lxc.pty.max = 1024
+          lxc.rootfs.path = #{rootfs_path}
           # VAGRANT-BEGIN
           lxc.network.type=veth
           lxc.network.name=eth1
@@ -241,9 +241,9 @@ describe Vagrant::LXC::Driver do
           # Blah blah comment
           lxc.mount.entry = proc proc proc nodev,noexec,nosuid 0 0
           lxc.mount.entry = sysfs sys sysfs defaults  0 0
-          lxc.tty = 4
-          lxc.pts = 1024
-          lxc.rootfs = overlayfs:/path/to/master/directory:#{rootfs_path}
+          lxc.tty.max = 4
+          lxc.pty.max = 1024
+          lxc.rootfs.path = overlayfs:/path/to/master/directory:#{rootfs_path}
           # VAGRANT-BEGIN
           lxc.network.type=veth
           lxc.network.name=eth1

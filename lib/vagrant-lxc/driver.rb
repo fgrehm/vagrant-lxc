@@ -83,6 +83,7 @@ module Vagrant
         @cli.name = @container_name = name
 
         @logger.debug "Creating container..."
+
         @cli.create template_path, backingstore, backingstore_options, config_file, template_options
       end
 
@@ -212,6 +213,10 @@ module Vagrant
 
       def version
         @version ||= @cli.version
+      end
+
+      def supports_new_config_format
+        Gem::Version.new(version) >= Gem::Version.new('2.1.0')
       end
 
       # TODO: This needs to be reviewed and specs needs to be written

@@ -33,7 +33,9 @@ LXC_PATH=
 LXC_ROOTFS=
 LXC_TARBALL=
 LXC_CONFIG=
+LXC_USE_OLDCONFIG=
 LXC_STRIP_COMPONENTS=2
+
 
 usage() {
     cat <<EOF
@@ -44,6 +46,7 @@ Required arguments:
 
 Optional arguments:
 [ --config ]: Configuration file to be used when building the container
+[ --oldconfig ]: Use pre LXC 2.1 config format
 [ -h | --help ]: This help message
 
 LXC internal arguments (do not pass manually!):
@@ -57,7 +60,7 @@ EOF
     return 0
 }
 
-options=$(getopt -o h -l tarball:,config:,help:,name:,path:,rootfs:,mapped-uid:,mapped-gid:,strip-components: -- "$@")SS
+options=$(getopt -o h -l tarball:,config:,oldconfig,help:,name:,path:,rootfs:,mapped-uid:,mapped-gid:,strip-components: -- "$@")SS
 
 if [ $? -ne 0 ]; then
     usage $(basename $0)
@@ -70,6 +73,7 @@ do
     case "$1" in
         -h|--help)          usage $0 && exit 0;;
         --config)           LXC_CONFIG=$2; shift 2;;
+        --oldconfig)        LXC_USE_OLDCONFIG=1; shift 1;;
         --tarball)          LXC_TARBALL=$2; shift 2;;
         --name)             LXC_NAME=$2; shift 2;;
         --path)             LXC_PATH=$2; shift 2;;
@@ -144,7 +148,12 @@ if [ -e "${LXC_PATH}/config-auto" ]; then
     cat ${LXC_PATH}/config-auto >> ${LXC_PATH}/config
     rm ${LXC_PATH}/config-auto
 fi
-echo "lxc.utsname = ${LXC_NAME}" >> ${LXC_PATH}/config
+
+if [ $LXC_USE_OLDCONFIG ]; then
+    echo "lxc.utsname = ${LXC_NAME}" >> ${LXC_PATH}/config
+else
+    echo "lxc.uts.name = ${LXC_NAME}" >> ${LXC_PATH}/config
+fi
 
 ## Re-add the previously removed network config
 if [ -e "${LXC_PATH}/config-network" ]; then
