@@ -25,7 +25,11 @@ module Vagrant
           end
           driver = env[:machine].provider.driver
           template_options = env[:lxc_template_opts]
-          if ! driver.supports_new_config_format
+          if driver.supports_new_config_format
+            if env[:lxc_box_config]
+              driver.update_config_keys(env[:lxc_box_config])
+            end
+          else
             template_options['--oldconfig'] = ''
           end
           driver.create(

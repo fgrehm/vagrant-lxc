@@ -33,8 +33,10 @@ module Vagrant
           end
 
           if template_config_file.exist?
+            @env[:lxc_box_config] = template_config_file.to_s
             @env[:lxc_template_opts].merge!('--config' => template_config_file.to_s)
           elsif old_template_config_file.exist?
+            @env[:lxc_box_config] = old_template_config_file.to_s
             @env[:lxc_template_config] = old_template_config_file.to_s
           end
 

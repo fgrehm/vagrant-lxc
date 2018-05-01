@@ -249,8 +249,9 @@ module Vagrant
         write_config(contents)
       end
 
-      def update_config_keys
-        @cli.update_config(config_path)
+      def update_config_keys(path = nil)
+        path = path || config_path
+        @cli.update_config(path)
       rescue Errors::ExecuteError
         # not on LXC 2.1+. Doesn't matter, ignore.
       end
