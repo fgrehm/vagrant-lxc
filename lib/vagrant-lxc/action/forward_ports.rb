@@ -81,8 +81,7 @@ module Vagrant
 
         def redirect_port(host_ip, host_port, guest_ip, guest_port)
           if redir_version >= 3
-            params = %W( :#{host_port} #{guest_ip}:#{guest_port} )
-            params[0] =  "#{host_ip}:#{host_port}" if host_ip
+            params = %W( -n #{host_ip}:#{host_port} #{guest_ip}:#{guest_port} )
           else
             params = %W( --lport=#{host_port} --caddr=#{guest_ip} --cport=#{guest_port} )
             params.unshift "--laddr=#{host_ip}" if host_ip
