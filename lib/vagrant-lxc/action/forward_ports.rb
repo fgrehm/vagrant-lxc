@@ -107,8 +107,9 @@ module Vagrant
         end
 
         def redir_version
-          # For some weird reason redir prints version information in STDERR
-          _, version, _ = Open3.capture3 "redir --version"
+          stdout, stderr, _ = Open3.capture3 "redir --version"
+          # For some weird reason redir printed version information in STDERR prior to 3.2
+          version = stdout || stderr
           version.split('.')[0].to_i
         end
 
