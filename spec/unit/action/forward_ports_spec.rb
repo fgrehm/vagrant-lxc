@@ -35,7 +35,7 @@ describe Vagrant::LXC::Action::ForwardPorts do
     subject.stub(system: true)
     subject.call(env)
     expect(subject).to have_received(:spawn).with(
-      "redir #{host_ip}:#{host_port} #{container_ip}:#{guest_port} 2>/dev/null"
+      "redir -n #{host_ip}:#{host_port} #{container_ip}:#{guest_port} 2>/dev/null"
     )
   end
 
@@ -44,7 +44,7 @@ describe Vagrant::LXC::Action::ForwardPorts do
     subject.stub(system: true)
     subject.call(env)
     expect(subject).to have_received(:spawn).with(
-      "redir 127.0.0.1:#{host_port} #{container_ip}:#{guest_port} 2>/dev/null"
+      "redir -n 127.0.0.1:#{host_port} #{container_ip}:#{guest_port} 2>/dev/null"
     )
   end
 
@@ -53,7 +53,7 @@ describe Vagrant::LXC::Action::ForwardPorts do
     subject.stub(system: true)
     subject.call(env)
     expect(subject).to have_received(:spawn).with(
-      "redir 127.0.0.1:#{host_port} #{container_ip}:#{guest_port} 2>/dev/null"
+      "redir -n 127.0.0.1:#{host_port} #{container_ip}:#{guest_port} 2>/dev/null"
     )
   end
 
@@ -92,7 +92,7 @@ describe Vagrant::LXC::Action::ForwardPorts do
       subject.stub(system: true)
       subject.call(env)
       expect(subject).to have_received(:spawn).with(
-        "sudo redir #{host_ip}:#{host_port} #{container_ip}:#{guest_port} 2>/dev/null"
+        "sudo redir -n #{host_ip}:#{host_port} #{container_ip}:#{guest_port} 2>/dev/null"
       )
     end
 
@@ -101,7 +101,7 @@ describe Vagrant::LXC::Action::ForwardPorts do
       subject.stub(system: true)
       subject.call(env)
       expect(subject).to have_received(:spawn).with(
-        "sudo redir 127.0.0.1:#{host_port} #{container_ip}:#{guest_port} 2>/dev/null"
+        "sudo redir -n 127.0.0.1:#{host_port} #{container_ip}:#{guest_port} 2>/dev/null"
       )
     end
 
@@ -110,7 +110,7 @@ describe Vagrant::LXC::Action::ForwardPorts do
       subject.stub(system: true)
       subject.call(env)
       expect(subject).to have_received(:spawn).with(
-        "sudo redir 127.0.0.1:#{host_port} #{container_ip}:#{guest_port} 2>/dev/null"
+        "sudo redir -n 127.0.0.1:#{host_port} #{container_ip}:#{guest_port} 2>/dev/null"
       )
     end
   end
