@@ -1,3 +1,11 @@
+## [1.4.1](https://github.com/fgrehm/vagrant-lxc/compare/v1.4.0...v1.4.1) (Apr 30, 2018)
+
+FEATURES:
+  - Add support for LXC v3.0
+  - Add support for `redir` 3.x command line. [[GH-460]]
+
+[GH-460]: https://github.com/fgrehm/vagrant-lxc/issues/460
+
 ## [1.4.0](https://github.com/fgrehm/vagrant-lxc/compare/v1.3.1...v1.4.0) (Mar 04, 2018)
 
 FEATURES:
