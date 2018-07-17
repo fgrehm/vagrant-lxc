@@ -1,3 +1,8 @@
+## [1.4.2](https://github.com/fgrehm/vagrant-lxc/compare/v1.4.1...v1.4.2) (Jul 17, 2018)
+
+FIXES:
+  - Fix problems with `redir` 3.x command line. [[GH-467]]
+
 ## [1.4.1](https://github.com/fgrehm/vagrant-lxc/compare/v1.4.0...v1.4.1) (Apr 30, 2018)
 
 FEATURES:
