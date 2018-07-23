@@ -21,6 +21,7 @@ module Vagrant
           fetch_ip_tries = config.fetch_ip_tries
           driver = env[:machine].provider.driver
           ip = ''
+          return config.ssh_ip_addr if not config.ssh_ip_addr.nil?
           retryable(:on => LXC::Errors::ExecuteError, :tries => fetch_ip_tries, :sleep => 3) do
             unless ip = get_container_ip_from_ip_addr(driver)
               # retry

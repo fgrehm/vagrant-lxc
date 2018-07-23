@@ -24,6 +24,8 @@ module Vagrant
 
       attr_accessor :fetch_ip_tries
 
+      attr_accessor :ssh_ip_addr
+
       # Whether the container needs to be privileged. Defaults to true (unprivileged containers
       # is a very new feature in vagrant-lxc). If false, will try creating an unprivileged
       # container. If it can't, will revert to the old "sudo wrapper" method to create a privileged
@@ -37,6 +39,7 @@ module Vagrant
         @container_name = UNSET_VALUE
         @tmpfs_mount_size = UNSET_VALUE
         @fetch_ip_tries = UNSET_VALUE
+        @ssh_ip_addr = UNSET_VALUE
         @privileged = UNSET_VALUE
       end
 
@@ -66,6 +69,7 @@ module Vagrant
         @existing_container_name = nil if @existing_container_name == UNSET_VALUE
         @tmpfs_mount_size = '2G' if @tmpfs_mount_size == UNSET_VALUE
         @fetch_ip_tries = 10 if @fetch_ip_tries == UNSET_VALUE
+        @ssh_ip_addr = nil if @ssh_ip_addr == UNSET_VALUE
         @privileged = true if @privileged == UNSET_VALUE
       end
     end
