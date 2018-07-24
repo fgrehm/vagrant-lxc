@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/fgrehm/vagrant-lxc.png?branch=master)](https://travis-ci.org/fgrehm/vagrant-lxc) [![Gem Version](https://badge.fury.io/rb/vagrant-lxc.png)](http://badge.fury.io/rb/vagrant-lxc) [![Code Climate](https://codeclimate.com/github/fgrehm/vagrant-lxc.png)](https://codeclimate.com/github/fgrehm/vagrant-lxc) [![Coverage Status](https://coveralls.io/repos/fgrehm/vagrant-lxc/badge.png?branch=master)](https://coveralls.io/r/fgrehm/vagrant-lxc) [![Gitter chat](https://badges.gitter.im/fgrehm/vagrant-lxc.png)](https://gitter.im/fgrehm/vagrant-lxc)
 
-[LXC](http://lxc.sourceforge.net/) provider for [Vagrant](http://www.vagrantup.com/) 1.8+
+[LXC](http://lxc.sourceforge.net/) provider for [Vagrant](http://www.vagrantup.com/) 1.9+
 
 This is a Vagrant plugin that allows it to control and provision Linux Containers
 as an alternative to the built in VirtualBox provider for Linux hosts. Check out
@@ -17,8 +17,8 @@ to see it in action.
 
 ## Requirements
 
-* [Vagrant 1.8+](http://www.vagrantup.com/downloads.html)
-* lxc >=1.0
+* [Vagrant 1.9+](http://www.vagrantup.com/downloads.html)
+* lxc >=2.1
 * `redir` (if you are planning to use port forwarding)
 * `brctl` (if you are planning to use private networks, on Ubuntu this means `apt-get install bridge-utils`)
 
