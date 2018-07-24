@@ -10,7 +10,7 @@ module Vagrant
       EOF
 
       provider(:lxc, parallel: true, priority: 7) do
-        require File.expand_path("../provider", __FILE__)
+        require_relative 'provider'
         init!
         Provider
       end
@@ -22,13 +22,13 @@ module Vagrant
       end
 
       config(:lxc, :provider) do
-        require File.expand_path("../config", __FILE__)
+        require_relative 'config'
         init!
         Config
       end
 
       synced_folder(:lxc) do
-        require File.expand_path("../synced_folder", __FILE__)
+        require_relative 'synced_folder'
         SyncedFolder
       end
 
