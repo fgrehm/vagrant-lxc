@@ -134,36 +134,11 @@ describe Vagrant::LXC::Driver::CLI do
 
     before do
       allow(subject).to receive(:run)
+      subject.stop
     end
 
-    context 'lxc-attach is supported' do
-      before do
-        subject.stub(attach: true, supports_attach?: true)
-        subject.stop
-      end
-
-      it 'runs a /sbin/halt within the container' do
-        expect(subject).to have_received(:attach).with('/sbin/halt')
-      end
-
-      it 'issues a lxc-stop with provided container name' do
-        expect(subject).to have_received(:run).with(:stop, '--name', name)
-      end
-    end
-
-    context 'lxc-attach is not supported' do
-      before do
-        subject.stub(attach: false, supports_attach?: false)
-        subject.stop
-      end
-
-      it 'runs a /sbin/halt within the container' do
-        expect(subject).to_not have_received(:attach)
-      end
-
-      it 'issues a lxc-stop with provided container name' do
-        expect(subject).to have_received(:run).with(:stop, '--name', name)
-      end
+    it 'issues a lxc-stop with provided container name' do
+      expect(subject).to have_received(:run).with(:stop, '--name', name)
     end
   end
 
@@ -230,34 +205,5 @@ describe Vagrant::LXC::Driver::CLI do
     end
 
     skip 'waits for the expected container state'
-  end
-
-  describe 'check for whether lxc-attach is supported' do
-    let(:name) { 'a-running-container' }
-    subject    { described_class.new(sudo_wrapper, name) }
-
-    context 'lxc-attach is present on system' do
-      before { subject.stub(run: true) }
-
-      it 'returns true if `lxc-attach --name CNAME -- /bin/true` works' do
-        expect(subject.supports_attach?).to be_truthy
-        expect(subject).to have_received(:run).with(
-          :attach, '--name', name, '--', '/bin/true'
-        )
-      end
-    end
-
-    context 'lxc-attach is not present on system' do
-      before do
-        allow(subject).to receive(:run).and_raise(Vagrant::LXC::Errors::ExecuteError.new('msg'))
-      end
-
-      it 'returns true if `lxc-attach --name CNAME -- /bin/true` works' do
-        expect(subject.supports_attach?).to be_falsy
-        expect(subject).to have_received(:run).with(
-          :attach, '--name', name, '--', '/bin/true'
-        )
-      end
-    end
   end
 end

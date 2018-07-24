@@ -89,14 +89,13 @@ module Vagrant
         # Man Page:
         # 2      The specified container exists but was not running.
         def stop
-          attach '/sbin/halt' if supports_attach?
           begin
             run :stop, '--name', @name
           rescue LXC::Errors::ExecuteError => e
             if e.exitcode == 2
-               @logger.debug "Machine already stopped, lxc-stop returned 2"
+              @logger.debug "Machine already stopped, lxc-stop returned 2"
             else
-		raise e
+              raise e
             end
           end
         end
@@ -140,19 +139,6 @@ module Vagrant
             # TODO: Raise an user friendly message
             raise TargetStateNotReached.new target_state, last_state
           end
-        end
-
-        def supports_attach?
-          unless defined?(@supports_attach)
-            begin
-              @supports_attach = true
-              run(:attach, '--name', @name, '--', '/bin/true')
-            rescue LXC::Errors::ExecuteError
-              @supports_attach = false
-            end
-          end
-
-          return @supports_attach
         end
 
         private

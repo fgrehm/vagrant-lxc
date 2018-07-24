@@ -122,10 +122,6 @@ module Vagrant
         @cli.destroy
       end
 
-      def supports_attach?
-        @cli.supports_attach?
-      end
-
       def attach(*command)
         @cli.attach(*command)
       end
