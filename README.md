@@ -51,8 +51,9 @@ _More information about skipping the `--provider` argument can be found at the
 
 ## Base boxes
 
-Base boxes can be found on [Atlas](https://atlas.hashicorp.com/boxes/search?provider=lxc)
-and some scripts to build your own are available at [fgrehm/vagrant-lxc-base-boxes](https://github.com/fgrehm/vagrant-lxc-base-boxes).
+Base boxes provided on Atlas haven't been refreshed for a good while and shouldn't be relied on.
+Your best best is to build your boxes yourself. Some scripts to build your own are available at
+[hsoft/vagrant-lxc-base-boxes](https://github.com/hsoft/vagrant-lxc-base-boxes).
 
 If you want to build your own boxes, please have a look at [`BOXES.md`](https://github.com/fgrehm/vagrant-lxc/tree/master/BOXES.md)
 for more information.
