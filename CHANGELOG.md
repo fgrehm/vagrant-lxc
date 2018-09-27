@@ -1,7 +1,20 @@
+## [1.4.3](https://github.com/fgrehm/vagrant-lxc/compare/v1.4.2...v1.4.3) (Sep 27, 2018)
+
+FEATURES:
+  - Add config for container ssh IP. [[GH-469]]
+
+FIXES:
+  - Fix problems with `redir` command line (bis). [[GH-473]]
+
+[GH-469]: https://github.com/fgrehm/vagrant-lxc/issues/469
+[GH-473]: https://github.com/fgrehm/vagrant-lxc/issues/473
+
 ## [1.4.2](https://github.com/fgrehm/vagrant-lxc/compare/v1.4.1...v1.4.2) (Jul 17, 2018)
 
 FIXES:
   - Fix problems with `redir` 3.x command line. [[GH-467]]
+
+[GH-467]: https://github.com/fgrehm/vagrant-lxc/issues/467
 
 ## [1.4.1](https://github.com/fgrehm/vagrant-lxc/compare/v1.4.0...v1.4.1) (Apr 30, 2018)
 
