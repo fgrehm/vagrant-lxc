@@ -79,7 +79,7 @@ class Whitelist
 end
 
 base = "<%= lxc_base_path %>"
-base_path = %r{\A#{base}/.*\z}
+base_path = %r{\A#{base}/[\ -_\/\.\d\w]+$\z}
 
 ##
 # Commands from provider.rb
@@ -93,11 +93,11 @@ Whitelist.add '<%= cmd_paths['cat'] %>', base_path
 # - Shared folders
 Whitelist.add '<%= cmd_paths['mkdir'] %>', '-p', base_path
 # - Container config customizations and pruning
-Whitelist.add '<%= cmd_paths['cp'] %>', '-f', %r{/tmp/.*}, base_path
+Whitelist.add '<%= cmd_paths['cp'] %>', '-f', %r{/tmp/[\ -_\/\.\d\w]+$}, base_path
 Whitelist.add '<%= cmd_paths['chown'] %>', 'root:root', base_path
 # - Packaging
-Whitelist.add '<%= cmd_paths['tar'] %>', '--numeric-owner', '-cvzf', %r{/tmp/.*/rootfs.tar.gz}, '-C', base_path, './rootfs'
-Whitelist.add '<%= cmd_paths['chown'] %>', /\A\d+:\d+\z/, %r{\A/tmp/.*/rootfs\.tar\.gz\z}
+Whitelist.add '<%= cmd_paths['tar'] %>', '--numeric-owner', '-cvzf', %r{/tmp/^[\ -_\/\.\d\w]+$/rootfs.tar.gz}, '-C', base_path, './rootfs'
+Whitelist.add '<%= cmd_paths['chown'] %>', /\A\d+:\d+\z/, %r{\A/tmp/^[\ -_\/\.\d\w]+$/rootfs\.tar\.gz\z}
 # - Private network script and commands
 Whitelist.add '<%= cmd_paths['ip'] %>', 'addr', 'add', /(\d+|\.)+\/24/, 'dev', /.+/
 Whitelist.add '<%= cmd_paths['ip'] %>', 'link', 'set', /.+/, /(up|down)/
@@ -108,22 +108,22 @@ Whitelist.add_regex %r{<%= pipework_regex %>}, '**'
 # Commands from driver/cli.rb
 Whitelist.add '<%= cmd_paths['lxc_bin'] %>/lxc-version'
 Whitelist.add '<%= cmd_paths['lxc_bin'] %>/lxc-ls'
-Whitelist.add '<%= cmd_paths['lxc_bin'] %>/lxc-info', '--name', /.*/
-Whitelist.add '<%= cmd_paths['lxc_bin'] %>/lxc-info', '--name', /.*/, '-iH'
-Whitelist.add '<%= cmd_paths['lxc_bin'] %>/lxc-create', '-B', /.*/, '--template', /.*/, '--name', /.*/, '**'
+Whitelist.add '<%= cmd_paths['lxc_bin'] %>/lxc-info', '--name', /^[\ -_\/\.\d\w]+$/
+Whitelist.add '<%= cmd_paths['lxc_bin'] %>/lxc-info', '--name', /^[\ -_\/\.\d\w]+$/, '-iH'
+Whitelist.add '<%= cmd_paths['lxc_bin'] %>/lxc-create', '-B', /^[\ -_\/\.\d\w]+$/, '--template', /^[\ -_\/\.\d\w]+$/, '--name', /^[\ -_\/\.\d\w]+$/, '**'
 Whitelist.add '<%= cmd_paths['lxc_bin'] %>/lxc-create', '--version'
-Whitelist.add '<%= cmd_paths['lxc_bin'] %>/lxc-destroy', '--name', /.*/
-Whitelist.add '<%= cmd_paths['lxc_bin'] %>/lxc-start', '-d', '--name', /.*/, '**'
-Whitelist.add '<%= cmd_paths['lxc_bin'] %>/lxc-stop', '--name', /.*/
-Whitelist.add '<%= cmd_paths['lxc_bin'] %>/lxc-shutdown', '--name', /.*/
-Whitelist.add '<%= cmd_paths['lxc_bin'] %>/lxc-attach', '--name', /.*/, '**'
+Whitelist.add '<%= cmd_paths['lxc_bin'] %>/lxc-destroy', '--name', /^[\ -_\/\.\d\w]+$/
+Whitelist.add '<%= cmd_paths['lxc_bin'] %>/lxc-start', '-d', '--name', /^[\ -_\/\.\d\w]+$/, '**'
+Whitelist.add '<%= cmd_paths['lxc_bin'] %>/lxc-stop', '--name', /^[\ -_\/\.\d\w]+$/
+Whitelist.add '<%= cmd_paths['lxc_bin'] %>/lxc-shutdown', '--name', /^[\ -_\/\.\d\w]+$/
+Whitelist.add '<%= cmd_paths['lxc_bin'] %>/lxc-attach', '--name', /^[\ -_\/\.\d\w]+$/, '**'
 Whitelist.add '<%= cmd_paths['lxc_bin'] %>/lxc-attach', '-h'
 Whitelist.add '<%= cmd_paths['lxc_bin'] %>/lxc-config', 'lxc.lxcpath'
-Whitelist.add '<%= cmd_paths['lxc_bin'] %>/lxc-update-config', '-c', /.*/
+Whitelist.add '<%= cmd_paths['lxc_bin'] %>/lxc-update-config', '-c', /^[\ -_\/\.\d\w]+$/
 
 ##
 # Commands from driver/action/remove_temporary_files.rb
-Whitelist.add '<%= cmd_paths['rm'] %>', '-rf', %r{\A#{base}/.*/rootfs/tmp/.*}
+Whitelist.add '<%= cmd_paths['rm'] %>', '-rf', %r{\A#{base}/^[\ -_\/\.\d\w]+$/rootfs/tmp/[\ -_\/\.\d\w]+$}
 
 # Watch out for stones
 Whitelist.run!(ARGV)
