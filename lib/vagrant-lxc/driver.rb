@@ -47,10 +47,10 @@ module Vagrant
 
       def config_path
         base_path.join('config').to_s
-      end 
+      end
 
       def rootfs_path
-        pathtype, path = config_string.match(/^lxc\.rootfs(?:\.path)?\s+=\s+(.+:)?(.+)$/)[1..2]
+        pathtype, path = config_string.match(/^lxc\.rootfs\.path\s+=\s+dir:(.+)$/)[1..2]
         case pathtype
         when 'overlayfs:'
           # Split on colon (:), ignoring any colon escaped by an escape character ( \ )
