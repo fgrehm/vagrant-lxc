@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 
 group :development do
-  gem 'vagrant', git: 'https://github.com/mitchellh/vagrant.git'
+  gem 'vagrant', git: 'https://github.com/mitchellh/vagrant.git', tag: 'v2.0.0'
   gem 'guard'
   gem 'guard-rspec'
   gem 'rb-inotify'
@@ -10,8 +10,8 @@ end
 group :development, :test do
   gem 'rake', '~> 10.4.2'
   gem 'rspec', '~> 3.5.0'
-  gem 'coveralls', '~> 0.7.2', require: (ENV['COVERAGE'] == 'true')
-  gem 'vagrant-spec', git: 'https://github.com/mitchellh/vagrant-spec.git'
+  gem 'coveralls', '= 0.7.2', require: (ENV['COVERAGE'] == 'true')
+  gem 'vagrant-spec', git: 'https://github.com/mitchellh/vagrant-spec.git', ref: '9413ab2'
 end
 
 group :plugins do
