@@ -1,8 +1,8 @@
-def vs(command) {
+def vs(command, returnStdout = false) {
     ansiColor('xterm') {
         writeFile file: 'command.sh', text: command
         echo command
-        sh('vagrant ssh -- -t "bash --login /vagrant/command.sh"')
+        return sh(script: 'vagrant ssh -- -t "bash --login /vagrant/command.sh"', returnStdout: returnStdout)
     }
 }
 
@@ -47,12 +47,15 @@ pipeline {
         stage('Build') {
             steps {
                 script {
+                    def version = vs("cd vagrant-lxc; ruby vagrant-lxc-version.rb", true).trim()
+                    echo "Version: ${version}"
                     vs('cd vagrant-lxc; bundle exec rake build')
-                    vs('cd vagrant-lxc/pkg; tar -zcf vagrant-lxc-1.4.4.tar.gz vagrant-lxc-1.4.4.gem')
-                    vs('mv vagrant-lxc/pkg/vagrant-lxc-1.4.4.gem /vagrant/vagrant-lxc-1.4.4.tar.gz')
+                    vs("echo \"${version}\" > vagrant-lxc/pkg/version.txt")
+                    vs("mv vagrant-lxc/pkg/vagrant-lxc-${version}.gem vagrant-lxc/pkg/vagrant-lxc.gem")
+                    vs("cd vagrant-lxc/pkg; sudo tar -zcf /vagrant/vagrant-lxc.tar.gz vagrant-lxc.gem version.txt")
                 }
-                archiveArtifacts allowEmptyArchive: true, artifacts: 'vagrant-lxc-1.4.4.tar.gz', onlyIfSuccessful: true
+                archiveArtifacts allowEmptyArchive: true, artifacts: 'vagrant-lxc.tar.gz', onlyIfSuccessful: true
             }
         }
     }
-}    
+}
