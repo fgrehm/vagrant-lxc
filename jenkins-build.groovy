@@ -20,7 +20,9 @@ pipeline {
                             sh 'vagrant destroy --force'
                         }
                     }
-                    sh "rm -rf ./*"
+                    dir("vagrant-lxc") {
+                        sh 'git reset --hard && git clean -ffdx'
+                    }
                     sh 'vagrant init emptybox/ubuntu-bionic-amd64-lxc'
                     sh 'vagrant up'
                     vs("sudo systemd-run --property='After=apt-daily.service apt-daily-upgrade.service' --wait /bin/true")
@@ -39,7 +41,7 @@ pipeline {
                     vs("echo 'source ~/.rvm/scripts/rvm' >> ~/.bashrc")
                     vs('rvm install ruby-2.3.1')
                     vs('gem install bundler')
-                    vs("git clone -b ${params.Revision} https://github.com/optimacros/vagrant-lxc")
+                    vs('cp -r /vagrant/vagrant-lxc vagrant-lxc')
                     vs('cd vagrant-lxc; bundler install')
                 }
             }
