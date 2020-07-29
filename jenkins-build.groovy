@@ -23,6 +23,7 @@ pipeline {
                     dir("vagrant-lxc") {
                         sh 'git reset --hard && git clean -ffdx'
                     }
+                    sh 'rm -f Vagrantfile vagrant-lxc.tar.gz'
                     sh 'vagrant init emptybox/ubuntu-bionic-amd64-lxc'
                     sh 'vagrant up'
                     vs("sudo systemd-run --property='After=apt-daily.service apt-daily-upgrade.service' --wait /bin/true")
