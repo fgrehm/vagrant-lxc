@@ -270,7 +270,7 @@ module Vagrant
       def write_config(contents)
         confpath = base_path.join('config').to_s
         begin
-          File.open(confpath, File::RDWR) do |file|
+          File.open(confpath, File::WRONLY|File::TRUNC) do |file|
             file.write contents
           end
         rescue
