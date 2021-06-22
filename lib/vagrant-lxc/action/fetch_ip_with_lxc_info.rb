@@ -34,7 +34,7 @@ module Vagrant
         # From: https://github.com/lxc/lxc/blob/staging/src/python-lxc/lxc/__init__.py#L371-L385
         def get_container_ip_from_ip_addr(driver)
           output = driver.info '-iH'
-          if output =~ /^([0-9.]+)/
+          if output =~ /^([0-9.a-f:]+)/
             return $1.to_s
           end
         end
