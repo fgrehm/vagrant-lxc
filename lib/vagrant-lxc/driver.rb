@@ -208,7 +208,7 @@ module Vagrant
       end
 
       def version
-        @version ||= @cli.version
+        @version ||= @cli.version.split('~', 2).first()
       end
 
       def supports_new_config_format
