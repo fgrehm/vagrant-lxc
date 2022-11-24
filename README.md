@@ -1,6 +1,8 @@
-# :warning: PROJECT UNMAINTAINED: Help Needed! :warning:
+# :warning: PROJECT UNMAINTAINED: warning:
 
-This project is looking for maintainers, please see [GH-499](https://github.com/fgrehm/vagrant-lxc/issues/499) for more.
+This project has been archived. Thanks a lot to everyone that contributed itwith over the years :heart:
+
+If anyone else wants to resurrect it please reach out by emails!
 
 # vagrant-lxc
 
