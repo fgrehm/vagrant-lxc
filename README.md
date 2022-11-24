@@ -1,4 +1,4 @@
-# :warning: PROJECT UNMAINTAINED: warning:
+# :warning: PROJECT UNMAINTAINED :arning:
 
 This project has been archived. Thanks a lot to everyone that contributed itwith over the years :heart:
 
